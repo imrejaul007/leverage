@@ -5,6 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
 
 import { PrismaModule } from './prisma/prisma.module';
+import { RedisModule } from './shared/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CompaniesModule } from './modules/companies/companies.module';
@@ -25,8 +26,6 @@ import { AdsModule } from './modules/ads/ads.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { SearchModule } from './modules/search/search.module';
 
-import { RedisService } from './shared/redis.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +34,7 @@ import { RedisService } from './shared/redis.service';
     }),
 
     PrismaModule,
+    RedisModule,
 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -72,9 +72,7 @@ import { RedisService } from './shared/redis.service';
     SearchModule,
   ],
 
-  providers: [
-    RedisService,
-  ],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {}
