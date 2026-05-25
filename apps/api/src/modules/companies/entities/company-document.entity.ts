@@ -1,21 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Company } from './company.entity';
 import { User } from '../../auth/entities/user.entity';
-import { VerificationStatus } from './company.entity';
-
-export enum DocumentType {
-  GST_CERTIFICATE = 'GST_CERTIFICATE',
-  IEC = 'IEC',
-  PAN_CARD = 'PAN_CARD',
-  ADDRESS_PROOF = 'ADDRESS_PROOF',
-  BANK_STATEMENT = 'BANK_STATEMENT',
-  MOA_AOA = 'MOA_AOA',
-  PARTNERSHIP_DEED = 'PARTNERSHIP_DEED',
-  IMPORT_LICENSE = 'IMPORT_LICENSE',
-  EXPORT_LICENSE = 'EXPORT_LICENSE',
-  ISO_CERTIFICATE = 'ISO_CERTIFICATE',
-  OTHER = 'OTHER',
-}
+import { VerificationStatus, DocumentType } from '../../../common/enums';
 
 @Entity('company_documents')
 export class CompanyDocument {

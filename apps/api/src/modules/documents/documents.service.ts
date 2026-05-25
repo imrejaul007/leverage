@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TradeDocument, DocumentStatus, DocumentCategory } from './entities/trade-document.entity';
+import { TradeDocument, DocumentStatus } from './entities/trade-document.entity';
+import { DocumentCategory } from '../../common/enums';
 import { DocumentGeneratorService } from './document-generator.service';
 
 export interface GenerateDocumentDto {

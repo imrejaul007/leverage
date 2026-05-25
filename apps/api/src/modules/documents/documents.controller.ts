@@ -2,7 +2,8 @@ import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, Req, Res, 
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { DocumentsService, GenerateDocumentDto, SignDocumentDto } from './documents.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { DocumentCategory, DocumentStatus } from './entities/trade-document.entity';
+import { DocumentStatus } from './entities/trade-document.entity';
+import { DocumentCategory } from '../../common/enums';
 
 @ApiTags('Documents')
 @ApiBearerAuth()

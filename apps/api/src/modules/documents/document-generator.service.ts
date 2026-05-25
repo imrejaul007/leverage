@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TradeDocument, DocumentCategory } from './entities/trade-document.entity';
+import { TradeDocument, DocumentStatus } from './entities/trade-document.entity';
+import { DocumentCategory } from '../../common/enums';
 
 @Injectable()
 export class DocumentGeneratorService {

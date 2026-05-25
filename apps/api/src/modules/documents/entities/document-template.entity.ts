@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-import { DocumentCategory } from './trade-document.entity';
+import { DocumentCategory } from '../../../common/enums';
 
 @Entity('document_templates')
 @Index(['type'])
