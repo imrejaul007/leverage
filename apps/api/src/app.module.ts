@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
 
+import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CompaniesModule } from './modules/companies/companies.module';
@@ -25,7 +26,6 @@ import { BillingModule } from './modules/billing/billing.module';
 import { SearchModule } from './modules/search/search.module';
 
 import { RedisService } from './shared/redis.service';
-import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -33,6 +33,8 @@ import { PrismaService } from './prisma/prisma.service';
       isGlobal: true,
       envFilePath: '.env',
     }),
+
+    PrismaModule,
 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -72,7 +74,6 @@ import { PrismaService } from './prisma/prisma.service';
 
   providers: [
     RedisService,
-    PrismaService,
   ],
 })
 export class AppModule implements NestModule {
