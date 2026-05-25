@@ -4,13 +4,12 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { ProductVariant } from './entities/product-variant.entity';
+import { Category } from './entities/category.entity';
 import { SearchModule } from '../search/search.module';
-import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, ProductVariant]),
-    CategoriesModule,
+    TypeOrmModule.forFeature([Product, ProductVariant, Category]),
     SearchModule
   ],
   controllers: [ProductsController],
