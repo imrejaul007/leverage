@@ -14,7 +14,42 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SubscriptionStatus, PlanType, BillingInterval, InvoiceStatus } from '@prisma/client';
+
+// ============================================
+// LOCAL ENUM DEFINITIONS (mirrors Prisma schema)
+// ============================================
+
+export enum SubscriptionStatus {
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  PAST_DUE = 'PAST_DUE',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
+  SUSPENDED = 'SUSPENDED',
+}
+
+export enum PlanType {
+  FREE = 'FREE',
+  STARTER = 'STARTER',
+  PROFESSIONAL = 'PROFESSIONAL',
+  BUSINESS = 'BUSINESS',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+export enum BillingInterval {
+  MONTHLY = 'MONTHLY',
+  YEARLY = 'YEARLY',
+  QUARTERLY = 'QUARTERLY',
+}
+
+export enum InvoiceStatus {
+  DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  OVERDUE = 'OVERDUE',
+  CANCELLED = 'CANCELLED',
+  REFUNDED = 'REFUNDED',
+}
 
 // ============================================
 // SUBSCRIPTION DTOs

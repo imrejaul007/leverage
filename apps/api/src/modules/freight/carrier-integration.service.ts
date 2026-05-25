@@ -1,7 +1,19 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
-import { TransportMode } from '@prisma/client';
+
+// ============================================
+// LOCAL ENUM DEFINITIONS (mirrors Prisma schema)
+// ============================================
+
+export enum TransportMode {
+  OCEAN = 'OCEAN',
+  AIR = 'AIR',
+  TRUCK = 'TRUCK',
+  RAIL = 'RAIL',
+  MULTIMODAL = 'MULTIMODAL',
+  COURIER = 'COURIER',
+}
 
 export interface CarrierQuoteRequest {
   origin: {
@@ -543,7 +555,7 @@ export class CarrierIntegrationService {
     const weightMultiplier = Math.max(1, request.cargoDetails.weight / 10000);
     const adjustedBaseRate = baseRate * weightMultiplier;
 
-    const transitDays = this.getEstimatedTransitDays('OCEAN', 'MAERSK');
+    const transitDays = this.getEstimatedTransitDays(TransportMode.OCEAN, 'MAERSK');
 
     return {
       carrierId: 'maersk-line',

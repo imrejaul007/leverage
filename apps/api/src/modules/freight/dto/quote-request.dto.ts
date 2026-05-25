@@ -12,7 +12,19 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TransportMode } from '@prisma/client';
+
+// ============================================
+// LOCAL ENUM DEFINITIONS (mirrors Prisma schema)
+// ============================================
+
+export enum TransportMode {
+  OCEAN = 'OCEAN',
+  AIR = 'AIR',
+  TRUCK = 'TRUCK',
+  RAIL = 'RAIL',
+  MULTIMODAL = 'MULTIMODAL',
+  COURIER = 'COURIER',
+}
 
 // ============================================
 // LOCATION & CARGO DTOs

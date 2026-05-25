@@ -9,8 +9,31 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
-import { TransportMode, QuoteStatus, ShipmentStatus } from '@prisma/client';
-import { CarrierIntegrationService, CarrierQuoteRequest, CarrierQuoteResponse } from './carrier-integration.service';
+import { CarrierIntegrationService, CarrierQuoteRequest, CarrierQuoteResponse, TransportMode } from './carrier-integration.service';
+
+// ============================================
+// LOCAL ENUM DEFINITIONS (mirrors Prisma schema)
+// ============================================
+
+export enum QuoteStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  BOOKED = 'BOOKED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ShipmentStatus {
+  DRAFT = 'DRAFT',
+  BOOKED = 'BOOKED',
+  PICKED_UP = 'PICKED_UP',
+  IN_TRANSIT = 'IN_TRANSIT',
+  CUSTOMS_CLEARANCE = 'CUSTOMS_CLEARANCE',
+  OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
+  DELIVERED = 'DELIVERED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  EXCEPTION = 'EXCEPTION',
+}
 import {
   FreightQuoteRequestDto,
   ContainerQuoteRequestDto,
@@ -210,7 +233,7 @@ export class FreightService {
         containerType: request.containerType,
         pieces: 1,
       },
-      transportMode: 'OCEAN',
+      transportMode: TransportMode.OCEAN,
       departureDate: request.shipmentDate,
       currency: 'USD',
     };
@@ -228,7 +251,7 @@ export class FreightService {
         origin: request.origin,
         destination: request.destination,
         cargoDetails: { weight: request.weight, pieces: 1, containerType: request.containerType },
-        transportMode: 'OCEAN',
+        transportMode: TransportMode.OCEAN,
         incoterms: request.incoterms,
       },
       userId,
@@ -256,7 +279,7 @@ export class FreightService {
 
     return {
       rates,
-      transportMode: 'OCEAN',
+      transportMode: TransportMode.OCEAN,
       currency: 'USD',
       totalQuotes: rates.length,
       filtered: false,
