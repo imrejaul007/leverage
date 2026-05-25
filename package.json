@@ -1,0 +1,26 @@
+{
+  "name": "leverage-by-lerar",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/api",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "dev:ai": "cd apps/ai && pip install -r requirements.txt && uvicorn src.main:app --reload",
+    "dev:api": "cd apps/api && npm run start:dev",
+    "dev:web": "cd apps/web && npm run dev"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0"
+  }
+}

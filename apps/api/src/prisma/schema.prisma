@@ -1,0 +1,1927 @@
+// Leverage by Lerar - Complete Database Schema
+// Global Trade Operating System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String?
+  firstName     String
+  lastName      String
+  phone         String?
+  avatar        String?
+  isEmailVerified Boolean  @default(false)
+  isPhoneVerified  Boolean  @default(false)
+  isMfaEnabled     Boolean  @default(false)
+  mfaSecret       String?
+  status        UserStatus @default(PENDING)
+  role          UserRole    @default(BUYER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  company       Company?
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  kycDocuments  CompanyDocument[]
+
+  @@index([email])
+  @@index([status])
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  EXPORTER
+  IMPORTER
+  MANUFACTURER
+  FREIGHT_FORWARDER
+  CONSULTANT
+  BUYER
+  BUYER_PENDING
+  GOVERNMENT_OFFICIAL
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String   @unique
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([refreshToken])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  resource  String?
+  resourceId String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ============================================
+// COMPANY & KYC
+// ============================================
+
+model Company {
+  id              String   @id @default(uuid())
+  name            String
+  legalName       String?
+  logo            String?
+  description     String?
+  website         String?
+  email           String
+  phone           String?
+  address         Json?
+
+  // Business Registration
+  gstin           String?  @unique
+  iec             String?  @unique
+  pan             String?
+  tan             String?
+
+  // Profile
+  businessType    BusinessType?
+  employeeCount   EmployeeCount?
+  annualRevenue   RevenueRange?
+
+  // Verification
+  verificationStatus VerificationStatus @default(PENDING)
+  isVerified      Boolean  @default(false)
+  verifiedAt      DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  owner           User     @relation(fields: [ownerId], references: [id])
+  ownerId         String   @unique
+
+  members         CompanyMember[]
+  products        Product[]
+  documents       CompanyDocument[]
+  kycStatus       KycStatus?
+
+  // Billing & Ads
+  subscription    Subscription?
+  adCredits       AdCredit?
+
+  // Profiles
+  companyProfile  CompanyProfile?
+
+  // Analytics
+  dashboardMetrics DashboardMetric[]
+
+  @@index([name])
+  @@index([gstin])
+  @@index([iec])
+}
+
+enum BusinessType {
+  MANUFACTURER
+  EXPORTER
+  IMPORTER
+  TRADING_COMPANY
+  FREIGHT_FORWARDER
+  CONSULTANT
+  OTHER
+}
+
+enum EmployeeCount {
+  MICRO       // 1-10
+  SMALL       // 11-50
+  MEDIUM      // 51-200
+  LARGE       // 201-1000
+  ENTERPRISE  // 1000+
+}
+
+enum RevenueRange {
+  BELOW_1_CR
+  ONE_TO_TEN_CR
+  TEN_TO_HUNDRED_CR
+  ABOVE_HUNDRED_CR
+}
+
+enum VerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  VERIFIED
+  REJECTED
+}
+
+model CompanyMember {
+  id         String   @id @default(uuid())
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  role       CompanyRole @default(MEMBER)
+  status     MemberStatus @default(PENDING)
+  invitedAt  DateTime @default(now())
+  joinedAt   DateTime?
+
+  @@unique([companyId, userId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+enum CompanyRole {
+  OWNER
+  ADMIN
+  MANAGER
+  MEMBER
+  VIEWER
+}
+
+enum MemberStatus {
+  PENDING
+  ACTIVE
+  REMOVED
+}
+
+model CompanyDocument {
+  id         String   @id @default(uuid())
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  type       DocumentType
+  name       String
+  url        String
+  status     VerificationStatus @default(PENDING)
+  verifiedAt DateTime?
+  expiresAt  DateTime?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([companyId])
+  @@index([type])
+}
+
+enum DocumentType {
+  GST_CERTIFICATE
+  IEC
+  PAN_CARD
+  ADDRESS_PROOF
+  BANK_STATEMENT
+  MOA_AOA
+  PARTNERSHIP_DEED
+  IMPORT_LICENSE
+  EXPORT_LICENSE
+  ISO_CERTIFICATE
+  OTHER
+}
+
+model KycStatus {
+  id              String   @id @default(uuid())
+  companyId       String   @unique
+  company         Company  @relation(fields: [companyId], references: [id])
+  gstinStatus     VerificationStatus @default(PENDING)
+  iecStatus       VerificationStatus @default(PENDING)
+  documentsStatus VerificationStatus @default(PENDING)
+  overallStatus   VerificationStatus @default(PENDING)
+  rejectionReason String?
+  verifiedAt      DateTime?
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// PRODUCTS & MARKETPLACE
+// ============================================
+
+model Product {
+  id              String   @id @default(uuid())
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id])
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+
+  name            String
+  slug            String   @unique
+  description     String?
+  shortDescription String?
+  sku             String?
+  hsCode          String?
+
+  price           Decimal? @db.Decimal(12, 2)
+  currency        String   @default("USD")
+  moq             Int      @default(1)
+  maxQuantity     Int?
+
+  weight          Decimal? @db.Decimal(10, 2)
+  weightUnit      String   @default("kg")
+  dimensions      Json?
+
+  images          Json?
+  videos          Json?
+
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  isPublished     Boolean  @default(false)
+
+  viewCount       Int      @default(0)
+  orderCount      Int      @default(0)
+
+  countryRestrictions String[]
+  targetMarkets       String[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+
+  variants        ProductVariant[]
+  rfqs            Rfq[]
+
+  @@index([companyId])
+  @@index([categoryId])
+  @@index([isPublished])
+  @@index([slug])
+}
+
+model ProductVariant {
+  id           String   @id @default(uuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  sku          String?
+  name         String
+  price        Decimal? @db.Decimal(12, 2)
+  inventory    Int      @default(0)
+  attributes   Json
+
+  isActive     Boolean  @default(true)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([productId, sku])
+  @@index([productId])
+}
+
+model Category {
+  id           String   @id @default(uuid())
+  parentId     String?
+  parent       Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children     Category[] @relation("CategoryHierarchy")
+
+  name         String
+  slug         String   @unique
+  description  String?
+  icon         String?
+  image        String?
+
+  sortOrder    Int      @default(0)
+  isActive     Boolean  @default(true)
+
+  productCount Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  products     Product[]
+
+  @@index([parentId])
+  @@index([slug])
+}
+
+model Rfq {
+  id           String   @id @default(uuid())
+  userId       String
+  companyId    String
+  productId    String?
+  product      Product?  @relation(fields: [productId], references: [id])
+
+  title        String
+  description  String
+  categoryId   String?
+
+  quantity     Int
+  unit         String   @default("units")
+
+  targetPrice  Decimal? @db.Decimal(12, 2)
+  currency     String   @default("USD")
+
+  deliveryLocation String?
+  deliveryCountry  String
+  deliveryDeadline DateTime?
+
+  status       RfqStatus @default(OPEN)
+  responseCount Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  expiresAt   DateTime?
+
+  responses    RfqResponse[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum RfqStatus {
+  DRAFT
+  OPEN
+  IN_REVIEW
+  CLOSED
+  AWARDED
+  EXPIRED
+  CANCELLED
+}
+
+model RfqResponse {
+  id           String   @id @default(uuid())
+  rfqId        String
+  rfq          Rfq      @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+
+  companyId    String
+  userId       String
+
+  price        Decimal  @db.Decimal(12, 2)
+  currency     String   @default("USD")
+
+  leadTimeDays Int?
+  validUntil   DateTime?
+
+  notes        String?
+
+  isAccepted   Boolean  @default(false)
+  isPreferred  Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([rfqId])
+  @@index([companyId])
+}
+
+// ============================================
+// ORDERS & PAYMENTS
+// ============================================
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique
+
+  buyerId         String
+  buyerCompanyId  String
+  sellerId        String
+  sellerCompanyId String
+
+  status          OrderStatus @default(PENDING)
+  type            OrderType   @default(STANDARD)
+
+  subtotal        Decimal  @db.Decimal(14, 2)
+  taxAmount       Decimal  @db.Decimal(12, 2)
+  shippingCost    Decimal  @db.Decimal(12, 2) @default(0)
+  discountAmount  Decimal  @db.Decimal(12, 2) @default(0)
+  totalAmount     Decimal  @db.Decimal(14, 2)
+
+  currency        String   @default("USD")
+
+  shippingAddress Json
+  billingAddress  Json?
+
+  notes           String?
+  internalNotes   String?
+
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentDueDate DateTime?
+
+  expectedDelivery DateTime?
+  actualDelivery   DateTime?
+
+  rfqId           String?
+  source          OrderSource @default(MARKETPLACE)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime?
+
+  items           OrderItem[]
+  invoices        Invoice[]
+  shipments       Shipment[]
+  transactions    PaymentTransaction[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([orderNumber])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  IN_TRANSIT
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  DISPUTED
+}
+
+enum OrderType {
+  STANDARD
+  RFQ
+  RECURRING
+  SAMPLE
+}
+
+enum OrderSource {
+  MARKETPLACE
+  DIRECT
+  RFQ
+  REORDER
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  REFUNDED
+  PARTIAL_REFUND
+  FAILED
+  DISPUTED
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId    String?
+  variantId    String?
+
+  name         String
+  sku          String?
+  description  String?
+
+  quantity     Int
+  unit         String   @default("units")
+  unitPrice    Decimal  @db.Decimal(12, 2)
+  totalPrice   Decimal  @db.Decimal(12, 2)
+
+  currency     String   @default("USD")
+
+  hsCode       String?
+  countryOrigin String?
+
+  weight       Decimal? @db.Decimal(10, 2)
+  weightUnit   String?
+
+  metadata     Json?
+
+  createdAt    DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model PaymentTransaction {
+  id             String   @id @default(uuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id])
+
+  provider       PaymentProvider
+  providerTransactionId String?
+
+  type           PaymentType
+  amount         Decimal  @db.Decimal(12, 2)
+  currency       String   @default("USD")
+
+  status         TransactionStatus @default(PENDING)
+
+  paymentMethod  String?
+  cardLast4      String?
+  cardBrand      String?
+
+  metadata       Json?
+  errorMessage   String?
+
+  initiatedAt    DateTime @default(now())
+  completedAt    DateTime?
+  failedAt       DateTime?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([provider])
+  @@index([status])
+}
+
+enum PaymentProvider {
+  STRIPE
+  RAZORPAY
+  PAYPAL
+  BANK_TRANSFER
+  ESCROW
+}
+
+enum PaymentType {
+  PAYMENT
+  REFUND
+  PARTIAL_REFUND
+  DISPUTE_REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Invoice {
+  id             String   @id @default(uuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id])
+
+  invoiceNumber  String   @unique
+  type           InvoiceType
+
+  buyerCompany   Json
+  sellerCompany  Json
+  shipFrom       Json?
+  shipTo         Json?
+
+  items          Json
+
+  subtotal       Decimal  @db.Decimal(14, 2)
+  taxBreakdown    Json
+  taxAmount       Decimal  @db.Decimal(12, 2)
+  discountAmount  Decimal  @db.Decimal(12, 2) @default(0)
+  shippingCost    Decimal  @db.Decimal(12, 2) @default(0)
+  totalAmount     Decimal  @db.Decimal(14, 2)
+
+  currency       String   @default("USD")
+
+  terms          String?
+  notes          String?
+
+  dueDate        DateTime?
+  paidAt         DateTime?
+  sentAt         DateTime?
+
+  pdfUrl         String?
+
+  status         InvoiceStatus @default(DRAFT)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([invoiceNumber])
+  @@index([status])
+}
+
+enum InvoiceType {
+  PROFORMA
+  COMMERCIAL
+  TAX
+  CREDIT_NOTE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  VIEWED
+  PARTIAL_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+// ============================================
+// DOCUMENTS
+// ============================================
+
+model TradeDocument {
+  id             String   @id @default(uuid())
+
+  type           DocumentCategory
+  referenceType  DocumentRefType
+  referenceId    String?
+
+  number         String?
+  version        Int      @default(1)
+
+  title          String
+  description    String?
+
+  generatedFor   Json
+  generatedBy    Json
+
+  content        Json?
+  htmlContent    String?
+
+  fileUrl        String?
+  fileSize       Int?
+  mimeType       String?
+
+  signatures     Json?
+
+  isValidated    Boolean  @default(false)
+  validationResult Json?
+  complianceFlags Json?
+
+  metadata       Json?
+
+  status         DocumentStatus @default(DRAFT)
+
+  expiresAt      DateTime?
+  effectiveDate  DateTime?
+
+  createdBy      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  @@index([type])
+  @@index([referenceType, referenceId])
+  @@index([createdBy])
+}
+
+enum DocumentCategory {
+  COMMERCIAL_INVOICE
+  PACKING_LIST
+  BILL_OF_LADING
+  AIR_WAYBILL
+  SEA_WAYBILL
+  CERTIFICATE_OF_ORIGIN
+  CERTIFICATE_OF_ANALYSIS
+  SHIPPING_BILL
+  EXPORT_DECLARATION
+  IMPORT_DECLARATION
+  INSURANCE_CERTIFICATE
+  LETTER_OF_CREDIT
+  BILL_OF_ENTRY
+  DELIVERY_ORDER
+  GOODS_DECLARATION
+  PHYTOSANITARY
+  FUMIGATION_CERTIFICATE
+  CONSULAR_INVOICE
+  CUSTOMS_INVOICE
+  PACKING_DECLARATION
+  SHIPPER_LETTER_OF_INSTRUCTIONS
+  DANGEROUS_GOODS_DECLARATION
+}
+
+enum DocumentRefType {
+  ORDER
+  SHIPMENT
+  PURCHASE_ORDER
+  INVOICE
+  QUOTE
+  RFQ
+}
+
+enum DocumentStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  PENDING_VALIDATION
+  VALIDATED
+  SIGNED
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+model DocumentTemplate {
+  id           String   @id @default(uuid())
+  name         String
+  type         DocumentCategory
+  description  String?
+
+  handlebars   String
+  css          String?
+
+  variables    Json
+
+  isDefault    Boolean  @default(false)
+  isActive     Boolean  @default(true)
+
+  companyId    String?
+
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+  @@index([companyId])
+}
+
+// ============================================
+// FREIGHT & LOGISTICS
+// ============================================
+
+model FreightQuote {
+  id             String   @id @default(uuid())
+  userId         String
+  companyId      String
+
+  carrierId      String
+
+  origin         Json
+  destination    Json
+
+  cargoDetails   Json
+
+  incoterms      String?
+
+  transportMode  TransportMode
+  serviceType    String?
+
+  transitDays    Int?
+  departureDate  DateTime?
+  arrivalDate    DateTime?
+
+  baseRate       Decimal  @db.Decimal(12, 2)
+  surcharges     Json
+  fuelSurcharge  Decimal  @db.Decimal(10, 2)
+  originCharges  Decimal  @db.Decimal(10, 2)
+  destCharges    Decimal  @db.Decimal(10, 2)
+  totalRate      Decimal  @db.Decimal(12, 2)
+
+  currency       String   @default("USD")
+
+  validUntil     DateTime
+
+  quoteData      Json
+
+  status         QuoteStatus @default(ACTIVE)
+
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@index([userId])
+  @@index([carrierId])
+}
+
+enum TransportMode {
+  OCEAN
+  AIR
+  TRUCK
+  RAIL
+  MULTIMODAL
+  COURIER
+}
+
+enum QuoteStatus {
+  ACTIVE
+  EXPIRED
+  BOOKED
+  CANCELLED
+}
+
+model Carrier {
+  id             String   @id @default(uuid())
+  name           String
+  code           String   @unique
+
+  type           CarrierType[]
+  logo           String?
+  website        String?
+
+  contactEmail   String?
+  supportPhone   String?
+
+  apiProvider    String?
+  apiConfig      Json?
+
+  isActive       Boolean  @default(true)
+
+  rating         Decimal? @db.Decimal(3, 2)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([code])
+}
+
+enum CarrierType {
+  AIRLINE
+  SHIPPING_LINE
+  TRUCKING
+  RAIL
+  COURIER
+  FREIGHT_FORWARDER
+  EXPRESS
+}
+
+model Shipment {
+  id             String   @id @default(uuid())
+  orderId        String?
+
+  userId         String
+  companyId      String
+
+  carrierId      String?
+
+  shipmentNumber String   @unique
+
+  origin         Json
+  destination    Json
+
+  cargoDetails   Json
+  incoterms      String
+
+  transportMode  TransportMode
+  serviceType    String?
+
+  status         ShipmentStatus @default(DRAFT)
+
+  pickupDate     DateTime?
+  deliveryDate   DateTime?
+
+  blNumber       String?
+  trackingNumber String?
+
+  documents      Json?
+
+  customsStatus  CustomsStatus @default(PENDING)
+  customsDocs    Json?
+
+  shippingCost   Decimal? @db.Decimal(12, 2)
+  currency       String   @default("USD")
+
+  insurancePolicyId String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  completedAt    DateTime?
+
+  containers     ContainerBooking[]
+  trackingEvents ShipmentTracking[]
+
+  @@index([userId])
+  @@index([carrierId])
+  @@index([shipmentNumber])
+}
+
+enum ShipmentStatus {
+  DRAFT
+  BOOKED
+  PICKED_UP
+  IN_TRANSIT
+  CUSTOMS_CLEARANCE
+  OUT_FOR_DELIVERY
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  EXCEPTION
+}
+
+enum CustomsStatus {
+  PENDING
+  SUBMITTED
+  UNDER_REVIEW
+  CLEARED
+  EXAMINED
+  HOLD
+  RELEASED
+  DENIED
+}
+
+model ContainerBooking {
+  id             String   @id @default(uuid())
+  shipmentId      String
+  shipment        Shipment @relation(fields: [shipmentId], references: [id])
+
+  containerNumber String?
+  containerType   ContainerType
+
+  sealNumber     String?
+  bookingNumber  String?
+
+  status         ContainerStatus @default(BOOKED)
+
+  vesselName     String?
+  voyageNumber   String?
+
+  POL            String?
+  POD            String?
+
+  etd            DateTime?
+  eta            DateTime?
+
+  atd            DateTime?
+  ata            DateTime?
+
+  releaseDate    DateTime?
+  returnDueDate DateTime?
+
+  charges        Json
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([shipmentId])
+  @@index([containerNumber])
+}
+
+enum ContainerType {
+  FCL_20FT
+  FCL_40FT
+  FCL_40FT_HC
+  FCL_45FT
+  LCL
+  REEFER_20FT
+  REEFER_40FT
+  OPEN_TOP
+  FLAT_RACK
+  TANK
+  BULK
+}
+
+enum ContainerStatus {
+  BOOKED
+  CONFIRMED
+  EMPTY_PICKED_UP
+  LOADED
+  IN_TRANSIT
+  ARRIVED
+  CUSTOMS_HOLD
+  RELEASED
+  DELIVERED
+  RETURNED
+}
+
+model ShipmentTracking {
+  id           String   @id @default(uuid())
+  shipmentId   String
+  shipment     Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  status       String
+  substatus    String?
+
+  location     Json?
+  coordinates  Json?
+
+  description  String
+  remarks      String?
+
+  eventTime    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([shipmentId])
+  @@index([eventTime])
+}
+
+model InsurancePolicy {
+  id             String   @id @default(uuid())
+  shipmentId     String?
+
+  policyNumber   String   @unique
+
+  provider       String
+  providerPolicyId String?
+
+  insuredAmount  Decimal  @db.Decimal(12, 2)
+  currency       String   @default("USD")
+
+  premium        Decimal  @db.Decimal(10, 2)
+
+  cargoDetails   Json
+
+  coverage       Json
+
+  beneficiary    Json
+
+  status         InsuranceStatus @default(ACTIVE)
+
+  effectiveDate  DateTime
+  expiryDate     DateTime
+
+  claimStatus    ClaimStatus?
+  claimDetails   Json?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([shipmentId])
+}
+
+enum InsuranceStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  CLAIMED
+}
+
+enum ClaimStatus {
+  NOT_APPLICABLE
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  DENIED
+  SETTLED
+}
+
+// ============================================
+// COMPLIANCE
+// ============================================
+
+model HsCode {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  chapter      String
+  heading      String
+  subheading   String
+
+  description  String
+  descriptionArabic String?
+
+  isActive     Boolean  @default(true)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  dutyRates    DutyRate[]
+  restrictions HsCodeRestriction[]
+
+  @@index([code])
+}
+
+model DutyRate {
+  id           String   @id @default(uuid())
+  hsCodeId     String
+  hsCode       HsCode   @relation(fields: [hsCodeId], references: [id])
+
+  countryCode  String
+  effectiveDate DateTime
+  expiryDate   DateTime?
+
+  basicDuty    Decimal? @db.Decimal(6, 2)
+  additionalDuty Decimal? @db.Decimal(6, 2)
+  safeguardDuty Decimal? @db.Decimal(6, 2)
+  antiDumpingDuty Decimal? @db.Decimal(6, 2)
+
+  unit         String?
+  unitQuantity Decimal?
+
+  preferentialRate Decimal? @db.Decimal(6, 2)
+  ftaAgreement String?
+
+  notes        String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([hsCodeId])
+  @@index([countryCode])
+}
+
+model SanctionsList {
+  id           String   @id @default(uuid())
+  listType     SanctionsListType
+  entityId     String?
+  name         String
+  nameVariants Json?
+  alias        String[]
+
+  entityType   EntityType
+
+  address      Json?
+  country      String?
+
+  nationalId   String?
+  passport     String?
+  taxId        String?
+
+  birthDate    DateTime?
+  deathDate    DateTime?
+
+  ofac         Boolean  @default(false)
+  unSecurity   Boolean  @default(false)
+  eu           Boolean  @default(false)
+  uk           Boolean  @default(false)
+
+  isActive     Boolean  @default(true)
+  delistedAt   DateTime?
+
+  lastReviewed DateTime?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([name])
+  @@index([ofac])
+  @@index([unSecurity])
+}
+
+enum SanctionsListType {
+  OFAC_SDN
+  OFAC_CONS
+  UN_SECURITY_COUNCIL
+  EU_CONSOLIDATED
+  UK_HMT
+}
+
+enum EntityType {
+  INDIVIDUAL
+  ORGANIZATION
+  VESSEL
+  AIRCRAFT
+  ENTITY
+}
+
+model HsCodeRestriction {
+  id           String   @id @default(uuid())
+  hsCodeId     String
+  hsCode       HsCode   @relation(fields: [hsCodeId], references: [id])
+
+  countryCode  String
+  type        RestrictionType
+
+  description  String
+  requirement  String?
+
+  authority    String?
+  licenseRequired Boolean @default(false)
+  permitRequired Boolean @default(false)
+  certificateRequired Boolean @default(false)
+
+  sourceUrl    String?
+
+  validFrom    DateTime?
+  validUntil   DateTime?
+
+  createdAt    DateTime @default(now())
+
+  @@index([hsCodeId])
+  @@index([countryCode])
+}
+
+enum RestrictionType {
+  PROHIBITED
+  RESTRICTED
+  LICENSE_REQUIRED
+  PERMIT_REQUIRED
+  QUOTA
+  SPECIAL_REQUIREMENT
+}
+
+model ComplianceCheck {
+  id           String   @id @default(uuid())
+
+  checkType    ComplianceCheckType
+
+  companyId    String?
+  userId       String?
+
+  input        Json
+
+  result       Json
+  status       ComplianceStatus
+
+  riskScore    Int?
+  riskLevel    RiskLevel?
+
+  flags        Json?
+
+  passed       Boolean
+  issues       Json?
+
+  checkedAt    DateTime @default(now())
+
+  @@index([checkType])
+  @@index([companyId])
+}
+
+enum ComplianceCheckType {
+  SANCTIONS_SCREEN
+  HS_CLASSIFICATION
+  DUTY_CALCULATION
+  RESTRICTION_CHECK
+  LICENSE_CHECK
+  DOCUMENT_CHECK
+}
+
+enum ComplianceStatus {
+  PASSED
+  FAILED
+  WARNING
+  REVIEW_REQUIRED
+  ERROR
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ============================================
+// NETWORKING & SOCIAL
+// ============================================
+
+model CompanyProfile {
+  id           String   @id @default(uuid())
+  companyId    String   @unique
+  company      Company  @relation(fields: [companyId], references: [id])
+
+  headline     String?
+  about        String?
+
+  coverImage   String?
+  coverVideo   String?
+
+  specialties  String[]
+  certifications String[]
+  exportMarkets String[]
+  importMarkets String[]
+
+  followersCount Int      @default(0)
+  followingCount Int      @default(0)
+  postsCount     Int      @default(0)
+  viewsCount     Int      @default(0)
+
+  linkedinUrl   String?
+  twitterUrl    String?
+  facebookUrl   String?
+  websiteUrl    String?
+
+  isFeatured    Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  followers     CompanyFollow[]
+  following     CompanyFollow[]
+  posts         Post[]
+}
+
+model CompanyFollow {
+  id           String   @id @default(uuid())
+  followerId   String
+  followingId  String
+
+  createdAt    DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Post {
+  id           String   @id @default(uuid())
+
+  authorId     String
+  author       CompanyProfile @relation(fields: [authorId], references: [id])
+
+  content      String
+
+  media        Json?
+
+  likesCount   Int      @default(0)
+  commentsCount Int     @default(0)
+  sharesCount  Int      @default(0)
+  viewsCount   Int      @default(0)
+
+  hashtags     String[]
+  mentions     String[]
+
+  type         PostType @default(STANDARD)
+  status       PostStatus @default(PUBLISHED)
+
+  communityId  String?
+  community    Community? @relation(fields: [communityId], references: [id])
+
+  isPinned     Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  publishedAt  DateTime?
+
+  @@index([authorId])
+  @@index([communityId])
+  @@index([createdAt])
+}
+
+enum PostType {
+  STANDARD
+  ANNOUNCEMENT
+  JOB_POSTING
+  EVENT
+  POLL
+  QUESTION
+  SHOWCASE
+  PARTNERSHIP
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+model Comment {
+  id           String   @id @default(uuid())
+  postId       String
+
+  parentId     String?
+  parent       Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies      Comment[] @relation("CommentReplies")
+
+  userId       String
+  content      String
+
+  likesCount   Int      @default(0)
+
+  isEdited     Boolean  @default(false)
+  isDeleted    Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([postId])
+  @@index([parentId])
+}
+
+model PostLike {
+  id           String   @id @default(uuid())
+  postId       String
+  userId       String
+
+  createdAt    DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([postId])
+}
+
+model Community {
+  id           String   @id @default(uuid())
+
+  name         String
+  slug         String   @unique
+  description  String?
+
+  type         CommunityType
+  category     String?
+
+  icon         String?
+  coverImage   String?
+
+  rules        String?
+
+  isPrivate    Boolean  @default(false)
+  isVerified   Boolean  @default(false)
+
+  membersCount Int      @default(0)
+  postsCount   Int      @default(0)
+
+  createdBy    String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([slug])
+}
+
+enum CommunityType {
+  INDUSTRY
+  REGIONAL
+  TRADE_LANE
+  PRODUCT
+  GENERAL
+}
+
+model CommunityMember {
+  id           String   @id @default(uuid())
+  communityId  String
+  community    Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  userId       String
+  companyId    String?
+
+  role         CommunityRole @default(MEMBER)
+
+  joinedAt     DateTime @default(now())
+
+  @@unique([communityId, userId])
+  @@index([communityId])
+  @@index([userId])
+}
+
+enum CommunityRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+// ============================================
+// MESSAGING
+// ============================================
+
+model Conversation {
+  id           String   @id @default(uuid())
+
+  type         ConversationType
+
+  participants Json
+
+  lastMessageAt DateTime?
+
+  unreadCounts Json?
+
+  isArchived   Boolean  @default(false)
+  isPinned     Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([lastMessageAt])
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+  TRADE
+  SUPPORT
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId       String
+  senderType     SenderType
+
+  content        String
+
+  contentType    ContentType @default(TEXT)
+  metadata       Json?
+
+  replyToId      String?
+
+  status         MessageStatus @default(SENT)
+
+  reactions      Json?
+
+  isEdited       Boolean  @default(false)
+  isDeleted      Boolean  @default(false)
+
+  sentAt         DateTime @default(now())
+  readAt         DateTime?
+
+  @@index([conversationId])
+  @@index([sentAt])
+}
+
+enum SenderType {
+  USER
+  BOT
+  SYSTEM
+}
+
+enum ContentType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+  TRADE_INQUIRY
+  QUOTE
+}
+
+enum MessageStatus {
+  SENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id           String   @id @default(uuid())
+  userId       String
+
+  type         NotificationType
+  title        String
+  message      String
+
+  data         Json?
+
+  isRead       Boolean  @default(false)
+  readAt       DateTime?
+
+  createdAt    DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  POST_LIKED
+  POST_COMMENTED
+  NEW_FOLLOWER
+  NEW_MESSAGE
+  ORDER_UPDATE
+  PAYMENT_RECEIVED
+  NEW_RFQ_RESPONSE
+  KYC_UPDATE
+  COMPLIANCE_ALERT
+}
+
+// ============================================
+// AI & CHAT
+// ============================================
+
+model AiConversation {
+  id           String   @id @default(uuid())
+  userId       String
+
+  title        String?
+  context      Json?
+
+  lastMessage  String?
+  messageCount Int      @default(0)
+
+  metadata     Json?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  endedAt      DateTime?
+
+  messages     AiMessage[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AiMessage {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role           MessageRole
+  content        String
+
+  tokens         Int?
+  model          String?
+
+  citations      Json?
+  confidence     Float?
+
+  metadata       Json?
+
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model FraudSignal {
+  id           String   @id @default(uuid())
+
+  type         FraudType
+  severity     FraudSeverity
+
+  entityType   String
+  entityId     String
+
+  description  String
+  evidence     Json?
+
+  confidence   Float
+
+  status       FraudStatus @default(DETECTED)
+
+  resolvedBy   String?
+  resolvedAt   DateTime?
+  resolution   String?
+
+  createdAt    DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([severity])
+}
+
+enum FraudType {
+  ACCOUNT_TAKEOVER
+  PAYMENT_FRAUD
+  IDENTITY_THEFT
+  SHIPPING_FRAUD
+  SANCTIONS_EVASION
+  TRADE_BASED_MONEY_LAUNDERING
+  PHISHING
+  FAKE_LISTING
+  FAKE_REVIEW
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FraudStatus {
+  DETECTED
+  REVIEWING
+  CONFIRMED
+  FALSE_POSITIVE
+  RESOLVED
+}
+
+// ============================================
+// ANALYTICS
+// ============================================
+
+model AnalyticsEvent {
+  id           String   @id @default(uuid())
+
+  eventType    String
+  eventName    String
+
+  userId       String?
+  sessionId    String?
+  companyId    String?
+
+  properties    Json
+
+  userAgent    String?
+
+  timestamp    DateTime @default(now())
+
+  page         String?
+  referrer     String?
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([companyId])
+  @@index([timestamp])
+}
+
+model DashboardMetric {
+  id           String   @id @default(uuid())
+
+  companyId    String?
+  company      Company? @relation(fields: [companyId], references: [id])
+
+  metricType   String
+  period       String
+
+  value        Decimal  @db.Decimal(20, 4)
+  previousValue Decimal?
+
+  change       Decimal?
+
+  date         DateTime
+
+  @@unique([companyId, metricType, period, date])
+  @@index([companyId])
+  @@index([date])
+}
+
+// ============================================
+// ADS & ADVERTISING
+// ============================================
+
+model AdCampaign {
+  id           String   @id @default(uuid())
+
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id])
+
+  name         String
+  type         AdType
+
+  status       AdStatus @default(DRAFT)
+
+  targeting    Json
+
+  budget       Decimal  @db.Decimal(12, 2)
+  dailyBudget  Decimal?
+  spent        Decimal  @default(0)
+
+  bidType      BidType @default(CPC)
+  bidAmount    Decimal?
+
+  startDate    DateTime
+  endDate      DateTime?
+
+  impressions  Int      @default(0)
+  clicks       Int      @default(0)
+  conversions  Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([status])
+}
+
+enum AdType {
+  SPONSORED_LISTING
+  BANNER
+  RFQ_PROMOTION
+  BRAND_VIDEO
+  CAROUSEL
+  TEXT_AD
+  INTERSTITIAL
+}
+
+enum AdStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PAUSED
+  RUNNING
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+enum BidType {
+  CPC
+  CPM
+  CPA
+  FLAT_RATE
+}
+
+model AdCredit {
+  id           String   @id @default(uuid())
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id])
+
+  balance      Decimal  @db.Decimal(12, 2)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([companyId])
+}
+
+// ============================================
+// BILLING & SUBSCRIPTIONS
+// ============================================
+
+model Subscription {
+  id           String   @id @default(uuid())
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id])
+
+  planId       String
+
+  stripeSubscriptionId String?
+  stripeCustomerId    String?
+
+  status       SubscriptionStatus @default(TRIAL)
+
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+
+  cancelAtPeriodEnd   Boolean @default(false)
+  cancelledAt         DateTime?
+  cancellationReason String?
+
+  trialEndsAt        DateTime?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([companyId])
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}
+
+model Plan {
+  id           String   @id @default(uuid())
+
+  name         String
+  slug         String   @unique
+
+  description  String?
+
+  type         PlanType
+
+  price        Decimal  @db.Decimal(10, 2)
+  currency     String   @default("USD")
+  interval     BillingInterval @default(MONTHLY)
+
+  features     Json
+
+  limits       Json
+
+  adCredits    Decimal?
+
+  isActive     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+
+  stripePriceId String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+}
+
+enum PlanType {
+  FREE
+  STARTER
+  PROFESSIONAL
+  BUSINESS
+  ENTERPRISE
+}
+
+enum BillingInterval {
+  MONTHLY
+  YEARLY
+  QUARTERLY
+}

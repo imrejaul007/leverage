@@ -1,0 +1,72 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+dist/
+build/
+.turbo/
+out/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfplan
+
+# Kubernetes
+kubeconfig*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+.eggs/
+*.egg-info/
+*.egg
+
+# Docker
+.docker/
+
+# Misc
+*.local
+.cache/
+.vercel/
+.telescope/

@@ -1,0 +1,775 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// FREIGHT & LOGISTICS MODELS
+// ============================================
+
+model FreightQuote {
+  id             String   @id @default(uuid())
+  userId         String
+  companyId      String
+
+  carrierId      String
+  carrier        Carrier  @relation(fields: [carrierId], references: [id])
+
+  origin         Json     // {country, port, city, type}
+  destination    Json     // {country, port, city, type}
+
+  cargoDetails   Json     // {weight, volume, pieces, containerType}
+
+  incoterms      String?
+
+  transportMode  TransportMode
+  serviceType    String?
+
+  transitDays    Int?
+  departureDate  DateTime?
+  arrivalDate    DateTime?
+
+  // Rates
+  baseRate       Decimal  @db.Decimal(12, 2)
+  surcharges     Json     // [{name, amount}]
+  fuelSurcharge  Decimal  @db.Decimal(10, 2)
+  originCharges  Decimal  @db.Decimal(10, 2)
+  destCharges    Decimal  @db.Decimal(10, 2)
+  totalRate      Decimal  @db.Decimal(12, 2)
+
+  currency       String   @default("USD")
+
+  validUntil     DateTime
+
+  quoteData      Json     // Full carrier response
+
+  status         QuoteStatus @default(ACTIVE)
+
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@index([userId])
+  @@index([carrierId])
+  @@index([status])
+}
+
+enum TransportMode {
+  OCEAN
+  AIR
+  TRUCK
+  RAIL
+  MULTIMODAL
+  COURIER
+}
+
+enum QuoteStatus {
+  ACTIVE
+  EXPIRED
+  BOOKED
+  CANCELLED
+}
+
+model Carrier {
+  id             String   @id @default(uuid())
+  name           String
+  code           String   @unique  // DHL, FEDEX, MAERSK
+
+  type           CarrierType[]
+  logo           String?
+  website        String?
+
+  contactEmail   String?
+  supportPhone   String?
+
+  // Integration
+  apiProvider    String?  // DHL, FREIGHTOS, etc.
+  apiConfig      Json?
+
+  isActive       Boolean  @default(true)
+
+  rating         Decimal? @db.Decimal(3, 2)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  quotes         FreightQuote[]
+  shipments      Shipment[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+enum CarrierType {
+  AIRLINE
+  SHIPPING_LINE
+  TRUCKING
+  RAIL
+  COURIER
+  FREIGHT_FORWARDER
+  EXPRESS
+}
+
+model ContainerBooking {
+  id             String   @id @default(uuid())
+  shipmentId      String
+  shipment        Shipment @relation(fields: [shipmentId], references: [id])
+
+  containerNumber String?
+  containerType   ContainerType
+
+  sealNumber     String?
+
+  bookingNumber  String?
+  bookingConfirmation String?
+
+  carrierBookingRef String?
+
+  status         ContainerStatus @default(BOOKED)
+
+  vesselName     String?
+  voyageNumber   String?
+
+  POL            String?  // Port of Loading
+  POD            String?  // Port of Discharge
+
+  etd            DateTime? // Estimated Time of Departure
+  eta            DateTime? // Estimated Time of Arrival
+
+  atd            DateTime? // Actual Time of Departure
+  ata            DateTime? // Actual Time of Arrival
+
+  emptyPickupDate DateTime?
+  cargoReceiptDate DateTime?
+
+  releaseDate    DateTime?
+  returnDueDate  DateTime?
+
+  charges        Json     // Charges breakdown
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([shipmentId])
+  @@index([containerNumber])
+}
+
+enum ContainerType {
+  FCL_20FT
+  FCL_40FT
+  FCL_40FT_HC
+  FCL_45FT
+  LCL
+  REEFER_20FT
+  REEFER_40FT
+  OPEN_TOP
+  FLAT_RACK
+  TANK
+  BULK
+}
+
+enum ContainerStatus {
+  BOOKED
+  CONFIRMED
+  EMPTY_PICKED_UP
+  LOADED
+  IN_TRANSIT
+  ARRIVED
+  CUSTOMS_HOLD
+  RELEASED
+  DELIVERED
+  RETURNED
+}
+
+model Shipment {
+  id             String   @id @default(uuid())
+  orderId        String?
+
+  userId         String
+  companyId      String
+
+  carrierId      String?
+  carrier        Carrier? @relation(fields: [carrierId], references: [id])
+
+  shipmentNumber String   @unique  // SHP-2024-XXXXX
+
+  // Route
+  origin         Json     // {country, city, port, address}
+  destination    Json     // {country, city, port, address}
+
+  // Cargo
+  cargoDetails   Json     // {description, hsCode, weight, volume, pieces}
+  incoterms      String
+
+  // Transport
+  transportMode  TransportMode
+  serviceType    String?
+
+  // Status
+  status         ShipmentStatus @default(DRAFT)
+
+  // Dates
+  pickupDate     DateTime?
+  deliveryDate   DateTime?
+
+  // References
+  blNumber       String?  // Bill of Lading
+  trackingNumber String?
+
+  // Documents
+  documents      Json?   // Document URLs
+
+  // Customs
+  customsStatus  CustomsStatus @default(PENDING)
+  customsDocs    Json?
+
+  // Charges
+  shippingCost   Decimal? @db.Decimal(12, 2)
+  currency       String   @default("USD")
+
+  // Insurance
+  insurancePolicyId String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  completedAt    DateTime?
+
+  containers     ContainerBooking[]
+  trackingEvents ShipmentTracking[]
+
+  @@index([userId])
+  @@index([carrierId])
+  @@index([status])
+  @@index([shipmentNumber])
+}
+
+enum ShipmentStatus {
+  DRAFT
+  BOOKED
+  PICKED_UP
+  IN_TRANSIT
+  CUSTOMS_CLEARANCE
+  OUT_FOR_DELIVERY
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  EXCEPTION
+}
+
+enum CustomsStatus {
+  PENDING
+  SUBMITTED
+  UNDER_REVIEW
+  CLEARED
+  EXAMINED
+  HOLD
+  RELEASED
+  DENIED
+}
+
+model ShipmentTracking {
+  id           String   @id @default(uuid())
+  shipmentId   String
+  shipment     Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  carrierId    String?
+
+  status       String
+  substatus    String?
+
+  location     Json?    // {city, country, port}
+  coordinates  Json?    // {lat, lng}
+
+  description  String
+  remarks      String?
+
+  eventTime    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([shipmentId])
+  @@index([eventTime])
+}
+
+model InsurancePolicy {
+  id             String   @id @default(uuid())
+  shipmentId     String?
+
+  policyNumber   String   @unique
+
+  provider       String
+  providerPolicyId String?
+
+  insuredAmount  Decimal  @db.Decimal(12, 2)
+  currency       String   @default("USD")
+
+  premium        Decimal  @db.Decimal(10, 2)
+
+  cargoDetails   Json
+
+  coverage       Json     // What's covered
+
+  beneficiary    Json
+
+  status         InsuranceStatus @default(ACTIVE)
+
+  effectiveDate  DateTime
+  expiryDate     DateTime
+
+  claimStatus    ClaimStatus?
+  claimDetails   Json?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([shipmentId])
+}
+
+enum InsuranceStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  CLAIMED
+}
+
+enum ClaimStatus {
+  NOT_APPLICABLE
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  DENIED
+  SETTLED
+}
+
+// ============================================
+// AI & CHAT MODELS
+// ============================================
+
+model AiConversation {
+  id           String   @id @default(uuid())
+  userId       String
+
+  title        String?
+  context      Json?    // Context data
+
+  lastMessage  String?
+  messageCount Int      @default(0)
+
+  metadata     Json?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  endedAt      DateTime?
+
+  messages     AiMessage[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AiMessage {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role           MessageRole
+  content        String
+
+  tokens         Int?
+  model          String?
+
+  citations      Json?    // Source citations
+  confidence     Float?
+
+  metadata       Json?
+
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model AiEmbedding {
+  id           String   @id @default(uuid())
+
+  documentId   String
+  documentType String
+
+  chunkIndex   Int
+  content      String
+
+  vectorId     String?  // Pinecone ID
+  metadata     Json
+
+  companyId    String?
+  userId       String?
+
+  createdAt    DateTime @default(now())
+
+  @@index([documentId])
+  @@index([documentType])
+}
+
+model FraudSignal {
+  id           String   @id @default(uuid())
+
+  type         FraudType
+  severity     FraudSeverity
+
+  entityType   String   // user, company, order, etc.
+  entityId     String
+
+  description  String
+  evidence     Json?
+
+  confidence   Float    // 0-1
+
+  status       FraudStatus @default(DETECTED)
+
+  resolvedBy   String?
+  resolvedAt   DateTime?
+  resolution   String?
+
+  createdAt    DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([status])
+  @@index([severity])
+}
+
+enum FraudType {
+  ACCOUNT_TAKEOVER
+  PAYMENT_FRAUD
+  IDENTITY_THEFT
+  SHIPPING_FRAUD
+  SANCTIONS_EVASION
+  TRADE_BASED_MONEY_LAUNDERING
+  PHISHING
+  FAKE_LISTING
+  FAKE_REVIEW
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FraudStatus {
+  DETECTED
+  REVIEWING
+  CONFIRMED
+  FALSE_POSITIVE
+  RESOLVED
+}
+
+// ============================================
+// AI AGENT MODELS
+// ============================================
+
+model AiAgent {
+  id           String   @id @default(uuid())
+
+  name         String
+  type         AgentType
+  description  String?
+
+  systemPrompt String
+  model        String   @default("gpt-4o")
+  temperature  Float    @default(0.3)
+  maxTokens    Int      @default(2000)
+
+  tools        Json?    // Available tools
+  skills       Json?    // Capabilities
+
+  isActive     Boolean  @default(true)
+
+  config       Json?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions     AiSession[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+enum AgentType {
+  TRADE_ADVISOR
+  COMPLIANCE_CHECKER
+  HS_CLASSIFIER
+  FRAUD_DETECTOR
+  DOCUMENT_EXTRACTOR
+  CUSTOM
+}
+
+model AiSession {
+  id           String   @id @default(uuid())
+  agentId      String
+  agent        AiAgent  @relation(fields: [agentId], references: [id])
+
+  userId       String
+
+  context      Json?
+  metadata     Json?
+
+  startedAt    DateTime @default(now())
+  endedAt      DateTime?
+
+  messageCount Int      @default(0)
+  tokenUsage   Int      @default(0)
+
+  @@index([agentId])
+  @@index([userId])
+}
+
+// ============================================
+// ANALYTICS MODELS
+// ============================================
+
+model AnalyticsEvent {
+  id           String   @id @default(uuid())
+
+  eventType    String
+  eventName    String
+
+  userId       String?
+  sessionId    String?
+  companyId    String?
+
+  properties    Json
+
+  userAgent    String?
+
+  timestamp    DateTime @default(now())
+
+  page         String?
+  referrer     String?
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([companyId])
+  @@index([timestamp])
+}
+
+model DashboardMetric {
+  id           String   @id @default(uuid())
+
+  companyId    String?
+
+  metricType   String
+  period       String
+
+  value        Decimal  @db.Decimal(20, 4)
+  previousValue Decimal?
+
+  change       Decimal?
+
+  date         DateTime
+
+  @@unique([companyId, metricType, period, date])
+}
+
+// ============================================
+// ADVERTISING MODELS
+// ============================================
+
+model AdCampaign {
+  id           String   @id @default(uuid())
+
+  companyId    String
+
+  name         String
+  type         AdType
+
+  status       AdStatus @default(DRAFT)
+
+  targeting    Json
+
+  budget       Decimal  @db.Decimal(12, 2)
+  dailyBudget  Decimal?
+  spent        Decimal  @default(0)
+
+  bidType      BidType @default(CPC)
+  bidAmount    Decimal?
+
+  startDate    DateTime
+  endDate      DateTime?
+
+  impressions  Int      @default(0)
+  clicks       Int      @default(0)
+  conversions  Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([status])
+}
+
+enum AdType {
+  SPONSORED_LISTING
+  BANNER
+  RFQ_PROMOTION
+  BRAND_VIDEO
+  CAROUSEL
+  TEXT_AD
+  INTERSTITIAL
+}
+
+enum AdStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PAUSED
+  RUNNING
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+enum BidType {
+  CPC
+  CPM
+  CPA
+  FLAT_RATE
+}
+
+model AdCredit {
+  id           String   @id @default(uuid())
+  companyId    String
+
+  balance      Decimal  @db.Decimal(12, 2)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([companyId])
+}
+
+// ============================================
+// BILLING MODELS
+// ============================================
+
+model Subscription {
+  id           String   @id @default(uuid())
+  companyId    String
+
+  planId       String
+
+  stripeSubscriptionId String?
+
+  status       SubscriptionStatus @default(TRIAL)
+
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+
+  cancelAtPeriodEnd   Boolean @default(false)
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([companyId])
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}
+
+model Plan {
+  id           String   @id @default(uuid())
+
+  name         String
+  slug         String   @unique
+
+  type         PlanType
+
+  price        Decimal  @db.Decimal(10, 2)
+  currency     String   @default("USD")
+  interval     BillingInterval @default(MONTHLY)
+
+  features     Json
+
+  limits       Json
+
+  adCredits    Decimal?
+
+  isActive     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+
+  stripePriceId String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+}
+
+enum PlanType {
+  FREE
+  STARTER
+  PROFESSIONAL
+  BUSINESS
+  ENTERPRISE
+}
+
+enum BillingInterval {
+  MONTHLY
+  YEARLY
+  QUARTERLY
+}
+
+model BillingInvoice {
+  id           String   @id @default(uuid())
+  companyId    String
+
+  invoiceNumber String  @unique
+
+  stripeInvoiceId String?
+
+  amount       Decimal
+  tax          Decimal  @default(0)
+  total        Decimal
+
+  currency     String   @default("USD")
+
+  status       InvoiceStatus @default(DRAFT)
+
+  dueDate      DateTime?
+  paidAt       DateTime?
+
+  items        Json
+
+  pdfUrl       String?
+
+  createdAt    DateTime @default(now())
+
+  @@index([companyId])
+  @@index([status])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}

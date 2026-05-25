@@ -1,0 +1,53 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [develop]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build applications
+        run: npm run build
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /app/leverage-by-lerar
+            git pull origin develop
+            npm ci
+            npx prisma generate
+            npx prisma migrate deploy
+            npm run build
+            pm2 restart all
+
+      - name: Run smoke tests
+        run: |
+          sleep 10
+          curl -f https://staging.api.leveragebylerar.com/health || exit 1
