@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { OrderStatus, PaymentStatus } from '../entities/order.entity';
+import { OrderStatus, PaymentStatus } from '../../../common/enums';
 
 export class CreateOrderItemDto {
   @ApiProperty()

@@ -8,12 +8,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { Order, OrderStatus, PaymentStatus } from './entities/order.entity';
+import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
-import { Invoice, InvoiceStatus } from './entities/invoice.entity';
-
-const OrderStatusEnum = OrderStatus;
-const PaymentStatusEnum = PaymentStatus;
+import { Invoice } from './entities/invoice.entity';
+import { OrderStatus, PaymentStatus, InvoiceStatus } from '../../common/enums';
 import {
   CreateOrderDto,
   CreateOrderItemDto,

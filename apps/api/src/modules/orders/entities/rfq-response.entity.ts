@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Rfq } from './rfq.entity';
-import { Company } from '../../companies/entities/company.entity';
-import { User } from '../../auth/entities/user.entity';
 
 @Entity('rfq_responses')
 export class RfqResponse {
@@ -18,16 +16,16 @@ export class RfqResponse {
   @Column()
   companyId: string;
 
-  @ManyToOne(() => Company)
+  @ManyToOne('Company', 'rfqResponses')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column()
   userId: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne('User', 'rfqResponses')
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user: any;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   price: number;

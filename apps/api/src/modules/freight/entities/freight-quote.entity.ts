@@ -1,21 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Carrier } from './carrier.entity';
-
-export enum TransportMode {
-  OCEAN = 'OCEAN',
-  AIR = 'AIR',
-  TRUCK = 'TRUCK',
-  RAIL = 'RAIL',
-  MULTIMODAL = 'MULTIMODAL',
-  COURIER = 'COURIER',
-}
-
-export enum QuoteStatus {
-  ACTIVE = 'ACTIVE',
-  EXPIRED = 'EXPIRED',
-  BOOKED = 'BOOKED',
-  CANCELLED = 'CANCELLED',
-}
+import { TransportMode, QuoteStatus } from '../../../common/enums';
 
 @Entity('freight_quotes')
 @Index(['userId'])
@@ -92,7 +77,7 @@ export class FreightQuote {
   @Column({ type: 'jsonb' })
   quoteData: Record<string, any>;
 
-  @Column({ type: 'enum', enum: QuoteStatus, default: QuoteStatus.ACTIVE })
+  @Column({ type: 'enum', enum: QuoteStatus, default: QuoteStatus.PENDING })
   status: QuoteStatus;
 
   @CreateDateColumn()

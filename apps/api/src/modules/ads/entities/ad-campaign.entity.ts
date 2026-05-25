@@ -1,5 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
+import { AdStatus } from '../../../common/enums';
+
+// Re-export AdStatus for convenience
+export { AdStatus };
 
 export enum AdType {
   SPONSORED_LISTING = 'SPONSORED_LISTING',
@@ -9,17 +12,6 @@ export enum AdType {
   CAROUSEL = 'CAROUSEL',
   TEXT_AD = 'TEXT_AD',
   INTERSTITIAL = 'INTERSTITIAL',
-}
-
-export enum AdStatus {
-  DRAFT = 'DRAFT',
-  PENDING_APPROVAL = 'PENDING_APPROVAL',
-  APPROVED = 'APPROVED',
-  PAUSED = 'PAUSED',
-  RUNNING = 'RUNNING',
-  COMPLETED = 'COMPLETED',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
 }
 
 export enum BidType {
@@ -39,9 +31,9 @@ export class AdCampaign {
   @Column()
   companyId: string;
 
-  @ManyToOne(() => Company)
+  @ManyToOne('Company', 'adCampaigns')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column()
   name: string;

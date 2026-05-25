@@ -24,7 +24,7 @@ import {
   OrderTimelineDto,
   AddOrderItemDto,
 } from './dto/orders.dto';
-import { OrderStatus } from './entities/order.entity';
+import { OrderStatus } from '../../common/enums';
 
 @ApiTags('Orders')
 @Controller('orders')

@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { Company } from '../../companies/entities/company.entity';
 import { Category } from './category.entity';
 import { ProductVariant } from './product-variant.entity';
-import { Rfq } from '../../orders/entities/rfq.entity';
 
 @Entity('products')
 export class Product {
@@ -101,6 +100,6 @@ export class Product {
   @OneToMany(() => ProductVariant, (variant) => variant.product)
   variants: ProductVariant[];
 
-  @OneToMany(() => Rfq, (rfq) => rfq.product)
-  rfqs: Rfq[];
+  @OneToMany('Rfq', 'product')
+  rfqs: any[];
 }

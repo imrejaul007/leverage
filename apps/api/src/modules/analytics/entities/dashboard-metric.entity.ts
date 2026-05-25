@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique, Index } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
 
 @Entity('dashboard_metrics')
 @Unique(['companyId', 'metricType', 'period', 'date'])
@@ -12,9 +11,9 @@ export class DashboardMetric {
   @Column({ nullable: true })
   companyId: string;
 
-  @ManyToOne(() => Company, { nullable: true })
+  @ManyToOne('Company', 'dashboardMetrics', { nullable: true })
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column()
   metricType: string;

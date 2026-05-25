@@ -1,14 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, Unique } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
-
-export enum SubscriptionStatus {
-  TRIAL = 'TRIAL',
-  ACTIVE = 'ACTIVE',
-  PAST_DUE = 'PAST_DUE',
-  CANCELLED = 'CANCELLED',
-  EXPIRED = 'EXPIRED',
-  SUSPENDED = 'SUSPENDED',
-}
+import { SubscriptionStatus } from '../../../common/enums';
 
 @Entity('subscriptions')
 @Unique(['companyId'])
@@ -19,9 +10,9 @@ export class Subscription {
   @Column()
   companyId: string;
 
-  @OneToOne(() => Company)
+  @OneToOne('Company', 'subscription')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column()
   planId: string;
@@ -32,7 +23,7 @@ export class Subscription {
   @Column({ nullable: true })
   stripeCustomerId: string;
 
-  @Column({ type: 'enum', enum: SubscriptionStatus, default: SubscriptionStatus.TRIAL })
+  @Column({ type: 'enum', enum: SubscriptionStatus, default: SubscriptionStatus.TRIALING })
   status: SubscriptionStatus;
 
   @Column()

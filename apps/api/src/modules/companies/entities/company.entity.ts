@@ -2,10 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from '../../auth/entities/user.entity';
 import { CompanyMember } from './company-member.entity';
 import { CompanyDocument } from './company-document.entity';
-import { Subscription } from '../../billing/entities/subscription.entity';
-import { AdCredit } from '../../ads/entities/ad-credit.entity';
-import { DashboardMetric } from '../../analytics/entities/dashboard-metric.entity';
-import { Post } from '../../posts/entities/post.entity';
+import { VerificationStatus } from '../../../common/enums';
 
 export enum BusinessType {
   MANUFACTURER = 'MANUFACTURER',
@@ -30,13 +27,6 @@ export enum RevenueRange {
   ONE_TO_TEN_CR = 'ONE_TO_TEN_CR',
   TEN_TO_HUNDRED_CR = 'TEN_TO_HUNDRED_CR',
   ABOVE_HUNDRED_CR = 'ABOVE_HUNDRED_CR',
-}
-
-export enum VerificationStatus {
-  PENDING = 'PENDING',
-  UNDER_REVIEW = 'UNDER_REVIEW',
-  VERIFIED = 'VERIFIED',
-  REJECTED = 'REJECTED',
 }
 
 @Entity('companies')
@@ -114,14 +104,17 @@ export class Company {
   @OneToMany(() => CompanyDocument, (doc) => doc.company)
   documents: CompanyDocument[];
 
-  @OneToOne(() => Subscription, (subscription) => subscription.company)
-  subscription: Subscription;
+  @OneToOne('Subscription', 'company')
+  subscription: any;
 
-  @OneToOne(() => AdCredit, (adCredit) => adCredit.company)
-  adCredits: AdCredit;
+  @OneToOne('AdCredit', 'company')
+  adCredits: any;
 
-  @OneToMany(() => DashboardMetric, (metric) => metric.company)
-  dashboardMetrics: DashboardMetric[];
+  @OneToMany('DashboardMetric', 'company')
+  dashboardMetrics: any[];
+
+  @OneToMany('Post', 'company')
+  posts: any[];
 
   @CreateDateColumn()
   createdAt: Date;

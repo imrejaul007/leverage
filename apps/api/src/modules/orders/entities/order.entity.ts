@@ -1,23 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { OrderItem } from './order-item.entity';
 import { Invoice } from './invoice.entity';
-import { Shipment } from '../../freight/entities/shipment.entity';
 import { PaymentTransaction } from './payment-transaction.entity';
 import { User } from '../../auth/entities/user.entity';
 import { Company } from '../../companies/entities/company.entity';
-
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  PROCESSING = 'PROCESSING',
-  SHIPPED = 'SHIPPED',
-  IN_TRANSIT = 'IN_TRANSIT',
-  DELIVERED = 'DELIVERED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  REFUNDED = 'REFUNDED',
-  DISPUTED = 'DISPUTED',
-}
+import { OrderStatus, PaymentStatus } from '../../../common/enums';
 
 export enum OrderType {
   STANDARD = 'STANDARD',
@@ -31,16 +18,6 @@ export enum OrderSource {
   DIRECT = 'DIRECT',
   RFQ = 'RFQ',
   REORDER = 'REORDER',
-}
-
-export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PARTIAL = 'PARTIAL',
-  PAID = 'PAID',
-  REFUNDED = 'REFUNDED',
-  PARTIAL_REFUND = 'PARTIAL_REFUND',
-  FAILED = 'FAILED',
-  DISPUTED = 'DISPUTED',
 }
 
 @Entity('orders')
@@ -151,9 +128,6 @@ export class Order {
 
   @OneToMany(() => Invoice, (invoice) => invoice.order)
   invoices: Invoice[];
-
-  @OneToMany(() => Shipment, (shipment) => shipment.order)
-  shipments: Shipment[];
 
   @OneToMany(() => PaymentTransaction, (transaction) => transaction.order)
   transactions: PaymentTransaction[];

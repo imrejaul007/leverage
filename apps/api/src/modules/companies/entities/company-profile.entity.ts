@@ -1,7 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
-import { Company } from './company.entity';
-import { CompanyFollow } from './company-follow.entity';
-import { Post } from '../../posts/entities/post.entity';
 
 @Entity('company_profiles')
 export class CompanyProfile {
@@ -11,9 +8,9 @@ export class CompanyProfile {
   @Column()
   companyId: string;
 
-  @OneToOne(() => Company)
+  @OneToOne('Company', 'profile')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column({ nullable: true })
   headline: string;

@@ -1,18 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-
-export enum PlanType {
-  FREE = 'FREE',
-  STARTER = 'STARTER',
-  PROFESSIONAL = 'PROFESSIONAL',
-  BUSINESS = 'BUSINESS',
-  ENTERPRISE = 'ENTERPRISE',
-}
-
-export enum BillingInterval {
-  MONTHLY = 'MONTHLY',
-  YEARLY = 'YEARLY',
-  QUARTERLY = 'QUARTERLY',
-}
+import { PlanType, BillingInterval } from '../../../common/enums';
 
 @Entity('plans')
 @Index(['type'])

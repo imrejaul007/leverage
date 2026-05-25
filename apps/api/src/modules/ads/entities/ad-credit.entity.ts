@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, Unique } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
 
 @Entity('ad_credits')
 @Unique(['companyId'])
@@ -10,9 +9,9 @@ export class AdCredit {
   @Column()
   companyId: string;
 
-  @OneToOne(() => Company)
+  @OneToOne('Company', 'adCredits')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   balance: number;

@@ -1,9 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { RfqResponse } from './rfq-response.entity';
-import { Product } from '../../products/entities/product.entity';
-import { User } from '../../auth/entities/user.entity';
-import { Company } from '../../companies/entities/company.entity';
-import { Category } from '../../products/entities/category.entity';
 
 export enum RfqStatus {
   DRAFT = 'DRAFT',
@@ -23,23 +19,23 @@ export class Rfq {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne('User', 'rfqs')
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user: any;
 
   @Column()
   companyId: string;
 
-  @ManyToOne(() => Company)
+  @ManyToOne('Company', 'rfqs')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column({ nullable: true })
   productId: string;
 
-  @ManyToOne(() => Product, (product) => product.rfqs, { nullable: true })
+  @ManyToOne('Product', 'rfqs', { nullable: true })
   @JoinColumn({ name: 'productId' })
-  product: Product;
+  product: any;
 
   @Column()
   title: string;
@@ -50,9 +46,9 @@ export class Rfq {
   @Column({ nullable: true })
   categoryId: string;
 
-  @ManyToOne(() => Category, { nullable: true })
+  @ManyToOne('Category', { nullable: true })
   @JoinColumn({ name: 'categoryId' })
-  category: Category;
+  category: any;
 
   @Column()
   quantity: number;

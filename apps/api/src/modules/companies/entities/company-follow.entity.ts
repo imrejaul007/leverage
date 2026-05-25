@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
-import { CompanyProfile } from './company-profile.entity';
 
 @Entity('company_follows')
 @Unique(['followerId', 'followingId'])
@@ -10,16 +9,16 @@ export class CompanyFollow {
   @Column()
   followerId: string;
 
-  @ManyToOne(() => CompanyProfile)
+  @ManyToOne('CompanyProfile')
   @JoinColumn({ name: 'followerId' })
-  follower: CompanyProfile;
+  follower: any;
 
   @Column()
   followingId: string;
 
-  @ManyToOne(() => CompanyProfile)
+  @ManyToOne('CompanyProfile')
   @JoinColumn({ name: 'followingId' })
-  following: CompanyProfile;
+  following: any;
 
   @CreateDateColumn()
   createdAt: Date;

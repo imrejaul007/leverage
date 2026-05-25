@@ -14,8 +14,8 @@ import {
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AdType } from '../entities/ad-campaign.entity';
-import { AdStatus } from '../entities/ad-campaign.entity';
 import { BidType } from '../entities/ad-campaign.entity';
+import { AdStatus } from '../../../common/enums';
 
 export class TargetingDto {
   @ApiPropertyOptional({ example: ['electronics', 'manufacturing'], description: 'Categories to target' })

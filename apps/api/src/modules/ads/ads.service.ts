@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, ILike } from 'typeorm';
 import { AdCampaign } from './entities/ad-campaign.entity';
 import { AdCredit } from './entities/ad-credit.entity';
-import { AdStatus } from './entities/ad-campaign.entity';
-import { Prisma } from '@prisma/client';
+import { AdStatus } from '../../common/enums';
 import {
   CreateCampaignDto,
   UpdateCampaignDto,

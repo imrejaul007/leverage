@@ -52,6 +52,9 @@ export enum TransportMode {
   ROAD = 'ROAD',
   RAIL = 'RAIL',
   MULTIMODAL = 'MULTIMODAL',
+  OCEAN = 'OCEAN',
+  TRUCK = 'TRUCK',
+  COURIER = 'COURIER',
 }
 
 export enum QuoteStatus {
@@ -59,6 +62,9 @@ export enum QuoteStatus {
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
   EXPIRED = 'EXPIRED',
+  ACTIVE = 'ACTIVE',
+  BOOKED = 'BOOKED',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum ShipmentStatus {
@@ -69,12 +75,18 @@ export enum ShipmentStatus {
   OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
   DELIVERED = 'DELIVERED',
   CANCELLED = 'CANCELLED',
+  CUSTOMS_CLEARANCE = 'CUSTOMS_CLEARANCE',
+  COMPLETED = 'COMPLETED',
+  EXCEPTION = 'EXCEPTION',
 }
 
 export enum SubscriptionStatus {
+  TRIAL = 'TRIAL',
   ACTIVE = 'ACTIVE',
   PAST_DUE = 'PAST_DUE',
   CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
+  SUSPENDED = 'SUSPENDED',
   TRIALING = 'TRIALING',
 }
 
@@ -94,6 +106,8 @@ export enum BillingInterval {
 export enum InvoiceStatus {
   DRAFT = 'DRAFT',
   SENT = 'SENT',
+  VIEWED = 'VIEWED',
+  PARTIAL_PAID = 'PARTIAL_PAID',
   PAID = 'PAID',
   OVERDUE = 'OVERDUE',
   CANCELLED = 'CANCELLED',
@@ -104,26 +118,33 @@ export enum OrderStatus {
   CONFIRMED = 'CONFIRMED',
   PROCESSING = 'PROCESSING',
   SHIPPED = 'SHIPPED',
+  IN_TRANSIT = 'IN_TRANSIT',
   DELIVERED = 'DELIVERED',
+  COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
   REFUNDED = 'REFUNDED',
+  DISPUTED = 'DISPUTED',
 }
 
 export enum PaymentStatus {
   PENDING = 'PENDING',
-  PROCESSING = 'PROCESSING',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
+  PARTIAL = 'PARTIAL',
+  PAID = 'PAID',
   REFUNDED = 'REFUNDED',
+  PARTIAL_REFUND = 'PARTIAL_REFUND',
+  FAILED = 'FAILED',
+  DISPUTED = 'DISPUTED',
 }
 
 export enum AdStatus {
   DRAFT = 'DRAFT',
-  PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  APPROVED = 'APPROVED',
   PAUSED = 'PAUSED',
+  RUNNING = 'RUNNING',
   COMPLETED = 'COMPLETED',
   REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum PostType {
@@ -135,7 +156,20 @@ export enum PostType {
 }
 
 export enum MessageStatus {
+  SENDING = 'SENDING',
   SENT = 'SENT',
   DELIVERED = 'DELIVERED',
   READ = 'READ',
+  FAILED = 'FAILED',
+}
+
+export enum TransactionStatus {
+  PENDING = 'PENDING',
+  PROCESSING = 'PROCESSING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+  REFUNDED = 'REFUNDED',
+  PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED',
+  DISPUTED = 'DISPUTED',
 }

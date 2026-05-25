@@ -2,20 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { Carrier } from './carrier.entity';
 import { ContainerBooking } from './container-booking.entity';
 import { ShipmentTracking } from './shipment-tracking.entity';
-import { Order } from '../../orders/entities/order.entity';
-
-export enum ShipmentStatus {
-  DRAFT = 'DRAFT',
-  BOOKED = 'BOOKED',
-  PICKED_UP = 'PICKED_UP',
-  IN_TRANSIT = 'IN_TRANSIT',
-  CUSTOMS_CLEARANCE = 'CUSTOMS_CLEARANCE',
-  OUT_FOR_DELIVERY = 'OUT_FOR_DELIVERY',
-  DELIVERED = 'DELIVERED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  EXCEPTION = 'EXCEPTION',
-}
+import { ShipmentStatus } from '../../../common/enums';
 
 export enum CustomsStatus {
   PENDING = 'PENDING',
@@ -39,9 +26,9 @@ export class Shipment {
   @Column({ nullable: true })
   orderId: string;
 
-  @ManyToOne(() => Order, { nullable: true })
+  @ManyToOne('Order', 'shipments', { nullable: true })
   @JoinColumn({ name: 'orderId' })
-  order: Order;
+  order: any;
 
   @Column()
   userId: string;

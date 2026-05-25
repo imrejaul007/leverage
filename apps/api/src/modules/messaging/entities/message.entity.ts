@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Conversation } from './conversation.entity';
+import { MessageStatus } from '../../../common/enums';
 
 export enum SenderType {
   USER = 'USER',
@@ -14,14 +15,6 @@ export enum ContentType {
   SYSTEM = 'SYSTEM',
   TRADE_INQUIRY = 'TRADE_INQUIRY',
   QUOTE = 'QUOTE',
-}
-
-export enum MessageStatus {
-  SENDING = 'SENDING',
-  SENT = 'SENT',
-  DELIVERED = 'DELIVERED',
-  READ = 'READ',
-  FAILED = 'FAILED',
 }
 
 @Entity('messages')

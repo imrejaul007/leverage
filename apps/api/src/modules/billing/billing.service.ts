@@ -3,17 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { Plan } from './entities/plan.entity';
-import { SubscriptionStatus } from './entities/subscription.entity';
-import { BillingInterval } from './entities/plan.entity';
-import { Prisma } from '@prisma/client';
+import { SubscriptionStatus, BillingInterval } from '../../common/enums';
 import {
   SubscribeDto,
   UpdateSubscriptionDto,
   AddPaymentMethodDto,
   PlanResponseDto,
-  SubscriptionResponseDto,
   InvoiceResponseDto,
   BillingSummaryDto,
+  SubscriptionResponseDto,
 } from './dto/billing.dto';
 
 @Injectable()
@@ -59,7 +57,7 @@ export class BillingService {
     const subscription = this.subscriptionRepository.create({
       companyId,
       planId: plan.slug,
-      status: dto.trial ? SubscriptionStatus.TRIAL : SubscriptionStatus.ACTIVE,
+      status: dto.trial ? SubscriptionStatus.TRIALING : SubscriptionStatus.ACTIVE,
       currentPeriodStart: now,
       currentPeriodEnd: periodEnd,
       cancelAtPeriodEnd: false,
@@ -310,7 +308,7 @@ export class BillingService {
     });
 
     if (subscription) {
-      subscription.status = SubscriptionStatus.EXPIRED;
+      subscription.status = SubscriptionStatus.CANCELLED;
       await this.subscriptionRepository.save(subscription);
     }
   }

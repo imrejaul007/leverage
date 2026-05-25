@@ -1,21 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Order } from './order.entity';
+import { InvoiceStatus } from '../../../common/enums';
 
 export enum InvoiceType {
   PROFORMA = 'PROFORMA',
   COMMERCIAL = 'COMMERCIAL',
   TAX = 'TAX',
   CREDIT_NOTE = 'CREDIT_NOTE',
-}
-
-export enum InvoiceStatus {
-  DRAFT = 'DRAFT',
-  SENT = 'SENT',
-  VIEWED = 'VIEWED',
-  PARTIAL_PAID = 'PARTIAL_PAID',
-  PAID = 'PAID',
-  OVERDUE = 'OVERDUE',
-  CANCELLED = 'CANCELLED',
 }
 
 @Entity('invoices')

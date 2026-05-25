@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Order } from './order.entity';
+import { TransactionStatus } from '../../../common/enums';
 
 export enum PaymentProvider {
   STRIPE = 'STRIPE',
@@ -14,16 +15,6 @@ export enum PaymentType {
   REFUND = 'REFUND',
   PARTIAL_REFUND = 'PARTIAL_REFUND',
   DISPUTE_REFUND = 'DISPUTE_REFUND',
-}
-
-export enum TransactionStatus {
-  PENDING = 'PENDING',
-  PROCESSING = 'PROCESSING',
-  SUCCESS = 'SUCCESS',
-  FAILED = 'FAILED',
-  CANCELLED = 'CANCELLED',
-  REFUNDED = 'REFUNDED',
-  PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED',
 }
 
 @Entity('payment_transactions')

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
+import { VerificationStatus } from '../../../common/enums';
 
 export enum KycVerificationStatus {
   PENDING = 'PENDING',
@@ -16,9 +16,9 @@ export class KycStatus {
   @Column()
   companyId: string;
 
-  @OneToOne(() => Company)
+  @OneToOne('Company', 'kycStatus')
   @JoinColumn({ name: 'companyId' })
-  company: Company;
+  company: any;
 
   @Column({ type: 'enum', enum: KycVerificationStatus, default: KycVerificationStatus.PENDING })
   gstinStatus: KycVerificationStatus;
