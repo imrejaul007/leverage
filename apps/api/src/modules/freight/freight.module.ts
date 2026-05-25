@@ -10,6 +10,7 @@ import { Shipment } from './entities/shipment.entity';
 import { ContainerBooking } from './entities/container-booking.entity';
 import { ShipmentTracking } from './entities/shipment-tracking.entity';
 import { InsurancePolicy } from './entities/insurance-policy.entity';
+import { Order } from '../orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { InsurancePolicy } from './entities/insurance-policy.entity';
       ContainerBooking,
       ShipmentTracking,
       InsurancePolicy,
+      Order,
     ]),
   ],
   controllers: [FreightController],
