@@ -5,9 +5,14 @@ import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { ProductVariant } from './entities/product-variant.entity';
 import { SearchModule } from '../search/search.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, ProductVariant]), SearchModule],
+  imports: [
+    TypeOrmModule.forFeature([Product, ProductVariant]),
+    CategoriesModule,
+    SearchModule
+  ],
   controllers: [ProductsController],
   providers: [ProductsService],
   exports: [ProductsService],
