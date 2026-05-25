@@ -25,7 +25,7 @@ export class AnalyticsEvent {
   companyId: string;
 
   @Column({ type: 'jsonb' })
-  properties: Record<string, any>;
+  properties: object;
 
   @Column({ nullable: true })
   userAgent: string;

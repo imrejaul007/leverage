@@ -23,7 +23,7 @@ export class AuditLog {
   resourceId: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  details: Record<string, any>;
+  details: object;
 
   @Column({ nullable: true })
   ipAddress: string;

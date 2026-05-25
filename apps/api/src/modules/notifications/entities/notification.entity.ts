@@ -32,7 +32,7 @@ export class Notification {
   message: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  data: Record<string, any>;
+  data: object;
 
   @Column({ default: false })
   isRead: boolean;

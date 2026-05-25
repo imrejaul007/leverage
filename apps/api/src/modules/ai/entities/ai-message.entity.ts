@@ -33,13 +33,13 @@ export class AiMessage {
   model: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  citations: Record<string, any>;
+  citations: object;
 
   @Column({ type: 'float', nullable: true })
   confidence: number;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @CreateDateColumn()
   createdAt: Date;

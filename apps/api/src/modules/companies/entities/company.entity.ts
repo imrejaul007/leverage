@@ -56,7 +56,7 @@ export class Company {
   phone: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  address: Record<string, any>;
+  address: object;
 
   // Business Registration
   @Column({ unique: true, nullable: true })

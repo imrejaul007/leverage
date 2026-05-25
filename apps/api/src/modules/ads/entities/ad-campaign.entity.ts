@@ -45,7 +45,7 @@ export class AdCampaign {
   status: AdStatus;
 
   @Column({ type: 'jsonb' })
-  targeting: Record<string, any>;
+  targeting: object;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   budget: number;

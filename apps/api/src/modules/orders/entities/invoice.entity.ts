@@ -30,25 +30,25 @@ export class Invoice {
   type: InvoiceType;
 
   @Column({ type: 'jsonb' })
-  buyerCompany: Record<string, any>;
+  buyerCompany: object;
 
   @Column({ type: 'jsonb' })
-  sellerCompany: Record<string, any>;
+  sellerCompany: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  shipFrom: Record<string, any>;
+  shipFrom: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  shipTo: Record<string, any>;
+  shipTo: object;
 
   @Column({ type: 'jsonb' })
-  items: Record<string, any>;
+  items: object;
 
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   subtotal: number;
 
   @Column({ type: 'jsonb' })
-  taxBreakdown: Record<string, any>;
+  taxBreakdown: object;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   taxAmount: number;

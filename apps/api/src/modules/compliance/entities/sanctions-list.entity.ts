@@ -34,7 +34,7 @@ export class SanctionsList {
   name: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  nameVariants: Record<string, any>;
+  nameVariants: object;
 
   @Column({ type: 'simple-array', nullable: true })
   alias: string[];
@@ -43,7 +43,7 @@ export class SanctionsList {
   entityType: EntityType;
 
   @Column({ type: 'jsonb', nullable: true })
-  address: Record<string, any>;
+  address: object;
 
   @Column({ nullable: true })
   country: string;

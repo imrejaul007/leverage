@@ -41,10 +41,10 @@ export class ComplianceCheck {
   userId: string;
 
   @Column({ type: 'jsonb' })
-  input: Record<string, any>;
+  input: object;
 
   @Column({ type: 'jsonb' })
-  result: Record<string, any>;
+  result: object;
 
   @Column({ type: 'enum', enum: ComplianceStatus })
   status: ComplianceStatus;
@@ -56,13 +56,13 @@ export class ComplianceCheck {
   riskLevel: RiskLevel;
 
   @Column({ type: 'jsonb', nullable: true })
-  flags: Record<string, any>;
+  flags: object;
 
   @Column()
   passed: boolean;
 
   @Column({ type: 'jsonb', nullable: true })
-  issues: Record<string, any>;
+  issues: object;
 
   @CreateDateColumn()
   checkedAt: Date;

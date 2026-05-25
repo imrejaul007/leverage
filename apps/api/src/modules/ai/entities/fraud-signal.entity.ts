@@ -50,7 +50,7 @@ export class FraudSignal {
   description: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  evidence: Record<string, any>;
+  evidence: object;
 
   @Column({ type: 'float' })
   confidence: number;

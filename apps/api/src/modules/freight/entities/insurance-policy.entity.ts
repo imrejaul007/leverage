@@ -44,13 +44,13 @@ export class InsurancePolicy {
   premium: number;
 
   @Column({ type: 'jsonb' })
-  cargoDetails: Record<string, any>;
+  cargoDetails: object;
 
   @Column({ type: 'jsonb' })
-  coverage: Record<string, any>;
+  coverage: object;
 
   @Column({ type: 'jsonb' })
-  beneficiary: Record<string, any>;
+  beneficiary: object;
 
   @Column({ type: 'enum', enum: InsuranceStatus, default: InsuranceStatus.ACTIVE })
   status: InsuranceStatus;
@@ -65,7 +65,7 @@ export class InsurancePolicy {
   claimStatus: ClaimStatus;
 
   @Column({ type: 'jsonb', nullable: true })
-  claimDetails: Record<string, any>;
+  claimDetails: object;
 
   @CreateDateColumn()
   createdAt: Date;

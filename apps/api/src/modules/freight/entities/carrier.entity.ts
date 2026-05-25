@@ -44,7 +44,7 @@ export class Carrier {
   apiProvider: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  apiConfig: Record<string, any>;
+  apiConfig: object;
 
   @Column({ default: true })
   isActive: boolean;

@@ -85,10 +85,10 @@ export class Order {
   currency: string;
 
   @Column({ type: 'jsonb' })
-  shippingAddress: Record<string, any>;
+  shippingAddress: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  billingAddress: Record<string, any>;
+  billingAddress: object;
 
   @Column({ type: 'text', nullable: true })
   notes: string;

@@ -23,7 +23,7 @@ export class AiEmbedding {
   vectorId: string;
 
   @Column({ type: 'jsonb' })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @Column({ nullable: true })
   companyId: string;

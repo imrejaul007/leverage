@@ -57,7 +57,7 @@ export class OrderItem {
   weightUnit: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @CreateDateColumn()
   createdAt: Date;

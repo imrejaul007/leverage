@@ -57,7 +57,7 @@ export class PaymentTransaction {
   cardBrand: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @Column({ nullable: true })
   errorMessage: string;

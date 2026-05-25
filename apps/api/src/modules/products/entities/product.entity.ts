@@ -59,13 +59,13 @@ export class Product {
   weightUnit: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  dimensions: Record<string, any>;
+  dimensions: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  images: Record<string, any>[];
+  images: object[];
 
   @Column({ type: 'jsonb', nullable: true })
-  videos: Record<string, any>[];
+  videos: object[];
 
   @Column({ default: true })
   isActive: boolean;

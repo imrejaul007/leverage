@@ -39,16 +39,16 @@ export class AiAgent {
   maxTokens: number;
 
   @Column({ type: 'jsonb', nullable: true })
-  tools: Record<string, any>;
+  tools: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  skills: Record<string, any>;
+  skills: object;
 
   @Column({ default: true })
   isActive: boolean;
 
   @Column({ type: 'jsonb', nullable: true })
-  config: Record<string, any>;
+  config: object;
 
   @CreateDateColumn()
   createdAt: Date;

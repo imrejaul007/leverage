@@ -26,7 +26,7 @@ export class ProductVariant {
   inventory: number;
 
   @Column({ type: 'jsonb' })
-  attributes: Record<string, any>;
+  attributes: object;
 
   @Column({ default: true })
   isActive: boolean;

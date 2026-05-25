@@ -25,10 +25,10 @@ export class ShipmentTracking {
   substatus: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  location: Record<string, any>;
+  location: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  coordinates: Record<string, any>;
+  coordinates: object;
 
   @Column()
   description: string;

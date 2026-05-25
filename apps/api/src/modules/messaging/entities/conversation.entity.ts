@@ -18,13 +18,13 @@ export class Conversation {
   type: ConversationType;
 
   @Column({ type: 'jsonb' })
-  participants: Record<string, any>;
+  participants: object;
 
   @Column({ nullable: true })
   lastMessageAt: Date;
 
   @Column({ type: 'jsonb', nullable: true })
-  unreadCounts: Record<string, any>;
+  unreadCounts: object;
 
   @Column({ default: false })
   isArchived: boolean;

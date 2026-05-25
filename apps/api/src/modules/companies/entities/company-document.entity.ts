@@ -41,7 +41,7 @@ export class CompanyDocument {
   expiresAt: Date;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @CreateDateColumn()
   createdAt: Date;

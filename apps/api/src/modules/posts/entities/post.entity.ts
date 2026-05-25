@@ -39,7 +39,7 @@ export class Post {
   content: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  media: Record<string, any>;
+  media: object;
 
   @Column({ default: 0 })
   likesCount: number;

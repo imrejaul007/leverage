@@ -19,10 +19,10 @@ export class AiSession {
   userId: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  context: Record<string, any>;
+  context: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @CreateDateColumn()
   startedAt: Date;

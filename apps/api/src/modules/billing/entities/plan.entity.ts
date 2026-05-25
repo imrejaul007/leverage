@@ -29,10 +29,10 @@ export class Plan {
   interval: BillingInterval;
 
   @Column({ type: 'jsonb' })
-  features: Record<string, any>;
+  features: object;
 
   @Column({ type: 'jsonb' })
-  limits: Record<string, any>;
+  limits: object;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   adCredits: number;

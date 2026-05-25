@@ -44,7 +44,7 @@ export class Message {
   contentType: ContentType;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @Column({ nullable: true })
   replyToId: string;
@@ -53,7 +53,7 @@ export class Message {
   status: MessageStatus;
 
   @Column({ type: 'jsonb', nullable: true })
-  reactions: Record<string, any>;
+  reactions: object;
 
   @Column({ default: false })
   isEdited: boolean;

@@ -100,7 +100,7 @@ export class ContainerBooking {
   returnDueDate: Date;
 
   @Column({ type: 'jsonb', nullable: true })
-  charges: Record<string, any>;
+  charges: object;
 
   @CreateDateColumn()
   createdAt: Date;

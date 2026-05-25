@@ -52,13 +52,13 @@ export class TradeDocument {
   description: string;
 
   @Column({ type: 'jsonb' })
-  generatedFor: Record<string, any>;
+  generatedFor: object;
 
   @Column({ type: 'jsonb' })
-  generatedBy: Record<string, any>;
+  generatedBy: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  content: Record<string, any>;
+  content: object;
 
   @Column({ type: 'text', nullable: true })
   htmlContent: string;
@@ -73,19 +73,19 @@ export class TradeDocument {
   mimeType: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  signatures: Record<string, any>;
+  signatures: object;
 
   @Column({ default: false })
   isValidated: boolean;
 
   @Column({ type: 'jsonb', nullable: true })
-  validationResult: Record<string, any>;
+  validationResult: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  complianceFlags: Record<string, any>;
+  complianceFlags: object;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @Column({ type: 'enum', enum: DocumentStatus, default: DocumentStatus.DRAFT })
   status: DocumentStatus;

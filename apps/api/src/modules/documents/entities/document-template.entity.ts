@@ -24,7 +24,7 @@ export class DocumentTemplate {
   css: string;
 
   @Column({ type: 'jsonb' })
-  variables: Record<string, any>;
+  variables: object;
 
   @Column({ default: false })
   isDefault: boolean;

@@ -24,13 +24,13 @@ export class FreightQuote {
   carrier: Carrier;
 
   @Column({ type: 'jsonb' })
-  origin: Record<string, any>;
+  origin: object;
 
   @Column({ type: 'jsonb' })
-  destination: Record<string, any>;
+  destination: object;
 
   @Column({ type: 'jsonb' })
-  cargoDetails: Record<string, any>;
+  cargoDetails: object;
 
   @Column({ nullable: true })
   incoterms: string;
@@ -54,7 +54,7 @@ export class FreightQuote {
   baseRate: number;
 
   @Column({ type: 'jsonb' })
-  surcharges: Record<string, any>[];
+  surcharges: object[];
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   fuelSurcharge: number;
@@ -75,7 +75,7 @@ export class FreightQuote {
   validUntil: Date;
 
   @Column({ type: 'jsonb' })
-  quoteData: Record<string, any>;
+  quoteData: object;
 
   @Column({ type: 'enum', enum: QuoteStatus, default: QuoteStatus.PENDING })
   status: QuoteStatus;

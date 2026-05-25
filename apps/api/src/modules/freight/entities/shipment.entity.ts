@@ -47,13 +47,13 @@ export class Shipment {
   shipmentNumber: string;
 
   @Column({ type: 'jsonb' })
-  origin: Record<string, any>;
+  origin: object;
 
   @Column({ type: 'jsonb' })
-  destination: Record<string, any>;
+  destination: object;
 
   @Column({ type: 'jsonb' })
-  cargoDetails: Record<string, any>;
+  cargoDetails: object;
 
   @Column()
   incoterms: string;
@@ -74,13 +74,13 @@ export class Shipment {
   trackingNumber: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  documents: Record<string, any>;
+  documents: object;
 
   @Column({ type: 'enum', enum: CustomsStatus, default: CustomsStatus.PENDING })
   customsStatus: CustomsStatus;
 
   @Column({ type: 'jsonb', nullable: true })
-  customsDocs: Record<string, any>;
+  customsDocs: object;
 
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
   shippingCost: number;

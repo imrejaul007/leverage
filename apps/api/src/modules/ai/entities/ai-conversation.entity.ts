@@ -15,7 +15,7 @@ export class AiConversation {
   title: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  context: Record<string, any>;
+  context: object;
 
   @Column({ nullable: true })
   lastMessage: string;
@@ -24,7 +24,7 @@ export class AiConversation {
   messageCount: number;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>;
+  metadata: object;
 
   @CreateDateColumn()
   createdAt: Date;
