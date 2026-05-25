@@ -10,6 +10,9 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "build:api": "cd apps/api && npm run build",
+    "start": "turbo start",
+    "start:prod": "cd apps/api && npm run start:prod",
     "test": "turbo test",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
