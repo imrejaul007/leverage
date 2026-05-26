@@ -12,6 +12,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@leverage/shared": [
+        "../../packages/shared/src"
       ]
     },
     "allowJs": true,
