@@ -5,11 +5,11 @@ import {
   Body,
   Param,
   Headers,
-  Req,
   UseGuards,
   HttpCode,
   HttpStatus,
   RawBodyRequest,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiExcludeEndpoint } from '@nestjs/swagger';
@@ -55,10 +55,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Confirm a payment transaction' })
   async confirmPayment(
     @Param('id') id: string,
-    @CurrentUser('companyId') companyId: string,
+    @CurrentUser() user: CurrentUserPayload,
     @Body(new ValidationPipe({ transform: true })) dto: ConfirmPaymentDto,
   ): Promise<PaymentTransactionResponseDto> {
-    return this.paymentsService.confirmPayment(id, companyId, dto);
+    return this.paymentsService.confirmPayment(id, user.companyId, dto);
   }
 
   @Post(':id/refund')
@@ -68,10 +68,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Process a refund for a transaction' })
   async refundPayment(
     @Param('id') id: string,
-    @CurrentUser('companyId') companyId: string,
+    @CurrentUser() user: CurrentUserPayload,
     @Body(new ValidationPipe({ transform: true })) dto: RefundPaymentDto,
   ): Promise<PaymentTransactionResponseDto> {
-    return this.paymentsService.processRefund(id, companyId, dto.amount, dto.reason);
+    return this.paymentsService.processRefund(id, user.companyId, dto.amount, dto.reason);
   }
 
   @Get('transactions/:id')
@@ -96,7 +96,7 @@ export class PaymentsController {
 
   @Post('webhook/stripe')
   @HttpCode(HttpStatus.OK)
-  @ApiExcludeEndpoint() // Exclude from OpenAPI docs
+  @ApiExcludeEndpoint()
   @ApiOperation({ summary: 'Stripe webhook endpoint' })
   async stripeWebhook(
     @Req() req: RawBodyRequest<Request>,
@@ -115,11 +115,8 @@ export class PaymentsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get saved payment methods' })
   async getPaymentMethods(): Promise<PaymentMethodsResponseDto> {
-    // This would typically fetch from Stripe based on the authenticated user
     return { methods: [] };
   }
-
-  // ==================== ESCROW ENDPOINTS ====================
 
   @Post('escrow/:orderId/hold')
   @UseGuards(JwtAuthGuard)
@@ -128,7 +125,7 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Create an escrow hold for an order' })
   async createEscrowHold(
     @Param('orderId') orderId: string,
-    @CurrentUser('companyId') companyId: string,
+    @CurrentUser() user: CurrentUserPayload,
     @Body('sellerId') sellerId: string,
     @Body('amount') amount: number,
     @Body('currency') currency: string,
@@ -136,7 +133,7 @@ export class PaymentsController {
     const escrow = await this.paymentsService.createEscrowHold(
       orderId,
       sellerId,
-      companyId,
+      user.companyId,
       amount,
       currency,
     );
@@ -150,9 +147,9 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Release an escrow hold' })
   async releaseEscrow(
     @Param('id') id: string,
-    @CurrentUser('companyId') companyId: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<EscrowHoldResponseDto> {
-    const escrow = await this.paymentsService.releaseEscrow(id, companyId);
+    const escrow = await this.paymentsService.releaseEscrow(id, user.companyId);
     return this.mapToEscrowResponse(escrow);
   }
 
@@ -163,10 +160,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Raise a dispute on an escrow hold' })
   async disputeEscrow(
     @Param('id') id: string,
-    @CurrentUser('companyId') companyId: string,
+    @CurrentUser() user: CurrentUserPayload,
     @Body('reason') reason: string,
   ): Promise<EscrowHoldResponseDto> {
-    const escrow = await this.paymentsService.disputeEscrow(id, companyId, reason);
+    const escrow = await this.paymentsService.disputeEscrow(id, user.companyId, reason);
     return this.mapToEscrowResponse(escrow);
   }
 
@@ -181,10 +178,18 @@ export class PaymentsController {
     return escrow ? this.mapToEscrowResponse(escrow) : null;
   }
 
-  /**
-   * Map escrow entity to response DTO
-   */
-  private mapToEscrowResponse(escrow: any): EscrowHoldResponseDto {
+  private mapToEscrowResponse(escrow: {
+    id: string;
+    orderId: string;
+    sellerId: string;
+    buyerId: string;
+    amount: unknown;
+    currency: string;
+    status: string;
+    releasedAt: Date | null;
+    disputeReason: string | null;
+    createdAt: Date;
+  }): EscrowHoldResponseDto {
     return {
       id: escrow.id,
       orderId: escrow.orderId,

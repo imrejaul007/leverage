@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../../common/decorators/public.decorator';
 import {
   ComplianceService,
   ShipmentValidationDto,
@@ -9,7 +11,9 @@ import {
 } from './compliance.service';
 
 @ApiTags('Compliance')
+@ApiBearerAuth()
 @Controller('compliance')
+@UseGuards(JwtAuthGuard)
 export class ComplianceController {
   constructor(private complianceService: ComplianceService) {}
 

@@ -1,8 +1,8 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './shared/redis.module';
@@ -33,19 +33,13 @@ import { SearchModule } from './modules/search/search.module';
       envFilePath: '.env',
     }),
 
+    ThrottlerModule.forRoot([{
+      ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10),
+      limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10),
+    }]),
+
     PrismaModule,
     RedisModule,
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: () => ({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        autoLoadEntities: true,
-        synchronize: process.env.NODE_ENV === 'development',
-        logging: process.env.NODE_ENV === 'development',
-      }),
-    }),
 
     BullModule.forRoot({
       redis: process.env.REDIS_URL || 'redis://localhost:6379',
@@ -72,7 +66,12 @@ import { SearchModule } from './modules/search/search.module';
     SearchModule,
   ],
 
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {}

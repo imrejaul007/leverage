@@ -1,22 +1,74 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
+
+interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  createdAt?: Date;
+}
+
+interface Conversation {
+  id: string;
+  title: string;
+  lastMessage: string;
+  messageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface AiResponse {
+  message: { role: string; content: string };
+  conversationId: string;
+  sources: string[];
+  confidence: number;
+}
+
+interface ComplianceAdviceResponse {
+  advice: string;
+  risks: string[];
+  recommendations: string[];
+  sources: string[];
+  confidence: number;
+}
+
+interface ClassificationResponse {
+  suggestedCodes: Array<{ code: string; description: string; confidence: number }>;
+  confidence: number;
+  explanation: string;
+}
+
+interface IngestResponse {
+  documentId: string;
+  chunksCreated: number;
+  embeddingsCount: number;
+  status: string;
+}
 
 @Injectable()
 export class AiService {
-  private conversations: Map<string, any[]> = new Map();
+  private readonly logger = new Logger(AiService.name);
+  private conversations: Map<string, ChatMessage[]> = new Map();
+  private userConversations: Map<string, Set<string>> = new Map();
 
-  async chat(message: string, conversationId?: string): Promise<any> {
-    const convId = conversationId || `conv_${Date.now()}`;
+  async chat(message: string, conversationId?: string, userId?: string): Promise<AiResponse> {
+    const convId = conversationId || `conv_${userId || 'anonymous'}_${Date.now()}`;
 
     if (!this.conversations.has(convId)) {
       this.conversations.set(convId, []);
+      if (userId) {
+        if (!this.userConversations.has(userId)) {
+          this.userConversations.set(userId, new Set());
+        }
+        this.userConversations.get(userId).add(convId);
+      }
     }
 
     const messages = this.conversations.get(convId);
-    messages.push({ role: 'user', content: message });
+    if (!messages) throw new Error('Failed to create conversation');
 
-    // Mock AI response
+    messages.push({ role: 'user', content: message, createdAt: new Date() });
+
     const response = this.generateResponse(message);
-    messages.push({ role: 'assistant', content: response });
+    messages.push({ role: 'assistant', content: response, createdAt: new Date() });
 
     return {
       message: { role: 'assistant', content: response },
@@ -26,39 +78,61 @@ export class AiService {
     };
   }
 
-  async getConversations(userId: string): Promise<any[]> {
-    const result: any[] = [];
-    this.conversations.forEach((messages, id) => {
-      if (messages.length > 0) {
+  async getConversations(userId: string): Promise<Conversation[]> {
+    const userConvs = this.userConversations.get(userId);
+    if (!userConvs) return [];
+
+    const result: Conversation[] = [];
+    userConvs.forEach(convId => {
+      const messages = this.conversations.get(convId);
+      if (messages && messages.length > 0) {
         result.push({
-          id,
+          id: convId,
           title: messages[0].content.substring(0, 50),
           lastMessage: messages[messages.length - 1].content,
           messageCount: messages.length,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: messages[0].createdAt || new Date(),
+          updatedAt: messages[messages.length - 1].createdAt || new Date(),
         });
       }
     });
     return result;
   }
 
-  async getConversation(id: string): Promise<any> {
-    const messages = this.conversations.get(id) || [];
-    return { id, messages };
+  async getConversation(id: string, userId?: string): Promise<{ id: string; messages: ChatMessage[] }> {
+    const convId = id;
+
+    if (userId) {
+      const userConvs = this.userConversations.get(userId);
+      if (!userConvs || !userConvs.has(convId)) {
+        throw new ForbiddenException('Conversation not found or access denied');
+      }
+    }
+
+    const messages = this.conversations.get(convId) || [];
+    return { id: convId, messages };
   }
 
   async addMessage(
     conversationId: string,
+    userId: string,
     role: string,
     content: string,
-  ): Promise<any> {
+  ): Promise<{ userMessage: ChatMessage; assistantMessage?: ChatMessage }> {
+    const userConvs = this.userConversations.get(userId);
+    if (!userConvs || !userConvs.has(conversationId)) {
+      throw new ForbiddenException('Conversation not found or access denied');
+    }
+
     if (!this.conversations.has(conversationId)) {
-      this.conversations.set(conversationId, []);
+      throw new Error('Conversation not found');
     }
 
     const messages = this.conversations.get(conversationId);
-    messages.push({ role, content, createdAt: new Date() });
+    if (!messages) throw new Error('Failed to get conversation');
+
+    const validRole = ['user', 'assistant', 'system'].includes(role) ? role as 'user' | 'assistant' | 'system' : 'user';
+    messages.push({ role: validRole, content, createdAt: new Date() });
 
     if (role === 'user') {
       const response = this.generateResponse(content);
@@ -67,17 +141,20 @@ export class AiService {
         content: response,
         createdAt: new Date(),
       });
-      return { userMessage: { role, content }, assistantMessage: { role: 'assistant', content: response } };
+      return {
+        userMessage: { role, content },
+        assistantMessage: { role: 'assistant', content: response },
+      };
     }
 
-    return { message: { role, content } };
+    return { userMessage: { role: validRole, content } };
   }
 
   async getComplianceAdvice(
     productDescription: string,
     originCountry: string,
     destinationCountry: string,
-  ): Promise<any> {
+  ): Promise<ComplianceAdviceResponse> {
     return {
       advice: `Based on the product "${productDescription}" from ${originCountry} to ${destinationCountry}, the following compliance requirements apply.`,
       risks: [
@@ -96,7 +173,7 @@ export class AiService {
     };
   }
 
-  async classifyProduct(description: string): Promise<any> {
+  async classifyProduct(description: string): Promise<ClassificationResponse> {
     const mockCodes = [
       { code: '8471.30', description: 'Portable digital computers', confidence: 0.92 },
       { code: '8517.12', description: 'Telephones for cellular networks', confidence: 0.78 },
@@ -113,8 +190,8 @@ export class AiService {
   async ingestDocument(
     documentId: string,
     content: string,
-    metadata?: Record<string, any>,
-  ): Promise<any> {
+    metadata?: Record<string, unknown>,
+  ): Promise<IngestResponse> {
     return {
       documentId,
       chunksCreated: Math.ceil(content.length / 500),
