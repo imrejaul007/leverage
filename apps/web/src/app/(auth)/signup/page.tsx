@@ -31,7 +31,7 @@ export default function SignupPage() {
       localStorage.setItem('refreshToken', refreshToken);
 
       toast.success('Account created successfully!');
-      router.push('/onboarding');
+      router.push('/dashboard');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Signup failed');
     } finally {

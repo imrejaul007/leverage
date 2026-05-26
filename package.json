@@ -22,9 +22,9 @@
     "dev:web": "cd apps/web && npm run dev"
   },
   "devDependencies": {
+    "eslint": "^10.4.0",
+    "prettier": "^3.8.3",
     "turbo": "^2.0.0",
-    "typescript": "^5.4.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.0"
+    "typescript": "^5.4.0"
   }
 }
