@@ -1,271 +1,297 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
+  const [profile, setProfile] = useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@company.com',
+    phone: '+1 555 123 4567',
+    company: 'Acme Trading Co.',
+    role: 'Trade Manager',
+    country: 'United States',
+  });
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: true,
+    rfqAlerts: true,
+    orderUpdates: true,
+    marketing: false,
+  });
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('leverage_profile');
+    if (stored) setProfile(JSON.parse(stored));
+    const storedNotif = localStorage.getItem('leverage_notifications');
+    if (storedNotif) setNotifications(JSON.parse(storedNotif));
+  }, []);
+
+  const saveProfile = () => {
+    localStorage.setItem('leverage_profile', JSON.stringify(profile));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const saveNotifications = () => {
+    localStorage.setItem('leverage_notifications', JSON.stringify(notifications));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
   const tabs = [
-    { id: 'profile', label: 'Profile' },
-    { id: 'company', label: 'Company' },
-    { id: 'notifications', label: 'Notifications' },
-    { id: 'security', label: 'Security' },
-    { id: 'billing', label: 'Billing' },
-    { id: 'integrations', label: 'Integrations' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'company', label: 'Company', icon: '🏢' },
+    { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'security', label: 'Security', icon: '🔒' },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Settings</h1>
-
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Tabs */}
-        <div className="lg:w-64 flex lg:flex-col gap-2 overflow-x-auto">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800 text-gray-400 hover:text-white'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Content */}
-        <div className="flex-1">
-          {activeTab === 'profile' && (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-6">
-              <h2 className="text-lg font-semibold text-white">Profile Settings</h2>
-
-              <div className="flex items-center gap-6">
-                <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
-                  JD
-                </div>
-                <div>
-                  <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors">
-                    Upload Photo
-                  </button>
-                  <p className="text-gray-400 text-sm mt-2">JPG, PNG up to 5MB</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">First Name</label>
-                  <input
-                    type="text"
-                    defaultValue="John"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Last Name</label>
-                  <input
-                    type="text"
-                    defaultValue="Doe"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Email</label>
-                  <input
-                    type="email"
-                    defaultValue="john.doe@company.com"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    defaultValue="+1 (555) 123-4567"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Role</label>
-                  <input
-                    type="text"
-                    defaultValue="Trade Manager"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Timezone</label>
-                  <select className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500">
-                    <option>UTC-8 Pacific Time</option>
-                    <option>UTC-5 Eastern Time</option>
-                    <option>UTC+0 London</option>
-                    <option>UTC+1 Central European</option>
-                  </select>
-                </div>
-              </div>
-
-              <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                Save Changes
-              </button>
-            </div>
-          )}
-
-          {activeTab === 'company' && (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-6">
-              <h2 className="text-lg font-semibold text-white">Company Settings</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-gray-400 text-sm mb-2">Company Name</label>
-                  <input
-                    type="text"
-                    defaultValue="Acme Trading Corp"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Business Type</label>
-                  <select className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500">
-                    <option>Exporter</option>
-                    <option>Importer</option>
-                    <option>Trading Company</option>
-                    <option>Manufacturer</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Industry</label>
-                  <select className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500">
-                    <option>Electronics</option>
-                    <option>Manufacturing</option>
-                    <option>Raw Materials</option>
-                    <option>Consumer Goods</option>
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-gray-400 text-sm mb-2">Address</label>
-                  <input
-                    type="text"
-                    defaultValue="123 Business Park Drive, Suite 400"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">City</label>
-                  <input
-                    type="text"
-                    defaultValue="San Francisco"
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-sm mb-2">Country</label>
-                  <select className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500">
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>United Kingdom</option>
-                    <option>Germany</option>
-                  </select>
-                </div>
-              </div>
-
-              <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                Save Changes
-              </button>
-            </div>
-          )}
-
-          {activeTab === 'notifications' && (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-6">
-              <h2 className="text-lg font-semibold text-white">Notification Preferences</h2>
-
-              <div className="space-y-4">
-                {[
-                  { label: 'Email Notifications', desc: 'Receive updates via email' },
-                  { label: 'Order Updates', desc: 'Get notified when order status changes' },
-                  { label: 'Shipment Tracking', desc: 'Receive tracking updates for shipments' },
-                  { label: 'Messages', desc: 'Get notified when you receive new messages' },
-                  { label: 'Marketing', desc: 'Receive promotional emails and offers' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
-                    <div>
-                      <p className="text-white font-medium">{item.label}</p>
-                      <p className="text-gray-400 text-sm">{item.desc}</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" defaultChecked={i < 4} className="sr-only peer" />
-                      <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'security' && (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-6">
-              <h2 className="text-lg font-semibold text-white">Security Settings</h2>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-white font-medium mb-4">Change Password</h3>
-                  <div className="space-y-4 max-w-md">
-                    <div>
-                      <label className="block text-gray-400 text-sm mb-2">Current Password</label>
-                      <input
-                        type="password"
-                        className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-sm mb-2">New Password</label>
-                      <input
-                        type="password"
-                        className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-sm mb-2">Confirm New Password</label>
-                      <input
-                        type="password"
-                        className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                      Update Password
-                    </button>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-slate-700">
-                  <h3 className="text-white font-medium mb-4">Two-Factor Authentication</h3>
-                  <div className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
-                    <div>
-                      <p className="text-white">2FA is currently disabled</p>
-                      <p className="text-gray-400 text-sm">Add an extra layer of security to your account</p>
-                    </div>
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                      Enable
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {(activeTab === 'billing' || activeTab === 'integrations') && (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <div className="text-center py-12">
-                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                <p className="text-gray-400">{activeTab === 'billing' ? 'Billing settings' : 'Integration settings'} coming soon...</p>
-              </div>
-            </div>
-          )}
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold text-[#F4F1EA]">Settings</h1>
+        <p className="text-[#D8CCBC]/60 text-sm">Manage your account settings</p>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 overflow-x-auto">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
+              activeTab === tab.id ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'
+            }`}
+          >
+            <span>{tab.icon}</span>
+            <span>{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Profile Tab */}
+      {activeTab === 'profile' && (
+        <div className="card">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Profile Information</h2>
+
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] text-2xl font-bold">
+              {profile.firstName[0]}{profile.lastName[0]}
+            </div>
+            <button className="px-4 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-lg text-sm font-medium">
+              Change Photo
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">First Name</label>
+              <input
+                type="text"
+                value={profile.firstName}
+                onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Last Name</label>
+              <input
+                type="text"
+                value={profile.lastName}
+                onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Email</label>
+              <input
+                type="email"
+                value={profile.email}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Phone</label>
+              <input
+                type="tel"
+                value={profile.phone}
+                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Company</label>
+              <input
+                type="text"
+                value={profile.company}
+                onChange={(e) => setProfile({ ...profile, company: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Role</label>
+              <input
+                type="text"
+                value={profile.role}
+                onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+                className="input w-full"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={saveProfile}
+            className="mt-6 px-6 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm"
+          >
+            {saved ? '✓ Saved!' : 'Save Changes'}
+          </button>
+        </div>
+      )}
+
+      {/* Company Tab */}
+      {activeTab === 'company' && (
+        <div className="card">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Company Information</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <label className="block text-[#D8CCBC] text-sm mb-2">Company Name</label>
+              <input type="text" value={profile.company} className="input w-full" />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Business Type</label>
+              <select className="input w-full">
+                <option>Trading Company</option>
+                <option>Manufacturer</option>
+                <option>Exporter</option>
+                <option>Importer</option>
+                <option>Freight Forwarder</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Country</label>
+              <select value={profile.country} className="input w-full">
+                <option>United States</option>
+                <option>China</option>
+                <option>India</option>
+                <option>Germany</option>
+                <option>UAE</option>
+                <option>Singapore</option>
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-[#D8CCBC] text-sm mb-2">Address</label>
+              <textarea className="input w-full resize-none" rows={3} placeholder="Enter company address..." />
+            </div>
+          </div>
+
+          <button className="mt-6 px-6 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm">
+            Update Company
+          </button>
+        </div>
+      )}
+
+      {/* Notifications Tab */}
+      {activeTab === 'notifications' && (
+        <div className="card">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Notification Preferences</h2>
+
+          <div className="space-y-4">
+            {[
+              { key: 'email', label: 'Email Notifications', desc: 'Receive updates via email' },
+              { key: 'push', label: 'Push Notifications', desc: 'Browser push notifications' },
+              { key: 'rfqAlerts', label: 'RFQ Alerts', desc: 'New quotes and RFQ updates' },
+              { key: 'orderUpdates', label: 'Order Updates', desc: 'Shipment and delivery updates' },
+              { key: 'marketing', label: 'Marketing', desc: 'Promotions and announcements' },
+            ].map(item => (
+              <div key={item.key} className="flex items-center justify-between p-4 bg-[rgba(255,255,255,0.03)] rounded-xl">
+                <div>
+                  <p className="text-[#F4F1EA] font-medium">{item.label}</p>
+                  <p className="text-[#D8CCBC]/50 text-sm">{item.desc}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setNotifications({ ...notifications, [item.key]: !notifications[item.key as keyof typeof notifications] });
+                    saveNotifications();
+                  }}
+                  className={`w-12 h-7 rounded-full transition-colors ${
+                    notifications[item.key as keyof typeof notifications] ? 'bg-[#C49A6C]' : 'bg-[rgba(255,255,255,0.1)]'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                    notifications[item.key as keyof typeof notifications] ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Security Tab */}
+      {activeTab === 'security' && (
+        <div className="space-y-6">
+          <div className="card">
+            <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Change Password</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[#D8CCBC] text-sm mb-2">Current Password</label>
+                <input type="password" className="input w-full" placeholder="Enter current password" />
+              </div>
+              <div>
+                <label className="block text-[#D8CCBC] text-sm mb-2">New Password</label>
+                <input type="password" className="input w-full" placeholder="Enter new password" />
+              </div>
+              <div>
+                <label className="block text-[#D8CCBC] text-sm mb-2">Confirm New Password</label>
+                <input type="password" className="input w-full" placeholder="Confirm new password" />
+              </div>
+            </div>
+
+            <button className="mt-6 px-6 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm">
+              Update Password
+            </button>
+          </div>
+
+          <div className="card">
+            <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Two-Factor Authentication</h2>
+            <p className="text-[#D8CCBC]/50 text-sm mb-4">Add an extra layer of security to your account</p>
+            <button className="px-6 py-2.5 bg-[#0E3B36] text-[#F4F1EA] rounded-xl font-medium text-sm border border-[rgba(255,255,255,0.1)]">
+              Enable 2FA
+            </button>
+          </div>
+
+          <div className="card">
+            <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Active Sessions</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💻</span>
+                  <div>
+                    <p className="text-[#F4F1EA] text-sm">MacBook Pro - Chrome</p>
+                    <p className="text-[#D8CCBC]/50 text-xs">New York, USA • Current session</p>
+                  </div>
+                </div>
+                <span className="text-emerald-400 text-sm">Active</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">📱</span>
+                  <div>
+                    <p className="text-[#F4F1EA] text-sm">iPhone 15 - Safari</p>
+                    <p className="text-[#D8CCBC]/50 text-xs">2 hours ago</p>
+                  </div>
+                </div>
+                <button className="text-red-400 text-sm hover:underline">Revoke</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
