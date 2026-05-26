@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { documentsApi } from '@/lib/api-client';
 
 interface Document {
   id: string;
@@ -15,7 +13,7 @@ interface Document {
   fileSize?: string;
 }
 
-// Mock data for demo
+// Mock data for demo - no API calls
 const mockDocuments: Document[] = [
   { id: '1', name: 'Commercial Invoice - Order #1234', type: 'INVOICE', status: 'VALIDATED', createdAt: '2024-01-20', fileSize: '245 KB' },
   { id: '2', name: 'Bill of Lading - Shipment #5678', type: 'BILL_OF_LADING', status: 'PENDING_SIGNATURE', createdAt: '2024-01-19', fileSize: '128 KB' },
@@ -28,23 +26,14 @@ const mockDocuments: Document[] = [
 export default function DocumentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [documents, setDocuments] = useState<Document[]>(mockDocuments);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Try API first, fall back to mock data
-  const { data, isLoading, isError } = useQuery<Document[]>({
-    queryKey: ['documents'],
-    queryFn: async () => {
-      try {
-        const response = await documentsApi.list();
-        return response.data.data?.documents || response.data.data || [];
-      } catch {
-        // Return mock data if API fails (demo mode)
-        return mockDocuments;
-      }
-    },
-    retry: false,
-  });
+  // For now, use mock data only - no API calls
+  useEffect(() => {
+    setDocuments(mockDocuments);
+  }, []);
 
-  const documents = data?.length ? data : mockDocuments;
   const types = ['all', ...new Set(documents.map(d => d.type).filter(Boolean))] as string[];
 
   const statusColors: Record<string, string> = {
@@ -100,13 +89,6 @@ export default function DocumentsPage() {
           ))}
         </select>
       </div>
-
-      {/* Error State */}
-      {isError && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
-          Failed to load documents. Please try again.
-        </div>
-      )}
 
       {/* Loading State */}
       {isLoading && (
