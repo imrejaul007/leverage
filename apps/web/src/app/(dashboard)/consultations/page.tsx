@@ -30,8 +30,6 @@ const keywords = ['Wheat', 'Sugar', 'Pulses', 'Rice', 'Spices', 'Cotton', 'Tea',
 export default function ConsultationsPage() {
   const [activeTab, setActiveTab] = useState('book');
   const [selectedExpert, setSelectedExpert] = useState<typeof experts[0] | null>(experts[1]);
-  const [selectedDate, setSelectedDate] = useState('28');
-  const [selectedDuration, setSelectedDuration] = useState('30');
 
   return (
     <div className="min-h-screen bg-[#081512]">
@@ -226,7 +224,7 @@ export default function ConsultationsPage() {
             </div>
           </div>
 
-          {/* Consultation Categories */}
+          {/* How it Works */}
           <div className="bg-[rgba(255,255,255,0.02)] rounded-2xl p-6 mb-6">
             <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">How Consultation & Ad Credit Works</h2>
             <div className="grid grid-cols-3 gap-4">
@@ -234,7 +232,7 @@ export default function ConsultationsPage() {
                 { num: '1', title: 'Buy Ad Credits', desc: 'Purchase credits to book consultations or advertise your products' },
                 { num: '2', title: 'Book Sessions', desc: 'Use credits to book expert consultations or boost your listings' },
                 { num: '3', title: 'Grow Business', desc: 'Get expert advice or reach more buyers globally' },
-              ].map((item) => (
+              ].map(item => (
                 <div key={item.num} className="bg-[#0E3B36]/50 rounded-xl p-4">
                   <div className="w-10 h-10 bg-[#C49A6C] rounded-xl flex items-center justify-center text-[#081512] text-lg font-bold mb-3">
                     {item.num}
