@@ -12,7 +12,7 @@ import { api } from '@/lib/api-client';
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<'normal' | 'demo'>('normal');
+  const [skipAuth] = useState(() => process.env.NODE_ENV === 'development');
 
   const {
     register,
@@ -47,7 +47,6 @@ export default function LoginPage() {
   };
 
   const handleDemoLogin = async () => {
-    setLoginMethod('demo');
     setIsLoading(true);
     try {
       const response = await api.post('/auth/demo');
@@ -69,6 +68,22 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSkipAuth = () => {
+    // Bypass auth for development/demo
+    const demoUser = {
+      id: 'demo-user-001',
+      email: 'demo@leverage.demo',
+      firstName: 'Demo',
+      lastName: 'User',
+      role: 'BUYER',
+    };
+    localStorage.setItem('accessToken', 'demo-token');
+    localStorage.setItem('refreshToken', 'demo-refresh-token');
+    localStorage.setItem('user', JSON.stringify(demoUser));
+    toast.success('Skipped to dashboard!');
+    router.push('/dashboard');
   };
 
   return (
@@ -129,7 +144,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50"
             >
-              {isLoading && loginMethod === 'normal' ? 'Signing in...' : 'Sign in'}
+              Sign in
             </button>
 
             <div className="relative my-4">
@@ -147,9 +162,18 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 border border-slate-600"
             >
-              {isLoading && loginMethod === 'demo' ? 'Creating demo...' : 'Try Demo Account'}
+              Try Demo Account
             </button>
           </form>
+
+          {/* Skip Auth Button - Development Only */}
+          <button
+            type="button"
+            onClick={handleSkipAuth}
+            className="w-full mt-4 py-2 text-gray-500 hover:text-gray-400 text-sm transition-colors border border-slate-700 rounded-lg"
+          >
+            Skip Authentication (Demo)
+          </button>
 
           <div className="mt-6 text-center">
             <p className="text-gray-400 text-sm">
