@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && npm install && npm run build --filter=@leverage/web",
+  "buildCommand": "cd ../.. && npm install && npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "regions": ["sin1"],
