@@ -2,47 +2,80 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { ordersApi } from '@/lib/api-client';
+
+interface Order {
+  id: string;
+  orderNumber?: string;
+  status: string;
+  total: number;
+  buyer?: string;
+  seller?: string;
+  product?: string;
+  quantity?: number;
+  createdAt?: string;
+}
 
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const tabs = [
-    { id: 'all', label: 'All Orders', count: 24 },
-    { id: 'pending', label: 'Pending', count: 5 },
-    { id: 'processing', label: 'Processing', count: 8 },
-    { id: 'shipped', label: 'Shipped', count: 6 },
-    { id: 'delivered', label: 'Delivered', count: 5 },
-  ];
+  const { data, isLoading, isError } = useQuery<Order[]>({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      const response = await ordersApi.list();
+      return response.data.data || [];
+    },
+    retry: false,
+  });
 
-  const orders = [
-    { id: 'LBL-2024-001', buyer: 'TechCorp Inc.', product: 'Industrial Sensors X200', quantity: 50, total: 14999.50, status: 'processing', date: '2024-01-15' },
-    { id: 'LBL-2024-002', buyer: 'Global Supplies Ltd.', product: 'Premium Steel Bearings', quantity: 200, total: 17900.00, status: 'shipped', date: '2024-01-14' },
-    { id: 'LBL-2024-003', buyer: 'Manufacturing Pro', product: 'LED Display Module', quantity: 100, total: 4500.00, status: 'pending', date: '2024-01-16' },
-    { id: 'LBL-2024-004', buyer: 'Industrial Solutions', product: 'Hydraulic Pump HP-500', quantity: 10, total: 12500.00, status: 'delivered', date: '2024-01-10' },
-    { id: 'LBL-2024-005', buyer: 'AutoParts Unlimited', product: 'Safety Gloves (Box)', quantity: 500, total: 12495.00, status: 'processing', date: '2024-01-15' },
+  const orders = data || [];
+
+  const tabs = [
+    { id: 'all', label: 'All Orders', count: orders.length },
+    { id: 'pending', label: 'Pending', count: orders.filter(o => o.status === 'PENDING').length },
+    { id: 'processing', label: 'Processing', count: orders.filter(o => o.status === 'PROCESSING').length },
+    { id: 'shipped', label: 'Shipped', count: orders.filter(o => o.status === 'SHIPPED').length },
+    { id: 'delivered', label: 'Delivered', count: orders.filter(o => o.status === 'DELIVERED').length },
   ];
 
   const statusColors: Record<string, string> = {
+    PENDING: 'bg-amber-600/20 text-amber-400',
+    PROCESSING: 'bg-blue-600/20 text-blue-400',
+    SHIPPED: 'bg-purple-600/20 text-purple-400',
+    DELIVERED: 'bg-emerald-600/20 text-emerald-400',
+    CANCELLED: 'bg-red-600/20 text-red-400',
     pending: 'bg-amber-600/20 text-amber-400',
     processing: 'bg-blue-600/20 text-blue-400',
     shipped: 'bg-purple-600/20 text-purple-400',
     delivered: 'bg-emerald-600/20 text-emerald-400',
+    cancelled: 'bg-red-600/20 text-red-400',
   };
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          order.buyer.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTab = activeTab === 'all' || order.status === activeTab;
+    const matchesSearch =
+      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (order.orderNumber || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (order.buyer || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTab = activeTab === 'all' || order.status.toLowerCase() === activeTab.toLowerCase();
     return matchesSearch && matchesTab;
   });
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Orders</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">Orders</h1>
+        <Link
+          href="/rfqs/new"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+        >
+          + Create Order
+        </Link>
+      </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+      <div className="flex gap-2 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -50,7 +83,7 @@ export default function OrdersPage() {
             className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-gray-400 hover:text-white'
+                : 'bg-slate-800 text-gray-400 hover:bg-slate-700'
             }`}
           >
             {tab.label} ({tab.count})
@@ -59,56 +92,81 @@ export default function OrdersPage() {
       </div>
 
       {/* Search */}
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search orders..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-slate-800 text-white rounded-lg px-4 py-2 pl-10 border border-slate-700 focus:outline-none focus:border-blue-500"
-        />
-        <svg className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
+      <input
+        type="text"
+        placeholder="Search orders..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
 
-      {/* Orders Table */}
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-slate-700">
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Order ID</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Buyer</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Product</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Qty</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Total</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Status</th>
-              <th className="text-left px-6 py-4 text-gray-400 font-medium">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.map(order => (
-              <tr key={order.id} className="border-b border-slate-700/50 hover:bg-slate-700/50">
-                <td className="px-6 py-4">
-                  <Link href={`/orders/${order.id}`} className="text-blue-400 hover:text-blue-300 font-mono">
-                    {order.id}
-                  </Link>
-                </td>
-                <td className="px-6 py-4 text-white">{order.buyer}</td>
-                <td className="px-6 py-4 text-gray-300">{order.product}</td>
-                <td className="px-6 py-4 text-gray-300">{order.quantity}</td>
-                <td className="px-6 py-4 text-white font-semibold">${order.total.toLocaleString()}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[order.status]}`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-gray-400">{order.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Error State */}
+      {isError && (
+        <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
+          <p className="text-red-400">Failed to load orders. Please try again.</p>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="space-y-4">
+          {[1,2,3,4,5].map(i => (
+            <div key={i} className="bg-slate-800 rounded-xl p-6 border border-slate-700 animate-pulse">
+              <div className="h-4 bg-slate-700 rounded w-1/4 mb-4"></div>
+              <div className="h-8 bg-slate-700 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && filteredOrders.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-400 mb-4">No orders found</p>
+          <Link href="/products" className="text-blue-400 hover:text-blue-300">
+            Browse products to place an order
+          </Link>
+        </div>
+      )}
+
+      {/* Orders List */}
+      {!isLoading && filteredOrders.length > 0 && (
+        <div className="space-y-4">
+          {filteredOrders.map(order => (
+            <Link
+              key={order.id}
+              href={`/orders/${order.id}`}
+              className="block bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="text-lg font-semibold text-white">
+                      {order.orderNumber || order.id}
+                    </h3>
+                    <span className={`px-2 py-1 text-xs rounded-full ${statusColors[order.status] || 'bg-gray-600/20 text-gray-400'}`}>
+                      {order.status}
+                    </span>
+                  </div>
+                  {order.buyer && (
+                    <p className="text-gray-400 text-sm">Buyer: {order.buyer}</p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-bold text-white">
+                    ${order.total?.toFixed(2) || '0.00'}
+                  </p>
+                  {order.createdAt && (
+                    <p className="text-gray-400 text-sm">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
