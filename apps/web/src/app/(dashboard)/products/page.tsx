@@ -2,27 +2,57 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { productsApi } from '@/lib/api-client';
+import toast from 'react-hot-toast';
+
+interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  price: number;
+  stock?: number;
+  status?: 'active' | 'inactive' | 'draft';
+  images?: string[];
+  sku?: string;
+  createdAt?: string;
+}
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const products = [
-    { id: '1', name: 'Industrial Sensors X200', category: 'Electronics', price: 299.99, stock: 150, status: 'active' },
-    { id: '2', name: 'Premium Steel Bearings', category: 'Hardware', price: 89.50, stock: 500, status: 'active' },
-    { id: '3', name: 'LED Display Module', category: 'Electronics', price: 45.00, stock: 200, status: 'low_stock' },
-    { id: '4', name: 'Hydraulic Pump HP-500', category: 'Machinery', price: 1250.00, stock: 25, status: 'active' },
-    { id: '5', name: 'Copper Wire Spools', category: 'Raw Materials', price: 320.00, stock: 0, status: 'out_of_stock' },
-    { id: '6', name: 'Safety Gloves (Box)', category: 'Safety', price: 24.99, stock: 1000, status: 'active' },
-  ];
+  const { data, isLoading, isError } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const response = await productsApi.list();
+      return response.data.data || [];
+    },
+    retry: false,
+  });
 
-  const categories = ['all', 'Electronics', 'Hardware', 'Machinery', 'Raw Materials', 'Safety'];
+  const products = data || [];
+  const categories = ['all', ...new Set(products.map(p => p.category).filter(Boolean))] as string[];
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const getStatusBadge = (status?: string) => {
+    switch (status) {
+      case 'active':
+        return <span className="px-2 py-1 text-xs rounded-full bg-emerald-500/20 text-emerald-400">Active</span>;
+      case 'draft':
+        return <span className="px-2 py-1 text-xs rounded-full bg-yellow-500/20 text-yellow-400">Draft</span>;
+      case 'inactive':
+        return <span className="px-2 py-1 text-xs rounded-full bg-gray-500/20 text-gray-400">Inactive</span>;
+      default:
+        return <span className="px-2 py-1 text-xs rounded-full bg-gray-500/20 text-gray-400">Unknown</span>;
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -44,16 +74,13 @@ export default function ProductsPage() {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-800 text-white rounded-lg px-4 py-2 pl-10 border border-slate-700 focus:outline-none focus:border-blue-500"
+            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <svg className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
         </div>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="bg-slate-800 text-white rounded-lg px-4 py-2 border border-slate-700 focus:outline-none focus:border-blue-500"
+          className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {categories.map(cat => (
             <option key={cat} value={cat}>{cat === 'all' ? 'All Categories' : cat}</option>
@@ -61,37 +88,70 @@ export default function ProductsPage() {
         </select>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
-          <Link
-            key={product.id}
-            href={`/products/${product.id}`}
-            className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-colors"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                product.status === 'active' ? 'bg-emerald-600/20 text-emerald-400' :
-                product.status === 'low_stock' ? 'bg-amber-600/20 text-amber-400' :
-                'bg-red-600/20 text-red-400'
-              }`}>
-                {product.status.replace('_', ' ')}
-              </span>
+      {/* Error State */}
+      {isError && (
+        <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
+          <p className="text-red-400">Failed to load products. Please try again.</p>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="bg-slate-800 rounded-xl p-6 border border-slate-700 animate-pulse">
+              <div className="h-4 bg-slate-700 rounded w-3/4 mb-4"></div>
+              <div className="h-6 bg-slate-700 rounded w-1/2"></div>
             </div>
-            <h3 className="text-white font-semibold mb-1">{product.name}</h3>
-            <p className="text-gray-400 text-sm mb-3">{product.category}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-white">${product.price.toFixed(2)}</span>
-              <span className="text-gray-400 text-sm">{product.stock} in stock</span>
-            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && filteredProducts.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-400 mb-4">No products found</p>
+          <Link href="/products/new" className="text-blue-400 hover:text-blue-300">
+            Add your first product
           </Link>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Products Grid */}
+      {!isLoading && filteredProducts.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.map((product) => (
+            <Link
+              key={product.id}
+              href={`/products/${product.id}`}
+              className="bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors"
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center">
+                    <span className="text-2xl">📦</span>
+                  </div>
+                  {getStatusBadge(product.status)}
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-1">{product.name}</h3>
+                {product.category && (
+                  <p className="text-sm text-gray-400 mb-3">{product.category}</p>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-xl font-bold text-white">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  {product.stock !== undefined && (
+                    <span className={`text-sm ${product.stock < 10 ? 'text-red-400' : 'text-gray-400'}`}>
+                      {product.stock} in stock
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
