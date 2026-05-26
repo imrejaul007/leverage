@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
 interface Supplier {
@@ -12,6 +12,8 @@ interface Supplier {
   rating: number;
   responseTime: string;
   established: string;
+  products: number;
+  responseRate: string;
 }
 
 interface Product {
@@ -19,9 +21,11 @@ interface Product {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number;
   currency: string;
   moq: string;
   image: string;
+  images: string[];
   category: string;
   supplier: Supplier;
   tradeTerms: string[];
@@ -31,6 +35,18 @@ interface Product {
   paymentTerms: string[];
   supplyCapacity: string;
   certifications: string[];
+  reviews: Review[];
+  relatedProducts: string[];
+  salesCount: number;
+}
+
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  comment: string;
+  country: string;
 }
 
 const supplier: Supplier = {
@@ -42,17 +58,21 @@ const supplier: Supplier = {
   rating: 4.8,
   responseTime: '< 2h',
   established: '2015',
+  products: 45,
+  responseRate: '98%',
 };
 
 const products: Record<string, Product> = {
   '1': {
     id: '1',
     name: 'Premium Basmati Rice 1121',
-    description: 'Extra long grain, aromatic basmati rice. Aged 2 years for perfect cooking. Preferred by restaurants and hotels worldwide. Sourced directly from farms in Haryana, India. Non-sticky texture and fluffy appearance when cooked.',
+    description: 'Extra long grain, aromatic basmati rice. Aged 2 years for perfect cooking. Preferred by restaurants and hotels worldwide. Sourced directly from farms in Haryana, India. Non-sticky texture and fluffy appearance when cooked. Perfect for biryanis, pilafs, and everyday meals.',
     price: 850,
+    originalPrice: 950,
     currency: 'USD',
     moq: '50 MT',
     image: '🍚',
+    images: ['🍚', '🌾', '🍲'],
     category: 'Food & Agriculture',
     supplier: supplier,
     tradeTerms: ['FOB', 'CIF', 'EXW'],
@@ -64,20 +84,30 @@ const products: Record<string, Product> = {
       'Origin': 'Haryana, India',
       'Crop Year': '2023',
       'Purity': '99.5% min',
+      'Admixture': '0.5% max',
+      'Color': 'White/Creamy',
     },
     packaging: '25kg/50kg PP Bags',
-    paymentTerms: ['LC at Sight', 'TT 30% Advance'],
+    paymentTerms: ['LC at Sight', 'TT 30% Advance', 'D/P'],
     supplyCapacity: '500 MT/month',
-    certifications: ['FSSAI', 'ISO 22000', 'HACCP'],
+    certifications: ['FSSAI', 'ISO 22000', 'HACCP', 'APEDA Certified'],
+    salesCount: 1248,
+    relatedProducts: ['5', '8', '10'],
+    reviews: [
+      { id: '1', author: 'Ahmed K.', rating: 5, date: '2024-01-15', comment: 'Excellent quality rice. Perfect for our restaurant chain.', country: '🇦🇪' },
+      { id: '2', author: 'Sarah M.', rating: 5, date: '2024-01-10', comment: 'Fast delivery and great packaging. Will order again.', country: '🇬🇧' },
+      { id: '3', author: 'John D.', rating: 4, date: '2024-01-05', comment: 'Good quality, slight variation in grain length.', country: '🇺🇸' },
+    ],
   },
   '2': {
     id: '2',
-    name: 'Cotton Yarn 40/1 Combed',
-    description: 'Premium quality 100% organic cotton yarn. OEKO-TEX certified for sustainable textiles.',
+    name: 'Organic Cotton Yarn 40/1',
+    description: 'Premium quality 100% organic cotton yarn. OEKO-TEX certified for sustainable textiles. Perfect for weaving and knitting applications.',
     price: 3.20,
     currency: 'USD',
     moq: '10 MT',
     image: '🧶',
+    images: ['🧶', '🧵', '👕'],
     category: 'Textiles',
     supplier: supplier,
     tradeTerms: ['FOB', 'CIF'],
@@ -85,35 +115,45 @@ const products: Record<string, Product> = {
       'Count': 'Ne 40/1',
       'Type': 'Combed',
       'Material': '100% Organic Cotton',
+      'Twist': 'S/Z',
       'Strength': '280 cN min',
     },
     packaging: 'Cone 1.5kg',
     paymentTerms: ['LC at Sight', 'TT 30% Advance'],
     supplyCapacity: '100 MT/month',
-    certifications: ['OEKO-TEX', 'GOTS'],
+    certifications: ['OEKO-TEX', 'GOTS', 'ISO 9001'],
+    salesCount: 520,
+    relatedProducts: ['1', '6', '3'],
+    reviews: [
+      { id: '1', author: ' Textile Co.', rating: 5, date: '2024-01-12', comment: 'Premium quality yarn. Very consistent.', country: '🇩🇪' },
+    ],
   },
-  '3': {
-    id: '3',
-    name: 'Solar Panels 550W Mono PERC',
-    description: 'Tier 1 monocrystalline solar panels with PERC technology.',
-    price: 165,
+  '5': {
+    id: '5',
+    name: 'Olive Oil Extra Virgin',
+    description: 'Cold pressed, first harvest olive oil. Premium quality from Turkish farms.',
+    price: 4.50,
     currency: 'USD',
-    moq: '100 units',
-    image: '☀️',
-    category: 'Energy',
-    supplier: { ...supplier, id: '2', name: 'Shanghai Import Co.', country: 'China', countryCode: '🇨🇳', rating: 4.6, responseTime: '< 4h' },
-    tradeTerms: ['FOB', 'CIF', 'DDP'],
+    moq: '5 MT',
+    image: '🫒',
+    images: ['🫒', '🫒🌿'],
+    category: 'Food & Agriculture',
+    supplier: { ...supplier, id: '3', name: 'Turkey Merchants', country: 'Turkey', countryCode: '🇹🇷', rating: 4.9 },
+    tradeTerms: ['FOB', 'CIF', 'EXW'],
     featured: true,
     specifications: {
-      'Power': '550W',
-      'Efficiency': '21.5%',
-      'Cell Type': 'Monocrystalline PERC',
-      'Warranty': '25 years linear',
+      'Grade': 'Extra Virgin',
+      'Acidity': '0.5% max',
+      'Origin': 'Aegean, Turkey',
+      'Processing': 'Cold Pressed',
     },
-    packaging: '31 pcs/pallet',
-    paymentTerms: ['LC at Sight', 'T/T 30%'],
-    supplyCapacity: '5MW/month',
-    certifications: ['IEC 61215', 'CE', 'TUV'],
+    packaging: '5L Tin / 1L Bottle',
+    paymentTerms: ['LC at Sight', 'TT 30%'],
+    supplyCapacity: '200 MT/month',
+    certifications: ['USDA Organic', 'EU Organic', 'IFS'],
+    salesCount: 3450,
+    relatedProducts: ['1', '8', '10'],
+    reviews: [],
   },
 };
 
@@ -125,8 +165,16 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [selectedTradeTerm, setSelectedTradeTerm] = useState('FOB');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const product = products[params.id] || products['1'];
+  const relatedProducts = product.relatedProducts?.map(id => products[id]).filter(Boolean) || [];
+
+  const averageRating = useMemo(() => {
+    if (!product.reviews.length) return 0;
+    return product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length;
+  }, [product.reviews]);
 
   const handleQuoteRequest = async () => {
     if (!quantity || !message) return;
@@ -155,15 +203,41 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     }, 3000);
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: product.name,
+        text: `Check out ${product.name} on Leverage`,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 pb-24 sm:pb-6">
       {/* Back Button */}
-      <Link href="/marketplace" className="inline-flex items-center gap-2 text-[#D8CCBC] hover:text-[#F4F1EA] text-sm">
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        Back
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link href="/marketplace" className="inline-flex items-center gap-2 text-[#D8CCBC] hover:text-[#F4F1EA] text-sm">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Marketplace
+        </Link>
+        <div className="flex items-center gap-2">
+          <button onClick={handleShare} className="p-2 text-[#D8CCBC] hover:text-[#F4F1EA]">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-2.4-2.6-4-4-4-1.6 0-3 1.6-3 4 0 1.6 1.6 3 4 3 2.482 0 2.938.114 3.342.658M9.144 7.758C9.09 7.348 9 6.897 9 6.5c0-2.4-2.6-4-4-4s-4 1.6-4 4c0 .397.09.848.144 1.258M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <button onClick={() => setIsFavorite(!isFavorite)} className={`p-2 ${isFavorite ? 'text-red-400' : 'text-[#D8CCBC]'} hover:text-red-400`}>
+            <svg className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
 
       {/* Success Toast */}
       {showSuccess && (
@@ -175,100 +249,176 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
         </div>
       )}
 
-      {/* Product Image */}
-      <div className="bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-8 sm:p-12 flex items-center justify-center relative">
-        <span className="text-8xl sm:text-9xl">{product.image}</span>
-        {product.featured && (
-          <span className="absolute top-4 left-4 px-3 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">
-            Featured
-          </span>
-        )}
-      </div>
+      {/* Breadcrumb */}
+      <nav className="text-sm text-[#D8CCBC]/60">
+        <Link href="/marketplace" className="hover:text-[#C49A6C]">Marketplace</Link>
+        <span className="mx-2">/</span>
+        <Link href={`/marketplace?category=${product.category}`} className="hover:text-[#C49A6C]">{product.category}</Link>
+        <span className="mx-2">/</span>
+        <span className="text-[#F4F1EA]">{product.name}</span>
+      </nav>
 
-      {/* Product Info */}
-      <div>
-        <div className="flex flex-wrap gap-2 mb-2">
-          <span className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC] text-xs rounded">{product.category}</span>
-          {product.tradeTerms.slice(0, 2).map(term => (
-            <span key={term} className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC]/70 text-xs rounded">{term}</span>
-          ))}
-        </div>
-        <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA] mb-2">{product.name}</h1>
-        <p className="text-[#D8CCBC]/70 text-sm">{product.description}</p>
-      </div>
-
-      {/* Price Card */}
-      <div className="bg-gradient-to-br from-[#0E3B36]/50 to-transparent rounded-2xl p-4 sm:p-6">
-        <div className="flex items-end gap-4 mb-4">
-          <div>
-            <p className="text-[#D8CCBC]/60 text-sm">Reference Price</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#C49A6C]">${product.price}</p>
-            <p className="text-[#D8CCBC]/50 text-sm">per MT</p>
+      {/* Product Image Gallery */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <div className="aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-8 flex items-center justify-center relative">
+            <span className="text-8xl sm:text-9xl">{product.images?.[selectedImage] || product.image}</span>
+            {product.featured && (
+              <span className="absolute top-4 left-4 px-3 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">
+                Featured
+              </span>
+            )}
+            {product.originalPrice && (
+              <span className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-lg">
+                {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+              </span>
+            )}
           </div>
-          <div className="flex-1">
-            <p className="text-[#D8CCBC]/60 text-sm">MOQ</p>
-            <p className="text-lg font-semibold text-[#F4F1EA]">{product.moq}</p>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => setActiveTab('quote')}
-            className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
-              activeTab === 'quote'
-                ? 'bg-[#C49A6C] text-[#081512]'
-                : 'bg-[#0E3B36] text-[#F4F1EA]'
-            }`}
-          >
-            Get Quote
-          </button>
-          <button
-            onClick={() => setActiveTab('bid')}
-            className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
-              activeTab === 'bid'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-[#0E3B36] text-[#F4F1EA]'
-            }`}
-          >
-            Place Bid
-          </button>
-        </div>
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#C49A6C]">{product.supplyCapacity}</p>
-          <p className="text-[#D8CCBC]/50 text-xs">Supply</p>
-        </div>
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#C49A6C]">{product.supplier.responseTime}</p>
-          <p className="text-[#D8CCBC]/50 text-xs">Response</p>
-        </div>
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#C49A6C]">{product.supplier.rating}</p>
-          <p className="text-[#D8CCBC]/50 text-xs">Rating</p>
-        </div>
-      </div>
-
-      {/* Supplier Card */}
-      <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-xl">
-            {product.supplier.countryCode}
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-[#F4F1EA]">{product.supplier.name}</h3>
-              {product.supplier.verified && (
-                <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-              )}
+          {product.images && product.images.length > 1 && (
+            <div className="flex gap-2">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16 rounded-lg bg-[#0E3B36] flex items-center justify-center ${selectedImage === i ? 'ring-2 ring-[#C49A6C]' : ''}`}
+                >
+                  <span className="text-2xl">{img}</span>
+                </button>
+              ))}
             </div>
-            <p className="text-[#D8CCBC]/50 text-sm">Est. {product.supplier.established}</p>
+          )}
+        </div>
+
+        {/* Product Info */}
+        <div className="space-y-4">
+          <div>
+            <div className="flex flex-wrap gap-2 mb-2">
+              <span className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC] text-xs rounded">{product.category}</span>
+              {product.tradeTerms.slice(0, 2).map(term => (
+                <span key={term} className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC]/70 text-xs rounded">{term}</span>
+              ))}
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA] mb-2">{product.name}</h1>
+            <p className="text-[#D8CCBC]/70 text-sm">{product.description}</p>
           </div>
+
+          {/* Rating & Sales */}
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              {[1,2,3,4,5].map(star => (
+                <svg key={star} className={`w-4 h-4 ${star <= averageRating ? 'text-[#C49A6C]' : 'text-[#D8CCBC]/30'}`} fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+              <span className="ml-1 text-[#F4F1EA] font-medium">{averageRating.toFixed(1)}</span>
+              <span className="text-[#D8CCBC]/50">({product.reviews.length} reviews)</span>
+            </div>
+            <span className="text-[#D8CCBC]/50">|</span>
+            <span className="text-[#D8CCBC]/70">{product.salesCount.toLocaleString()} sold</span>
+          </div>
+
+          {/* Price Card */}
+          <div className="bg-gradient-to-br from-[#0E3B36]/50 to-transparent rounded-2xl p-4 sm:p-6">
+            <div className="flex items-end gap-4 mb-4">
+              <div>
+                <p className="text-[#D8CCBC]/60 text-sm">Reference Price</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-2xl sm:text-3xl font-bold text-[#C49A6C]">${product.price}</p>
+                  <p className="text-[#D8CCBC]/50 text-sm">/{product.currency}</p>
+                  {product.originalPrice && (
+                    <p className="text-[#D8CCBC]/50 text-sm line-through">${product.originalPrice}</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex-1">
+                <p className="text-[#D8CCBC]/60 text-sm">MOQ</p>
+                <p className="text-lg font-semibold text-[#F4F1EA]">{product.moq}</p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setActiveTab('quote')}
+                className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
+                  activeTab === 'quote'
+                    ? 'bg-[#C49A6C] text-[#081512]'
+                    : 'bg-[#0E3B36] text-[#F4F1EA]'
+                }`}
+              >
+                Get Quote
+              </button>
+              <button
+                onClick={() => setActiveTab('bid')}
+                className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
+                  activeTab === 'bid'
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-[#0E3B36] text-[#F4F1EA]'
+                }`}
+              >
+                Place Bid
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-4 gap-2">
+            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
+              <p className="text-sm font-bold text-[#C49A6C]">{product.supplyCapacity}</p>
+              <p className="text-[#D8CCBC]/50 text-xs">Supply</p>
+            </div>
+            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
+              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.responseTime}</p>
+              <p className="text-[#D8CCBC]/50 text-xs">Response</p>
+            </div>
+            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
+              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.responseRate}</p>
+              <p className="text-[#D8CCBC]/50 text-xs">Response Rate</p>
+            </div>
+            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
+              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.products}</p>
+              <p className="text-[#D8CCBC]/50 text-xs">Products</p>
+            </div>
+          </div>
+
+          {/* Supplier Card */}
+          <Link href={`/suppliers/${product.supplier.id}`} className="block bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4 hover:border-[#C49A6C]/30 transition-colors">
+            <div className="flex items-start gap-3">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-2xl">
+                {product.supplier.countryCode}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-[#F4F1EA]">{product.supplier.name}</h3>
+                  {product.supplier.verified && (
+                    <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex items-center gap-3 mt-1 text-sm">
+                  <span className="flex items-center gap-1 text-[#C49A6C]">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    {product.supplier.rating}
+                  </span>
+                  <span className="text-[#D8CCBC]/50">Est. {product.supplier.established}</span>
+                </div>
+              </div>
+              <button className="px-4 py-2 bg-[#0E3B36] text-[#D8CCBC] text-sm rounded-lg hover:bg-[#0f4a42]">
+                Visit Shop
+              </button>
+            </div>
+          </Link>
+
+          {/* Message Supplier */}
+          <button className="w-full py-3 bg-[#0E3B36] text-[#D8CCBC] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#0f4a42] transition-colors">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Message Supplier
+          </button>
         </div>
       </div>
 
@@ -276,6 +426,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
         {activeTab === 'quote' ? (
           <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-[#F4F1EA]">Request Quotation</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
@@ -305,7 +456,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Describe your requirements..."
+                placeholder="Describe your requirements, destination port, delivery timeline..."
                 rows={3}
                 className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none"
               />
@@ -327,6 +478,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
         ) : (
           <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-[#F4F1EA]">Place Your Bid</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
@@ -358,7 +510,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <div className="flex justify-between text-sm">
                   <span className="text-[#D8CCBC]/60">Your Bid:</span>
                   <span className={parseFloat(bidAmount) < product.price ? 'text-emerald-400' : 'text-[#F4F1EA]'}>
-                    ${bidAmount}/MT
+                    ${bidAmount}/MT {parseFloat(bidAmount) < product.price ? '(Competitive!)' : ''}
                   </span>
                 </div>
               )}
@@ -393,12 +545,12 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
       {/* Specifications */}
       <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Specifications</h2>
-        <div className="grid grid-cols-2 gap-2">
+        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Product Specifications</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {Object.entries(product.specifications).map(([key, value]) => (
             <div key={key} className="bg-[#0E3B36]/30 rounded-lg p-3">
               <p className="text-[#D8CCBC]/60 text-xs">{key}</p>
-              <p className="text-[#F4F1EA] font-medium text-sm">{value}</p>
+              <p className="text-[#F4F1EA] font-medium text-sm mt-1">{value}</p>
             </div>
           ))}
         </div>
@@ -406,10 +558,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
       {/* Certifications */}
       <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Certifications</h2>
+        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Certifications & Standards</h2>
         <div className="flex flex-wrap gap-2">
           {product.certifications.map(cert => (
-            <span key={cert} className="px-3 py-1.5 bg-[#0E3B36] text-[#C49A6C] rounded-lg text-sm font-medium">
+            <span key={cert} className="px-4 py-2 bg-[#0E3B36] text-[#C49A6C] rounded-xl font-medium">
               ✓ {cert}
             </span>
           ))}
@@ -417,20 +569,83 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       </div>
 
       {/* Payment & Packaging */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-2">Payment Terms</h3>
-          <div className="space-y-1">
+          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-3">Payment Terms</h3>
+          <div className="space-y-2">
             {product.paymentTerms.map(term => (
-              <p key={term} className="text-[#D8CCBC]/70 text-xs">• {term}</p>
+              <div key={term} className="flex items-center gap-2 text-[#D8CCBC]/70 text-sm">
+                <svg className="w-4 h-4 text-[#C49A6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {term}
+              </div>
             ))}
           </div>
         </div>
         <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-2">Packaging</h3>
-          <p className="text-[#D8CCBC]/70 text-xs">{product.packaging}</p>
+          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-3">Packaging & Delivery</h3>
+          <div className="space-y-2 text-[#D8CCBC]/70 text-sm">
+            <p>📦 {product.packaging}</p>
+            <p>🚢 Supply: {product.supplyCapacity}</p>
+          </div>
         </div>
       </div>
+
+      {/* Reviews */}
+      {product.reviews.length > 0 && (
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-[#F4F1EA]">Customer Reviews</h2>
+            <button className="text-[#C49A6C] text-sm hover:underline">Write Review</button>
+          </div>
+          <div className="space-y-4">
+            {product.reviews.map(review => (
+              <div key={review.id} className="border-b border-[rgba(255,255,255,0.05)] pb-4 last:border-0 last:pb-0">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-xl">{review.country}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#F4F1EA] font-medium">{review.author}</span>
+                      <div className="flex">
+                        {[1,2,3,4,5].map(star => (
+                          <svg key={star} className={`w-4 h-4 ${star <= review.rating ? 'text-[#C49A6C]' : 'text-[#D8CCBC]/30'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-[#D8CCBC]/50 text-xs">{new Date(review.date).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <p className="text-[#D8CCBC]/80 text-sm">{review.comment}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Related Products</h2>
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
+            {relatedProducts.map(rp => (
+              <Link
+                key={rp.id}
+                href={`/marketplace/${rp.id}`}
+                className="flex-shrink-0 w-48 bg-[#0E3B36]/30 rounded-xl p-3 hover:bg-[#0E3B36]/50 transition-colors"
+              >
+                <div className="w-full aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-lg flex items-center justify-center mb-2">
+                  <span className="text-4xl">{rp.image}</span>
+                </div>
+                <h4 className="text-[#F4F1EA] text-sm font-medium line-clamp-1">{rp.name}</h4>
+                <p className="text-[#C49A6C] font-bold mt-1">${rp.price}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
