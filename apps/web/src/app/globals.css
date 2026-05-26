@@ -159,3 +159,69 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  /* Safe area for notched phones */
+  .safe-area-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .safe-area-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Touch-friendly tap targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  @media (hover: none) {
+    .card:hover {
+      border-color: var(--border);
+    }
+  }
+}
+
+/* Mobile bottom nav safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  nav.fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Ensure buttons are large enough for touch */
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-accent {
+    height: 48px;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  .input {
+    height: 48px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+}
