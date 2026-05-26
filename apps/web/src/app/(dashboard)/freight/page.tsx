@@ -28,7 +28,6 @@ export default function FreightPage() {
 
   const handleGetQuote = () => {
     if (!origin || !destination || !weight) return;
-
     quoteMutation.mutate({
       origin,
       destination,
@@ -40,49 +39,53 @@ export default function FreightPage() {
   const quotes: Quote[] = quoteMutation.data || [];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Freight Quotes</h1>
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-[#F4F1EA] mb-2">Freight & Logistics</h1>
+        <p className="text-[#D8CCBC]/60">Get quotes and track your shipments</p>
+      </div>
 
       {/* Quote Calculator */}
-      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h2 className="text-lg font-semibold text-white mb-6">Get a Quote</h2>
+      <div className="card">
+        <h2 className="text-xl font-semibold text-[#F4F1EA] mb-6">Get a Quote</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
-            <label className="block text-gray-400 text-sm mb-2">Origin</label>
+            <label className="block text-[#D8CCBC]/80 text-sm mb-2">Origin</label>
             <input
               type="text"
               placeholder="City or Port"
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
+              className="input w-full"
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-2">Destination</label>
+            <label className="block text-[#D8CCBC]/80 text-sm mb-2">Destination</label>
             <input
               type="text"
               placeholder="City or Port"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
+              className="input w-full"
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-2">Weight (kg)</label>
+            <label className="block text-[#D8CCBC]/80 text-sm mb-2">Weight (kg)</label>
             <input
               type="number"
               placeholder="Weight"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
+              className="input w-full"
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-2">Shipping Type</label>
+            <label className="block text-[#D8CCBC]/80 text-sm mb-2">Shipping Type</label>
             <select
               value={shippingType}
               onChange={(e) => setShippingType(e.target.value as 'sea' | 'air' | 'truck')}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2 border border-slate-600 focus:outline-none focus:border-blue-500"
+              className="input w-full"
             >
               <option value="sea">Sea Freight</option>
               <option value="air">Air Freight</option>
@@ -93,7 +96,7 @@ export default function FreightPage() {
             <button
               onClick={handleGetQuote}
               disabled={!origin || !destination || !weight || quoteMutation.isPending}
-              className="w-full py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white rounded-lg font-medium transition-colors"
+              className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors disabled:opacity-50"
             >
               {quoteMutation.isPending ? 'Getting Quotes...' : 'Get Quotes'}
             </button>
@@ -101,17 +104,10 @@ export default function FreightPage() {
         </div>
       </div>
 
-      {/* Error State */}
-      {quoteMutation.isError && (
-        <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
-          <p className="text-red-400">Failed to get quotes. Please check your inputs and try again.</p>
-        </div>
-      )}
-
       {/* Popular Routes */}
       {!quoteMutation.data && (
         <div>
-          <h2 className="text-lg font-semibold text-white mb-4">Popular Routes</h2>
+          <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">Popular Routes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { from: 'Shanghai', to: 'Los Angeles', seaPrice: 2800, airPrice: 9500 },
@@ -119,20 +115,20 @@ export default function FreightPage() {
               { from: 'Hong Kong', to: 'Dubai', seaPrice: 1800, airPrice: 6500 },
               { from: 'Singapore', to: 'Mumbai', seaPrice: 1200, airPrice: 4800 },
             ].map((route, i) => (
-              <div key={i} className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-                <div className="text-center mb-3">
-                  <span className="text-gray-400 text-sm">{route.from}</span>
-                  <span className="text-gray-600 mx-2">→</span>
-                  <span className="text-gray-400 text-sm">{route.to}</span>
+              <div key={i} className="card hover:border-[#C49A6C]/30 transition-all">
+                <div className="text-center mb-4">
+                  <span className="text-[#D8CCBC]/60 text-sm">{route.from}</span>
+                  <span className="text-[#C49A6C] mx-2">→</span>
+                  <span className="text-[#D8CCBC]/60 text-sm">{route.to}</span>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Sea</span>
-                    <span className="text-white">${route.seaPrice.toLocaleString()}</span>
+                    <span className="text-[#D8CCBC]/50">Sea</span>
+                    <span className="text-[#F4F1EA] font-medium">${route.seaPrice.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Air</span>
-                    <span className="text-white">${route.airPrice.toLocaleString()}</span>
+                    <span className="text-[#D8CCBC]/50">Air</span>
+                    <span className="text-[#F4F1EA] font-medium">${route.airPrice.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -144,37 +140,35 @@ export default function FreightPage() {
       {/* Quote Results */}
       {quoteMutation.data && (
         <div>
-          <h2 className="text-lg font-semibold text-white mb-4">Available Quotes</h2>
+          <h2 className="text-xl font-semibold text-[#F4F1EA] mb-4">Available Quotes</h2>
           {quotes.length === 0 ? (
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 text-center">
-              <p className="text-gray-400">No quotes available for this route. Try different parameters.</p>
+            <div className="card text-center py-12">
+              <p className="text-[#D8CCBC]/50">No quotes available for this route.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {quotes.map((quote, i) => (
-                <div key={i} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center">
-                        <span className="text-xl">🚢</span>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-white">{quote.carrier}</h3>
-                        <p className="text-sm text-gray-400">{quote.type}</p>
-                      </div>
+                <div key={i} className="card hover:border-[#C49A6C]/30 transition-all">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 bg-[#0E3B36] rounded-xl flex items-center justify-center text-2xl">
+                      🚢
+                    </div>
+                    <div>
+                      <h3 className="text-[#F4F1EA] font-semibold">{quote.carrier}</h3>
+                      <p className="text-[#D8CCBC]/50 text-sm">{quote.type}</p>
                     </div>
                   </div>
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-sm text-gray-400">Transit Time</p>
-                      <p className="text-white">{quote.transit}</p>
+                      <p className="text-[#D8CCBC]/50 text-sm">Transit Time</p>
+                      <p className="text-[#F4F1EA]">{quote.transit}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-white">${quote.price.toLocaleString()}</p>
-                      <p className="text-sm text-gray-400">{quote.currency}</p>
+                      <p className="text-3xl font-bold text-[#C49A6C]">${quote.price.toLocaleString()}</p>
+                      <p className="text-[#D8CCBC]/50 text-sm">{quote.currency}</p>
                     </div>
                   </div>
-                  <button className="w-full mt-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                  <button className="w-full mt-4 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors">
                     Book Now
                   </button>
                 </div>

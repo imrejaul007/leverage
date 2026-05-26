@@ -14,9 +14,13 @@ async function bootstrap() {
   app.use(helmet());
 
   // CORS - strict configuration
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || 'http://localhost:3000')
-    .split(',')
-    .map(origin => origin.trim());
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://leverageweb.vercel.app',
+    'https://www.leverageweb.vercel.app',
+    process.env.FRONTEND_URL,
+    process.env.ALLOWED_ORIGINS,
+  ].filter(Boolean);
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -26,14 +30,22 @@ async function bootstrap() {
       // In development, allow localhost without strict checking
       if (process.env.NODE_ENV === 'development') return callback(null, true);
 
-      // Check against allowed origins
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Check against allowed origins (origin might include www subdomain)
+      const normalizedOrigin = origin.replace(/^https?:\/\/www\./, '');
+      const isAllowed = allowedOrigins.some(allowed => {
+        if (!allowed) return false;
+        const normalizedAllowed = allowed.replace(/^https?:\/\/www\./, '');
+        return normalizedOrigin === normalizedAllowed || normalizedOrigin.includes(normalizedAllowed.replace('https://', ''));
+      });
 
+      if (isAllowed) return callback(null, true);
+
+      console.warn(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Client-Info'],
   });
 
   // Global prefix

@@ -41,16 +41,11 @@ export default function OrdersPage() {
   ];
 
   const statusColors: Record<string, string> = {
-    PENDING: 'bg-amber-600/20 text-amber-400',
-    PROCESSING: 'bg-blue-600/20 text-blue-400',
-    SHIPPED: 'bg-purple-600/20 text-purple-400',
-    DELIVERED: 'bg-emerald-600/20 text-emerald-400',
-    CANCELLED: 'bg-red-600/20 text-red-400',
-    pending: 'bg-amber-600/20 text-amber-400',
-    processing: 'bg-blue-600/20 text-blue-400',
-    shipped: 'bg-purple-600/20 text-purple-400',
-    delivered: 'bg-emerald-600/20 text-emerald-400',
-    cancelled: 'bg-red-600/20 text-red-400',
+    PENDING: 'bg-amber-500/20 text-amber-400',
+    PROCESSING: 'bg-blue-500/20 text-blue-400',
+    SHIPPED: 'bg-purple-500/20 text-purple-400',
+    DELIVERED: 'bg-emerald-500/20 text-emerald-400',
+    CANCELLED: 'bg-red-500/20 text-red-400',
   };
 
   const filteredOrders = orders.filter(order => {
@@ -63,15 +58,33 @@ export default function OrdersPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Orders</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-[#F4F1EA] mb-2">Orders</h1>
+          <p className="text-[#D8CCBC]/60">Manage your orders and track shipments</p>
+        </div>
         <Link
           href="/rfqs/new"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors"
         >
           + Create Order
         </Link>
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search orders..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="input w-full pl-10"
+        />
+        <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
       </div>
 
       {/* Tabs */}
@@ -80,10 +93,10 @@ export default function OrdersPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+            className={`px-5 py-2.5 rounded-xl font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-gray-400 hover:bg-slate-700'
+                ? 'bg-[#C49A6C] text-[#081512]'
+                : 'bg-[#0E3B36] text-[#D8CCBC] hover:bg-[#0E3B36]/80'
             }`}
           >
             {tab.label} ({tab.count})
@@ -91,19 +104,10 @@ export default function OrdersPage() {
         ))}
       </div>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search orders..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-
       {/* Error State */}
       {isError && (
-        <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
-          <p className="text-red-400">Failed to load orders. Please try again.</p>
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
+          Failed to load orders. Please try again.
         </div>
       )}
 
@@ -111,9 +115,14 @@ export default function OrdersPage() {
       {isLoading && (
         <div className="space-y-4">
           {[1,2,3,4,5].map(i => (
-            <div key={i} className="bg-slate-800 rounded-xl p-6 border border-slate-700 animate-pulse">
-              <div className="h-4 bg-slate-700 rounded w-1/4 mb-4"></div>
-              <div className="h-8 bg-slate-700 rounded w-1/2"></div>
+            <div key={i} className="card animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="space-y-3">
+                  <div className="h-5 bg-[#0E3B36]/50 rounded w-32"></div>
+                  <div className="h-4 bg-[#0E3B36]/50 rounded w-48"></div>
+                </div>
+                <div className="h-8 bg-[#0E3B36]/50 rounded w-24"></div>
+              </div>
             </div>
           ))}
         </div>
@@ -121,10 +130,13 @@ export default function OrdersPage() {
 
       {/* Empty State */}
       {!isLoading && filteredOrders.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-400 mb-4">No orders found</p>
-          <Link href="/products" className="text-blue-400 hover:text-blue-300">
-            Browse products to place an order
+        <div className="text-center py-16">
+          <div className="w-20 h-20 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">📋</span>
+          </div>
+          <p className="text-[#D8CCBC]/50 text-lg mb-4">No orders found</p>
+          <Link href="/products" className="text-[#C49A6C] hover:text-[#D4AA82] font-medium">
+            Browse products
           </Link>
         </div>
       )}
@@ -136,28 +148,28 @@ export default function OrdersPage() {
             <Link
               key={order.id}
               href={`/orders/${order.id}`}
-              className="block bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors"
+              className="card hover:border-[#C49A6C]/30 transition-all"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-[#F4F1EA] font-semibold">
                       {order.orderNumber || order.id}
                     </h3>
-                    <span className={`px-2 py-1 text-xs rounded-full ${statusColors[order.status] || 'bg-gray-600/20 text-gray-400'}`}>
-                      {order.status}
+                    <span className={`px-3 py-1 text-xs rounded-full capitalize ${statusColors[order.status] || 'bg-gray-500/20 text-gray-400'}`}>
+                      {order.status.toLowerCase()}
                     </span>
                   </div>
                   {order.buyer && (
-                    <p className="text-gray-400 text-sm">Buyer: {order.buyer}</p>
+                    <p className="text-[#D8CCBC]/50 text-sm">Buyer: {order.buyer}</p>
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-bold text-white">
+                  <p className="text-2xl font-bold text-[#C49A6C]">
                     ${order.total?.toFixed(2) || '0.00'}
                   </p>
                   {order.createdAt && (
-                    <p className="text-gray-400 text-sm">
+                    <p className="text-[#D8CCBC]/50 text-sm">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>
                   )}

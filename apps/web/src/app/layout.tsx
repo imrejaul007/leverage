@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   description: 'The complete B2B marketplace for importers, exporters, manufacturers, and freight forwarders. AI-powered compliance, integrated logistics, and seamless trade documentation.',
   keywords: ['B2B marketplace', 'trade', 'import', 'export', 'logistics', 'freight', 'compliance', 'documentation'],
   authors: [{ name: 'Lorar Technologies' }],
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
   openGraph: {
     title: 'Leverage by Lerar',
     description: 'Global Trade Operating System',
