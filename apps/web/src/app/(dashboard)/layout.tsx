@@ -91,10 +91,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#C49A6C] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center shadow-lg shadow-[#C49A6C]/20">
               <span className="text-[#081512] font-bold text-xl brand-font">L</span>
             </div>
-            <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>
+            <div className="flex flex-col">
+              <span className="text-[#C49A6C] text-xl font-bold brand-font leading-none">LEVERAGE</span>
+              <span className="text-[#D8CCBC]/60 text-xs leading-none">Connecting Dots to Ports</span>
+            </div>
           </Link>
         </div>
 
@@ -122,7 +125,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* User Profile */}
         <div className="p-4 border-t border-[rgba(255,255,255,0.05)]">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)]">
-            <div className="w-10 h-10 rounded-full bg-[#C49A6C] flex items-center justify-center text-[#081512] font-semibold">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] font-semibold">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
@@ -178,7 +181,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Page Content */}
-        <main className="p-4 lg:p-8">
+        <main className="p-8">
           {children}
         </main>
       </div>
