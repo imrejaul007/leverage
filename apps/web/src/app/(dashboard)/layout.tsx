@@ -26,7 +26,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { user, isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     setMounted(true);
@@ -36,10 +37,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
-    router.push('/login');
+    router.push('/');
   };
 
-  if (!mounted || isLoading) {
+  if (!mounted) {
     return (
       <div className="min-h-screen bg-[#081512] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#C49A6C] border-t-transparent"></div>
@@ -47,24 +48,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  if (!isAuthenticated) {
-    router.push('/login');
-    return null;
-  }
-
   const initials = getUserInitials(user);
 
   return (
     <div className="min-h-screen bg-[#081512] flex">
       {/* Sidebar - 280px width, #0E3B36 background */}
-      <aside className="w-[280px] bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full">
+      <aside className={`bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full transition-all duration-300 ${sidebarOpen ? 'w-[280px]' : 'w-20'}`}>
         {/* Logo */}
         <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#C49A6C] flex items-center justify-center">
               <span className="text-[#081512] font-bold text-xl brand-font">L</span>
             </div>
-            <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>
+            {sidebarOpen && <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>}
           </Link>
         </div>
 
@@ -83,7 +79,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 }`}
               >
                 <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.name}</span>
+                {sidebarOpen && <span className="font-medium">{item.name}</span>}
               </Link>
             );
           })}
@@ -95,24 +91,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="w-10 h-10 rounded-full bg-[#C49A6C] flex items-center justify-center text-[#081512] font-semibold">
               {initials}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[#F4F1EA] font-medium truncate">{user?.firstName || 'User'}</p>
-              <p className="text-[#D8CCBC]/50 text-sm truncate">{user?.email || ''}</p>
-            </div>
-            <button onClick={handleLogout} className="text-[#D8CCBC]/50 hover:text-red-400 transition-colors">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </button>
+            {sidebarOpen && (
+              <div className="flex-1 min-w-0">
+                <p className="text-[#F4F1EA] font-medium truncate">{user?.firstName || 'User'}</p>
+                <p className="text-[#D8CCBC]/50 text-sm truncate">{user?.email || ''}</p>
+              </div>
+            )}
+            {sidebarOpen && (
+              <button onClick={handleLogout} className="text-[#D8CCBC]/50 hover:text-red-400 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 ml-[280px]">
+      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-[280px]' : 'ml-20'}`}>
         {/* Header - 80px height */}
         <header className="h-[80px] bg-[#0E3B36]/50 backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between px-8 sticky top-0 z-40">
           <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#D8CCBC]/70 hover:text-[#F4F1EA] transition-colors">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <div className="relative">
               <input
                 type="text"

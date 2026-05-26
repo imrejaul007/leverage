@@ -27,14 +27,9 @@ export default function HomePage() {
                 About
               </Link>
             </nav>
-            <div className="flex items-center gap-4">
-              <Link href="/login" className="text-[#D8CCBC] hover:text-[#F4F1EA] transition-colors">
-                Sign In
-              </Link>
-              <Link href="/signup" className="px-5 py-2.5 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] font-semibold rounded-xl transition-colors">
-                Get Started
-              </Link>
-            </div>
+            <Link href="/dashboard" className="px-5 py-2.5 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] font-semibold rounded-xl transition-colors">
+              Go to Dashboard
+            </Link>
           </div>
         </div>
       </header>
