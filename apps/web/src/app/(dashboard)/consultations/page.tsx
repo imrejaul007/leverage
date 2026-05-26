@@ -51,7 +51,7 @@ export default function ConsultationsPage() {
           <p className="text-[#D8CCBC]/60 text-sm">Connect with trade experts</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-[#C49A6C] flex items-center justify-center text-[#081512] font-bold">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] font-bold shadow-lg shadow-[#C49A6C]/20">
             JD
           </div>
           <div className="hidden sm:block">

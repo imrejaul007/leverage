@@ -34,7 +34,7 @@ export default function HomePage() {
       <section className="py-24 px-8">
         <div className="container mx-auto text-center max-w-4xl">
           <div className="inline-block px-5 py-2 bg-[#0E3B36] border border-[#C49A6C]/30 rounded-full mb-8">
-            <span className="text-[#C49A6C] text-sm font-medium">🚀 Global Trade Made Simple</span>
+            <span className="text-[#C49A6C] text-sm font-medium">🚀 Connecting Dots to Ports</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold text-[#F4F1EA] mb-6 leading-tight">
             The Operating System for
