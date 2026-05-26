@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     setMounted(true);
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const initials = getUserInitials(user);
 
-  // Mobile: Show MobileHeader only
+  // Mobile: Show MobileHeader with hamburger + bottom nav
   if (isMobile) {
     return (
       <div className="min-h-screen bg-[#081512]">
@@ -72,22 +72,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  // Desktop: Show sidebar
+  // Desktop: Always show sidebar (no hamburger)
   return (
     <div className="min-h-screen bg-[#081512] flex">
-      {/* Sidebar Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar - 280px width, #0E3B36 background */}
-      <aside className={`fixed top-0 left-0 h-full bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col z-50 transition-transform duration-300 ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } w-[280px] hidden lg:flex`}>
-
+      {/* Sidebar - Always visible on desktop */}
+      <aside className="w-[280px] bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full">
         {/* Logo */}
         <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
           <Link href="/" className="flex items-center gap-3">
@@ -142,16 +131,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-[280px]">
-        {/* Header - 80px height */}
+      <div className="flex-1 ml-[280px]">
+        {/* Top Header */}
         <header className="h-[80px] bg-[#0E3B36]/50 backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between px-8 sticky top-0 z-40">
           <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-[#D8CCBC]/70 hover:text-[#F4F1EA] transition-colors">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <div className="relative hidden md:block">
+            <div className="relative">
               <input
                 type="text"
                 placeholder="Search..."
@@ -165,7 +149,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <div className="flex items-center gap-4">
             {/* Notifications */}
-            <button className="relative p-2 text-[#D8CCBC]/70 hover:text-[#F4F1EA] transition-colors hidden sm:block">
+            <button className="relative p-2 text-[#D8CCBC]/70 hover:text-[#F4F1EA] transition-colors">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
