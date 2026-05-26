@@ -66,7 +66,7 @@ const products: Record<string, Product> = {
   '1': {
     id: '1',
     name: 'Premium Basmati Rice 1121',
-    description: 'Extra long grain, aromatic basmati rice. Aged 2 years for perfect cooking. Preferred by restaurants and hotels worldwide. Sourced directly from farms in Haryana, India. Non-sticky texture and fluffy appearance when cooked. Perfect for biryanis, pilafs, and everyday meals.',
+    description: 'Extra long grain, aromatic basmati rice. Aged 2 years for perfect cooking. Preferred by restaurants and hotels worldwide.',
     price: 850,
     originalPrice: 950,
     currency: 'USD',
@@ -84,59 +84,52 @@ const products: Record<string, Product> = {
       'Origin': 'Haryana, India',
       'Crop Year': '2023',
       'Purity': '99.5% min',
-      'Admixture': '0.5% max',
-      'Color': 'White/Creamy',
     },
     packaging: '25kg/50kg PP Bags',
     paymentTerms: ['LC at Sight', 'TT 30% Advance', 'D/P'],
     supplyCapacity: '500 MT/month',
-    certifications: ['FSSAI', 'ISO 22000', 'HACCP', 'APEDA Certified'],
+    certifications: ['FSSAI', 'ISO 22000', 'HACCP'],
     salesCount: 1248,
     relatedProducts: ['5', '8', '10'],
     reviews: [
-      { id: '1', author: 'Ahmed K.', rating: 5, date: '2024-01-15', comment: 'Excellent quality rice. Perfect for our restaurant chain.', country: '🇦🇪' },
-      { id: '2', author: 'Sarah M.', rating: 5, date: '2024-01-10', comment: 'Fast delivery and great packaging. Will order again.', country: '🇬🇧' },
-      { id: '3', author: 'John D.', rating: 4, date: '2024-01-05', comment: 'Good quality, slight variation in grain length.', country: '🇺🇸' },
+      { id: '1', author: 'Ahmed K.', rating: 5, date: '2024-01-15', comment: 'Excellent quality rice.', country: '🇦🇪' },
+      { id: '2', author: 'Sarah M.', rating: 5, date: '2024-01-10', comment: 'Fast delivery.', country: '🇬🇧' },
     ],
   },
   '2': {
     id: '2',
     name: 'Organic Cotton Yarn 40/1',
-    description: 'Premium quality 100% organic cotton yarn. OEKO-TEX certified for sustainable textiles. Perfect for weaving and knitting applications.',
+    description: 'Premium quality 100% organic cotton yarn.',
     price: 3.20,
     currency: 'USD',
     moq: '10 MT',
     image: '🧶',
-    images: ['🧶', '🧵', '👕'],
+    images: ['🧶', '🧵'],
     category: 'Textiles',
     supplier: supplier,
     tradeTerms: ['FOB', 'CIF'],
     specifications: {
       'Count': 'Ne 40/1',
       'Type': 'Combed',
-      'Material': '100% Organic Cotton',
-      'Twist': 'S/Z',
-      'Strength': '280 cN min',
+      'Material': '100% Organic',
     },
     packaging: 'Cone 1.5kg',
     paymentTerms: ['LC at Sight', 'TT 30% Advance'],
     supplyCapacity: '100 MT/month',
-    certifications: ['OEKO-TEX', 'GOTS', 'ISO 9001'],
+    certifications: ['OEKO-TEX', 'GOTS'],
     salesCount: 520,
-    relatedProducts: ['1', '6', '3'],
-    reviews: [
-      { id: '1', author: ' Textile Co.', rating: 5, date: '2024-01-12', comment: 'Premium quality yarn. Very consistent.', country: '🇩🇪' },
-    ],
+    relatedProducts: ['1', '6'],
+    reviews: [],
   },
   '5': {
     id: '5',
     name: 'Olive Oil Extra Virgin',
-    description: 'Cold pressed, first harvest olive oil. Premium quality from Turkish farms.',
+    description: 'Cold pressed, first harvest olive oil.',
     price: 4.50,
     currency: 'USD',
     moq: '5 MT',
     image: '🫒',
-    images: ['🫒', '🫒🌿'],
+    images: ['🫒'],
     category: 'Food & Agriculture',
     supplier: { ...supplier, id: '3', name: 'Turkey Merchants', country: 'Turkey', countryCode: '🇹🇷', rating: 4.9 },
     tradeTerms: ['FOB', 'CIF', 'EXW'],
@@ -145,20 +138,19 @@ const products: Record<string, Product> = {
       'Grade': 'Extra Virgin',
       'Acidity': '0.5% max',
       'Origin': 'Aegean, Turkey',
-      'Processing': 'Cold Pressed',
     },
     packaging: '5L Tin / 1L Bottle',
     paymentTerms: ['LC at Sight', 'TT 30%'],
     supplyCapacity: '200 MT/month',
-    certifications: ['USDA Organic', 'EU Organic', 'IFS'],
+    certifications: ['USDA Organic', 'EU Organic'],
     salesCount: 3450,
-    relatedProducts: ['1', '8', '10'],
+    relatedProducts: ['1', '8'],
     reviews: [],
   },
 };
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState<'quote' | 'bid'>('quote');
+  const [activeTab, setActiveTab] = useState<'quote' | 'bid' | 'requirement'>('quote');
   const [quantity, setQuantity] = useState('');
   const [bidAmount, setBidAmount] = useState('');
   const [message, setMessage] = useState('');
@@ -167,6 +159,17 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  // Requirement form state
+  const [requirementForm, setRequirementForm] = useState({
+    quantity: '',
+    targetPrice: '',
+    customSpecs: '',
+    deliveryLocation: '',
+    deliveryTimeline: '',
+    paymentTerms: '',
+    additionalRequirements: '',
+  });
 
   const product = products[params.id] || products['1'];
   const relatedProducts = product.relatedProducts?.map(id => products[id]).filter(Boolean) || [];
@@ -203,6 +206,26 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     }, 3000);
   };
 
+  const handleRequirementSubmit = async () => {
+    if (!requirementForm.quantity || !requirementForm.deliveryLocation) return;
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      setRequirementForm({
+        quantity: '',
+        targetPrice: '',
+        customSpecs: '',
+        deliveryLocation: '',
+        deliveryTimeline: '',
+        paymentTerms: '',
+        additionalRequirements: '',
+      });
+    }, 3000);
+  };
+
   const handleShare = async () => {
     if (navigator.share) {
       await navigator.share({
@@ -215,9 +238,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     }
   };
 
+  const updateRequirement = (field: string, value: string) => {
+    setRequirementForm(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 pb-24 sm:pb-6">
-      {/* Back Button */}
+      {/* Back Button & Actions */}
       <div className="flex items-center justify-between">
         <Link href="/marketplace" className="inline-flex items-center gap-2 text-[#D8CCBC] hover:text-[#F4F1EA] text-sm">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -245,7 +272,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          {activeTab === 'quote' ? 'Quote request sent!' : 'Bid submitted successfully!'}
+          {activeTab === 'quote' ? 'Quote request sent!' : activeTab === 'bid' ? 'Bid submitted!' : 'Requirements sent to supplier!'}
         </div>
       )}
 
@@ -264,24 +291,14 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           <div className="aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-8 flex items-center justify-center relative">
             <span className="text-8xl sm:text-9xl">{product.images?.[selectedImage] || product.image}</span>
             {product.featured && (
-              <span className="absolute top-4 left-4 px-3 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">
-                Featured
-              </span>
-            )}
-            {product.originalPrice && (
-              <span className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-lg">
-                {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
-              </span>
+              <span className="absolute top-4 left-4 px-3 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">Featured</span>
             )}
           </div>
           {product.images && product.images.length > 1 && (
             <div className="flex gap-2">
               {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedImage(i)}
-                  className={`w-16 h-16 rounded-lg bg-[#0E3B36] flex items-center justify-center ${selectedImage === i ? 'ring-2 ring-[#C49A6C]' : ''}`}
-                >
+                <button key={i} onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16 rounded-lg bg-[#0E3B36] flex items-center justify-center ${selectedImage === i ? 'ring-2 ring-[#C49A6C]' : ''}`}>
                   <span className="text-2xl">{img}</span>
                 </button>
               ))}
@@ -322,42 +339,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <div className="flex items-end gap-4 mb-4">
               <div>
                 <p className="text-[#D8CCBC]/60 text-sm">Reference Price</p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-2xl sm:text-3xl font-bold text-[#C49A6C]">${product.price}</p>
-                  <p className="text-[#D8CCBC]/50 text-sm">/{product.currency}</p>
-                  {product.originalPrice && (
-                    <p className="text-[#D8CCBC]/50 text-sm line-through">${product.originalPrice}</p>
-                  )}
-                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-[#C49A6C]">${product.price}</p>
+                <p className="text-[#D8CCBC]/50 text-sm">/{product.currency}</p>
               </div>
               <div className="flex-1">
                 <p className="text-[#D8CCBC]/60 text-sm">MOQ</p>
                 <p className="text-lg font-semibold text-[#F4F1EA]">{product.moq}</p>
               </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setActiveTab('quote')}
-                className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
-                  activeTab === 'quote'
-                    ? 'bg-[#C49A6C] text-[#081512]'
-                    : 'bg-[#0E3B36] text-[#F4F1EA]'
-                }`}
-              >
-                Get Quote
-              </button>
-              <button
-                onClick={() => setActiveTab('bid')}
-                className={`py-3 rounded-xl font-semibold text-sm transition-colors ${
-                  activeTab === 'bid'
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-[#0E3B36] text-[#F4F1EA]'
-                }`}
-              >
-                Place Bid
-              </button>
             </div>
           </div>
 
@@ -382,7 +370,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
 
           {/* Supplier Card */}
-          <Link href={`/suppliers/${product.supplier.id}`} className="block bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4 hover:border-[#C49A6C]/30 transition-colors">
+          <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
             <div className="flex items-start gap-3">
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-2xl">
                 {product.supplier.countryCode}
@@ -406,11 +394,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   <span className="text-[#D8CCBC]/50">Est. {product.supplier.established}</span>
                 </div>
               </div>
-              <button className="px-4 py-2 bg-[#0E3B36] text-[#D8CCBC] text-sm rounded-lg hover:bg-[#0f4a42]">
-                Visit Shop
-              </button>
             </div>
-          </Link>
+          </div>
 
           {/* Message Supplier */}
           <button className="w-full py-3 bg-[#0E3B36] text-[#D8CCBC] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#0f4a42] transition-colors">
@@ -422,126 +407,175 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      {/* Quote/Bid Form */}
-      <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        {activeTab === 'quote' ? (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#F4F1EA]">Request Quotation</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="MT"
-                  className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]"
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Trade Terms</label>
-                <select
-                  value={selectedTradeTerm}
-                  onChange={(e) => setSelectedTradeTerm(e.target.value)}
-                  className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]"
-                >
-                  {product.tradeTerms.map(term => (
-                    <option key={term} value={term}>{term}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Describe your requirements, destination port, delivery timeline..."
-                rows={3}
-                className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none"
-              />
-            </div>
-            <button
-              onClick={handleQuoteRequest}
-              disabled={isSubmitting}
-              className="w-full py-4 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="w-5 h-5 border-2 border-[#081512]/30 border-t-[#081512] rounded-full animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                '📤 Send Quote Request'
-              )}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#F4F1EA]">Place Your Bid</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="MT"
-                  className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]"
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Your Bid Price *</label>
-                <input
-                  type="number"
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(e.target.value)}
-                  placeholder="per MT"
-                  className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]"
-                />
-              </div>
-            </div>
-            <div className="bg-[#0E3B36]/30 rounded-xl p-3">
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-[#D8CCBC]/60">Market Price:</span>
-                <span className="text-[#F4F1EA]">${product.price}/MT</span>
-              </div>
-              {bidAmount && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-[#D8CCBC]/60">Your Bid:</span>
-                  <span className={parseFloat(bidAmount) < product.price ? 'text-emerald-400' : 'text-[#F4F1EA]'}>
-                    ${bidAmount}/MT {parseFloat(bidAmount) < product.price ? '(Competitive!)' : ''}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Add notes for supplier..."
-                rows={3}
-                className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none"
-              />
-            </div>
-            <button
-              onClick={handleBid}
-              disabled={isSubmitting}
-              className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                '🎯 Submit Bid'
-              )}
-            </button>
-          </div>
-        )}
+      {/* Action Tabs */}
+      <div className="flex gap-2 overflow-x-auto">
+        <button onClick={() => setActiveTab('quote')}
+          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'quote' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
+          📋 Get Quote
+        </button>
+        <button onClick={() => setActiveTab('bid')}
+          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'bid' ? 'bg-emerald-500 text-white' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
+          🎯 Place Bid
+        </button>
+        <button onClick={() => setActiveTab('requirement')}
+          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'requirement' ? 'bg-blue-500 text-white' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
+          📝 Send Requirements
+        </button>
       </div>
+
+      {/* Quote Form */}
+      {activeTab === 'quote' && (
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
+          <h3 className="text-lg font-semibold text-[#F4F1EA]">Request Quotation</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
+              <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="MT"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Trade Terms</label>
+              <select value={selectedTradeTerm} onChange={(e) => setSelectedTradeTerm(e.target.value)}
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]">
+                {product.tradeTerms.map(term => <option key={term} value={term}>{term}</option>)}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3}
+              placeholder="Describe your requirements, destination port, delivery timeline..."
+              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none" />
+          </div>
+          <button onClick={handleQuoteRequest} disabled={isSubmitting}
+            className="w-full py-4 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+            {isSubmitting ? <><span className="w-5 h-5 border-2 border-[#081512]/30 border-t-[#081512] rounded-full animate-spin" />Sending...</> : '📤 Send Quote Request'}
+          </button>
+        </div>
+      )}
+
+      {/* Bid Form */}
+      {activeTab === 'bid' && (
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
+          <h3 className="text-lg font-semibold text-[#F4F1EA]">Place Your Bid</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
+              <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="MT"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Your Bid Price *</label>
+              <input type="number" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} placeholder="per MT"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
+            </div>
+          </div>
+          <div className="bg-[#0E3B36]/30 rounded-xl p-3">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-[#D8CCBC]/60">Market Price:</span>
+              <span className="text-[#F4F1EA]">${product.price}/MT</span>
+            </div>
+            {bidAmount && (
+              <div className="flex justify-between text-sm">
+                <span className="text-[#D8CCBC]/60">Your Bid:</span>
+                <span className={parseFloat(bidAmount) < product.price ? 'text-emerald-400' : 'text-[#F4F1EA]'}>
+                  ${bidAmount}/MT {parseFloat(bidAmount) < product.price ? '(Competitive!)' : ''}
+                </span>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3}
+              placeholder="Add notes for supplier..."
+              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none" />
+          </div>
+          <button onClick={handleBid} disabled={isSubmitting}
+            className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+            {isSubmitting ? <><span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Submitting...</> : '🎯 Submit Bid'}
+          </button>
+        </div>
+      )}
+
+      {/* Requirements Form */}
+      {activeTab === 'requirement' && (
+        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <span className="text-2xl">📝</span>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[#F4F1EA]">Send Your Requirements</h3>
+              <p className="text-[#D8CCBC]/60 text-sm">Tell the supplier exactly what you need</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Required Quantity *</label>
+              <input type="text" value={requirementForm.quantity} onChange={(e) => updateRequirement('quantity', e.target.value)}
+                placeholder="e.g., 100 MT"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Target Price (Optional)</label>
+              <input type="text" value={requirementForm.targetPrice} onChange={(e) => updateRequirement('targetPrice', e.target.value)}
+                placeholder="e.g., $800/MT"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[#D8CCBC] text-sm mb-2">Custom Specifications *</label>
+            <textarea value={requirementForm.customSpecs} onChange={(e) => updateRequirement('customSpecs', e.target.value)} rows={3}
+              placeholder="Describe your exact requirements:&#10;• Specific grade or quality needed&#10;• Required certifications&#10;• Packaging preferences&#10;• Any customization needs..."
+              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500 resize-none" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Delivery Location *</label>
+              <input type="text" value={requirementForm.deliveryLocation} onChange={(e) => updateRequirement('deliveryLocation', e.target.value)}
+                placeholder="e.g., Dubai, UAE"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
+            </div>
+            <div>
+              <label className="block text-[#D8CCBC] text-sm mb-2">Delivery Timeline</label>
+              <input type="text" value={requirementForm.deliveryTimeline} onChange={(e) => updateRequirement('deliveryTimeline', e.target.value)}
+                placeholder="e.g., Within 30 days"
+                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[#D8CCBC] text-sm mb-2">Preferred Payment Terms</label>
+            <select value={requirementForm.paymentTerms} onChange={(e) => updateRequirement('paymentTerms', e.target.value)}
+              className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500">
+              <option value="">Select payment terms</option>
+              {product.paymentTerms.map(term => <option key={term} value={term}>{term}</option>)}
+              <option value="LC 90 Days">LC 90 Days</option>
+              <option value="TT 30% Advance">TT 30% Advance</option>
+              <option value="Open Account">Open Account</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[#D8CCBC] text-sm mb-2">Additional Requirements</label>
+            <textarea value={requirementForm.additionalRequirements} onChange={(e) => updateRequirement('additionalRequirements', e.target.value)} rows={3}
+              placeholder="Any other requirements:&#10;• Sample needed?&#10;• Inspection requirements&#10;• Insurance preferences&#10;• Special handling needs..."
+              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500 resize-none" />
+          </div>
+
+          <button onClick={handleRequirementSubmit} disabled={isSubmitting}
+            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+            {isSubmitting ? (
+              <><span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</>
+            ) : (
+              <>📤 Send Requirements to Supplier</>
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Specifications */}
       <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
@@ -558,7 +592,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
       {/* Certifications */}
       <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Certifications & Standards</h2>
+        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Certifications</h2>
         <div className="flex flex-wrap gap-2">
           {product.certifications.map(cert => (
             <span key={cert} className="px-4 py-2 bg-[#0E3B36] text-[#C49A6C] rounded-xl font-medium">
@@ -568,37 +602,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      {/* Payment & Packaging */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-3">Payment Terms</h3>
-          <div className="space-y-2">
-            {product.paymentTerms.map(term => (
-              <div key={term} className="flex items-center gap-2 text-[#D8CCBC]/70 text-sm">
-                <svg className="w-4 h-4 text-[#C49A6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {term}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#F4F1EA] mb-3">Packaging & Delivery</h3>
-          <div className="space-y-2 text-[#D8CCBC]/70 text-sm">
-            <p>📦 {product.packaging}</p>
-            <p>🚢 Supply: {product.supplyCapacity}</p>
-          </div>
-        </div>
-      </div>
-
       {/* Reviews */}
       {product.reviews.length > 0 && (
         <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#F4F1EA]">Customer Reviews</h2>
-            <button className="text-[#C49A6C] text-sm hover:underline">Write Review</button>
-          </div>
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Customer Reviews</h2>
           <div className="space-y-4">
             {product.reviews.map(review => (
               <div key={review.id} className="border-b border-[rgba(255,255,255,0.05)] pb-4 last:border-0 last:pb-0">
@@ -620,28 +627,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 </div>
                 <p className="text-[#D8CCBC]/80 text-sm">{review.comment}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Related Products</h2>
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
-            {relatedProducts.map(rp => (
-              <Link
-                key={rp.id}
-                href={`/marketplace/${rp.id}`}
-                className="flex-shrink-0 w-48 bg-[#0E3B36]/30 rounded-xl p-3 hover:bg-[#0E3B36]/50 transition-colors"
-              >
-                <div className="w-full aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-lg flex items-center justify-center mb-2">
-                  <span className="text-4xl">{rp.image}</span>
-                </div>
-                <h4 className="text-[#F4F1EA] text-sm font-medium line-clamp-1">{rp.name}</h4>
-                <p className="text-[#C49A6C] font-bold mt-1">${rp.price}</p>
-              </Link>
             ))}
           </div>
         </div>
