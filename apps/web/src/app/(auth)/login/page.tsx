@@ -7,7 +7,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginInput } from '@leverage/shared';
 import toast from 'react-hot-toast';
-import { authApi } from '@/lib/api-client';
+import { api } from '@/lib/api-client';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,16 +26,38 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
     try {
-      const response = await authApi.login(data);
+      const response = await api.post(`${API_BASE_URL}/auth/login`, data);
       const { user, accessToken, refreshToken } = response.data.data;
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
 
       toast.success(`Welcome back, ${user.firstName}!`);
       router.push('/dashboard');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      const message = error.response?.data?.message || 'Login failed';
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.post(`${API_BASE_URL}/auth/demo`);
+      const { user, accessToken, refreshToken } = response.data.data;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      toast.success('Welcome to the demo!');
+      router.push('/dashboard');
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Demo login failed';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -98,6 +122,24 @@ export default function LoginPage() {
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50"
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
+            </button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-slate-800 text-gray-400">or</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 border border-slate-600"
+            >
+              {isLoading ? 'Creating demo...' : 'Try Demo Account'}
             </button>
           </form>
 

@@ -7,7 +7,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupInput } from '@leverage/shared';
 import toast from 'react-hot-toast';
-import { authApi } from '@/lib/api-client';
+import { api } from '@/lib/api-client';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -24,16 +26,18 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupInput) => {
     setIsLoading(true);
     try {
-      const response = await authApi.signup(data);
+      const response = await api.post(`${API_BASE_URL}/auth/signup`, data);
       const { user, accessToken, refreshToken } = response.data.data;
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user', JSON.stringify(user));
 
       toast.success('Account created successfully!');
       router.push('/dashboard');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Signup failed');
+      const message = error.response?.data?.message || 'Signup failed';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

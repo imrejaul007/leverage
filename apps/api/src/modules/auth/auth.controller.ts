@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
-import { SignupDto } from './dto/signup.dto';
+import { SignupDto, UserRole } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('Auth')
@@ -15,7 +15,8 @@ export class AuthController {
   @Post('signup')
   @ApiOperation({ summary: 'Register a new user' })
   async signup(@Body() dto: SignupDto) {
-    return this.authService.signup(dto);
+    const result = await this.authService.signup(dto);
+    return { data: result, message: 'User registered successfully' };
   }
 
   @Public()
@@ -23,7 +24,24 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login with email and password' })
   async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+    const result = await this.authService.login(dto);
+    return { data: result, message: 'Login successful' };
+  }
+
+  @Public()
+  @Post('demo')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Create and login as demo user' })
+  async demoLogin() {
+    const demoUser: SignupDto = {
+      email: `demo_${Date.now()}@leverage.demo`,
+      password: 'Demo123!@#',
+      firstName: 'Demo',
+      lastName: 'User',
+      role: UserRole.BUYER,
+    };
+    const signupResult = await this.authService.signup(demoUser);
+    return { data: signupResult, message: 'Demo account created' };
   }
 
   @Public()
