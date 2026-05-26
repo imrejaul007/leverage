@@ -1,27 +1,25 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { analyticsApi } from '@/lib/api-client';
 
 export default function DashboardPage() {
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['dashboard'],
-    queryFn: async () => {
-      const response = await analyticsApi.getDashboard();
-      return response.data.data;
-    },
-    retry: false,
-  });
+  // Mock data for demo - no API calls
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for demo
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const stats = {
-    rfqs: data?.orders?.value || 127,
-    revenue: data?.revenue?.value || 24500000,
+    rfqs: 127,
+    revenue: 24500000,
     consultations: 48,
     activeBuyers: 892,
   };
@@ -40,6 +38,14 @@ export default function DashboardPage() {
     { label: 'Book Shipment', icon: '🚢', href: '/freight' },
     { label: 'AI Assistant', icon: '🤖', href: '/ai' },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#081512] p-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#C49A6C] border-t-transparent"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#081512] p-8" style={{ maxWidth: '1440px', margin: '0 auto' }}>
@@ -63,30 +69,10 @@ export default function DashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <KPICard
-          title="Active RFQs"
-          value={stats.rfqs.toString()}
-          change="+12"
-          trend="up"
-        />
-        <KPICard
-          title="Revenue YTD"
-          value={`$${(stats.revenue / 1000000).toFixed(1)}M`}
-          change="+8.2%"
-          trend="up"
-        />
-        <KPICard
-          title="Consultations"
-          value={stats.consultations.toString()}
-          change="+5"
-          trend="up"
-        />
-        <KPICard
-          title="Active Buyers"
-          value={stats.activeBuyers.toString()}
-          change="+23"
-          trend="up"
-        />
+        <KPICard title="Active RFQs" value={stats.rfqs.toString()} change="+12" trend="up" />
+        <KPICard title="Revenue YTD" value={`$${(stats.revenue / 1000000).toFixed(1)}M`} change="+8.2%" trend="up" />
+        <KPICard title="Consultations" value={stats.consultations.toString()} change="+5" trend="up" />
+        <KPICard title="Active Buyers" value={stats.activeBuyers.toString()} change="+23" trend="up" />
       </div>
 
       {/* Main Content Grid */}
@@ -103,21 +89,18 @@ export default function DashboardPage() {
 
           {/* Globe Visualization */}
           <div className="relative h-[420px] rounded-xl overflow-hidden bg-gradient-to-b from-[#0E3B36]/20 to-[#081512]">
-            {/* Simplified world map outline */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-80 h-80 rounded-full border-2 border-[#C49A6C]/20"></div>
               <div className="absolute w-64 h-64 rounded-full border border-[#C49A6C]/10"></div>
               <div className="absolute w-48 h-48 rounded-full border border-[#C49A6C]/10"></div>
             </div>
 
-            {/* Trade routes */}
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
               <path d="M80,200 Q200,100 320,180" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
               <path d="M120,100 Q220,180 350,120" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
               <path d="M60,150 Q180,250 340,100" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
             </svg>
 
-            {/* Trade points */}
             <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-[#C49A6C] rounded-full animate-pulse shadow-lg shadow-[#C49A6C]/50"></div>
             <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-[#C49A6C] rounded-full animate-pulse shadow-lg shadow-[#C49A6C]/50" style={{ animationDelay: '0.5s' }}></div>
             <div className="absolute bottom-1/3 left-1/2 w-3 h-3 bg-[#C49A6C] rounded-full animate-pulse shadow-lg shadow-[#C49A6C]/50" style={{ animationDelay: '1s' }}></div>
@@ -126,7 +109,6 @@ export default function DashboardPage() {
             <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-[#F4F1EA] rounded-full"></div>
           </div>
 
-          {/* Trade Stats */}
           <div className="grid grid-cols-4 gap-4 mt-6">
             <div className="text-center p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
               <p className="text-[#C49A6C] text-xl font-semibold">127</p>
@@ -149,16 +131,11 @@ export default function DashboardPage() {
 
         {/* Right Column */}
         <div className="space-y-8">
-          {/* Quick Actions */}
           <div className="card">
             <h2 className="text-xl font-semibold text-[#F4F1EA] mb-5">Quick Actions</h2>
             <div className="grid grid-cols-2 gap-3">
               {quickActions.map((action) => (
-                <Link
-                  key={action.label}
-                  href={action.href}
-                  className="flex flex-col items-center gap-2 p-4 bg-[#0E3B36]/50 rounded-xl hover:bg-[#0E3B36] transition-colors group"
-                >
+                <Link key={action.label} href={action.href} className="flex flex-col items-center gap-2 p-4 bg-[#0E3B36]/50 rounded-xl hover:bg-[#0E3B36] transition-colors group">
                   <span className="text-3xl">{action.icon}</span>
                   <span className="text-[#F4F1EA] text-sm font-medium group-hover:text-[#C49A6C] transition-colors">{action.label}</span>
                 </Link>
@@ -166,7 +143,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Recent Activity */}
           <div className="card">
             <h2 className="text-xl font-semibold text-[#F4F1EA] mb-5">Recent Activity</h2>
             <div className="space-y-4">
@@ -186,7 +162,6 @@ export default function DashboardPage() {
 
       {/* Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-        {/* Top Markets */}
         <div className="card">
           <h2 className="text-xl font-semibold text-[#F4F1EA] mb-5">Top Markets</h2>
           <div className="space-y-4">
@@ -200,7 +175,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Compliance Alerts */}
         <div className="card">
           <h2 className="text-xl font-semibold text-[#F4F1EA] mb-5">Compliance Alerts</h2>
           <div className="space-y-3">
@@ -215,7 +189,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Wallet */}
         <div className="card">
           <h2 className="text-xl font-semibold text-[#F4F1EA] mb-5">Trade Wallet</h2>
           <div className="p-4 bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl border border-[#C49A6C]/20">

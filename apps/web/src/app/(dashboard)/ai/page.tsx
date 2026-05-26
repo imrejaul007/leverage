@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { chatApi } from '@/lib/api-client';
 
 interface Message {
   id: string;
@@ -11,24 +9,27 @@ interface Message {
   timestamp: Date;
 }
 
+// Mock AI responses for demo
+const mockResponses = [
+  "Based on the HS code classification, your product falls under Chapter 84 of the Harmonized System. The applicable HS code is 8471.30.00 for portable digital automatic data processing machines.",
+  "For importing goods from China to the USA, you'll need to comply with Section 301 tariffs. Additional documentation including COO, Commercial Invoice, and Bill of Lading are required.",
+  "The estimated import duty for your product (HS Code 8471.30.00) is approximately 0% under the Most Favored Nation (MFN) tariff rate. However, additional fees may apply including Customs Processing Fees.",
+  "I recommend using Incoterms 2020 CIF for your shipment to include insurance coverage. This protects both buyer and seller during transit.",
+  "For sea freight from Shanghai to Los Angeles, transit time is typically 14-21 days. Air freight takes 3-5 days but is approximately 3-4x more expensive.",
+];
+
 export default function AIPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Hello! I\'m your AI Trade Assistant. I can help you with:\n\n• HS code classification\n• Compliance questions\n• Document analysis\n• Trade regulations\n• Duty calculations\n\nHow can I assist you today?',
+      content: 'Hello! I\'m your AI Trade Assistant on Leverage by Lerar. I can help you with:\n\n• HS code classification\n• Compliance requirements\n• Document analysis\n• Trade regulations\n• Duty calculations\n• Freight optimization\n\nHow can I assist you today?',
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const chatMutation = useMutation({
-    mutationFn: async (message: string) => {
-      const response = await chatApi.chat(message);
-      return response.data.data;
-    },
-  });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,25 +47,20 @@ export default function AIPage() {
 
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setIsTyping(true);
 
-    try {
-      const response = await chatMutation.mutateAsync(input);
+    // Simulate AI response
+    setTimeout(() => {
+      const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.message?.content || 'I\'m processing your request...',
+        content: randomResponse,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    }
+      setIsTyping(false);
+    }, 1500);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -78,7 +74,7 @@ export default function AIPage() {
     { label: 'Classify HS code', prompt: 'Help me classify a product with HS code. Product description: ' },
     { label: 'Check compliance', prompt: 'What compliance requirements apply for importing goods from ' },
     { label: 'Calculate duty', prompt: 'Calculate import duty for product with HS code ' },
-    { label: 'Draft invoice', prompt: 'Help me draft a commercial invoice template for ' },
+    { label: 'Freight estimate', prompt: 'What is the estimated freight cost from Shanghai to Los Angeles for ' },
   ];
 
   return (
@@ -91,7 +87,7 @@ export default function AIPage() {
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 rounded-full">
           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-          <span className="text-emerald-400 text-sm font-medium">Online</span>
+          <span className="text-emerald-400 text-sm font-medium">AI Online</span>
         </div>
       </div>
 
@@ -131,7 +127,7 @@ export default function AIPage() {
           </div>
         ))}
 
-        {chatMutation.isPending && (
+        {isTyping && (
           <div className="flex justify-start">
             <div className="bg-[#0E3B36] text-[#F4F1EA] rounded-2xl px-5 py-3">
               <div className="flex gap-1">
@@ -152,13 +148,13 @@ export default function AIPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask about compliance, HS codes, documents..."
+          placeholder="Ask about compliance, HS codes, documents, freight..."
           className="flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl px-4 py-3 text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] resize-none"
           rows={1}
         />
         <button
           onClick={handleSend}
-          disabled={!input.trim() || chatMutation.isPending}
+          disabled={!input.trim() || isTyping}
           className="px-8 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors disabled:opacity-50 flex items-center gap-2"
         >
           <span>Send</span>

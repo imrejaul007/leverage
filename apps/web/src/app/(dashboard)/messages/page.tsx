@@ -1,31 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { messagesApi } from '@/lib/api-client';
 
 interface Conversation {
   id: string;
-  participants?: Array<{ id: string; name: string; email?: string }>;
-  lastMessage?: string;
-  lastMessageAt?: string;
-  unreadCount?: number;
+  participant: { name: string; company?: string };
+  lastMessage: string;
+  lastMessageAt: string;
+  unreadCount: number;
 }
+
+// Mock data for demo
+const mockConversations: Conversation[] = [
+  { id: '1', participant: { name: 'Sarah Chen', company: 'Asia Trade Hub' }, lastMessage: 'The shipment has been confirmed for next week.', lastMessageAt: '2 min ago', unreadCount: 2 },
+  { id: '2', participant: { name: 'Rakesh Sharma', company: 'Global Trade Partners' }, lastMessage: 'Please find attached the updated quotation.', lastMessageAt: '15 min ago', unreadCount: 0 },
+  { id: '3', participant: { name: 'Michael Torres', company: 'FastFreight Solutions' }, lastMessage: 'Container CL-1234 is ready for pickup.', lastMessageAt: '1 hour ago', unreadCount: 1 },
+  { id: '4', participant: { name: 'John Williams', company: 'US Imports Inc.' }, lastMessage: 'Payment confirmed. Thank you!', lastMessageAt: '3 hours ago', unreadCount: 0 },
+  { id: '5', participant: { name: 'Ahmad Hassan', company: 'Dubai Trading Co.' }, lastMessage: 'Can you send the COO document?', lastMessageAt: '1 day ago', unreadCount: 0 },
+];
 
 export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading, isError } = useQuery<Conversation[]>({
-    queryKey: ['conversations'],
-    queryFn: async () => {
-      const response = await messagesApi.getConversations();
-      return response.data.data || [];
-    },
-    retry: false,
-  });
-
-  const conversations = data || [];
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setConversations(mockConversations);
+      setIsLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="h-[calc(100vh-200px)] flex gap-6">
@@ -34,13 +41,6 @@ export default function MessagesPage() {
         <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
           <h2 className="text-xl font-semibold text-[#F4F1EA]">Messages</h2>
         </div>
-
-        {/* Error State */}
-        {isError && (
-          <div className="p-4 text-red-400 text-sm">
-            Failed to load conversations
-          </div>
-        )}
 
         {/* Loading State */}
         {isLoading && (
@@ -68,9 +68,7 @@ export default function MessagesPage() {
         {!isLoading && conversations.length > 0 && (
           <div className="flex-1 overflow-y-auto">
             {conversations.map(conv => {
-              const participant = conv.participants?.[0];
-              const name = participant?.name || 'Unknown';
-              const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+              const initials = conv.participant.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
               return (
                 <Link
@@ -86,18 +84,17 @@ export default function MessagesPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-[#F4F1EA]">{name}</span>
-                        {conv.lastMessageAt && (
-                          <span className="text-xs text-[#D8CCBC]/40">
-                            {formatTime(conv.lastMessageAt)}
-                          </span>
-                        )}
+                        <span className="font-medium text-[#F4F1EA]">{conv.participant.name}</span>
+                        <span className="text-xs text-[#D8CCBC]/40">{conv.lastMessageAt}</span>
                       </div>
+                      {conv.participant.company && (
+                        <p className="text-xs text-[#C49A6C] mb-1">{conv.participant.company}</p>
+                      )}
                       <p className="text-sm text-[#D8CCBC]/50 truncate">
-                        {conv.lastMessage || 'No messages yet'}
+                        {conv.lastMessage}
                       </p>
                     </div>
-                    {conv.unreadCount && conv.unreadCount > 0 && (
+                    {conv.unreadCount > 0 && (
                       <span className="w-6 h-6 bg-[#C49A6C] rounded-full text-[#081512] text-xs font-bold flex items-center justify-center">
                         {conv.unreadCount}
                       </span>
@@ -123,21 +120,4 @@ export default function MessagesPage() {
       </div>
     </div>
   );
-}
-
-function formatTime(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return 'now';
-  if (minutes < 60) return `${minutes}m`;
-  if (hours < 24) return `${hours}h`;
-  if (days < 7) return `${days}d`;
-
-  return date.toLocaleDateString();
 }

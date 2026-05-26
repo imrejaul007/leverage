@@ -1,36 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { ordersApi } from '@/lib/api-client';
 
 interface Order {
   id: string;
-  orderNumber?: string;
-  status: string;
+  orderNumber: string;
+  status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
   total: number;
-  buyer?: string;
-  seller?: string;
-  product?: string;
-  quantity?: number;
-  createdAt?: string;
+  buyer: string;
+  product: string;
+  quantity: number;
+  createdAt: string;
 }
+
+// Mock data for demo
+const mockOrders: Order[] = [
+  { id: '1', orderNumber: 'ORD-2024-001', status: 'SHIPPED', total: 85000, buyer: 'Tokyo Trading Co.', product: 'Premium Basmati Rice', quantity: '100 MT', createdAt: '2024-01-15' },
+  { id: '2', orderNumber: 'ORD-2024-002', status: 'PROCESSING', total: 125000, buyer: 'Berlin Imports GmbH', product: 'Solar Panels - 550W', quantity: '500 units', createdAt: '2024-01-18' },
+  { id: '3', orderNumber: 'ORD-2024-003', status: 'PENDING', total: 45000, buyer: 'Singapore Logistics Pte', product: 'Cotton Yarn 40/1', quantity: '15 MT', createdAt: '2024-01-20' },
+  { id: '4', orderNumber: 'ORD-2024-004', status: 'DELIVERED', total: 620000, buyer: 'Dubai Trading LLC', product: 'Steel Billets', quantity: '1000 MT', createdAt: '2024-01-10' },
+  { id: '5', orderNumber: 'ORD-2024-005', status: 'PROCESSING', total: 22500, buyer: 'Mumbai Pharma Ltd', product: 'Pharmaceutical Raw Materials', quantity: '500 kg', createdAt: '2024-01-19' },
+];
 
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading, isError } = useQuery<Order[]>({
-    queryKey: ['orders'],
-    queryFn: async () => {
-      const response = await ordersApi.list();
-      return response.data.data || [];
-    },
-    retry: false,
-  });
-
-  const orders = data || [];
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOrders(mockOrders);
+      setIsLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const tabs = [
     { id: 'all', label: 'All Orders', count: orders.length },
@@ -51,8 +56,8 @@ export default function OrdersPage() {
   const filteredOrders = orders.filter(order => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (order.orderNumber || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (order.buyer || '').toLowerCase().includes(searchQuery.toLowerCase());
+      order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.buyer.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTab = activeTab === 'all' || order.status.toLowerCase() === activeTab.toLowerCase();
     return matchesSearch && matchesTab;
   });
@@ -65,10 +70,7 @@ export default function OrdersPage() {
           <h1 className="text-3xl font-bold text-[#F4F1EA] mb-2">Orders</h1>
           <p className="text-[#D8CCBC]/60">Manage your orders and track shipments</p>
         </div>
-        <Link
-          href="/rfqs/new"
-          className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors"
-        >
+        <Link href="/rfqs/new" className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors">
           + Create Order
         </Link>
       </div>
@@ -103,13 +105,6 @@ export default function OrdersPage() {
           </button>
         ))}
       </div>
-
-      {/* Error State */}
-      {isError && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400">
-          Failed to load orders. Please try again.
-        </div>
-      )}
 
       {/* Loading State */}
       {isLoading && (
@@ -153,26 +148,17 @@ export default function OrdersPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-[#F4F1EA] font-semibold">
-                      {order.orderNumber || order.id}
-                    </h3>
-                    <span className={`px-3 py-1 text-xs rounded-full capitalize ${statusColors[order.status] || 'bg-gray-500/20 text-gray-400'}`}>
+                    <h3 className="text-[#F4F1EA] font-semibold">{order.orderNumber}</h3>
+                    <span className={`px-3 py-1 text-xs rounded-full capitalize ${statusColors[order.status]}`}>
                       {order.status.toLowerCase()}
                     </span>
                   </div>
-                  {order.buyer && (
-                    <p className="text-[#D8CCBC]/50 text-sm">Buyer: {order.buyer}</p>
-                  )}
+                  <p className="text-[#D8CCBC]/50 text-sm">{order.product} • {order.quantity}</p>
+                  <p className="text-[#C49A6C] text-sm">Buyer: {order.buyer}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-[#C49A6C]">
-                    ${order.total?.toFixed(2) || '0.00'}
-                  </p>
-                  {order.createdAt && (
-                    <p className="text-[#D8CCBC]/50 text-sm">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </p>
-                  )}
+                  <p className="text-2xl font-bold text-[#C49A6C]">${order.total.toLocaleString()}</p>
+                  <p className="text-[#D8CCBC]/50 text-sm">{order.createdAt}</p>
                 </div>
               </div>
             </Link>
