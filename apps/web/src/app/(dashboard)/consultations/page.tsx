@@ -1,21 +1,30 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-const tabs = [
-  { id: 'verify', label: 'Verify', icon: '✓' },
-  { id: 'book', label: 'Book', icon: '📅' },
-  { id: 'solutions', label: 'Solutions', icon: '💡' },
-  { id: 'grow', label: 'Grow', icon: '🌍' },
-];
+interface Expert {
+  id: string;
+  name: string;
+  title: string;
+  image: string;
+  rating: number;
+  reviews: number;
+  price: number;
+  subPrice: number;
+  online: boolean;
+  verified: boolean;
+  specialties: string[];
+  bio: string;
+}
 
-const experts = [
-  { id: '1', name: 'Rakesh Sharma', title: 'Shipping Consultant', image: 'RS', rating: 4.9, reviews: 128, price: 3000, subPrice: 2250, online: true, verified: true },
-  { id: '2', name: 'Anita Iyer', title: 'Customs Expert', image: 'AI', rating: 4.8, reviews: 96, price: 2500, subPrice: 1875, online: true, verified: true },
-  { id: '3', name: 'Vikram Singh', title: 'Logistics Expert', image: 'VS', rating: 4.9, reviews: 74, price: 3500, subPrice: 2625, online: true, verified: true },
-  { id: '4', name: 'Neha Bansal', title: 'Trade Finance', image: 'NB', rating: 4.8, reviews: 63, price: 2800, subPrice: 2100, online: false, verified: true },
-  { id: '5', name: 'David Lee', title: 'Supply Chain', image: 'DL', rating: 4.9, reviews: 58, price: 3200, subPrice: 2400, online: false, verified: true },
-  { id: '6', name: 'Maria Santos', title: 'Import Export', image: 'MS', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true },
+const experts: Expert[] = [
+  { id: '1', name: 'Rakesh Sharma', title: 'Shipping Consultant', image: 'RS', rating: 4.9, reviews: 128, price: 3000, subPrice: 2250, online: true, verified: true, specialties: ['Freight Forwarding', 'Customs', 'Documentation'], bio: '15+ years of experience in international shipping and logistics.' },
+  { id: '2', name: 'Anita Iyer', title: 'Customs Expert', image: 'AI', rating: 4.8, reviews: 96, price: 2500, subPrice: 1875, online: true, verified: true, specialties: ['Import/Export', 'Duty Optimization', 'Trade Compliance'], bio: 'Former customs officer with 12 years of experience.' },
+  { id: '3', name: 'Vikram Singh', title: 'Logistics Expert', image: 'VS', rating: 4.9, reviews: 74, price: 3500, subPrice: 2625, online: true, verified: true, specialties: ['Supply Chain', 'Warehouse', 'Distribution'], bio: 'Expert in optimizing supply chain operations.' },
+  { id: '4', name: 'Neha Bansal', title: 'Trade Finance', image: 'NB', rating: 4.8, reviews: 63, price: 2800, subPrice: 2100, online: false, verified: true, specialties: ['Letters of Credit', 'Payment Terms', 'Insurance'], bio: 'Specialist in trade finance solutions.' },
+  { id: '5', name: 'David Lee', title: 'Supply Chain', image: 'DL', rating: 4.9, reviews: 58, price: 3200, subPrice: 2400, online: false, verified: true, specialties: ['Sourcing', 'Vendor Management', 'Quality Control'], bio: '20 years in global supply chain management.' },
+  { id: '6', name: 'Maria Santos', title: 'Import Export', image: 'MS', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true, specialties: ['Regulations', 'Documentation', 'Compliance'], bio: 'Expert in cross-border trade regulations.' },
 ];
 
 const categories = [
@@ -26,308 +35,195 @@ const categories = [
 ];
 
 export default function ConsultationsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('book');
-  const [selectedExpert, setSelectedExpert] = useState<typeof experts[0] | null>(null);
-  const [showExpertDetail, setShowExpertDetail] = useState(false);
+  const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingType, setBookingType] = useState<'one-time' | 'subscription'>('one-time');
   const [duration, setDuration] = useState('30');
+  const [filterCategory, setFilterCategory] = useState('All');
 
-  const getPrice = (expert: typeof experts[0]) => {
+  const [bookingForm, setBookingForm] = useState({
+    date: '',
+    time: '',
+    topic: '',
+    description: '',
+  });
+
+  const getPrice = (expert: Expert) => {
     const base = bookingType === 'subscription' ? expert.subPrice : expert.price;
-    if (duration === '30') return base / 2;
-    if (duration === '60') return base;
-    return base * 2;
+    return base * (parseInt(duration) / 30);
   };
 
-  const handleExpertSelect = (expert: typeof experts[0]) => {
+  const handleBookExpert = (expert: Expert) => {
     setSelectedExpert(expert);
-    setShowExpertDetail(true);
+    setShowBookingModal(true);
   };
+
+  const handleConfirmBooking = () => {
+    if (!selectedExpert || !bookingForm.date || !bookingForm.time || !bookingForm.topic) return;
+
+    const bookings = JSON.parse(localStorage.getItem('leverage_bookings') || '[]');
+    bookings.push({
+      id: Date.now().toString(),
+      expertId: selectedExpert.id,
+      expertName: selectedExpert.name,
+      expertTitle: selectedExpert.title,
+      date: bookingForm.date,
+      time: bookingForm.time,
+      topic: bookingForm.topic,
+      description: bookingForm.description,
+      price: getPrice(selectedExpert),
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+    });
+    localStorage.setItem('leverage_bookings', JSON.stringify(bookings));
+
+    setBookingSuccess(true);
+    setTimeout(() => {
+      setShowBookingModal(false);
+      setBookingSuccess(false);
+      setSelectedExpert(null);
+      setBookingForm({ date: '', time: '', topic: '', description: '' });
+      router.push('/messages');
+    }, 2000);
+  };
+
+  const filteredExperts = filterCategory === 'All'
+    ? experts
+    : experts.filter(e => e.specialties.some(s => s.toLowerCase().includes(filterCategory.toLowerCase())));
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* Tabs - Horizontal scroll on mobile */}
-      <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex-shrink-0 px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-colors ${
-              activeTab === tab.id
-                ? 'bg-[#C49A6C] text-[#081512]'
-                : 'bg-[#0E3B36] text-[#D8CCBC]'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            <span className="hidden xs:inline">{tab.label}</span>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-[#F4F1EA]">Expert Consultations</h1>
+        <p className="text-[#D8CCBC]/60 text-sm">Book consultations with trade experts</p>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {[{ id: 'book', label: 'Book Expert', icon: '📅' }, { id: 'my', label: 'My Bookings', icon: '📋' }].map(tab => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === tab.id ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC] hover:bg-[#0E3B36]/80'}`}>
+            <span>{tab.icon}</span>{tab.label}
           </button>
         ))}
       </div>
 
-      {/* Categories - Horizontal scroll */}
-      <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-        {categories.map(cat => (
-          <button
-            key={cat.name}
-            className="flex-shrink-0 flex items-center gap-2 px-4 py-3 bg-[#0E3B36] rounded-xl"
-          >
-            <span className="text-xl">{cat.icon}</span>
-            <div className="text-left">
-              <p className="text-[#F4F1EA] text-sm font-medium">{cat.name}</p>
-              <p className="text-[#C49A6C] text-xs">{cat.count}+</p>
+      {activeTab === 'book' && (
+        <>
+          {/* Categories */}
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            <button onClick={() => setFilterCategory('All')} className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === 'All' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>All</button>
+            {categories.map(cat => (
+              <button key={cat.name} onClick={() => setFilterCategory(cat.name)} className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === cat.name ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>{cat.icon} {cat.name}</button>
+            ))}
+          </div>
+
+          {/* Booking Type Toggle */}
+          <div className="card">
+            <div className="flex gap-3">
+              <button onClick={() => setBookingType('one-time')} className={`flex-1 py-3 rounded-xl font-medium transition-colors ${bookingType === 'one-time' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]'}`}>One-time Session</button>
+              <button onClick={() => setBookingType('subscription')} className={`flex-1 py-3 rounded-xl font-medium transition-colors ${bookingType === 'subscription' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]'}`}>Subscription</button>
             </div>
-          </button>
-        ))}
-      </div>
-
-      {/* Search */}
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search experts..."
-          className="input pl-12"
-        />
-        <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-
-      {/* Expert Cards - Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {experts.map(expert => (
-          <div
-            key={expert.id}
-            onClick={() => handleExpertSelect(expert)}
-            className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all"
-          >
-            <div className="flex items-start gap-3 mb-3">
-              <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">
-                  {expert.image}
-                </div>
-                {expert.online && (
-                  <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-[#F4F1EA] font-medium truncate">{expert.name}</h3>
-                  {expert.verified && (
-                    <svg className="w-4 h-4 text-[#C49A6C] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-                <p className="text-[#D8CCBC]/60 text-xs truncate">{expert.title}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex items-center gap-1">
-                <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-[#F4F1EA] text-sm font-medium">{expert.rating}</span>
-                <span className="text-[#D8CCBC]/50 text-xs">({expert.reviews})</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.05)]">
-              <div>
-                <p className="text-[#D8CCBC]/50 text-xs">From</p>
-                <p className="text-[#F4F1EA] font-bold">${expert.price}/hr</p>
-              </div>
-              <button className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg text-sm font-semibold">
-                Book
-              </button>
+            <div className="mt-4">
+              <label className="text-[#D8CCBC] text-sm mb-2 block">Duration</label>
+              <select value={duration} onChange={(e) => setDuration(e.target.value)} className="input">
+                <option value="30">30 minutes</option>
+                <option value="60">60 minutes</option>
+                <option value="90">90 minutes</option>
+              </select>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Expert Detail Modal/Drawer - Mobile friendly */}
-      {showExpertDetail && selectedExpert && (
-        <div className="fixed inset-0 z-50 sm:relative sm:inset-auto">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/60 sm:hidden"
-            onClick={() => setShowExpertDetail(false)}
-          />
-
-          {/* Drawer */}
-          <div className="absolute bottom-0 left-0 right-0 sm:relative bg-[#081512] sm:bg-transparent rounded-t-2xl sm:rounded-none max-h-[85vh] sm:max-h-none overflow-y-auto">
-            {/* Handle */}
-            <div className="flex justify-center py-3 sm:hidden">
-              <div className="w-12 h-1 bg-[#D8CCBC]/30 rounded-full"></div>
-            </div>
-
-            <div className="p-4 sm:p-0 space-y-4">
-              {/* Close button for desktop */}
-              <div className="hidden sm:flex justify-end">
-                <button
-                  onClick={() => setShowExpertDetail(false)}
-                  className="p-2 text-[#D8CCBC] hover:text-white"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Expert Header */}
-              <div className="flex items-start gap-4">
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] text-xl font-bold border border-[#C49A6C]/20">
-                    {selectedExpert.image}
+          {/* Expert Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredExperts.map(expert => (
+              <div key={expert.id} className="card hover:border-[#C49A6C]/30 transition-all">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="relative">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 text-lg">{expert.image}</div>
+                    {expert.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>}
                   </div>
-                  {selectedExpert.online && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-[#F4F1EA]">{selectedExpert.name}</h2>
-                    {selectedExpert.verified && (
-                      <svg className="w-5 h-5 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </div>
-                  <p className="text-[#D8CCBC]/70">{selectedExpert.title}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <span className="text-[#F4F1EA] font-medium">{selectedExpert.rating}/5</span>
-                    <span className="text-[#D8CCBC]/50">({selectedExpert.reviews} reviews)</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-[#F4F1EA] font-semibold">{expert.name}</h3>
+                      {expert.verified && <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>}
+                    </div>
+                    <p className="text-[#C49A6C] text-sm">{expert.title}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      <span className="text-[#F4F1EA] text-sm">{expert.rating}</span>
+                      <span className="text-[#D8CCBC]/50 text-sm">({expert.reviews} reviews)</span>
+                    </div>
                   </div>
                 </div>
+                <p className="text-[#D8CCBC]/70 text-sm mb-4 line-clamp-2">{expert.bio}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {expert.specialties.map(s => (
+                    <span key={s} className="px-2 py-1 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]/50 text-xs rounded">{s}</span>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.05)]">
+                  <div><span className="text-[#C49A6C] text-xl font-bold">${getPrice(expert).toLocaleString()}</span><span className="text-[#D8CCBC]/50 text-sm ml-1">/{duration}min</span></div>
+                  <button onClick={() => handleBookExpert(expert)} className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm hover:bg-[#D4AA82] transition-colors">Book Now</button>
+                </div>
               </div>
+            ))}
+          </div>
+        </>
+      )}
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
-                  <p className="text-xl font-bold text-[#C49A6C]">1,248</p>
-                  <p className="text-[#D8CCBC]/60 text-xs">Consultations</p>
-                </div>
-                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
-                  <p className="text-xl font-bold text-[#C49A6C]">15 min</p>
-                  <p className="text-[#D8CCBC]/60 text-xs">Response</p>
-                </div>
-                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
-                  <p className="text-xl font-bold text-[#C49A6C]">18+</p>
-                  <p className="text-[#D8CCBC]/60 text-xs">Years Exp.</p>
-                </div>
-              </div>
-
-              {/* Booking Type */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setBookingType('one-time')}
-                  className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
-                    bookingType === 'one-time'
-                      ? 'bg-[#C49A6C] text-[#081512]'
-                      : 'bg-[#0E3B36] text-[#D8CCBC]'
-                  }`}
-                >
-                  One Time
-                </button>
-                <button
-                  onClick={() => setBookingType('subscription')}
-                  className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
-                    bookingType === 'subscription'
-                      ? 'bg-[#C49A6C] text-[#081512]'
-                      : 'bg-[#0E3B36] text-[#D8CCBC]'
-                  }`}
-                >
-                  Subscribe
-                </button>
-              </div>
-
-              {/* Duration */}
-              <div>
-                <label className="block text-[#D8CCBC]/80 text-sm mb-2">Duration</label>
-                <select
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  className="input"
-                >
-                  <option value="30">30 minutes - ${getPrice(selectedExpert)}</option>
-                  <option value="60">60 minutes - ${getPrice(selectedExpert)}</option>
-                  <option value="120">120 minutes - ${getPrice(selectedExpert)}</option>
-                </select>
-              </div>
-
-              {/* Price */}
-              <div className="bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[#D8CCBC]/60 text-sm">Session Cost</p>
-                    <p className="text-3xl font-bold text-[#F4F1EA]">${getPrice(selectedExpert)}</p>
-                    {bookingType === 'subscription' && (
-                      <p className="text-[#C49A6C] text-sm">20% subscriber discount</p>
-                    )}
-                  </div>
-                  <button className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">
-                    Book Session
-                  </button>
-                </div>
-              </div>
-
-              {/* Upcoming Consultation */}
-              <div className="bg-[#0E3B36]/50 rounded-xl p-4 border border-[#C49A6C]/20">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-2xl">📹</span>
-                  <div>
-                    <p className="text-[#F4F1EA] font-medium">Upcoming Consultation</p>
-                    <p className="text-[#D8CCBC]/60 text-sm">Today, 11:00 AM - 12:00 PM</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="flex-1 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm">
-                    Join
-                  </button>
-                  <button className="flex-1 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-lg text-sm">
-                    Reschedule
-                  </button>
-                </div>
-              </div>
-            </div>
+      {activeTab === 'my' && (
+        <div className="card">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">My Bookings</h2>
+          <div id="bookings-list" className="text-center py-8">
+            <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">📅</span></div>
+            <p className="text-[#D8CCBC]/50 mb-4">No bookings yet</p>
+            <button onClick={() => setActiveTab('book')} className="text-[#C49A6C] hover:text-[#D4AA82] font-medium">Browse Experts</button>
           </div>
         </div>
       )}
 
-      {/* Ad Wallet Banner - Mobile friendly */}
-      <div className="bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-4 sm:p-6 border border-[#C49A6C]/20">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[#D8CCBC]/60 text-sm">Ad Wallet</p>
-            <p className="text-2xl font-bold text-[#F4F1EA]">$4,875</p>
-          </div>
-          <button className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm">
-            Add Funds
-          </button>
-        </div>
-      </div>
-
-      {/* How it Works - Mobile friendly */}
-      <div className="card">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">How it Works</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { step: '1', title: 'Book', desc: 'Consult an expert' },
-            { step: '2', title: 'Get Credit', desc: 'Equal ad credit' },
-            { step: '3', title: 'Run Ads', desc: 'Promote products' },
-            { step: '4', title: 'Grow', desc: 'Get more leads' },
-          ].map(item => (
-            <div key={item.step} className="text-center">
-              <div className="w-8 h-8 bg-[#C49A6C] rounded-full flex items-center justify-center text-[#081512] font-bold mx-auto mb-2">
-                {item.step}
-              </div>
-              <p className="text-[#F4F1EA] text-sm font-medium">{item.title}</p>
-              <p className="text-[#D8CCBC]/50 text-xs">{item.desc}</p>
+      {/* Booking Modal */}
+      {showBookingModal && selectedExpert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-[#F4F1EA]">Book Consultation</h2>
+              <button onClick={() => setShowBookingModal(false)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
             </div>
-          ))}
+
+            {bookingSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4"><svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg></div>
+                <p className="text-[#F4F1EA] font-medium">Booking Confirmed!</p>
+                <p className="text-[#D8CCBC]/50 text-sm mt-2">Redirecting to messages...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">{selectedExpert.image}</div>
+                  <div><p className="text-[#F4F1EA] font-semibold">{selectedExpert.name}</p><p className="text-[#C49A6C] text-sm">{selectedExpert.title}</p></div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Date *</label><input type="date" value={bookingForm.date} onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })} className="w-full input" min={new Date().toISOString().split('T')[0]} /></div>
+                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Time *</label><select value={bookingForm.time} onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })} className="w-full input"><option value="">Select time</option><option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option><option value="11:00">11:00 AM</option><option value="14:00">02:00 PM</option><option value="15:00">03:00 PM</option><option value="16:00">04:00 PM</option></select></div>
+                </div>
+                <div><label className="block text-[#D8CCBC] text-sm mb-2">Topic *</label><input type="text" value={bookingForm.topic} onChange={(e) => setBookingForm({ ...bookingForm, topic: e.target.value })} className="w-full input" placeholder="Brief description of your topic" /></div>
+                <div><label className="block text-[#D8CCBC] text-sm mb-2">Additional Details</label><textarea value={bookingForm.description} onChange={(e) => setBookingForm({ ...bookingForm, description: e.target.value })} className="w-full input resize-none" rows={3} placeholder="Any specific questions or requirements..." /></div>
+                <div className="p-4 bg-[#0E3B36]/50 rounded-xl flex items-center justify-between">
+                  <span className="text-[#D8CCBC]">Total</span><span className="text-[#C49A6C] text-xl font-bold">${getPrice(selectedExpert).toLocaleString()}</span>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button onClick={() => setShowBookingModal(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
+                  <button onClick={handleConfirmBooking} disabled={!bookingForm.date || !bookingForm.time || !bookingForm.topic} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50">Confirm Booking</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

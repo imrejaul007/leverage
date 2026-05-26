@@ -2,40 +2,108 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+
+interface DashboardStats {
+  rfqs: number;
+  orders: number;
+  documents: number;
+  shipments: number;
+  revenue: number;
+  consultations: number;
+  activeBuyers: number;
+}
+
+interface RecentActivity {
+  id: string;
+  type: 'rfq' | 'payment' | 'document' | 'partner';
+  text: string;
+  time: string;
+  status: 'pending' | 'completed' | 'new' | 'sent';
+}
 
 export default function DashboardPage() {
-  const user = useSelector((state: RootState) => state.auth.user);
-
   const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>({
+    rfqs: 0,
+    orders: 0,
+    documents: 0,
+    shipments: 0,
+    revenue: 24500000,
+    consultations: 0,
+    activeBuyers: 892,
+  });
+
+  const recentActivity: RecentActivity[] = [
+    { id: '1', type: 'rfq', text: 'New RFQ from Germany - Industrial Equipment', time: '5 min ago', status: 'pending' },
+    { id: '2', type: 'payment', text: 'Payment received - $125,000 USD', time: '12 min ago', status: 'completed' },
+    { id: '3', type: 'document', text: 'Invoice #INV-2024-089 verified', time: '1 hour ago', status: 'completed' },
+    { id: '4', type: 'rfq', text: 'Quote sent to Singapore - $45,000', time: '2 hours ago', status: 'sent' },
+    { id: '5', type: 'partner', text: 'New partner verified: Tokyo Trading Co.', time: '3 hours ago', status: 'new' },
+  ];
+
+  const quickActions = [
+    { label: 'Create RFQ', icon: '📋', href: '/rfqs/new', color: 'bg-[#C49A6C]' },
+    { label: 'Upload Document', icon: '📄', href: '/documents', color: 'bg-[#0E3B36]' },
+    { label: 'Book Shipment', icon: '🚢', href: '/freight', color: 'bg-[#0E3B36]' },
+    { label: 'AI Assistant', icon: '🤖', href: '/ai', color: 'bg-[#0E3B36]' },
+  ];
 
   useEffect(() => {
+    // Load counts from localStorage
+    const rfqs = JSON.parse(localStorage.getItem('leverage_rfqs') || '[]');
+    const orders = JSON.parse(localStorage.getItem('leverage_orders') || '[]');
+    const documents = JSON.parse(localStorage.getItem('leverage_documents') || '[]');
+    const shipments = JSON.parse(localStorage.getItem('leverage_shipments') || '[]');
+
+    // Initialize with default data if empty
+    if (rfqs.length === 0) {
+      localStorage.setItem('leverage_rfqs', JSON.stringify([
+        { id: '1', title: 'Industrial Sensors X200', status: 'PENDING', buyer: 'Tokyo Trading Co.', amount: 85000, createdAt: '2024-01-20' },
+        { id: '2', title: 'Cotton Yarn 40/1', status: 'SENT', buyer: 'Berlin Imports GmbH', amount: 45000, createdAt: '2024-01-19' },
+      ]));
+    }
+    if (orders.length === 0) {
+      localStorage.setItem('leverage_orders', JSON.stringify([
+        { id: '1', orderNumber: 'ORD-2024-001', status: 'SHIPPED', total: 85000, currency: 'USD', buyer: 'Tokyo Trading Co.', product: 'Premium Basmati Rice', quantity: '100 MT', createdAt: '2024-01-15', updatedAt: '2024-01-18' },
+        { id: '2', orderNumber: 'ORD-2024-002', status: 'PROCESSING', total: 125000, currency: 'USD', buyer: 'Berlin Imports GmbH', product: 'Solar Panels', quantity: '500 units', createdAt: '2024-01-18', updatedAt: '2024-01-20' },
+      ]));
+    }
+    if (documents.length === 0) {
+      localStorage.setItem('leverage_documents', JSON.stringify([
+        { id: '1', name: 'Commercial Invoice - Order #1234', type: 'INVOICE', status: 'VALIDATED', createdAt: '2024-01-20', updatedAt: '2024-01-20', fileSize: '245 KB' },
+        { id: '2', name: 'Bill of Lading - Shipment #5678', type: 'BILL_OF_LADING', status: 'PENDING', createdAt: '2024-01-19', updatedAt: '2024-01-19', fileSize: '128 KB' },
+      ]));
+    }
+    if (shipments.length === 0) {
+      localStorage.setItem('leverage_shipments', JSON.stringify([
+        { id: 'SHP-001', trackingNumber: 'MSKU1234567890', container: 'MSKU1234567', origin: 'Shanghai, China', destination: 'Los Angeles, USA', status: 'in_transit', eta: '2024-02-15', carrier: 'Maersk Line', createdAt: '2024-01-15', lastUpdate: '2024-01-20' },
+      ]));
+    }
+
+    // Update stats from localStorage
+    const updatedRfqs = JSON.parse(localStorage.getItem('leverage_rfqs') || '[]');
+    const updatedOrders = JSON.parse(localStorage.getItem('leverage_orders') || '[]');
+    const updatedDocs = JSON.parse(localStorage.getItem('leverage_documents') || '[]');
+    const updatedShipments = JSON.parse(localStorage.getItem('leverage_shipments') || '[]');
+
+    setStats(prev => ({
+      ...prev,
+      rfqs: updatedRfqs.length + 125,
+      orders: updatedOrders.length + 127,
+      documents: updatedDocs.length + 45,
+      shipments: updatedShipments.length + 12,
+    }));
+
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const stats = {
-    rfqs: 127,
-    revenue: 24500000,
-    consultations: 48,
-    activeBuyers: 892,
+  const statusColors: Record<string, string> = {
+    pending: 'bg-amber-500/20 text-amber-400',
+    completed: 'bg-emerald-500/20 text-emerald-400',
+    new: 'bg-blue-500/20 text-blue-400',
+    sent: 'bg-purple-500/20 text-purple-400',
   };
-
-  const recentActivity = [
-    { type: 'rfq', text: 'New RFQ from Germany - Industrial Equipment', time: '5 min ago', status: 'pending' },
-    { type: 'payment', text: 'Payment received - $125,000 USD', time: '12 min ago', status: 'completed' },
-    { type: 'document', text: 'Invoice #INV-2024-089 verified', time: '1 hour ago', status: 'completed' },
-    { type: 'rfq', text: 'Quote sent to Singapore - $45,000', time: '2 hours ago', status: 'sent' },
-    { type: 'partner', text: 'New partner verified: Tokyo Trading Co.', time: '3 hours ago', status: 'new' },
-  ];
-
-  const quickActions = [
-    { label: 'Create RFQ', icon: '📋', href: '/rfqs/new' },
-    { label: 'Upload Document', icon: '📄', href: '/documents' },
-    { label: 'Book Shipment', icon: '🚢', href: '/freight' },
-    { label: 'AI Assistant', icon: '🤖', href: '/ai' },
-  ];
 
   if (isLoading) {
     return (
@@ -47,171 +115,110 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header - Responsive */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#F4F1EA]">
-            Good morning, <span className="text-[#C49A6C]">{user?.firstName || 'User'}</span>
-          </h1>
-          <p className="text-[#D8CCBC]/60 text-sm mt-1">Welcome back to your dashboard</p>
+          <h1 className="text-2xl font-bold text-[#F4F1EA]">Welcome back</h1>
+          <p className="text-[#D8CCBC]/60 text-sm">Here's your business overview</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/rfqs/new" className="flex-1 sm:flex-none px-4 py-2.5 bg-[#0E3B36] text-[#F4F1EA] rounded-xl font-medium text-center text-sm">
-            + RFQ
-          </Link>
-          <Link href="/ai" className="flex-1 sm:flex-none px-4 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-center text-sm">
-            🤖 AI
+          <Link href="/ai" className="px-4 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-xl font-medium text-sm hover:bg-[#0f4a42] transition-colors">
+            AI Assistant
           </Link>
         </div>
       </div>
 
-      {/* KPI Cards - Mobile: 2 columns, Tablet: 4 columns */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <KPICard title="RFQs" value={stats.rfqs.toString()} change="+12" trend="up" />
-        <KPICard title="Revenue" value={`$${(stats.revenue / 1000000).toFixed(1)}M`} change="+8.2%" trend="up" />
-        <KPICard title="Consults" value={stats.consultations.toString()} change="+5" trend="up" />
-        <KPICard title="Buyers" value={stats.activeBuyers.toString()} change="+23" trend="up" />
-      </div>
-
-      {/* Quick Actions - Mobile: Horizontal scroll */}
-      <div className="card">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Quick Actions</h2>
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2 sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0 sm:-mx-0 sm:px-0">
-          {quickActions.map((action) => (
-            <Link
-              key={action.label}
-              href={action.href}
-              className="flex-shrink-0 flex flex-col items-center gap-2 p-4 bg-[#0E3B36]/50 rounded-xl hover:bg-[#0E3B36] transition-colors min-w-[80px]"
-            >
-              <span className="text-2xl sm:text-3xl">{action.icon}</span>
-              <span className="text-[#F4F1EA] text-xs font-medium whitespace-nowrap">{action.label}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Global Trade Map - Full width on mobile */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#F4F1EA]">Global Trade Activity</h2>
-          <div className="flex gap-2">
-            <button className="px-3 py-1.5 text-xs bg-[#0E3B36] text-[#C49A6C] rounded-lg">Live</button>
-            <button className="px-3 py-1.5 text-xs text-[#D8CCBC]/60">7D</button>
-          </div>
-        </div>
-
-        <div className="relative h-48 sm:h-64 md:h-80 lg:h-[420px] rounded-xl overflow-hidden bg-gradient-to-b from-[#0E3B36]/20 to-[#081512]">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-80 lg:h-80 rounded-full border-2 border-[#C49A6C]/20"></div>
-            <div className="absolute w-36 h-36 sm:w-48 sm:h-48 md:w-64 md:h-64 rounded-full border border-[#C49A6C]/10"></div>
-          </div>
-
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-            <path d="M80,200 Q200,100 320,180" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
-            <path d="M120,100 Q220,180 350,120" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
-            <path d="M60,150 Q180,250 340,100" stroke="#C49A6C" strokeWidth="2" fill="none" opacity="0.4" strokeDasharray="8,4" />
-          </svg>
-
-          <div className="absolute top-1/4 left-1/3 w-2 h-2 sm:w-3 sm:h-3 bg-[#C49A6C] rounded-full animate-pulse"></div>
-          <div className="absolute top-1/3 right-1/4 w-2 h-2 sm:w-3 sm:h-3 bg-[#C49A6C] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-          <div className="absolute bottom-1/3 left-1/2 w-2 h-2 sm:w-3 sm:h-3 bg-[#C49A6C] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-
-        {/* Trade Stats - Mobile: 2x2 grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-          {[
-            { label: 'Shipments', value: '127' },
-            { label: 'Countries', value: '45' },
-            { label: 'Volume', value: '$2.4M' },
-            { label: 'On-Time', value: '98.5%' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center p-2 sm:p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
-              <p className="text-[#C49A6C] text-base sm:text-xl font-semibold">{stat.value}</p>
-              <p className="text-[#D8CCBC]/60 text-xs">{stat.label}</p>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Active RFQs', value: stats.rfqs, icon: '📋', color: 'text-blue-400' },
+          { label: 'Total Orders', value: stats.orders.toLocaleString(), icon: '📦', color: 'text-purple-400' },
+          { label: 'Revenue', value: `$${(stats.revenue / 1000000).toFixed(1)}M`, icon: '💰', color: 'text-emerald-400' },
+          { label: 'Active Shipments', value: stats.shipments, icon: '🚢', color: 'text-amber-400' },
+        ].map((stat, i) => (
+          <div key={i} className="card">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-2xl">{stat.icon}</span>
+              <span className={`text-xs font-medium ${stat.color}`}>Live</span>
             </div>
-          ))}
-        </div>
+            <p className="text-3xl font-bold text-[#F4F1EA]">{stat.value}</p>
+            <p className="text-[#D8CCBC]/50 text-sm mt-1">{stat.label}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Two Column Layout - Mobile: Stack vertically */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Recent Activity</h2>
-          <div className="space-y-3">
-            {recentActivity.map((activity, i) => (
-              <div key={i} className="flex items-start gap-3 pb-3 border-b border-[rgba(255,255,255,0.05)] last:border-0 last:pb-0">
-                <div className="w-2 h-2 mt-1.5 rounded-full bg-[#C49A6C] flex-shrink-0"></div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[#F4F1EA] text-sm truncate">{activity.text}</p>
-                  <p className="text-[#D8CCBC]/50 text-xs mt-0.5">{activity.time}</p>
+        <div className="lg:col-span-2 card">
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Recent Activity</h2>
+          <div className="space-y-4">
+            {recentActivity.map((activity) => (
+              <div key={activity.id} className="flex items-center gap-4 p-3 bg-[rgba(255,255,255,0.02)] rounded-xl">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  activity.type === 'rfq' ? 'bg-blue-500/20' :
+                  activity.type === 'payment' ? 'bg-emerald-500/20' :
+                  activity.type === 'document' ? 'bg-purple-500/20' :
+                  'bg-amber-500/20'
+                }`}>
+                  <span className={
+                    activity.type === 'rfq' ? 'text-blue-400' :
+                    activity.type === 'payment' ? 'text-emerald-400' :
+                    activity.type === 'document' ? 'text-purple-400' :
+                    'text-amber-400'
+                  }>
+                    {activity.type === 'rfq' ? '📋' :
+                     activity.type === 'payment' ? '💰' :
+                     activity.type === 'document' ? '📄' : '🤝'}
+                  </span>
                 </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#F4F1EA] font-medium truncate">{activity.text}</p>
+                  <p className="text-[#D8CCBC]/50 text-sm">{activity.time}</p>
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${statusColors[activity.status]}`}>
+                  {activity.status}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Top Markets */}
+        {/* Quick Actions */}
         <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Top Markets</h2>
-          <div className="space-y-2">
-            {['United States', 'Germany', 'China', 'Singapore', 'UAE'].map((market, i) => (
-              <div key={market} className="flex items-center gap-3 p-2">
-                <span className="w-5 text-[#D8CCBC]/50 text-xs">{i + 1}</span>
-                <span className="flex-1 text-[#F4F1EA] text-sm">{market}</span>
-                <span className="text-[#C49A6C] text-sm">${(Math.random() * 5 + 1).toFixed(1)}M</span>
-              </div>
+          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {quickActions.map((action, i) => (
+              <Link
+                key={i}
+                href={action.href}
+                className="flex flex-col items-center gap-3 p-4 bg-[rgba(255,255,255,0.02)] rounded-xl hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+              >
+                <span className="text-3xl">{action.icon}</span>
+                <span className="text-[#F4F1EA] text-sm font-medium text-center">{action.label}</span>
+              </Link>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* Bottom Section - Mobile: Stack */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Compliance Alerts */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Compliance</h2>
-          <div className="space-y-3">
-            <div className="p-3 bg-[#C49A6C]/10 border border-[#C49A6C]/20 rounded-xl">
-              <p className="text-[#F4F1EA] text-sm font-medium">Document Review</p>
-              <p className="text-[#D8CCBC]/60 text-xs">Invoice #INV-2024-092</p>
-            </div>
-            <div className="p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
-              <p className="text-[#F4F1EA] text-sm font-medium">HS Code Updated</p>
-              <p className="text-[#D8CCBC]/60 text-xs">8471.30.00 → 8471.50.00</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Trade Wallet */}
-        <div className="card sm:col-span-2 lg:col-span-2">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Trade Wallet</h2>
-          <div className="p-4 bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl border border-[#C49A6C]/20">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[#D8CCBC]/60 text-sm">Available Balance</p>
-                <p className="text-2xl sm:text-3xl font-bold text-[#F4F1EA] mt-1">$124,580.00</p>
+          {/* Quick Stats */}
+          <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.05)]">
+            <h3 className="text-[#F4F1EA] font-medium mb-4">At a Glance</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-[#D8CCBC]/50">Documents</span>
+                <span className="text-[#F4F1EA] font-medium">{stats.documents}</span>
               </div>
-              <div className="flex gap-2">
-                <button className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg text-sm font-semibold">Add</button>
-                <button className="px-4 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-lg text-sm font-medium border border-[rgba(255,255,255,0.1)]">Withdraw</button>
+              <div className="flex justify-between">
+                <span className="text-[#D8CCBC]/50">Active Buyers</span>
+                <span className="text-[#F4F1EA] font-medium">{stats.activeBuyers}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#D8CCBC]/50">Consultations</span>
+                <span className="text-[#F4F1EA] font-medium">{stats.consultations || 48}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function KPICard({ title, value, change, trend }: { title: string; value: string; change: string; trend: 'up' | 'down' }) {
-  return (
-    <div className="card p-3 sm:p-4">
-      <p className="text-[#D8CCBC]/70 text-xs sm:text-sm mb-1">{title}</p>
-      <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#F4F1EA]">{value}</p>
-      <p className={`text-xs ${trend === 'up' ? 'text-emerald-400' : 'text-red-400'}`}>
-        {trend === 'up' ? '↑' : '↓'} {change}
-      </p>
     </div>
   );
 }
