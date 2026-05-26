@@ -11,7 +11,7 @@ export default function ContactPage() {
               <div className="w-10 h-10 rounded-lg bg-[#C49A6C] flex items-center justify-center">
                 <span className="text-[#081512] font-bold text-xl brand-font">L</span>
               </div>
-              <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>
+              <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERGE</span>
             </Link>
             <nav className="hidden md:flex items-center gap-8">
               <Link href="/marketplace" className="text-[#D8CCBC]/80 hover:text-[#F4F1EA] transition-colors">

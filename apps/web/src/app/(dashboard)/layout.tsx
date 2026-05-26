@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
@@ -84,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="text-[#081512] font-bold text-xl brand-font">L</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[#C49A6C] text-xl font-bold brand-font leading-none">LEVERAGE</span>
+              <span className="text-[#C49A6C] text-xl font-bold brand-font leading-none">LEVERGE</span>
               <span className="text-[#D8CCBC]/60 text-xs leading-none">Connecting Dots to Ports</span>
             </div>
           </Link>

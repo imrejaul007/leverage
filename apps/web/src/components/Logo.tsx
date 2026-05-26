@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -8,21 +9,30 @@ interface LogoProps {
 
 export default function Logo({ size = 'md', showTagline = false, className = '' }: LogoProps) {
   const sizes = {
-    sm: { icon: 'w-8 h-8 text-lg', text: 'text-lg', tagline: 'text-xs' },
-    md: { icon: 'w-10 h-10 text-xl', text: 'text-2xl', tagline: 'text-sm' },
-    lg: { icon: 'w-12 h-12 text-2xl', text: 'text-3xl', tagline: 'text-base' },
+    sm: { icon: 32, text: 'text-lg', tagline: 'text-xs' },
+    md: { icon: 40, text: 'text-xl', tagline: 'text-sm' },
+    lg: { icon: 48, text: 'text-2xl', tagline: 'text-base' },
   };
+
+  const s = sizes[size];
 
   return (
     <Link href="/" className={`flex items-center gap-3 ${className}`}>
-      {/* Logo Icon */}
-      <div className={`${sizes[size].icon} rounded-lg bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center shadow-lg shadow-[#C49A6C]/20`}>
-        <span className={`text-[#081512] font-bold brand-font`}>L</span>
+      {/* Logo Image */}
+      <div className="relative" style={{ width: s.icon, height: s.icon }}>
+        <Image
+          src="/logo.png"
+          alt="LEVERGE Logo"
+          width={s.icon}
+          height={s.icon}
+          className="object-contain"
+          priority
+        />
       </div>
       <div className="flex flex-col">
-        <span className={`${sizes[size].text} text-[#C49A6C] font-bold brand-font leading-none`}>LEVERAGE</span>
+        <span className={`${s.text} text-[#C49A6C] font-bold brand-font leading-none`}>LEVERGE</span>
         {showTagline && (
-          <span className={`${sizes[size].tagline} text-[#D8CCBC]/60 leading-none mt-0.5`}>Connecting Dots to Ports</span>
+          <span className={`${s.tagline} text-[#D8CCBC]/60 leading-none mt-0.5`}>Connecting Dots to Ports</span>
         )}
       </div>
     </Link>

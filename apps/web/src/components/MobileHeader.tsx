@@ -55,7 +55,7 @@ export default function MobileHeader() {
           <div className="w-8 h-8 rounded-lg bg-[#C49A6C] flex items-center justify-center">
             <span className="text-[#081512] font-bold text-sm">L</span>
           </div>
-          <span className="text-[#C49A6C] font-bold text-lg">LEVERAGE</span>
+          <span className="text-[#C49A6C] font-bold text-lg">LEVERGE</span>
         </Link>
 
         {/* Right Actions */}

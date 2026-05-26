@@ -147,7 +147,7 @@ export default function HomePage() {
               <div className="w-8 h-8 rounded bg-[#C49A6C] flex items-center justify-center">
                 <span className="text-[#081512] font-bold text-sm brand-font">L</span>
               </div>
-              <span className="text-[#C49A6C] font-bold brand-font">LEVERAGE</span>
+              <span className="text-[#C49A6C] font-bold brand-font">LEVERGE</span>
             </div>
             <div className="flex gap-6 text-sm text-[#D8CCBC]/60">
               <Link href="/terms" className="hover:text-[#F4F1EA] transition-colors">Terms</Link>
