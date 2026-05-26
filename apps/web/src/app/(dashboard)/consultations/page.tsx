@@ -27,12 +27,12 @@ const experts = [
 ];
 
 const menuItems = [
-  { label: 'Bookings', count: 3 },
-  { label: 'Orders & Invoices', count: 12 },
-  { label: 'Documents', count: 0 },
-  { label: 'Certificates', count: 0 },
-  { label: 'Subscriptions', count: 0 },
-  { label: 'Experts', count: 0 },
+  { label: 'Bookings', count: 3, icon: '📅' },
+  { label: 'Orders & Invoices', count: 12, icon: '📋' },
+  { label: 'Documents', count: 0, icon: '📄' },
+  { label: 'Certificates', count: 0, icon: '📜' },
+  { label: 'Subscriptions', count: 0, icon: '💎' },
+  { label: 'Experts', count: 0, icon: '👥' },
 ];
 
 export default function ConsultationsPage() {
@@ -41,23 +41,23 @@ export default function ConsultationsPage() {
 
   return (
     <div className="min-h-screen bg-[#081512]">
-      {/* Top Header */}
+      {/* Header - Simple, Clean */}
       <div className="bg-[#0E3B36] border-b border-[rgba(255,255,255,0.05)]">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Search */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search anything…"
-                  className="w-96 h-11 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-white placeholder-[rgba(216,204,188,0.4)] focus:outline-none focus:border-[#C49A6C]"
+                  className="w-[500px] h-11 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-white placeholder-[rgba(216,204,188,0.4)] focus:outline-none focus:border-[#C49A6C]"
                 />
                 <svg className="w-5 h-5 text-[rgba(216,204,188,0.5)] absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-[rgba(255,255,255,0.05)] rounded-xl text-[#D8CCBC]">
+              <button className="h-11 px-4 flex items-center gap-2 bg-[rgba(255,255,255,0.05)] rounded-xl text-[#D8CCBC]">
                 <span>EN</span>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -65,25 +65,25 @@ export default function ConsultationsPage() {
               </button>
             </div>
 
-            {/* User */}
+            {/* User Profile */}
             <div className="flex items-center gap-4">
               <button className="p-2 text-[#D8CCBC]/70">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
               </button>
-              <button className="flex items-center gap-3 px-4 py-2 bg-[rgba(255,255,255,0.05)] rounded-xl">
-                <div className="w-8 h-8 rounded-full bg-[#C49A6C] flex items-center justify-center text-[#081512] text-sm font-bold">JD</div>
+              <div className="flex items-center gap-3 px-4 py-2 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="Avatar" className="w-8 h-8 rounded-full bg-[#0E3B36]" />
                 <div className="text-left">
-                  <p className="text-[#F4F1EA] text-sm font-medium">John Doe</p>
-                  <p className="text-[#C49A6C] text-xs">Super Admin</p>
+                  <p className="text-[#F4F1EA] text-sm font-medium leading-tight">John Doe</p>
+                  <p className="text-[#C49A6C] text-xs leading-tight">Super Admin</p>
                 </div>
-              </button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Tabs and Title */}
+        {/* Title and Tabs */}
         <div className="px-6 pb-4">
           <h1 className="text-3xl font-bold text-[#F4F1EA] mb-4">Consultation Hub</h1>
           <div className="flex gap-2">
@@ -128,14 +128,7 @@ export default function ConsultationsPage() {
                 className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-[rgba(255,255,255,0.03)] transition-colors text-left"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">
-                    {item.label === 'Bookings' && '📅'}
-                    {item.label === 'Orders & Invoices' && '📋'}
-                    {item.label === 'Documents' && '📄'}
-                    {item.label === 'Certificates' && '📜'}
-                    {item.label === 'Subscriptions' && '💎'}
-                    {item.label === 'Experts' && '👥'}
-                  </span>
+                  <span className="text-lg">{item.icon}</span>
                   <span className="text-[#F4F1EA]">{item.label}</span>
                 </div>
                 {item.count > 0 && (
@@ -177,14 +170,16 @@ export default function ConsultationsPage() {
                 <div
                   key={expert.id}
                   onClick={() => setSelectedExpert(expert)}
-                  className={`bg-[rgba(255,255,255,0.02)] rounded-2xl p-4 border border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/30 transition-all cursor-pointer ${
-                    selectedExpert?.id === expert.id ? 'border-[#C49A6C]/50' : ''
+                  className={`bg-[rgba(255,255,255,0.02)] rounded-2xl p-4 border transition-all cursor-pointer ${
+                    selectedExpert?.id === expert.id
+                      ? 'border-[#C49A6C]/50'
+                      : 'border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/30'
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <div className="relative">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">
-                        {expert.image}
+                      <div className="w-12 h-12 rounded-full bg-[#0E3B36] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 overflow-hidden">
+                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${expert.image}`} alt={expert.name} className="w-full h-full" />
                       </div>
                       {expert.online && (
                         <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
@@ -239,9 +234,7 @@ export default function ConsultationsPage() {
                   key={cat.name}
                   className="bg-[rgba(255,255,255,0.02)] rounded-2xl p-4 border border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/30 transition-all flex flex-col items-center text-center"
                 >
-                  <span className="text-3xl mb-2">
-                    {['🚢', '⚖️', '💰', '🔍', '📦', '📢'][i]}
-                  </span>
+                  <span className="text-3xl mb-2">{['🚢', '⚖️', '💰', '🔍', '📦', '📢'][i]}</span>
                   <p className="text-[#F4F1EA] text-sm font-medium mb-1">{cat.name}</p>
                   <p className="text-[#C49A6C] text-xs">{cat.count} experts</p>
                 </button>
@@ -271,14 +264,14 @@ export default function ConsultationsPage() {
         </div>
 
         {/* Right Sidebar - Expert Detail */}
-        {selectedExpert && (
+        {selectedExpert ? (
           <div className="w-80 flex-shrink-0">
             <div className="bg-[rgba(255,255,255,0.02)] rounded-2xl border border-[rgba(255,255,255,0.05)] p-6 sticky top-6">
               {/* Expert Header */}
               <div className="flex items-start gap-4 mb-6">
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] text-xl font-bold border-2 border-[#C49A6C]/20">
-                    {selectedExpert.image}
+                  <div className="w-16 h-16 rounded-full bg-[#0E3B36] border-2 border-[#C49A6C]/20 overflow-hidden">
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedExpert.image}`} alt={selectedExpert.name} className="w-full h-full" />
                   </div>
                   {selectedExpert.online && (
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
@@ -330,7 +323,7 @@ export default function ConsultationsPage() {
               <div className="flex items-center gap-2 mb-6">
                 <span className="text-[rgba(216,204,188,0.6)] text-sm">Countries:</span>
                 <div className="flex gap-1">
-                  {['India', 'UAE', 'Singapore'].slice(0, 3).map(c => (
+                  {['India', 'UAE', 'Singapore'].map(c => (
                     <span key={c} className="px-3 py-1 bg-[#0E3B36]/50 rounded-full text-[#F4F1EA] text-sm">{c}</span>
                   ))}
                 </div>
@@ -356,7 +349,7 @@ export default function ConsultationsPage() {
                 <h4 className="text-[#F4F1EA] font-medium mb-3">Session Chat</h4>
                 <div className="space-y-3">
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#0E3B36] flex items-center justify-center text-[#C49A6C] text-xs font-bold">RS</div>
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedExpert.image}`} alt="" className="w-8 h-8 rounded-full bg-[#0E3B36]" />
                     <div className="flex-1 bg-[#0E3B36]/50 rounded-xl rounded-tl-none p-3">
                       <p className="text-[#F4F1EA] text-sm">Sure, I can help you with the HSN code classification. Please share the product details.</p>
                       <p className="text-[rgba(216,204,188,0.4)] text-xs mt-1">10:05 AM</p>
@@ -412,10 +405,7 @@ export default function ConsultationsPage() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* Empty State for Right Sidebar */}
-        {!selectedExpert && (
+        ) : (
           <div className="w-80 flex-shrink-0">
             <div className="bg-[rgba(255,255,255,0.02)] rounded-2xl border border-[rgba(255,255,255,0.05)] p-6 sticky top-6">
               <h3 className="text-xl font-semibold text-[#F4F1EA] mb-4">Select an Expert</h3>
