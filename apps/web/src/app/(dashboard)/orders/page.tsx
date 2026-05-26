@@ -10,7 +10,7 @@ interface Order {
   total: number;
   buyer: string;
   product: string;
-  quantity: number;
+  quantity: string;
   createdAt: string;
 }
 
