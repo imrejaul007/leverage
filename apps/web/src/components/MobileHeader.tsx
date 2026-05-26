@@ -13,6 +13,7 @@ const pageTitles: Record<string, string> = {
   '/documents': 'Documents',
   '/consultations': 'Consultations',
   '/ai': 'AI Assistant',
+  '/marketplace': 'Marketplace',
   '/freight': 'Freight',
   '/compliance': 'Compliance',
   '/messages': 'Messages',
@@ -28,6 +29,7 @@ const pageTitles: Record<string, string> = {
 const quickActions = [
   { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
   { name: 'New RFQ', href: '/rfqs/new', icon: 'M12 4v16m8-8H4' },
+  { name: 'Marketplace', href: '/marketplace', icon: 'M3 3h18v18H3V3zm2 6h14v2H5V9zm0 4h14v2H5v-2zm0 4h10v2H5v-2z' },
   { name: 'AI Chat', href: '/ai', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
   { name: 'Messages', href: '/messages', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' },
 ];
