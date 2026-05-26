@@ -281,7 +281,7 @@ export default function MarketplacePage() {
 
 function ProductCard({ product, featured }: { product: Product; featured?: boolean }) {
   return (
-    <div className="card hover:border-[#C49A6C]/30 transition-all group">
+    <Link href={`/marketplace/${product.id}`} className="block card hover:border-[#C49A6C]/30 transition-all group">
       {/* Product Image */}
       <div className="aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
         <span className="text-6xl group-hover:scale-110 transition-transform">{product.image}</span>
@@ -347,7 +347,7 @@ function ProductCard({ product, featured }: { product: Product; featured?: boole
         {/* Actions */}
         <div className="flex gap-2 pt-3">
           <button className="flex-1 py-2.5 bg-[#C49A6C] text-[#081512] font-semibold rounded-lg hover:bg-[#D4AA82] transition-colors">
-            Contact
+            View Details
           </button>
           <button className="px-4 py-2.5 border border-[rgba(255,255,255,0.1)] text-[#D8CCBC] rounded-lg hover:border-[#C49A6C] hover:text-[#C49A6C] transition-colors">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -356,6 +356,6 @@ function ProductCard({ product, featured }: { product: Product; featured?: boole
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
