@@ -9,11 +9,10 @@ import { loginSchema, type LoginInput } from '@leverage/shared';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api-client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [loginMethod, setLoginMethod] = useState<'normal' | 'demo'>('normal');
 
   const {
     register,
@@ -26,14 +25,18 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
     try {
-      const response = await api.post(`${API_BASE_URL}/auth/login`, data);
-      const { user, accessToken, refreshToken } = response.data.data;
+      const response = await api.post('/auth/login', data);
+      const result = response.data;
 
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      toast.success(`Welcome back, ${user.firstName}!`);
+      if (result.data) {
+        const { user, accessToken, refreshToken } = result.data;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        toast.success(`Welcome back, ${user.firstName}!`);
+      } else {
+        toast.success('Login successful!');
+      }
       router.push('/dashboard');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Login failed';
@@ -44,16 +47,21 @@ export default function LoginPage() {
   };
 
   const handleDemoLogin = async () => {
+    setLoginMethod('demo');
     setIsLoading(true);
     try {
-      const response = await api.post(`${API_BASE_URL}/auth/demo`);
-      const { user, accessToken, refreshToken } = response.data.data;
+      const response = await api.post('/auth/demo');
+      const result = response.data;
 
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      toast.success('Welcome to the demo!');
+      if (result.data) {
+        const { user, accessToken, refreshToken } = result.data;
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        toast.success('Welcome to the demo!');
+      } else {
+        toast.success('Demo account created!');
+      }
       router.push('/dashboard');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Demo login failed';
@@ -76,7 +84,7 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
-          <h1 className="text-2xl font-bold text-white mb-2">Sign in to your account</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
           <p className="text-gray-400 mb-6">Enter your credentials to access the platform</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -121,7 +129,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading && loginMethod === 'normal' ? 'Signing in...' : 'Sign in'}
             </button>
 
             <div className="relative my-4">
@@ -139,13 +147,13 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 border border-slate-600"
             >
-              {isLoading ? 'Creating demo...' : 'Try Demo Account'}
+              {isLoading && loginMethod === 'demo' ? 'Creating demo...' : 'Try Demo Account'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400">
-              Don't have an account?{' '}
+            <p className="text-gray-400 text-sm">
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-blue-400 hover:text-blue-300">
                 Sign up
               </Link>
