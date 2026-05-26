@@ -81,9 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center shadow-lg shadow-[#C49A6C]/20">
-              <span className="text-[#081512] font-bold text-xl brand-font">L</span>
-            </div>
+            <Image src="/logo.png" alt="LEVERGE Logo" width={40} height={40} className="object-contain" />
             <div className="flex flex-col">
               <span className="text-[#C49A6C] text-xl font-bold brand-font leading-none">LEVERGE</span>
               <span className="text-[#D8CCBC]/60 text-xs leading-none">Connecting Dots to Ports</span>
