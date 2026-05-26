@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && npm install && npm run build",
+  "buildCommand": "npx turbo build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "regions": ["sin1"],
