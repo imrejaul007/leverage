@@ -7,12 +7,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginInput } from '@leverage/shared';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 import { api } from '@/lib/api-client';
+import { AppDispatch } from '@/store';
+import { setUser, setTokens, loginSuccess } from '@/store/slices/authSlice';
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState(false);
-  const [skipAuth] = useState(() => process.env.NODE_ENV === 'development');
 
   const {
     register,
@@ -33,6 +36,7 @@ export default function LoginPage() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('user', JSON.stringify(user));
+        dispatch(loginSuccess({ user, tokens: { accessToken, refreshToken } }));
         toast.success(`Welcome back, ${user.firstName}!`);
       } else {
         toast.success('Login successful!');
@@ -57,6 +61,7 @@ export default function LoginPage() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('user', JSON.stringify(user));
+        dispatch(loginSuccess({ user, tokens: { accessToken, refreshToken } }));
         toast.success('Welcome to the demo!');
       } else {
         toast.success('Demo account created!');
@@ -79,9 +84,16 @@ export default function LoginPage() {
       lastName: 'User',
       role: 'BUYER',
     };
-    localStorage.setItem('accessToken', 'demo-token');
-    localStorage.setItem('refreshToken', 'demo-refresh-token');
+    const token = 'demo-token';
+    const refreshToken = 'demo-refresh-token';
+
+    localStorage.setItem('accessToken', token);
+    localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('user', JSON.stringify(demoUser));
+
+    // Update Redux state
+    dispatch(loginSuccess({ user: demoUser, tokens: { accessToken: token, refreshToken } }));
+
     toast.success('Skipped to dashboard!');
     router.push('/dashboard');
   };
