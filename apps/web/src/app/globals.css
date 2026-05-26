@@ -34,6 +34,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -68,7 +69,13 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 24px;
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 24px;
+  }
 }
 
 .card:hover {
@@ -79,13 +86,23 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
   background: var(--bg-secondary);
   color: var(--neutral-light);
-  height: 52px;
-  padding: 0 24px;
-  border-radius: 14px;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
   font-weight: 600;
   transition: all 0.2s;
   border: none;
   cursor: pointer;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  .btn-primary {
+    height: 52px;
+    padding: 0 24px;
+    border-radius: 14px;
+    font-size: 16px;
+  }
 }
 
 .btn-primary:hover {
@@ -95,13 +112,23 @@ h1, h2, h3, h4, h5, h6 {
 .btn-accent {
   background: var(--accent);
   color: var(--bg-primary);
-  height: 52px;
-  padding: 0 24px;
-  border-radius: 14px;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
   font-weight: 600;
   transition: all 0.2s;
   border: none;
   cursor: pointer;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  .btn-accent {
+    height: 52px;
+    padding: 0 24px;
+    border-radius: 14px;
+    font-size: 16px;
+  }
 }
 
 .btn-accent:hover {
@@ -112,11 +139,12 @@ h1, h2, h3, h4, h5, h6 {
 .input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 12px 16px;
   color: var(--neutral-light);
   font-size: 16px;
   transition: all 0.2s;
+  width: 100%;
 }
 
 .input:focus {
@@ -160,33 +188,52 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 2px;
 }
 
-/* Mobile-specific styles */
+/* ============================================
+   MOBILE-SPECIFIC STYLES
+   ============================================ */
+
 @media (max-width: 767px) {
   /* Safe area for notched phones */
   .safe-area-bottom {
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 
   .safe-area-top {
-    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-top: max(1rem, env(safe-area-inset-top));
   }
 
-  /* Prevent horizontal scroll on mobile */
+  /* Prevent horizontal scroll */
   body {
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* Touch-friendly tap targets */
-  button, a, [role="button"] {
+  /* Touch-friendly tap targets - minimum 44px */
+  button, a, [role="button"], .tap-target {
     min-height: 44px;
     min-width: 44px;
   }
 
+  /* Better inputs for mobile */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Card adjustments */
+  .card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  /* Section spacing */
+  section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   /* Remove hover effects on touch devices */
-  @media (hover: none) {
-    .card:hover {
-      border-color: var(--border);
-    }
+  .card:hover, .btn-primary:hover, .btn-accent:hover {
+    transform: none;
   }
 }
 
@@ -194,6 +241,10 @@ h1, h2, h3, h4, h5, h6 {
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   nav.fixed.bottom-0 {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  header.fixed.top-0 {
+    padding-top: env(safe-area-inset-top);
   }
 }
 
@@ -204,11 +255,12 @@ h1, h2, h3, h4, h5, h6 {
     height: 48px;
     padding: 0 20px;
     font-size: 15px;
+    border-radius: 12px;
   }
 
   .input {
     height: 48px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
   }
 }
 
@@ -223,5 +275,16 @@ h1, h2, h3, h4, h5, h6 {
 @media (prefers-contrast: high) {
   .card {
     border-width: 2px;
+  }
+}
+
+/* Hide scrollbar on mobile but keep functionality */
+@media (max-width: 767px) {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

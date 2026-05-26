@@ -19,50 +19,35 @@ const experts = [
 ];
 
 const categories = [
-  { name: 'Shipping & Freight', count: 42, icon: '🚢' },
-  { name: 'Customs & Compliance', count: 38, icon: '✅' },
-  { name: 'Import / Export', count: 24, icon: '🌐' },
-  { name: 'Trade Finance', count: 31, icon: '💰' },
-  { name: 'Legal & Contracts', count: 28, icon: '⚖️' },
-  { name: 'Sourcing', count: 18, icon: '🔍' },
+  { name: 'Shipping', count: 42, icon: '🚢' },
+  { name: 'Customs', count: 38, icon: '✅' },
+  { name: 'Trade', count: 31, icon: '💰' },
+  { name: 'Legal', count: 28, icon: '⚖️' },
 ];
 
 export default function ConsultationsPage() {
   const [activeTab, setActiveTab] = useState('book');
   const [selectedExpert, setSelectedExpert] = useState<typeof experts[0] | null>(null);
+  const [showExpertDetail, setShowExpertDetail] = useState(false);
   const [bookingType, setBookingType] = useState<'one-time' | 'subscription'>('one-time');
   const [duration, setDuration] = useState('30');
-  const [showSidebar, setShowSidebar] = useState(false);
 
   const getPrice = (expert: typeof experts[0]) => {
     const base = bookingType === 'subscription' ? expert.subPrice : expert.price;
     if (duration === '30') return base / 2;
     if (duration === '60') return base;
-    if (duration === '120') return base * 2;
-    return base;
+    return base * 2;
+  };
+
+  const handleExpertSelect = (expert: typeof experts[0]) => {
+    setSelectedExpert(expert);
+    setShowExpertDetail(true);
   };
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header - Responsive */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">Consultation Hub</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">Connect with trade experts</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] font-bold shadow-lg shadow-[#C49A6C]/20">
-            JD
-          </div>
-          <div className="hidden sm:block">
-            <p className="text-[#F4F1EA] text-sm font-medium">John Doe</p>
-            <p className="text-[#C49A6C] text-xs">Super Admin</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs - Mobile scrollable */}
-      <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible">
+      {/* Tabs - Horizontal scroll on mobile */}
+      <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -79,177 +64,269 @@ export default function ConsultationsPage() {
         ))}
       </div>
 
-      {/* Search - Mobile responsive */}
+      {/* Categories - Horizontal scroll */}
+      <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
+        {categories.map(cat => (
+          <button
+            key={cat.name}
+            className="flex-shrink-0 flex items-center gap-2 px-4 py-3 bg-[#0E3B36] rounded-xl"
+          >
+            <span className="text-xl">{cat.icon}</span>
+            <div className="text-left">
+              <p className="text-[#F4F1EA] text-sm font-medium">{cat.name}</p>
+              <p className="text-[#C49A6C] text-xs">{cat.count}+</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Search */}
       <div className="relative">
         <input
           type="text"
           placeholder="Search experts..."
-          className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] text-sm"
+          className="input pl-12"
         />
         <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
 
-      <div className="flex gap-4">
-        {/* Expert Cards - Main content */}
-        <div className="flex-1 space-y-4">
-          {/* Categories - Mobile horizontal scroll */}
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible sm:grid sm:grid-cols-3 lg:grid-cols-6 sm:gap-3">
-            {categories.map(cat => (
-              <button
-                key={cat.name}
-                className="flex-shrink-0 card p-3 flex items-center gap-3 hover:border-[#C49A6C]/30 transition-colors min-w-[140px] sm:min-w-0"
-              >
-                <span className="text-2xl">{cat.icon}</span>
-                <div className="text-left">
-                  <p className="text-[#F4F1EA] text-sm font-medium">{cat.name}</p>
-                  <p className="text-[#C49A6C] text-xs">{cat.count} experts</p>
+      {/* Expert Cards - Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {experts.map(expert => (
+          <div
+            key={expert.id}
+            onClick={() => handleExpertSelect(expert)}
+            className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all"
+          >
+            <div className="flex items-start gap-3 mb-3">
+              <div className="relative">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">
+                  {expert.image}
                 </div>
-              </button>
-            ))}
-          </div>
+                {expert.online && (
+                  <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-[#F4F1EA] font-medium truncate">{expert.name}</h3>
+                  {expert.verified && (
+                    <svg className="w-4 h-4 text-[#C49A6C] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <p className="text-[#D8CCBC]/60 text-xs truncate">{expert.title}</p>
+              </div>
+            </div>
 
-          {/* Top Experts */}
-          <div>
-            <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Top Experts</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {experts.map(expert => (
-                <div
-                  key={expert.id}
-                  onClick={() => { setSelectedExpert(expert); setShowSidebar(true); }}
-                  className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all"
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="relative">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">
-                        {expert.image}
-                      </div>
-                      {expert.online && (
-                        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-[#F4F1EA] font-medium truncate">{expert.name}</h3>
-                        {expert.verified && (
-                          <span className="text-[#C49A6C]">✓</span>
-                        )}
-                      </div>
-                      <p className="text-[#D8CCBC]/60 text-xs truncate">{expert.title}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-1">
-                      <span className="text-[#C49A6C]">★</span>
-                      <span className="text-[#F4F1EA]">{expert.rating}</span>
-                      <span className="text-[#D8CCBC]/50">({expert.reviews})</span>
-                    </div>
-                    <span className="text-[#C49A6C] font-semibold">${expert.price}/hr</span>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-1">
+                <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-[#F4F1EA] text-sm font-medium">{expert.rating}</span>
+                <span className="text-[#D8CCBC]/50 text-xs">({expert.reviews})</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.05)]">
+              <div>
+                <p className="text-[#D8CCBC]/50 text-xs">From</p>
+                <p className="text-[#F4F1EA] font-bold">${expert.price}/hr</p>
+              </div>
+              <button className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg text-sm font-semibold">
+                Book
+              </button>
             </div>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Expert Detail Sidebar - Mobile: Modal/Drawer style */}
-        {selectedExpert && showSidebar && (
-          <div className="fixed inset-0 z-50 bg-black/50 sm:relative sm:bg-transparent sm:block sm:w-80 lg:w-96">
-            <div className="absolute bottom-0 left-0 right-0 sm:relative bg-[#081512] sm:bg-transparent rounded-t-2xl sm:rounded-xl p-4 sm:p-0 h-[70vh] sm:h-auto overflow-y-auto border-t border-[rgba(255,255,255,0.1)] sm:border-0">
-              {/* Close button for mobile */}
-              <button
-                onClick={() => setShowSidebar(false)}
-                className="sm:hidden absolute top-4 right-4 p-2 text-[#D8CCBC]"
-              >
-                ✕
-              </button>
+      {/* Expert Detail Modal/Drawer - Mobile friendly */}
+      {showExpertDetail && selectedExpert && (
+        <div className="fixed inset-0 z-50 sm:relative sm:inset-auto">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 sm:hidden"
+            onClick={() => setShowExpertDetail(false)}
+          />
 
-              <div className="space-y-4">
-                {/* Expert Header */}
-                <div className="flex items-center gap-4">
+          {/* Drawer */}
+          <div className="absolute bottom-0 left-0 right-0 sm:relative bg-[#081512] sm:bg-transparent rounded-t-2xl sm:rounded-none max-h-[85vh] sm:max-h-none overflow-y-auto">
+            {/* Handle */}
+            <div className="flex justify-center py-3 sm:hidden">
+              <div className="w-12 h-1 bg-[#D8CCBC]/30 rounded-full"></div>
+            </div>
+
+            <div className="p-4 sm:p-0 space-y-4">
+              {/* Close button for desktop */}
+              <div className="hidden sm:flex justify-end">
+                <button
+                  onClick={() => setShowExpertDetail(false)}
+                  className="p-2 text-[#D8CCBC] hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Expert Header */}
+              <div className="flex items-start gap-4">
+                <div className="relative">
                   <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] text-xl font-bold border border-[#C49A6C]/20">
                     {selectedExpert.image}
                   </div>
-                  <div>
-                    <h3 className="text-[#F4F1EA] text-lg font-semibold">{selectedExpert.name}</h3>
-                    <p className="text-[#D8CCBC]/60 text-sm">{selectedExpert.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[#C49A6C]">★</span>
-                      <span className="text-[#F4F1EA] text-sm">{selectedExpert.rating}</span>
-                      <span className="text-[#D8CCBC]/50 text-sm">({selectedExpert.reviews} reviews)</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Booking Type */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setBookingType('one-time')}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      bookingType === 'one-time'
-                        ? 'bg-[#C49A6C] text-[#081512]'
-                        : 'bg-[#0E3B36] text-[#D8CCBC]'
-                    }`}
-                  >
-                    One-time
-                  </button>
-                  <button
-                    onClick={() => setBookingType('subscription')}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      bookingType === 'subscription'
-                        ? 'bg-[#C49A6C] text-[#081512]'
-                        : 'bg-[#0E3B36] text-[#D8CCBC]'
-                    }`}
-                  >
-                    Subscribe
-                  </button>
-                </div>
-
-                {/* Duration */}
-                <div>
-                  <label className="block text-[#D8CCBC]/80 text-sm mb-2">Duration</label>
-                  <select
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="w-full input"
-                  >
-                    <option value="30">30 minutes - ${getPrice(selectedExpert)}</option>
-                    <option value="60">60 minutes - ${getPrice(selectedExpert)}</option>
-                    <option value="120">120 minutes - ${getPrice(selectedExpert)}</option>
-                  </select>
-                </div>
-
-                {/* Price */}
-                <div className="p-4 bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl">
-                  <p className="text-[#D8CCBC]/60 text-sm">Session Cost</p>
-                  <p className="text-3xl font-bold text-[#F4F1EA]">${getPrice(selectedExpert)}</p>
-                  {bookingType === 'subscription' && (
-                    <p className="text-[#C49A6C] text-sm">20% subscriber discount</p>
+                  {selectedExpert.online && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>
                   )}
                 </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-bold text-[#F4F1EA]">{selectedExpert.name}</h2>
+                    {selectedExpert.verified && (
+                      <svg className="w-5 h-5 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                  <p className="text-[#D8CCBC]/70">{selectedExpert.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="text-[#F4F1EA] font-medium">{selectedExpert.rating}/5</span>
+                    <span className="text-[#D8CCBC]/50">({selectedExpert.reviews} reviews)</span>
+                  </div>
+                </div>
+              </div>
 
-                {/* Book Button */}
-                <button className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors">
-                  Book Session
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
+                  <p className="text-xl font-bold text-[#C49A6C]">1,248</p>
+                  <p className="text-[#D8CCBC]/60 text-xs">Consultations</p>
+                </div>
+                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
+                  <p className="text-xl font-bold text-[#C49A6C]">15 min</p>
+                  <p className="text-[#D8CCBC]/60 text-xs">Response</p>
+                </div>
+                <div className="bg-[#0E3B36] rounded-xl p-3 text-center">
+                  <p className="text-xl font-bold text-[#C49A6C]">18+</p>
+                  <p className="text-[#D8CCBC]/60 text-xs">Years Exp.</p>
+                </div>
+              </div>
+
+              {/* Booking Type */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setBookingType('one-time')}
+                  className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
+                    bookingType === 'one-time'
+                      ? 'bg-[#C49A6C] text-[#081512]'
+                      : 'bg-[#0E3B36] text-[#D8CCBC]'
+                  }`}
+                >
+                  One Time
                 </button>
+                <button
+                  onClick={() => setBookingType('subscription')}
+                  className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
+                    bookingType === 'subscription'
+                      ? 'bg-[#C49A6C] text-[#081512]'
+                      : 'bg-[#0E3B36] text-[#D8CCBC]'
+                  }`}
+                >
+                  Subscribe
+                </button>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <label className="block text-[#D8CCBC]/80 text-sm mb-2">Duration</label>
+                <select
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className="input"
+                >
+                  <option value="30">30 minutes - ${getPrice(selectedExpert)}</option>
+                  <option value="60">60 minutes - ${getPrice(selectedExpert)}</option>
+                  <option value="120">120 minutes - ${getPrice(selectedExpert)}</option>
+                </select>
+              </div>
+
+              {/* Price */}
+              <div className="bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#D8CCBC]/60 text-sm">Session Cost</p>
+                    <p className="text-3xl font-bold text-[#F4F1EA]">${getPrice(selectedExpert)}</p>
+                    {bookingType === 'subscription' && (
+                      <p className="text-[#C49A6C] text-sm">20% subscriber discount</p>
+                    )}
+                  </div>
+                  <button className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">
+                    Book Session
+                  </button>
+                </div>
+              </div>
+
+              {/* Upcoming Consultation */}
+              <div className="bg-[#0E3B36]/50 rounded-xl p-4 border border-[#C49A6C]/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl">📹</span>
+                  <div>
+                    <p className="text-[#F4F1EA] font-medium">Upcoming Consultation</p>
+                    <p className="text-[#D8CCBC]/60 text-sm">Today, 11:00 AM - 12:00 PM</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="flex-1 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm">
+                    Join
+                  </button>
+                  <button className="flex-1 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-lg text-sm">
+                    Reschedule
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Ad Wallet Banner - Mobile friendly */}
+      <div className="bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-4 sm:p-6 border border-[#C49A6C]/20">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[#D8CCBC]/60 text-sm">Ad Wallet</p>
+            <p className="text-2xl font-bold text-[#F4F1EA]">$4,875</p>
+          </div>
+          <button className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm">
+            Add Funds
+          </button>
+        </div>
       </div>
 
-      {/* Ad Wallet - Mobile friendly */}
-      <div className="card bg-gradient-to-br from-[#0E3B36] to-[#081512] border-[#C49A6C]/20">
-        <h3 className="text-lg font-semibold text-[#F4F1EA] mb-3">Ad Wallet</h3>
-        <div className="text-center py-4">
-          <p className="text-[#D8CCBC]/60 text-sm">Available Credits</p>
-          <p className="text-4xl font-bold text-[#F4F1EA]">2,450</p>
-          <p className="text-[#C49A6C]">≈ $245.00 value</p>
+      {/* How it Works - Mobile friendly */}
+      <div className="card">
+        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">How it Works</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { step: '1', title: 'Book', desc: 'Consult an expert' },
+            { step: '2', title: 'Get Credit', desc: 'Equal ad credit' },
+            { step: '3', title: 'Run Ads', desc: 'Promote products' },
+            { step: '4', title: 'Grow', desc: 'Get more leads' },
+          ].map(item => (
+            <div key={item.step} className="text-center">
+              <div className="w-8 h-8 bg-[#C49A6C] rounded-full flex items-center justify-center text-[#081512] font-bold mx-auto mb-2">
+                {item.step}
+              </div>
+              <p className="text-[#F4F1EA] text-sm font-medium">{item.title}</p>
+              <p className="text-[#D8CCBC]/50 text-xs">{item.desc}</p>
+            </div>
+          ))}
         </div>
-        <button className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">
-          Buy Credits
-        </button>
       </div>
     </div>
   );
