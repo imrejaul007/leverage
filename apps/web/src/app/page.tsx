@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function HomePage() {
   return (
@@ -7,12 +8,7 @@ export default function HomePage() {
       <header className="border-b border-[rgba(255,255,255,0.05)]">
         <div className="container mx-auto px-8 py-5">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#C49A6C] flex items-center justify-center">
-                <span className="text-[#081512] font-bold text-xl brand-font">L</span>
-              </div>
-              <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>
-            </Link>
+            <Logo showTagline />
             <nav className="hidden md:flex items-center gap-8">
               <Link href="/marketplace" className="text-[#D8CCBC]/80 hover:text-[#F4F1EA] transition-colors">
                 Marketplace
