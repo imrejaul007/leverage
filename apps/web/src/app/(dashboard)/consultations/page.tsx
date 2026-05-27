@@ -98,8 +98,22 @@ export default function ConsultationsPage() {
     : experts.filter(e => e.specialties.some(s => s.toLowerCase().includes(filterCategory.toLowerCase())));
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-6 relative overflow-hidden">
+      {/* Large prominent globe glow - left side */}
+      <div className="absolute -top-24 -left-32 w-[600px] h-[600px] bg-gradient-radial from-[#C49A6C]/40 via-[#C49A6C]/10 to-transparent pointer-events-none" />
+      <div className="absolute -top-16 -left-16 w-96 h-96 bg-gradient-radial from-[#0E3B36]/50 to-transparent rounded-full pointer-events-none" />
+
+      {/* Globe latitude/longitude lines */}
+      <svg className="absolute top-0 left-0 w-80 h-48 pointer-events-none opacity-30" viewBox="0 0 320 192">
+        <ellipse cx="160" cy="96" rx="150" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="96" rx="100" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="96" rx="50" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <line x1="10" y1="96" x2="310" y2="96" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="60" rx="150" ry="30" fill="none" stroke="#C49A6C" strokeWidth="0.5" />
+        <ellipse cx="160" cy="132" rx="150" ry="30" fill="none" stroke="#C49A6C" strokeWidth="0.5" />
+      </svg>
+
+      <div className="relative z-10">
         <h1 className="text-2xl font-bold text-[#F4F1EA]">Expert Consultations</h1>
         <p className="text-[#D8CCBC]/60 text-sm">Book consultations with trade experts</p>
       </div>
