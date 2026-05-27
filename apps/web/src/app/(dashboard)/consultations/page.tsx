@@ -8,6 +8,9 @@ interface Expert {
   name: string;
   title: string;
   image: string;
+  imageUrl?: string;
+  industry: string;
+  yearsExperience: number;
   rating: number;
   reviews: number;
   price: number;
@@ -19,12 +22,12 @@ interface Expert {
 }
 
 const experts: Expert[] = [
-  { id: '1', name: 'Rakesh Sharma', title: 'Shipping Consultant', image: 'RS', rating: 4.9, reviews: 128, price: 3000, subPrice: 2250, online: true, verified: true, specialties: ['Freight Forwarding', 'Customs', 'Documentation'], bio: '15+ years of experience in international shipping and logistics.' },
-  { id: '2', name: 'Anita Iyer', title: 'Customs Expert', image: 'AI', rating: 4.8, reviews: 96, price: 2500, subPrice: 1875, online: true, verified: true, specialties: ['Import/Export', 'Duty Optimization', 'Trade Compliance'], bio: 'Former customs officer with 12 years of experience.' },
-  { id: '3', name: 'Vikram Singh', title: 'Logistics Expert', image: 'VS', rating: 4.9, reviews: 74, price: 3500, subPrice: 2625, online: true, verified: true, specialties: ['Supply Chain', 'Warehouse', 'Distribution'], bio: 'Expert in optimizing supply chain operations.' },
-  { id: '4', name: 'Neha Bansal', title: 'Trade Finance', image: 'NB', rating: 4.8, reviews: 63, price: 2800, subPrice: 2100, online: false, verified: true, specialties: ['Letters of Credit', 'Payment Terms', 'Insurance'], bio: 'Specialist in trade finance solutions.' },
-  { id: '5', name: 'David Lee', title: 'Supply Chain', image: 'DL', rating: 4.9, reviews: 58, price: 3200, subPrice: 2400, online: false, verified: true, specialties: ['Sourcing', 'Vendor Management', 'Quality Control'], bio: '20 years in global supply chain management.' },
-  { id: '6', name: 'Maria Santos', title: 'Import Export', image: 'MS', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true, specialties: ['Regulations', 'Documentation', 'Compliance'], bio: 'Expert in cross-border trade regulations.' },
+  { id: '1', name: 'Rakesh Sharma', title: 'Shipping Consultant', industry: 'International Logistics', yearsExperience: 15, image: 'RS', imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face', rating: 4.9, reviews: 128, price: 3000, subPrice: 2250, online: true, verified: true, specialties: ['Freight Forwarding', 'Customs', 'Documentation'], bio: '15+ years of experience in international shipping and logistics.' },
+  { id: '2', name: 'Anita Iyer', title: 'Customs Expert', industry: 'Government & Trade', yearsExperience: 12, image: 'AI', imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face', rating: 4.8, reviews: 96, price: 2500, subPrice: 1875, online: true, verified: true, specialties: ['Import/Export', 'Duty Optimization', 'Trade Compliance'], bio: 'Former customs officer with 12 years of experience.' },
+  { id: '3', name: 'Vikram Singh', title: 'Logistics Expert', industry: 'Supply Chain', yearsExperience: 18, image: 'VS', imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face', rating: 4.9, reviews: 74, price: 3500, subPrice: 2625, online: true, verified: true, specialties: ['Supply Chain', 'Warehouse', 'Distribution'], bio: 'Expert in optimizing supply chain operations.' },
+  { id: '4', name: 'Neha Bansal', title: 'Trade Finance', industry: 'Banking & Finance', yearsExperience: 10, image: 'NB', imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face', rating: 4.8, reviews: 63, price: 2800, subPrice: 2100, online: false, verified: true, specialties: ['Letters of Credit', 'Payment Terms', 'Insurance'], bio: 'Specialist in trade finance solutions.' },
+  { id: '5', name: 'David Lee', title: 'Supply Chain', industry: 'Manufacturing', yearsExperience: 20, image: 'DL', imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face', rating: 4.9, reviews: 58, price: 3200, subPrice: 2400, online: false, verified: true, specialties: ['Sourcing', 'Vendor Management', 'Quality Control'], bio: '20 years in global supply chain management.' },
+  { id: '6', name: 'Maria Santos', title: 'Import Export', industry: 'International Trade', yearsExperience: 8, image: 'MS', imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true, specialties: ['Regulations', 'Documentation', 'Compliance'], bio: 'Expert in cross-border trade regulations.' },
 ];
 
 const categories = [
@@ -95,8 +98,22 @@ export default function ConsultationsPage() {
     : experts.filter(e => e.specialties.some(s => s.toLowerCase().includes(filterCategory.toLowerCase())));
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-6 relative overflow-hidden">
+      {/* Large prominent globe glow - left side */}
+      <div className="absolute -top-24 -left-32 w-[600px] h-[600px] bg-gradient-radial from-[#C49A6C]/40 via-[#C49A6C]/10 to-transparent pointer-events-none" />
+      <div className="absolute -top-16 -left-16 w-96 h-96 bg-gradient-radial from-[#0E3B36]/50 to-transparent rounded-full pointer-events-none" />
+
+      {/* Globe latitude/longitude lines */}
+      <svg className="absolute top-0 left-0 w-80 h-48 pointer-events-none opacity-30" viewBox="0 0 320 192">
+        <ellipse cx="160" cy="96" rx="150" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="96" rx="100" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="96" rx="50" ry="90" fill="none" stroke="#C49A6C" strokeWidth="1" />
+        <line x1="10" y1="96" x2="310" y2="96" stroke="#C49A6C" strokeWidth="1" />
+        <ellipse cx="160" cy="60" rx="150" ry="30" fill="none" stroke="#C49A6C" strokeWidth="0.5" />
+        <ellipse cx="160" cy="132" rx="150" ry="30" fill="none" stroke="#C49A6C" strokeWidth="0.5" />
+      </svg>
+
+      <div className="relative z-10">
         <h1 className="text-2xl font-bold text-[#F4F1EA]">Expert Consultations</h1>
         <p className="text-[#D8CCBC]/60 text-sm">Book consultations with trade experts</p>
       </div>
@@ -139,27 +156,33 @@ export default function ConsultationsPage() {
           {/* Expert Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredExperts.map(expert => (
-              <div key={expert.id} className="card hover:border-[#C49A6C]/30 transition-all">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="relative">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 text-lg">{expert.image}</div>
-                    {expert.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>}
+              <div key={expert.id} className="card hover:border-[#C49A6C]/30 transition-all text-center">
+                <div className="flex flex-col items-center mb-4">
+                  <div className="relative mb-3">
+                    {expert.imageUrl ? (
+                      <img src={expert.imageUrl} alt={expert.name} className="w-24 h-24 rounded-full object-cover border-2 border-[#C49A6C]/30" />
+                    ) : (
+                      <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 text-3xl">{expert.image}</div>
+                    )}
+                    {expert.online && <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-[#F4F1EA] font-semibold">{expert.name}</h3>
-                      {expert.verified && <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>}
-                    </div>
-                    <p className="text-[#C49A6C] text-sm">{expert.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                      <span className="text-[#F4F1EA] text-sm">{expert.rating}</span>
-                      <span className="text-[#D8CCBC]/50 text-sm">({expert.reviews} reviews)</span>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-[#F4F1EA] font-semibold">{expert.name}</h3>
+                    {expert.verified && <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>}
+                  </div>
+                  <p className="text-[#C49A6C] text-sm">{expert.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    <span className="text-[#F4F1EA] text-sm">{expert.rating}</span>
+                    <span className="text-[#D8CCBC]/50 text-sm">({expert.reviews} reviews)</span>
+                  </div>
+                  <div className="mt-2 px-3 py-1.5 bg-[#0E3B36]/50 rounded-lg">
+                    <p className="text-[#D8CCBC]/70 text-xs">{expert.industry}</p>
+                    <p className="text-[#C49A6C] text-sm font-semibold">{expert.yearsExperience}+ Years Expertise</p>
                   </div>
                 </div>
                 <p className="text-[#D8CCBC]/70 text-sm mb-4 line-clamp-2">{expert.bio}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
                   {expert.specialties.map(s => (
                     <span key={s} className="px-2 py-1 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]/50 text-xs rounded">{s}</span>
                   ))}
@@ -202,9 +225,20 @@ export default function ConsultationsPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">{selectedExpert.image}</div>
-                  <div><p className="text-[#F4F1EA] font-semibold">{selectedExpert.name}</p><p className="text-[#C49A6C] text-sm">{selectedExpert.title}</p></div>
+                <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl flex flex-col items-center text-center">
+                  <div className="relative mb-2">
+                    {selectedExpert.imageUrl ? (
+                      <img src={selectedExpert.imageUrl} alt={selectedExpert.name} className="w-20 h-20 rounded-full object-cover border-2 border-[#C49A6C]/30" />
+                    ) : (
+                      <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 text-2xl">{selectedExpert.image}</div>
+                    )}
+                  </div>
+                  <p className="text-[#F4F1EA] font-semibold">{selectedExpert.name}</p>
+                  <p className="text-[#C49A6C] text-sm">{selectedExpert.title}</p>
+                  <div className="mt-2 px-3 py-1 bg-[#0E3B36]/50 rounded-lg">
+                    <p className="text-[#D8CCBC]/70 text-xs">{selectedExpert.industry}</p>
+                    <p className="text-[#C49A6C] text-sm font-semibold">{selectedExpert.yearsExperience}+ Years Expertise</p>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div><label className="block text-[#D8CCBC] text-sm mb-2">Date *</label><input type="date" value={bookingForm.date} onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })} className="w-full input" min={new Date().toISOString().split('T')[0]} /></div>
