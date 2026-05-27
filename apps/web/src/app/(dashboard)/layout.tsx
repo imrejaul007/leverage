@@ -13,12 +13,16 @@ import MobileHeader from '@/components/MobileHeader';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: '📊' },
   { name: 'Marketplace', href: '/marketplace', icon: '🛒' },
-  { name: 'RFQs', href: '/rfqs', icon: '📋' },
   { name: 'My Inbox', href: '/marketplace/inbox', icon: '📨' },
+  { name: 'RFQs', href: '/rfqs', icon: '📋' },
   { name: 'Documents', href: '/documents', icon: '📄' },
   { name: 'Orders', href: '/orders', icon: '📦' },
+  { name: 'Consultations', href: '/consultations', icon: '💬' },
   { name: 'Freight', href: '/freight', icon: '🚢' },
+  { name: 'Compliance', href: '/compliance', icon: '✅' },
   { name: 'AI Assistant', href: '/ai', icon: '🤖' },
+  { name: 'Analytics', href: '/analytics', icon: '📈' },
+  { name: 'Billing', href: '/billing', icon: '💳' },
   { name: 'Settings', href: '/settings', icon: '⚙️' },
 ];
 
