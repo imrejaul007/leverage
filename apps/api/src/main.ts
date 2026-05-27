@@ -13,14 +13,18 @@ async function bootstrap() {
   // Security headers
   app.use(helmet());
 
-  // CORS - strict configuration
+  // CORS - strict configuration for production, permissive for development
   const allowedOrigins = [
     'http://localhost:3000',
+    'http://localhost:3001',
     'https://leverageweb.vercel.app',
     'https://www.leverageweb.vercel.app',
     process.env.FRONTEND_URL,
-    process.env.ALLOWED_ORIGINS,
   ].filter(Boolean);
+
+  // Parse additional origins from ALLOWED_ORIGINS env var (comma-separated)
+  const additionalOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean) || [];
+  allowedOrigins.push(...additionalOrigins);
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -28,24 +32,36 @@ async function bootstrap() {
       if (!origin) return callback(null, true);
 
       // In development, allow localhost without strict checking
-      if (process.env.NODE_ENV === 'development') return callback(null, true);
+      // But still log it for visibility
+      if (process.env.NODE_ENV === 'development') {
+        // Still validate it looks like a localhost URL
+        if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+          return callback(null, true);
+        }
+        // For non-localhost in dev, still allow but log
+        console.log(`[DEV CORS] Allowing non-localhost origin: ${origin}`);
+        return callback(null, true);
+      }
 
-      // Check against allowed origins (origin might include www subdomain)
-      const normalizedOrigin = origin.replace(/^https?:\/\/www\./, '');
+      // Production: strict origin checking
+      const normalizedOrigin = origin.replace(/^https?:\/\/www\./, '').replace(/\/$/, '');
+
       const isAllowed = allowedOrigins.some(allowed => {
         if (!allowed) return false;
-        const normalizedAllowed = allowed.replace(/^https?:\/\/www\./, '');
-        return normalizedOrigin === normalizedAllowed || normalizedOrigin.includes(normalizedAllowed.replace('https://', ''));
+        const normalizedAllowed = allowed.replace(/^https?:\/\/www\./, '').replace(/\/$/, '');
+        return normalizedOrigin === normalizedAllowed;
       });
 
       if (isAllowed) return callback(null, true);
 
-      console.warn(`CORS blocked origin: ${origin}`);
+      console.warn(`[CORS] Blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Client-Info'],
+    exposedHeaders: ['X-Request-Id'], // Expose custom headers
+    maxAge: 86400, // Preflight cache for 24 hours
   });
 
   // Global prefix

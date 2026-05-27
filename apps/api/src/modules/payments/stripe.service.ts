@@ -1,20 +1,62 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 
 @Injectable()
-export class StripeService {
+export class StripeService implements OnModuleInit {
   private readonly logger = new Logger(StripeService.name);
-  private stripe: Stripe;
+  private stripe: Stripe | null = null;
+  private readonly isProduction = process.env.NODE_ENV === 'production';
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService) {}
+
+  /**
+   * Validate Stripe configuration at startup
+   */
+  onModuleInit(): void {
     const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
+
     if (!secretKey) {
-      this.logger.warn('STRIPE_SECRET_KEY not configured - Stripe features will be disabled');
+      const errorMsg = 'STRIPE_SECRET_KEY is not configured';
+      if (this.isProduction) {
+        // In production, this is a fatal error
+        throw new Error(`FATAL: ${errorMsg}. Please set the STRIPE_SECRET_KEY environment variable.`);
+      } else {
+        this.logger.warn(`WARNING: ${errorMsg} - Stripe features will be unavailable`);
+        this.stripe = null;
+        return;
+      }
     }
-    this.stripe = new Stripe(secretKey || 'sk_test_placeholder', {
+
+    // Validate the key format
+    if (!secretKey.startsWith('sk_')) {
+      const errorMsg = 'STRIPE_SECRET_KEY has an invalid format';
+      if (this.isProduction) {
+        throw new Error(`FATAL: ${errorMsg}`);
+      } else {
+        this.logger.warn(`WARNING: ${errorMsg}`);
+        this.stripe = null;
+        return;
+      }
+    }
+
+    this.stripe = new Stripe(secretKey, {
       apiVersion: '2023-10-16',
     });
+
+    this.logger.log('Stripe service initialized successfully');
+  }
+
+  /**
+   * Ensure Stripe is configured before any operation
+   */
+  private ensureConfigured(): Stripe {
+    if (!this.stripe) {
+      throw new Error(
+        'Stripe is not configured. Please set the STRIPE_SECRET_KEY environment variable.',
+      );
+    }
+    return this.stripe;
   }
 
   /**
@@ -25,9 +67,10 @@ export class StripeService {
     currency: string,
     metadata: Record<string, string>,
   ): Promise<Stripe.PaymentIntent> {
+    const stripe = this.ensureConfigured();
     this.logger.log(`Creating payment intent: ${amount} ${currency}`);
 
-    return this.stripe.paymentIntents.create({
+    return stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),
       metadata,
@@ -41,7 +84,8 @@ export class StripeService {
    * Create a Stripe customer
    */
   async createCustomer(email: string, name: string, metadata?: Record<string, string>): Promise<Stripe.Customer> {
-    return this.stripe.customers.create({
+    const stripe = this.ensureConfigured();
+    return stripe.customers.create({
       email,
       name,
       metadata,
@@ -56,7 +100,8 @@ export class StripeService {
     priceId: string,
     metadata?: Record<string, string>,
   ): Promise<Stripe.Subscription> {
-    return this.stripe.subscriptions.create({
+    const stripe = this.ensureConfigured();
+    return stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: priceId }],
       metadata,
@@ -67,7 +112,8 @@ export class StripeService {
    * Cancel a subscription
    */
   async cancelSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
-    return this.stripe.subscriptions.cancel(subscriptionId);
+    const stripe = this.ensureConfigured();
+    return stripe.subscriptions.cancel(subscriptionId);
   }
 
   /**
@@ -77,6 +123,7 @@ export class StripeService {
     paymentIntentId: string,
     amount?: number,
   ): Promise<Stripe.Refund> {
+    const stripe = this.ensureConfigured();
     const params: Stripe.RefundCreateParams = {
       payment_intent: paymentIntentId,
     };
@@ -87,21 +134,23 @@ export class StripeService {
 
     this.logger.log(`Processing refund for ${paymentIntentId}: ${amount || 'full'}`);
 
-    return this.stripe.refunds.create(params);
+    return stripe.refunds.create(params);
   }
 
   /**
    * Cancel a refund
    */
   async cancelRefund(refundId: string): Promise<Stripe.Refund> {
-    return this.stripe.refunds.cancel(refundId);
+    const stripe = this.ensureConfigured();
+    return stripe.refunds.cancel(refundId);
   }
 
   /**
    * Retrieve a payment intent
    */
   async getPaymentIntent(paymentIntentId: string): Promise<Stripe.PaymentIntent> {
-    return this.stripe.paymentIntents.retrieve(paymentIntentId);
+    const stripe = this.ensureConfigured();
+    return stripe.paymentIntents.retrieve(paymentIntentId);
   }
 
   /**
@@ -111,15 +160,17 @@ export class StripeService {
     paymentIntentId: string,
     updates: Partial<Stripe.PaymentIntentUpdateParams>,
   ): Promise<Stripe.PaymentIntent> {
-    return this.stripe.paymentIntents.update(paymentIntentId, updates);
+    const stripe = this.ensureConfigured();
+    return stripe.paymentIntents.update(paymentIntentId, updates);
   }
 
   /**
    * Verify and parse Stripe webhook event
    */
   handleWebhook(payload: Buffer, signature: string, webhookSecret: string): Stripe.Event {
+    const stripe = this.ensureConfigured();
     try {
-      return this.stripe.webhooks.constructEvent(
+      return stripe.webhooks.constructEvent(
         payload,
         signature,
         webhookSecret,
@@ -134,7 +185,8 @@ export class StripeService {
    * Create a SetupIntent for saving payment methods
    */
   async createSetupIntent(customerId: string): Promise<Stripe.SetupIntent> {
-    return this.stripe.setupIntents.create({
+    const stripe = this.ensureConfigured();
+    return stripe.setupIntents.create({
       customer: customerId,
       automatic_payment_methods: {
         enabled: true,
@@ -146,7 +198,8 @@ export class StripeService {
    * List customer's payment methods
    */
   async listPaymentMethods(customerId: string): Promise<Stripe.ApiList<Stripe.PaymentMethod>> {
-    return this.stripe.paymentMethods.list({
+    const stripe = this.ensureConfigured();
+    return stripe.paymentMethods.list({
       customer: customerId,
       type: 'card',
     });
@@ -161,7 +214,8 @@ export class StripeService {
     connectedAccountId: string,
     metadata?: Record<string, string>,
   ): Promise<Stripe.Transfer> {
-    return this.stripe.transfers.create({
+    const stripe = this.ensureConfigured();
+    return stripe.transfers.create({
       amount: Math.round(amount * 100),
       currency: currency.toLowerCase(),
       destination: connectedAccountId,
@@ -177,7 +231,8 @@ export class StripeService {
     currency: string,
     metadata: Record<string, string>,
   ): Promise<Stripe.PaymentIntent> {
-    return this.stripe.paymentIntents.create({
+    const stripe = this.ensureConfigured();
+    return stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency: currency.toLowerCase(),
       capture_method: 'manual', // Requires manual capture after verification
@@ -192,10 +247,11 @@ export class StripeService {
    * Capture a held payment
    */
   async capturePayment(paymentIntentId: string, amount?: number): Promise<Stripe.PaymentIntent> {
+    const stripe = this.ensureConfigured();
     const params: Stripe.PaymentIntentCaptureParams = {};
     if (amount) {
       params.amount_to_capture = Math.round(amount * 100);
     }
-    return this.stripe.paymentIntents.capture(paymentIntentId, params);
+    return stripe.paymentIntents.capture(paymentIntentId, params);
   }
 }

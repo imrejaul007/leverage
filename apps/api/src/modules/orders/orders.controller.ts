@@ -54,8 +54,11 @@ export class OrdersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get order by ID' })
-  async getOrder(@Param('id') id: string): Promise<OrderResponseDto> {
-    return this.ordersService.getOrderById(id);
+  async getOrder(
+    @Param('id') id: string,
+    @CurrentUser('companyId') companyId: string,
+  ): Promise<OrderResponseDto> {
+    return this.ordersService.getOrderById(id, companyId);
   }
 
   @Get('number/:orderNumber')
@@ -82,10 +85,12 @@ export class OrdersController {
   @ApiOperation({ summary: 'Update payment status' })
   async updatePaymentStatus(
     @Param('id') id: string,
+    @CurrentUser('companyId') companyId: string,
     @Body('paymentStatus') paymentStatus: string,
   ): Promise<OrderResponseDto> {
     return this.ordersService.updatePaymentStatus(
       id,
+      companyId,
       paymentStatus as any,
     );
   }
@@ -125,8 +130,11 @@ export class OrdersController {
 
   @Get(':id/timeline')
   @ApiOperation({ summary: 'Get order timeline' })
-  async getOrderTimeline(@Param('id') id: string): Promise<OrderTimelineDto> {
-    return this.ordersService.getOrderTimeline(id);
+  async getOrderTimeline(
+    @Param('id') id: string,
+    @CurrentUser('companyId') companyId: string,
+  ): Promise<OrderTimelineDto> {
+    return this.ordersService.getOrderTimeline(id, companyId);
   }
 
   @Post(':id/invoice')
@@ -141,7 +149,10 @@ export class OrdersController {
 
   @Get(':id/invoices')
   @ApiOperation({ summary: 'Get all invoices for an order' })
-  async getOrderInvoices(@Param('id') id: string) {
-    return this.ordersService.getOrderInvoices(id);
+  async getOrderInvoices(
+    @Param('id') id: string,
+    @CurrentUser('companyId') companyId: string,
+  ) {
+    return this.ordersService.getOrderInvoices(id, companyId);
   }
 }

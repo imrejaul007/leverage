@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerModule, ThrottlerGuard, ThrottlerException } from '@nestjs/throttler';
 
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './shared/redis.module';
@@ -46,11 +46,24 @@ import { SearchModule } from './modules/search/search.module';
       }),
     }),
 
-    // Rate limiting
-    ThrottlerModule.forRoot([{
-      ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10),
-      limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10),
-    }]),
+    // Rate limiting - multiple tiers for different endpoint types
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: parseInt(process.env.THROTTLE_AUTH_TTL || '60000', 10), // 1 minute
+        limit: parseInt(process.env.THROTTLE_AUTH_LIMIT || '5', 10), // 5 requests per minute for auth
+      },
+      {
+        name: 'medium',
+        ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10), // 1 minute
+        limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10), // 100 requests per minute
+      },
+      {
+        name: 'long',
+        ttl: parseInt(process.env.THROTTLE_LONG_TTL || '3600000', 10), // 1 hour
+        limit: parseInt(process.env.THROTTLE_LONG_LIMIT || '1000', 10), // 1000 requests per hour
+      },
+    ]),
 
     PrismaModule,
     RedisModule,

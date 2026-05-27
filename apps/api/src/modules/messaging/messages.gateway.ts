@@ -11,9 +11,11 @@ import {
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { Logger, UseGuards } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 interface AuthenticatedSocket extends Socket {
   userId?: string;
+  companyId?: string;
 }
 
 @WebSocketGateway({
@@ -29,8 +31,13 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
 
   private readonly logger = new Logger(MessagesGateway.name);
   private userSockets = new Map<string, Set<string>>();
+  // Track which conversations a user has joined
+  private userConversations = new Map<string, Set<string>>();
 
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private prisma: PrismaService,
+  ) {}
 
   async handleConnection(client: AuthenticatedSocket) {
     try {
@@ -43,6 +50,7 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
 
       const payload = await this.jwtService.verifyAsync(token);
       client.userId = payload.sub;
+      client.companyId = payload.companyId;
       client.join(`user:${payload.sub}`);
 
       if (!this.userSockets.has(payload.sub)) {
@@ -64,6 +72,8 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
         sockets.delete(client.id);
         if (sockets.size === 0) {
           this.userSockets.delete(client.userId);
+          // Clean up conversation tracking
+          this.userConversations.delete(client.userId);
         }
       }
       this.logger.log(`User ${client.userId} disconnected socket ${client.id}`);
@@ -78,6 +88,31 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
 
     const token = client.handshake.auth?.token || client.handshake.query?.token;
     return token as string || null;
+  }
+
+  /**
+   * Verify user is a participant of the conversation
+   */
+  private async isConversationParticipant(
+    userId: string,
+    conversationId: string,
+  ): Promise<boolean> {
+    try {
+      const conversation = await this.prisma.conversation.findFirst({
+        where: {
+          id: conversationId,
+          participants: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+      });
+      return !!conversation;
+    } catch (error) {
+      this.logger.error(`Failed to verify conversation participation: ${error}`);
+      return false;
+    }
   }
 
   @SubscribeMessage('join')
@@ -98,13 +133,32 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('join_conversation')
-  handleJoinConversation(
+  async handleJoinConversation(
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
     if (!client.userId) {
       throw new WsException('Not authenticated');
     }
+
+    // AUTHORIZATION CHECK: Verify user is a participant of this conversation
+    const isParticipant = await this.isConversationParticipant(
+      client.userId,
+      data.conversationId,
+    );
+
+    if (!isParticipant) {
+      this.logger.warn(
+        `User ${client.userId} attempted to join unauthorized conversation ${data.conversationId}`,
+      );
+      throw new WsException('Not authorized to join this conversation');
+    }
+
+    // Track this conversation for the user
+    if (!this.userConversations.has(client.userId)) {
+      this.userConversations.set(client.userId, new Set());
+    }
+    this.userConversations.get(client.userId).add(data.conversationId);
 
     client.join(`conv:${data.conversationId}`);
     client.to(`conv:${data.conversationId}`).emit('user_joined', { userId: client.userId });
@@ -121,6 +175,11 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
       throw new WsException('Not authenticated');
     }
 
+    // Remove from tracked conversations
+    if (this.userConversations.has(client.userId)) {
+      this.userConversations.get(client.userId).delete(data.conversationId);
+    }
+
     client.leave(`conv:${data.conversationId}`);
     client.to(`conv:${data.conversationId}`).emit('user_left', { userId: client.userId });
 
@@ -128,9 +187,30 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('send_message')
-  handleSendMessage(@MessageBody() data: { conversationId: string; recipientId?: string; content: string }, @ConnectedSocket() client: AuthenticatedSocket) {
+  async handleSendMessage(
+    @MessageBody() data: { conversationId: string; recipientId?: string; content: string },
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
     if (!client.userId) {
       throw new WsException('Not authenticated');
+    }
+
+    // AUTHORIZATION CHECK: Verify sender is a participant
+    const isParticipant = await this.isConversationParticipant(
+      client.userId,
+      data.conversationId,
+    );
+
+    if (!isParticipant) {
+      this.logger.warn(
+        `User ${client.userId} attempted to send message to unauthorized conversation ${data.conversationId}`,
+      );
+      throw new WsException('Not authorized to send messages in this conversation');
+    }
+
+    // Input validation: prevent empty messages
+    if (!data.content || data.content.trim().length === 0) {
+      throw new WsException('Message content cannot be empty');
     }
 
     const messageData = {
@@ -151,12 +231,22 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('typing')
-  handleTyping(
+  async handleTyping(
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
     if (!client.userId) {
       throw new WsException('Not authenticated');
+    }
+
+    // Verify user is in this conversation
+    const isParticipant = await this.isConversationParticipant(
+      client.userId,
+      data.conversationId,
+    );
+
+    if (!isParticipant) {
+      throw new WsException('Not authorized in this conversation');
     }
 
     client.to(`conv:${data.conversationId}`).emit('user_typing', {
@@ -166,12 +256,22 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('stop_typing')
-  handleStopTyping(
+  async handleStopTyping(
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
     if (!client.userId) {
       throw new WsException('Not authenticated');
+    }
+
+    // Verify user is in this conversation
+    const isParticipant = await this.isConversationParticipant(
+      client.userId,
+      data.conversationId,
+    );
+
+    if (!isParticipant) {
+      throw new WsException('Not authorized in this conversation');
     }
 
     client.to(`conv:${data.conversationId}`).emit('user_stopped_typing', {
@@ -181,9 +281,22 @@ export class MessagesGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('read')
-  handleRead(@MessageBody() data: { conversationId: string; messageId: string }, @ConnectedSocket() client: AuthenticatedSocket) {
+  async handleRead(
+    @MessageBody() data: { conversationId: string; messageId: string },
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
     if (!client.userId) {
       throw new WsException('Not authenticated');
+    }
+
+    // Verify user is in this conversation
+    const isParticipant = await this.isConversationParticipant(
+      client.userId,
+      data.conversationId,
+    );
+
+    if (!isParticipant) {
+      throw new WsException('Not authorized in this conversation');
     }
 
     this.server.to(`conv:${data.conversationId}`).emit('message_read', {

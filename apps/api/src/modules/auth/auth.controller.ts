@@ -1,5 +1,6 @@
 import { Controller, Post, Body, Get, UseGuards, Req, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
@@ -13,6 +14,7 @@ export class AuthController {
 
   @Public()
   @Post('signup')
+  @Throttle({ short: { limit: 5, ttl: 60000 } }) // 5 signups per minute
   @ApiOperation({ summary: 'Register a new user' })
   async signup(@Body() dto: SignupDto) {
     const result = await this.authService.signup(dto);
@@ -22,6 +24,7 @@ export class AuthController {
   @Public()
   @HttpCode(200)
   @Post('login')
+  @Throttle({ short: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute
   @ApiOperation({ summary: 'Login with email and password' })
   async login(@Body() dto: LoginDto) {
     const result = await this.authService.login(dto);
@@ -31,6 +34,7 @@ export class AuthController {
   @Public()
   @Post('demo')
   @HttpCode(200)
+  @Throttle({ short: { limit: 3, ttl: 60000 } }) // Limit demo account creation
   @ApiOperation({ summary: 'Create and login as demo user' })
   async demoLogin() {
     const demoUser: SignupDto = {
@@ -54,6 +58,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('verify-otp')
+  @Throttle({ short: { limit: 10, ttl: 60000 } }) // 10 OTP verifications per minute
   @ApiOperation({ summary: 'Verify email OTP' })
   async verifyOtp(@Body() dto: { code: string }, @Req() req: any) {
     return this.authService.verifyOtp(req.user.id, dto.code);
@@ -68,6 +73,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('mfa/verify')
+  @Throttle({ short: { limit: 5, ttl: 60000 } }) // 5 MFA attempts per minute
   @ApiOperation({ summary: 'Verify and enable MFA' })
   async verifyMfa(@Body() dto: { code: string }, @Req() req: any) {
     return this.authService.verifyMfa(req.user.id, dto.code);
@@ -83,6 +89,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
+  @SkipThrottle() // Don't throttle authenticated user checks
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current authenticated user' })
   async me(@Req() req: any) {

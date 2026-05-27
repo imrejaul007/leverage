@@ -21,6 +21,7 @@ import {
   OrderTimelineDto,
   AddOrderItemDto,
 } from './dto/orders.dto';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class OrdersService {
@@ -33,18 +34,30 @@ export class OrdersService {
     private orderItemRepository: Repository<OrderItem>,
     @InjectRepository(Invoice)
     private invoiceRepository: Repository<Invoice>,
+    private prisma: PrismaService,
   ) {}
+
+  /**
+   * Helper to find company by ID
+   */
+  private async findCompanyById(companyId: string): Promise<{ id: string } | null> {
+    return this.prisma.company.findUnique({
+      where: { id: companyId },
+      select: { id: true },
+    });
+  }
 
   /**
    * Create a new order with items
    */
   async createOrder(
-    buyerId: string,
+    buyerCompanyId: string,
     dto: CreateOrderDto,
   ): Promise<OrderResponseDto> {
-    // Validate buyer is not the seller
-    if (buyerId === dto.sellerId) {
-      throw new BadRequestException('Buyer cannot be the same as seller');
+    // Get seller company info
+    const sellerCompany = await this.findCompanyById(dto.sellerCompanyId);
+    if (!sellerCompany) {
+      throw new BadRequestException('Seller company not found');
     }
 
     // Calculate order totals
@@ -52,32 +65,31 @@ export class OrdersService {
       (sum, item) => sum + item.quantity * item.unitPrice,
       0,
     );
-    const total = subtotal; // Tax, shipping, discount can be added later
+    const total = subtotal;
 
     // Generate unique order number
     const orderNumber = `LBL-${new Date().getFullYear()}-${uuidv4()
       .slice(0, 8)
       .toUpperCase()}`;
 
-    // Create order
-    const order = this.orderRepository.create({
-      orderNumber,
-      buyerId,
-      buyerCompanyId: 'default',
-      sellerId: dto.sellerId,
-      sellerCompanyId: 'default',
-      subtotal: subtotal as any,
-      totalAmount: total as any,
-      taxAmount: 0 as any,
-      discountAmount: 0 as any,
-      shippingCost: 0 as any,
-      currency: dto.currency || 'USD',
-      status: OrderStatus.PENDING,
-      paymentStatus: PaymentStatus.PENDING,
-      shippingAddress: dto.shippingAddress as any,
-      billingAddress: dto.billingAddress as any,
-      notes: dto.notes,
-    });
+    // Create order with proper company IDs
+    const order = new Order();
+    order.orderNumber = orderNumber;
+    order.buyerId = buyerCompanyId;
+    order.buyerCompanyId = buyerCompanyId;
+    order.sellerId = dto.sellerId;
+    order.sellerCompanyId = dto.sellerCompanyId;
+    order.subtotal = subtotal;
+    order.totalAmount = total;
+    order.taxAmount = 0;
+    order.discountAmount = 0;
+    order.shippingCost = 0;
+    order.currency = dto.currency || 'USD';
+    order.status = OrderStatus.PENDING;
+    order.paymentStatus = PaymentStatus.PENDING;
+    order.shippingAddress = dto.shippingAddress as object;
+    order.billingAddress = dto.billingAddress as object;
+    order.notes = dto.notes;
 
     const savedOrder = await this.orderRepository.save(order);
 
@@ -92,9 +104,9 @@ export class OrdersService {
 
     await this.orderItemRepository.save(items);
 
-    this.logger.log(`Order created: ${savedOrder.id} for buyer: ${buyerId}`);
+    this.logger.log(`Order created: ${savedOrder.id} for buyer: ${buyerCompanyId}`);
 
-    return this.getOrderById(savedOrder.id);
+    return this.getOrderById(savedOrder.id, buyerCompanyId);
   }
 
   /**
@@ -161,9 +173,9 @@ export class OrdersService {
   }
 
   /**
-   * Get a single order by ID
+   * Get a single order by ID with authorization check
    */
-  async getOrderById(id: string): Promise<OrderResponseDto> {
+  async getOrderById(id: string, companyId: string): Promise<OrderResponseDto> {
     const order = await this.orderRepository.findOne({
       where: { id },
       relations: ['items'],
@@ -171,6 +183,11 @@ export class OrdersService {
 
     if (!order) {
       throw new NotFoundException(`Order not found: ${id}`);
+    }
+
+    // Authorization check - only buyer or seller can view
+    if (order.buyerId !== companyId && order.sellerId !== companyId) {
+      throw new ForbiddenException('You do not have access to this order');
     }
 
     return this.mapToOrderResponse(order);
@@ -227,7 +244,7 @@ export class OrdersService {
 
     this.logger.log(`Order ${id} status updated to ${status}`);
 
-    return this.getOrderById(id);
+    return this.getOrderById(id, companyId);
   }
 
   /**
@@ -235,6 +252,7 @@ export class OrdersService {
    */
   async updatePaymentStatus(
     id: string,
+    companyId: string,
     paymentStatus: PaymentStatus,
   ): Promise<OrderResponseDto> {
     const order = await this.orderRepository.findOne({ where: { id } });
@@ -243,11 +261,16 @@ export class OrdersService {
       throw new NotFoundException(`Order not found: ${id}`);
     }
 
+    // Validate company has access
+    if (order.buyerId !== companyId && order.sellerId !== companyId) {
+      throw new ForbiddenException('You do not have access to this order');
+    }
+
     await this.orderRepository.update(id, { paymentStatus });
 
     this.logger.log(`Order ${id} payment status updated to ${paymentStatus}`);
 
-    return this.getOrderById(id);
+    return this.getOrderById(id, companyId);
   }
 
   /**
@@ -346,7 +369,7 @@ export class OrdersService {
 
     this.logger.log(`Item added to order ${orderId}`);
 
-    return this.getOrderById(orderId);
+    return this.getOrderById(orderId, companyId);
   }
 
   /**
@@ -404,17 +427,22 @@ export class OrdersService {
 
     this.logger.log(`Item ${itemId} removed from order ${orderId}`);
 
-    return this.getOrderById(orderId);
+    return this.getOrderById(orderId, companyId);
   }
 
   /**
-   * Get order timeline
+   * Get order timeline with authorization check
    */
-  async getOrderTimeline(id: string): Promise<OrderTimelineDto> {
+  async getOrderTimeline(id: string, companyId: string): Promise<OrderTimelineDto> {
     const order = await this.orderRepository.findOne({ where: { id } });
 
     if (!order) {
       throw new NotFoundException(`Order not found: ${id}`);
+    }
+
+    // Authorization check
+    if (order.buyerId !== companyId && order.sellerId !== companyId) {
+      throw new ForbiddenException('You do not have access to this order');
     }
 
     const timeline: OrderTimelineDto = {
@@ -480,9 +508,20 @@ export class OrdersService {
   }
 
   /**
-   * Get invoices for an order
+   * Get invoices for an order with authorization check
    */
-  async getOrderInvoices(orderId: string): Promise<Invoice[]> {
+  async getOrderInvoices(orderId: string, companyId: string): Promise<Invoice[]> {
+    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+
+    if (!order) {
+      throw new NotFoundException(`Order not found: ${orderId}`);
+    }
+
+    // Authorization check
+    if (order.buyerId !== companyId && order.sellerId !== companyId) {
+      throw new ForbiddenException('You do not have access to this order');
+    }
+
     return this.invoiceRepository.find({
       where: { orderId },
       order: { createdAt: 'DESC' },

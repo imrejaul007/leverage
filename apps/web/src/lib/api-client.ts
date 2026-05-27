@@ -1,4 +1,167 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type {
+  User,
+  Product,
+  Order,
+  Conversation,
+  Message,
+  FreightQuote,
+  TradeDocument,
+  DashboardMetrics,
+  ComplianceAdvice,
+  DutyCalculation,
+  SanctionMatch,
+} from '@leverage/shared';
+import type {
+  CreateProductInput,
+  CreateOrderInput,
+} from '@leverage/shared';
+
+// Import types from shared or define locally
+export type {
+  CreateProductInput,
+  CreateOrderInput,
+};
+
+// Additional input types for API calls
+interface OrderTimeline {
+  created: Date;
+  confirmed?: Date;
+  processing?: Date;
+  shipped?: Date;
+  delivered?: Date;
+}
+
+interface AiMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: string;
+}
+
+interface AiConversation {
+  id: string;
+  title?: string;
+  messageCount: number;
+  lastMessage?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface HsCodeClassification {
+  code: string;
+  description: string;
+  category: string;
+  confidence: number;
+}
+
+interface SanctionScreeningResult {
+  blocked: boolean;
+  match: SanctionMatch | null;
+  riskScore: number;
+  lists: string[];
+}
+
+interface ShipmentValidationInput {
+  hsCode: string;
+  destinationCountry: string;
+  parties?: { name: string; country?: string }[];
+  productDescription?: string;
+  cargoValue?: number;
+}
+
+interface ValidationResult {
+  valid: boolean;
+  checks: {
+    hsCode: {
+      restricted: boolean;
+      warnings: string[];
+      requiresLicense: boolean;
+    };
+    sanctions: {
+      blocked: boolean;
+      matches: SanctionMatch[];
+      riskLevel: string;
+    };
+  };
+  warnings: string[];
+}
+
+interface LandedCostInput {
+  hsCode: string;
+  productValue: number;
+  destinationCountry: string;
+  shippingCost?: number;
+  insuranceCost?: number;
+  currency?: string;
+}
+
+interface LandedCostResult {
+  productValue: number;
+  shippingCost: number;
+  insuranceCost: number;
+  duties: number;
+  taxes: number;
+  totalLandedCost: number;
+  currency: string;
+}
+
+interface FreightQuoteRequest {
+  origin: { country: string; city?: string; port?: string };
+  destination: { country: string; city?: string; port?: string };
+  transportMode: string;
+  weight?: number;
+  volume?: number;
+  incoterm?: string;
+}
+
+interface FreightBooking {
+  id: string;
+  bookingReference: string;
+  status: string;
+  quote: FreightQuote;
+}
+
+interface Carrier {
+  id: string;
+  name: string;
+  code: string;
+  logo?: string;
+  transportModes: string[];
+}
+
+interface DocumentGenerationInput {
+  type: string;
+  orderId?: string;
+  data?: Record<string, unknown>;
+}
+
+interface DocumentSignature {
+  signature: string;
+  type: 'text' | 'image';
+}
+
+interface Document {
+  id: string;
+  type: string;
+  title: string;
+  number?: string;
+  status: string;
+  fileUrl?: string;
+  createdAt: string;
+}
+
+interface AnalyticsEventInput {
+  eventType: string;
+  eventName: string;
+  properties?: Record<string, unknown>;
+}
+
+interface RevenueData {
+  data: Array<{ date: string; revenue: number }>;
+  total: number;
+  period: string;
+}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -7,17 +170,13 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Required for HttpOnly cookies
 });
 
-// Request interceptor
+// Request interceptor - token comes from HttpOnly cookie, not needed here
 api.interceptors.request.use(
-  (config) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
+  (config: InternalAxiosRequestConfig) => {
+    // Tokens are now HttpOnly cookies - no need to read from localStorage
     return config;
   },
   (error) => Promise.reject(error)
@@ -27,28 +186,26 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as any;
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-            refreshToken,
-          });
+        // Refresh token is now HttpOnly cookie - server handles it
+        const response = await axios.post(
+          `${API_BASE_URL}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', newRefreshToken);
+        const { accessToken } = response.data;
 
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return api(originalRequest);
-        }
+        // Set new access token cookie
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        // Redirect to login on refresh failure
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
@@ -58,6 +215,20 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Token management functions for special cases (logout, etc.)
+export const tokenService = {
+  // Tokens are HttpOnly cookies - this just triggers logout
+  clearTokens: () => {
+    // Server handles cookie clearing via /auth/logout
+  },
+
+  // Check if user is authenticated (by presence of auth cookie)
+  isAuthenticated: (): boolean => {
+    if (typeof document === 'undefined') return false;
+    return document.cookie.includes('accessToken') || document.cookie.includes('auth_token');
+  },
+};
 
 // API Response types
 export interface ApiResponse<T> {
@@ -83,7 +254,7 @@ export interface ApiError {
 // Auth API
 export const authApi = {
   login: (data: { email: string; password: string }) =>
-    api.post<ApiResponse<{ user: any; accessToken: string; refreshToken: string }>>('/auth/login', data),
+    api.post<ApiResponse<{ user: User; accessToken: string }>>('/auth/login', data, { withCredentials: true }),
 
   signup: (data: {
     email: string;
@@ -91,15 +262,15 @@ export const authApi = {
     firstName: string;
     lastName: string;
     role?: string;
-  }) => api.post<ApiResponse<{ user: any; accessToken: string; refreshToken: string }>>('/auth/signup', data),
+  }) => api.post<ApiResponse<{ user: User; accessToken: string }>>('/auth/signup', data, { withCredentials: true }),
 
-  logout: (refreshToken: string) =>
-    api.post('/auth/logout', { refreshToken }),
+  logout: () =>
+    api.post('/auth/logout', {}, { withCredentials: true }),
 
-  refresh: (refreshToken: string) =>
-    api.post<ApiResponse<{ accessToken: string; refreshToken: string }>>('/auth/refresh', { refreshToken }),
+  refresh: () =>
+    api.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', {}, { withCredentials: true }),
 
-  me: () => api.get<ApiResponse<any>>('/auth/me'),
+  me: () => api.get<ApiResponse<User>>('/auth/me'),
 
   verifyOtp: (code: string) =>
     api.post('/auth/verify-otp', { code }),
@@ -113,55 +284,55 @@ export const authApi = {
 // Products API
 export const productsApi = {
   list: (params?: { page?: number; limit?: number; categoryId?: string; search?: string }) =>
-    api.get<PaginatedResponse<any>>('/products', { params }),
+    api.get<PaginatedResponse<Product>>('/products', { params }),
 
   get: (id: string) =>
-    api.get<ApiResponse<any>>(`/products/${id}`),
+    api.get<ApiResponse<Product>>(`/products/${id}`),
 
-  create: (data: any) =>
-    api.post<ApiResponse<any>>('/products', data),
+  create: (data: CreateProductInput) =>
+    api.post<ApiResponse<Product>>('/products', data),
 
-  update: (id: string, data: any) =>
-    api.patch<ApiResponse<any>>(`/products/${id}`, data),
+  update: (id: string, data: Partial<CreateProductInput>) =>
+    api.patch<ApiResponse<Product>>(`/products/${id}`, data),
 
   delete: (id: string) =>
     api.delete(`/products/${id}`),
 
   search: (query: string) =>
-    api.get<ApiResponse<any[]>>('/products/search', { params: { q: query } }),
+    api.get<ApiResponse<Product[]>>('/products/search', { params: { q: query } }),
 };
 
 // Orders API
 export const ordersApi = {
   list: (params?: { page?: number; status?: string }) =>
-    api.get<PaginatedResponse<any>>('/orders', { params }),
+    api.get<PaginatedResponse<Order>>('/orders', { params }),
 
   get: (id: string) =>
-    api.get<ApiResponse<any>>(`/orders/${id}`),
+    api.get<ApiResponse<Order>>(`/orders/${id}`),
 
-  create: (data: any) =>
-    api.post<ApiResponse<any>>('/orders', data),
+  create: (data: CreateOrderInput) =>
+    api.post<ApiResponse<Order>>('/orders', data),
 
   updateStatus: (id: string, status: string) =>
-    api.patch<ApiResponse<any>>(`/orders/${id}/status`, { status }),
+    api.patch<ApiResponse<Order>>(`/orders/${id}/status`, { status }),
 
   cancel: (id: string) =>
-    api.delete<ApiResponse<any>>(`/orders/${id}`),
+    api.delete<ApiResponse<Order>>(`/orders/${id}`),
 
   timeline: (id: string) =>
-    api.get<ApiResponse<any>>(`/orders/${id}/timeline`),
+    api.get<ApiResponse<OrderTimeline>>(`/orders/${id}/timeline`),
 };
 
 // Messages API
 export const messagesApi = {
   getConversations: () =>
-    api.get<ApiResponse<any[]>>('/messages/conversations'),
+    api.get<ApiResponse<Conversation[]>>('/messages/conversations'),
 
   getMessages: (conversationId: string, params?: { limit?: number; offset?: number }) =>
-    api.get<ApiResponse<any[]>>(`/messages/conversations/${conversationId}/messages`, { params }),
+    api.get<ApiResponse<Message[]>>(`/messages/conversations/${conversationId}/messages`, { params }),
 
   sendMessage: (conversationId: string, content: string) =>
-    api.post<ApiResponse<any>>(`/messages/conversations/${conversationId}/messages`, { content }),
+    api.post<ApiResponse<Message>>(`/messages/conversations/${conversationId}/messages`, { content }),
 
   markAsRead: (conversationId: string) =>
     api.post(`/messages/conversations/${conversationId}/read`),
@@ -170,16 +341,16 @@ export const messagesApi = {
 // AI Chat API
 export const chatApi = {
   chat: (message: string, conversationId?: string) =>
-    api.post<ApiResponse<any>>('/ai/chat', { message, conversation_id: conversationId }),
+    api.post<ApiResponse<AiMessage>>('/ai/chat', { message, conversation_id: conversationId }),
 
   getConversations: () =>
-    api.get<ApiResponse<any[]>>('/ai/conversations'),
+    api.get<ApiResponse<AiConversation[]>>('/ai/conversations'),
 
   getConversation: (conversationId: string) =>
-    api.get<ApiResponse<any>>(`/ai/conversations/${conversationId}`),
+    api.get<ApiResponse<AiConversation>>(`/ai/conversations/${conversationId}`),
 
   complianceAdvice: (productDescription: string, originCountry: string, destinationCountry: string) =>
-    api.post<ApiResponse<any>>('/ai/compliance/advice', {
+    api.post<ApiResponse<ComplianceAdvice>>('/ai/compliance/advice', {
       product_description: productDescription,
       origin_country: originCountry,
       destination_country: destinationCountry,
@@ -189,58 +360,58 @@ export const chatApi = {
 // Compliance API
 export const complianceApi = {
   classifyProduct: (description: string) =>
-    api.post<ApiResponse<any>>('/compliance/classify', { description }),
+    api.post<ApiResponse<HsCodeClassification>>('/compliance/classify', { description }),
 
   calculateDuty: (data: { hsCode: string; value: number; country: string }) =>
-    api.post<ApiResponse<any>>('/compliance/duty-calculate', data),
+    api.post<ApiResponse<DutyCalculation>>('/compliance/duty-calculate', data),
 
   screenEntity: (name: string, country?: string) =>
-    api.post<ApiResponse<any>>('/compliance/screen', { name, country }),
+    api.post<ApiResponse<SanctionScreeningResult>>('/compliance/screen', { name, country }),
 
-  validateShipment: (shipment: any) =>
-    api.post<ApiResponse<any>>('/compliance/validate-shipment', shipment),
+  validateShipment: (shipment: ShipmentValidationInput) =>
+    api.post<ApiResponse<ValidationResult>>('/compliance/validate-shipment', shipment),
 
-  calculateLandedCost: (data: any) =>
-    api.post<ApiResponse<any>>('/compliance/landed-cost', data),
+  calculateLandedCost: (data: LandedCostInput) =>
+    api.post<ApiResponse<LandedCostResult>>('/compliance/landed-cost', data),
 };
 
 // Freight API
 export const freightApi = {
-  getQuotes: (data: any) =>
-    api.post<ApiResponse<any[]>>('/freight/quotes', data),
+  getQuotes: (data: FreightQuoteRequest) =>
+    api.post<ApiResponse<FreightQuote[]>>('/freight/quotes', data),
 
   bookQuote: (quoteId: string) =>
-    api.post<ApiResponse<any>>(`/freight/quotes/${quoteId}/book`),
+    api.post<ApiResponse<FreightBooking>>(`/freight/quotes/${quoteId}/book`),
 
   getCarriers: () =>
-    api.get<ApiResponse<any[]>>('/freight/carriers'),
+    api.get<ApiResponse<Carrier[]>>('/freight/carriers'),
 };
 
 // Documents API
 export const documentsApi = {
   list: (params?: { type?: string; page?: number }) =>
-    api.get<PaginatedResponse<any>>('/documents', { params }),
+    api.get<PaginatedResponse<Document>>('/documents', { params }),
 
-  generate: (data: any) =>
-    api.post<ApiResponse<any>>('/documents/generate', data),
+  generate: (data: DocumentGenerationInput) =>
+    api.post<ApiResponse<Document>>('/documents/generate', data),
 
   download: (id: string) =>
     api.get(`/documents/${id}/download`, { responseType: 'blob' }),
 
-  sign: (id: string, signature: any) =>
-    api.post<ApiResponse<any>>(`/documents/${id}/sign`, signature),
+  sign: (id: string, signature: DocumentSignature) =>
+    api.post<ApiResponse<Document>>(`/documents/${id}/sign`, signature),
 };
 
 // Analytics API
 export const analyticsApi = {
-  trackEvent: (event: { eventType: string; eventName: string; properties?: any }) =>
+  trackEvent: (event: AnalyticsEventInput) =>
     api.post('/analytics/events', event),
 
   getDashboard: () =>
-    api.get<ApiResponse<any>>('/analytics/dashboard'),
+    api.get<ApiResponse<DashboardMetrics>>('/analytics/dashboard'),
 
   getRevenue: (params?: { period?: string; startDate?: string; endDate?: string }) =>
-    api.get<ApiResponse<any>>('/analytics/revenue', { params }),
+    api.get<ApiResponse<RevenueData>>('/analytics/revenue', { params }),
 };
 
 export default api;

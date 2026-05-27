@@ -40,7 +40,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      const user = await (this.prisma as any).user.findUnique({
+      // Use proper Prisma typing instead of `as any`
+      const user = await this.prisma.user.findUnique({
         where: { id: payload.sub },
         include: { company: true },
       });
@@ -57,10 +58,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         throw new UnauthorizedException('Account has been suspended');
       }
 
+      // Attach user data to request with proper typing
       request.user = user;
       request.user.id = payload.sub;
       request.user.email = payload.email;
       request.user.role = payload.role;
+      request.user.companyId = user.company?.id;
 
       return true;
     } catch (error) {
@@ -71,7 +74,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
   }
 
-  private extractTokenFromHeader(request: any): string | null {
+  private extractTokenFromHeader(request: { headers: { authorization?: string } }): string | null {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : null;
   }

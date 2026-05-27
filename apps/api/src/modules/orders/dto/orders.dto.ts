@@ -58,7 +58,13 @@ export class CreateOrderItemDto {
 export class CreateOrderDto {
   @ApiProperty()
   @IsString()
+  @IsUUID()
   sellerId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsUUID()
+  sellerCompanyId: string;
 
   @ApiProperty({ type: [CreateOrderItemDto] })
   @IsArray()

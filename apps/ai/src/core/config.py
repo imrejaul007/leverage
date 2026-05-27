@@ -2,6 +2,7 @@
 Core configuration settings for AI service
 """
 import os
+import sys
 from typing import List, Optional
 from pydantic_settings import BaseSettings
 
@@ -62,7 +63,7 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "200"))
 
     # JWT Settings
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "your-secret-key-here")
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "")
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_EXPIRATION_HOURS: int = int(os.getenv("JWT_EXPIRATION_HOURS", "24"))
 
@@ -73,9 +74,55 @@ class Settings(BaseSettings):
         env_file = ".env"
         case_sensitive = True
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._validate_configuration()
+
     @property
     def is_production(self) -> bool:
         return not self.DEBUG
+
+    def _validate_configuration(self) -> None:
+        """Validate critical configuration settings at startup."""
+        errors = []
+        warnings = []
+
+        # Check for placeholder/default values
+        if self.DEBUG:
+            # In development, just warn
+            if not self.OPENAI_API_KEY:
+                warnings.append("OPENAI_API_KEY not set - AI features will be unavailable")
+            if not self.JWT_SECRET_KEY:
+                warnings.append("JWT_SECRET_KEY not set - using default (not secure)")
+        else:
+            # In production, fail fast
+            if not self.OPENAI_API_KEY:
+                errors.append("OPENAI_API_KEY is required in production")
+            if not self.JWT_SECRET_KEY:
+                errors.append("JWT_SECRET_KEY is required in production")
+            elif len(self.JWT_SECRET_KEY) < 32:
+                errors.append("JWT_SECRET_KEY must be at least 32 characters")
+
+        # Validate API key formats if provided
+        if self.OPENAI_API_KEY:
+            if not self.OPENAI_API_KEY.startswith("sk-"):
+                errors.append("OPENAI_API_KEY has an invalid format (should start with 'sk-')")
+
+        if self.ANTHROPIC_API_KEY:
+            if not self.ANTHROPIC_API_KEY.startswith("sk-ant-"):
+                warnings.append("ANTHROPIC_API_KEY may have an invalid format (should start with 'sk-ant-')")
+
+        # Print warnings
+        for warning in warnings:
+            print(f"[CONFIG WARNING] {warning}", file=sys.stderr)
+
+        # Exit on critical errors in production
+        if errors:
+            error_msg = "\n".join([f"[CONFIG ERROR] {e}" for e in errors])
+            print(f"[CONFIG ERROR] Configuration validation failed:\n{error_msg}", file=sys.stderr)
+            if not self.DEBUG:
+                sys.exit(1)
+            print("[CONFIG WARNING] Continuing anyway in development mode", file=sys.stderr)
 
 
 # Global settings instance
