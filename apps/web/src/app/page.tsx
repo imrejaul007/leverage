@@ -135,10 +135,10 @@ export default function HomePage() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#F4F1EA] mb-6 leading-tight">
-            The Operating System for
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#F4F1EA] mb-6 leading-tight tracking-tight">
+            Trade Smarter.
             <br />
-            <span className="text-[#C49A6C] brand-font">Global Trade</span>
+            <span className="text-[#C49A6C]">Globally.</span>
           </h1>
 
           {/* Subheadline */}
@@ -186,30 +186,30 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
               Everything You Need for Global Trade
             </h2>
-            <p className="text-lg text-[#D8CCBC] max-w-2xl mx-auto">
+            <p className="text-lg text-[#D8CCBC]/70 max-w-2xl mx-auto">
               From RFQ to delivery, manage your entire trade lifecycle with our comprehensive platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, i) => {
               const Icon = feature.icon;
               return (
                 <div
                   key={i}
-                  className="group p-6 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl hover:border-[#C49A6C]/30 transition-all hover:bg-[rgba(255,255,255,0.05)]"
+                  className="group p-8 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] rounded-2xl hover:border-[#C49A6C]/20 transition-all duration-300"
                 >
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${colorMap[feature.color]} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-7 h-7" />
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorMap[feature.color]} flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-300`}>
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-semibold text-[#F4F1EA] mb-2">{feature.title}</h3>
-                  <p className="text-[#D8CCBC]">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-[#F4F1EA] mb-2 tracking-tight">{feature.title}</h3>
+                  <p className="text-[#D8CCBC]/70 text-sm leading-relaxed">{feature.description}</p>
                 </div>
               );
             })}
@@ -218,18 +218,18 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-8 bg-[#0E3B36]">
+      <section className="py-24 px-4 sm:px-8 bg-[#0E3B36]/50">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
               How It Works
             </h2>
-            <p className="text-lg text-[#D8CCBC]">
+            <p className="text-lg text-[#D8CCBC]/70">
               Get started in minutes, not days
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               { step: '1', title: 'Create Account', desc: 'Sign up in seconds with your email. No credit card required.', icon: Zap },
               { step: '2', title: 'Connect & Trade', desc: 'Browse marketplace, create RFQs, and manage documents.', icon: Globe },
@@ -239,13 +239,13 @@ export default function HomePage() {
               return (
                 <div key={i} className="relative text-center">
                   {i < 2 && (
-                    <div className="hidden md:block absolute top-12 right-0 w-full h-0.5 bg-gradient-to-r from-[#C49A6C]/50 to-transparent" />
+                    <div className="hidden md:block absolute top-12 right-0 w-full h-px bg-gradient-to-r from-[#C49A6C]/30 to-transparent" />
                   )}
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[rgba(255,255,255,0.1)] to-[#0E3B36] border border-[#C49A6C]/30 flex items-center justify-center mx-auto mb-6 relative">
-                    <Icon className="w-10 h-10 text-[#C49A6C]" />
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[rgba(255,255,255,0.08)] to-[#0E3B36] border border-[#C49A6C]/20 flex items-center justify-center mx-auto mb-6 relative">
+                    <Icon className="w-8 h-8 text-[#C49A6C]" />
                   </div>
-                  <h3 className="text-xl font-semibold text-[#F4F1EA] mb-2">{item.title}</h3>
-                  <p className="text-[#D8CCBC]">{item.desc}</p>
+                  <h3 className="text-lg font-semibold text-[#F4F1EA] mb-2 tracking-tight">{item.title}</h3>
+                  <p className="text-[#D8CCBC]/70 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               );
             })}
@@ -254,32 +254,32 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
               Trusted by Traders Worldwide
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((t, i) => (
-              <div key={i} className="p-6 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl">
-                <div className="flex gap-1 mb-4">
+              <div key={i} className="p-8 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] rounded-2xl">
+                <div className="flex gap-1 mb-5">
                   {[1,2,3,4,5].map(star => (
-                    <svg key={star} className="w-5 h-5 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
+                    <svg key={star} className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
                 </div>
-                <p className="text-[#D8CCBC] mb-6 italic">"{t.quote}"</p>
+                <p className="text-[#D8CCBC]/80 mb-6 leading-relaxed">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#C49A6C] flex items-center justify-center text-[#081512] font-bold text-sm">
                     {t.avatar}
                   </div>
                   <div>
-                    <p className="text-[#F4F1EA] font-medium">{t.author}</p>
-                    <p className="text-[#D8CCBC] text-sm">{t.role}</p>
+                    <p className="text-[#F4F1EA] font-medium text-sm">{t.author}</p>
+                    <p className="text-[#D8CCBC]/60 text-xs">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -289,16 +289,16 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8">
         <div className="container mx-auto max-w-4xl">
-          <div className="relative bg-gradient-to-br from-[#C49A6C]/20 to-[#D4AA82]/10 rounded-3xl p-8 sm:p-12 text-center border border-[#C49A6C]/30 overflow-hidden">
+          <div className="relative bg-gradient-to-br from-[#C49A6C]/15 to-[#D4AA82]/5 rounded-3xl p-12 sm:p-16 text-center border border-[#C49A6C]/20 overflow-hidden">
             <div className="absolute top-0 left-0 w-64 h-64 bg-[#C49A6C]/10 rounded-full blur-3xl" />
             <div className="relative">
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
                 Ready to Transform Your Trade Business?
               </h2>
-              <p className="text-lg text-[#D8CCBC] mb-8 max-w-xl mx-auto">
-                Join thousands of traders who have already streamlined their global trade operations with Leverage.
+              <p className="text-lg text-[#D8CCBC]/70 mb-10 max-w-xl mx-auto leading-relaxed">
+                Join thousands of traders who have already streamlined their global trade operations with Leverge.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/signup" className="px-8 py-4 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] font-bold rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2">
