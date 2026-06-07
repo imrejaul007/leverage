@@ -19,34 +19,48 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % preloaderImages.length);
-    }, 600);
+    // Auto-advance after 1.5 seconds if user doesn't tap
+    const autoTimer = setTimeout(() => {
+      setCurrentIndex((prev) => {
+        if (prev < preloaderImages.length - 1) {
+          return prev + 1;
+        } else {
+          setIsVisible(false);
+          onComplete?.();
+          return prev;
+        }
+      });
+    }, 1500);
 
-    const hideTimer = setTimeout(() => {
+    return () => clearTimeout(autoTimer);
+  }, [currentIndex, onComplete]);
+
+  const handleTap = () => {
+    if (currentIndex < preloaderImages.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
       setIsVisible(false);
       onComplete?.();
-    }, 2800);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(hideTimer);
-    };
-  }, [onComplete]);
+    }
+  };
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#081512]">
-      {/* Preloader Images Cycling */}
-      <div className="relative w-full h-full flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[9999] bg-[#081512] cursor-pointer"
+      onClick={handleTap}
+      onTouchEnd={(e) => { e.preventDefault(); handleTap(); }}
+    >
+      {/* Preloader Images - Full Screen Cover */}
+      <div className="absolute inset-0">
         {preloaderImages.map((src, index) => (
           <Image
             key={src}
             src={src}
             alt={`Loading ${index + 1}`}
             fill
-            className={`object-contain transition-opacity duration-500 ${
+            className={`object-cover transition-opacity duration-500 ${
               index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
             priority
@@ -54,16 +68,19 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         ))}
       </div>
 
-      {/* Progress dots */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {preloaderImages.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex ? 'bg-[#C49A6C] w-6' : 'bg-[#D8CCBC]/30'
-            }`}
-          />
-        ))}
+      {/* Tap indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <p className="text-white/60 text-sm">Tap to continue</p>
+        <div className="flex items-center gap-2">
+          {preloaderImages.map((_, index) => (
+            <div
+              key={index}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-white w-6' : 'bg-white/30 w-2'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
