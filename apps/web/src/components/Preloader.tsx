@@ -3,28 +3,33 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
+const preloaderImages = [
+  '/prelaoder1.PNG',
+  '/prelaoder2.PNG',
+  '/prelaoder3.PNG',
+  '/prelaoder4.PNG',
+];
+
 interface PreloaderProps {
   onComplete?: () => void;
 }
 
 export default function Preloader({ onComplete }: PreloaderProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Start animation after mount
-    const animTimer = setTimeout(() => {
-      setIsAnimating(true);
-    }, 100);
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % preloaderImages.length);
+    }, 600);
 
-    // Hide preloader after animation
     const hideTimer = setTimeout(() => {
       setIsVisible(false);
       onComplete?.();
-    }, 2500);
+    }, 2800);
 
     return () => {
-      clearTimeout(animTimer);
+      clearInterval(interval);
       clearTimeout(hideTimer);
     };
   }, [onComplete]);
@@ -32,49 +37,34 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   if (!isVisible) return null;
 
   return (
-    <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#081512] transition-all duration-700 ${
-        isAnimating ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
-      {/* Animated Logo */}
-      <div className="relative">
-        <Image
-          src="/preloader.png"
-          alt="Loading"
-          width={300}
-          height={200}
-          className={`object-contain transition-transform duration-1000 ${
-            isAnimating ? 'scale-100 animate-pulse' : 'scale-50'
-          }`}
-          priority
-        />
-
-        {/* Loading dots */}
-        <div className="flex items-center justify-center gap-2 mt-6">
-          <span
-            className={`w-3 h-3 rounded-full bg-[#C49A6C] transition-all duration-500 ${
-              isAnimating ? 'animate-bounce' : 'opacity-0'
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#081512]">
+      {/* Preloader Images Cycling */}
+      <div className="relative w-full h-full flex items-center justify-center">
+        {preloaderImages.map((src, index) => (
+          <Image
+            key={src}
+            src={src}
+            alt={`Loading ${index + 1}`}
+            fill
+            className={`object-contain transition-opacity duration-500 ${
+              index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
-            style={{ animationDelay: '0ms' }}
+            priority
           />
-          <span
-            className={`w-3 h-3 rounded-full bg-[#C49A6C] transition-all duration-500 ${
-              isAnimating ? 'animate-bounce' : 'opacity-0'
-            }`}
-            style={{ animationDelay: '150ms' }}
-          />
-          <span
-            className={`w-3 h-3 rounded-full bg-[#C49A6C] transition-all duration-500 ${
-              isAnimating ? 'animate-bounce' : 'opacity-0'
-            }`}
-            style={{ animationDelay: '300ms' }}
-          />
-        </div>
+        ))}
       </div>
 
-      {/* Glow effect behind logo */}
-      <div className="absolute w-80 h-80 rounded-full bg-[#C49A6C]/10 blur-3xl animate-pulse" />
+      {/* Progress dots */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-2">
+        {preloaderImages.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentIndex ? 'bg-[#C49A6C] w-6' : 'bg-[#D8CCBC]/30'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
