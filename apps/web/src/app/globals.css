@@ -1,35 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* B2B Trade Portal Color System */
-  --bg-primary: #0A1628;
-  --bg-secondary: #0F172A;
-  --bg-tertiary: #1E293B;
-  --bg-card: #111827;
-
-  --accent-primary: #F97316;
-  --accent-secondary: #EA580C;
-  --accent-light: #FB923C;
-
-  --text-primary: #FFFFFF;
-  --text-secondary: #F1F5F9;
-  --text-muted: #94A3B8;
-  --text-subtle: #64748B;
-
-  --border-primary: #1E293B;
-  --border-secondary: #334155;
-
-  --success: #22C55E;
-  --warning: #EAB308;
-  --error: #EF4444;
-  --info: #3B82F6;
-
-  --gradient-primary: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-  --gradient-dark: linear-gradient(180deg, #0F172A 0%, #0A1628 100%);
+  /* Original Design System Colors - DO NOT CHANGE */
+  --bg-primary: #081512;
+  --bg-secondary: #0E3B36;
+  --accent: #C49A6C;
+  --accent-light: #D4AA82;
+  --neutral-light: #F4F1EA;
+  --neutral-secondary: #D8CCBC;
+  --foreground: #F4F1EA;
+  --foreground-muted: #D8CCBC;
+  --border: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --text-primary: #F4F1EA;
+  --text-secondary: #D8CCBC;
+  --text-muted: #D8CCBC;
 }
 
 * {
@@ -44,7 +33,7 @@ html {
 
 body {
   background: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--foreground);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -54,12 +43,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .brand-font {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Playfair Display', serif;
 }
 
 /* Custom scrollbar */
@@ -69,25 +58,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-secondary);
+  background: rgba(196, 154, 108, 0.3);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-subtle);
+  background: rgba(196, 154, 108, 0.5);
 }
 
 /* Card styles */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-primary);
-  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
   padding: 16px;
-  transition: all 0.2s ease;
 }
 
 @media (min-width: 768px) {
@@ -98,98 +86,63 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card:hover {
-  border-color: var(--accent-primary);
-  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.1);
+  border-color: rgba(196, 154, 108, 0.2);
 }
 
 /* Button styles */
 .btn-primary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: var(--bg-secondary);
+  color: var(--neutral-light);
   height: 48px;
   padding: 0 20px;
   border-radius: 12px;
   font-weight: 600;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-secondary);
+  transition: all 0.2s;
+  border: none;
   cursor: pointer;
   font-size: 15px;
 }
 
 .btn-primary:hover {
-  background: var(--border-secondary);
-  border-color: var(--text-subtle);
+  background: #0f4a42;
 }
 
 .btn-accent {
-  background: var(--gradient-primary);
-  color: white;
+  background: var(--accent);
+  color: var(--bg-primary);
   height: 48px;
   padding: 0 20px;
   border-radius: 12px;
-  font-weight: 700;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s;
   border: none;
   cursor: pointer;
   font-size: 15px;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
 }
 
 .btn-accent:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+  background: var(--accent-light);
 }
 
 /* Input styles */
 .input {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 12px 16px;
-  color: var(--text-primary);
+  color: var(--neutral-light);
   font-size: 16px;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   width: 100%;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  border-color: var(--accent);
 }
 
 .input::placeholder {
-  color: var(--text-subtle);
-}
-
-/* Badge styles */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badge-success {
-  background: rgba(34, 197, 94, 0.15);
-  color: var(--success);
-}
-
-.badge-warning {
-  background: rgba(234, 179, 8, 0.15);
-  color: var(--warning);
-}
-
-.badge-error {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--error);
-}
-
-.badge-info {
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--info);
+  color: var(--neutral-secondary);
 }
 
 /* Animations */
@@ -198,39 +151,20 @@ h1, h2, h3, h4, h5, h6 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(100%); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out;
 }
 
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
-}
-
-.animate-pulse-slow {
-  animation: pulse 2s ease-in-out infinite;
-}
-
 /* Glassmorphism */
 .glass {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(14, 59, 54, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-primary);
 }
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid var(--accent-primary);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -254,7 +188,7 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Touch-friendly tap targets - minimum 44px */
+  /* Touch-friendly tap targets */
   button, a, [role="button"], .tap-target {
     min-height: 44px;
     min-width: 44px;
@@ -269,17 +203,6 @@ h1, h2, h3, h4, h5, h6 {
   .card {
     padding: 14px;
     border-radius: 14px;
-  }
-
-  /* Section spacing */
-  section {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  /* Remove hover effects on touch devices */
-  .card:hover, .btn-primary:hover, .btn-accent:hover {
-    transform: none;
   }
 }
 
@@ -335,46 +258,32 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Utility classes for trade portal */
+/* Utility classes */
 .section-title {
-  @apply text-lg font-bold text-white mb-4;
+  @apply text-lg font-semibold text-[#F4F1EA] mb-4;
 }
 
 .stat-card {
-  @apply bg-[var(--bg-card)] border border-[var(--border-primary)] rounded-2xl p-4;
+  @apply bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4;
 }
 
-.trade-gradient {
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(234, 88, 12, 0.05) 100%);
+/* Status badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
 }
 
-.status-dot {
-  @apply w-2 h-2 rounded-full;
+.badge-success {
+  @apply bg-emerald-500/20 text-emerald-400;
 }
 
-.status-online {
-  @apply bg-green-500 animate-pulse;
+.badge-warning {
+  @apply bg-amber-500/20 text-amber-400;
 }
 
-.status-offline {
-  @apply bg-gray-500;
+.badge-error {
+  @apply bg-red-500/20 text-red-400;
 }
 
-/* Price tag styling */
-.price-tag {
-  @apply text-xl font-bold text-[#22C55E];
-}
-
-.price-old {
-  @apply text-sm text-[var(--text-subtle)] line-through;
-}
-
-/* HS Code styling */
-.hs-code {
-  @apply font-mono text-sm bg-[var(--bg-tertiary)] px-2 py-1 rounded;
-}
-
-/* Country flag placeholder */
-.flag {
-  @apply w-6 h-4 rounded-sm bg-[var(--bg-tertiary)] flex items-center justify-center text-xs;
+.badge-info {
+  @apply bg-blue-500/20 text-blue-400;
 }

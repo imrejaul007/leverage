@@ -110,10 +110,10 @@ export default function MarketplacePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white">Browse Products</h1>
-          <p className="text-[#64748B] text-sm">{products.length} products from verified suppliers</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">Browse Products</h1>
+          <p className="text-[#D8CCBC] text-sm">{products.length} products from verified suppliers</p>
         </div>
-        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#F97316] text-white font-semibold rounded-xl hover:bg-[#EA580C] transition-colors">
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors">
           <Plus className="w-5 h-5" />
           Post RFQ
         </Link>
@@ -121,13 +121,13 @@ export default function MarketplacePage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-5 h-5 text-[#64748B] absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search products, suppliers..."
-          className="w-full h-12 pl-12 pr-4 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-[#64748B] focus:outline-none focus:border-[#F97316]"
+          className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/50 focus:outline-none focus:border-[#C49A6C]"
         />
       </div>
 
@@ -139,8 +139,8 @@ export default function MarketplacePage() {
             onClick={() => setSelectedCategory(cat)}
             className={`flex-shrink-0 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors ${
               selectedCategory === cat
-                ? 'bg-[#F97316] text-white'
-                : 'bg-[#1E293B] text-[#94A3B8] hover:bg-[#334155]'
+                ? 'bg-[#C49A6C] text-[#081512]'
+                : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] hover:bg-[rgba(255,255,255,0.1)]'
             }`}
           >
             {cat}
@@ -150,11 +150,11 @@ export default function MarketplacePage() {
 
       {/* Sort */}
       <div className="flex items-center justify-between">
-        <span className="text-[#64748B] text-sm">{filteredProducts.length} products</span>
+        <span className="text-[#D8CCBC] text-sm">{filteredProducts.length} products</span>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="h-10 px-3 bg-[#1E293B] border border-[#334155] rounded-lg text-white text-sm focus:outline-none focus:border-[#F97316]"
+          className="h-10 px-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[#F4F1EA] text-sm focus:outline-none focus:border-[#C49A6C]"
         >
           <option value="featured">Featured</option>
           <option value="newest">Newest</option>
@@ -166,12 +166,12 @@ export default function MarketplacePage() {
 
       {/* Compare Bar */}
       {compareList.length > 0 && (
-        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-[#0F172A] border border-[#F97316]/30 rounded-2xl p-4 shadow-2xl z-50">
+        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-[#0E3B36] border border-[#C49A6C]/30 rounded-2xl p-4 shadow-2xl z-50">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-white font-semibold">Compare ({compareList.length}/3)</span>
-            <button onClick={() => setCompareList([])} className="text-[#64748B] hover:text-white text-sm">Clear</button>
+            <span className="text-[#F4F1EA] font-semibold">Compare ({compareList.length}/3)</span>
+            <button onClick={() => setCompareList([])} className="text-[#D8CCBC] hover:text-white text-sm">Clear</button>
           </div>
-          <Link href={`/marketplace/compare?ids=${compareList.join(',')}`} className="block w-full py-2.5 bg-[#F97316] text-white font-semibold rounded-xl text-center">
+          <Link href={`/marketplace/compare?ids=${compareList.join(',')}`} className="block w-full py-2.5 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl text-center">
             Compare Products
           </Link>
         </div>
@@ -180,15 +180,15 @@ export default function MarketplacePage() {
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.map(product => (
-          <div key={product.id} className="bg-[#111827] border border-[#1E293B] rounded-2xl overflow-hidden hover:border-[#F97316]/30 transition-all group">
+          <div key={product.id} className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl overflow-hidden hover:border-[#C49A6C]/30 transition-all group">
             <Link href={`/marketplace/${product.id}`} className="block">
-              <div className="aspect-square bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center relative p-8">
+              <div className="aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center relative p-8">
                 <span className="text-6xl group-hover:scale-110 transition-transform">{product.category === 'Food & Agriculture' ? '🍚' : product.category === 'Textiles' ? '🧶' : product.category === 'Energy' ? '☀️' : '📦'}</span>
                 {product.featured && (
-                  <span className="absolute top-3 left-3 px-2 py-1 bg-[#F97316] text-white text-xs font-semibold rounded-lg">Featured</span>
+                  <span className="absolute top-3 left-3 px-2 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">Featured</span>
                 )}
                 {product.isNew && (
-                  <span className="absolute top-3 right-3 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-lg">NEW</span>
+                  <span className="absolute top-3 right-3 px-2 py-1 bg-emerald-500 text-white text-xs font-semibold rounded-lg">NEW</span>
                 )}
                 {product.originalPrice && (
                   <span className="absolute bottom-3 left-3 px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-lg">
@@ -201,52 +201,52 @@ export default function MarketplacePage() {
             <div className="p-4 space-y-3">
               <div>
                 <Link href={`/marketplace/${product.id}`}>
-                  <h3 className="text-white font-semibold line-clamp-1 hover:text-[#F97316] transition-colors">{product.name}</h3>
+                  <h3 className="text-[#F4F1EA] font-semibold line-clamp-1 hover:text-[#C49A6C] transition-colors">{product.name}</h3>
                 </Link>
-                <p className="text-[#64748B] text-sm line-clamp-2 mt-1">{product.description}</p>
+                <p className="text-[#D8CCBC] text-sm line-clamp-2 mt-1">{product.description}</p>
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xl font-bold text-[#22C55E]">${product.price}</span>
-                  <span className="text-[#64748B] text-xs">/{product.currency}</span>
+                  <span className="text-xl font-bold text-emerald-400">${product.price}</span>
+                  <span className="text-[#D8CCBC] text-xs">/{product.currency}</span>
                 </div>
-                <span className="text-[#64748B] text-xs">MOQ: {product.moq}</span>
+                <span className="text-[#D8CCBC] text-xs">MOQ: {product.moq}</span>
               </div>
 
-              <div className="flex items-center gap-4 text-xs text-[#64748B]">
+              <div className="flex items-center gap-4 text-xs text-[#D8CCBC]">
                 <span className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-[#F97316] fill-[#F97316]" />
+                  <Star className="w-3 h-3 text-[#C49A6C] fill-[#C49A6C]" />
                   {product.reviews}
                 </span>
                 <span>{product.salesCount.toLocaleString()} sold</span>
               </div>
 
-              <div className="pt-3 border-t border-[#1E293B]">
+              <div className="pt-3 border-t border-[rgba(255,255,255,0.05)]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-[#1E293B] flex items-center justify-center text-sm font-bold text-[#F97316]">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(255,255,255,0.05)] flex items-center justify-center text-sm font-bold text-[#C49A6C]">
                       {product.supplier.country.charAt(0)}
                     </div>
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className="text-white text-xs font-medium">{product.supplier.name}</span>
-                        {product.supplier.verified && <CheckCircle className="w-3 h-3 text-[#22C55E]" />}
+                        <span className="text-[#F4F1EA] text-xs font-medium">{product.supplier.name}</span>
+                        {product.supplier.verified && <CheckCircle className="w-3 h-3 text-emerald-400" />}
                       </div>
-                      <span className="text-[#64748B] text-xs">{product.supplier.responseTime}</span>
+                      <span className="text-[#D8CCBC] text-xs">{product.supplier.responseTime}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Link href={`/marketplace/${product.id}`} className="flex-1 py-2.5 bg-[#F97316] text-white font-semibold rounded-xl text-center text-sm hover:bg-[#EA580C] transition-colors">
+                <Link href={`/marketplace/${product.id}`} className="flex-1 py-2.5 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl text-center text-sm hover:bg-[#D4AA82] transition-colors">
                   View Details
                 </Link>
-                <button onClick={() => toggleFavorite(product.id)} className={`p-2.5 rounded-xl border transition-colors ${favorites.has(product.id) ? 'bg-red-500/20 border-red-500 text-red-400' : 'border-[#334155] text-[#64748B] hover:border-red-500 hover:text-red-400'}`}>
+                <button onClick={() => toggleFavorite(product.id)} className={`p-2.5 rounded-xl border transition-colors ${favorites.has(product.id) ? 'bg-red-500/20 border-red-500 text-red-400' : 'border-[rgba(255,255,255,0.1)] text-[#D8CCBC] hover:border-red-500 hover:text-red-400'}`}>
                   <Heart className="w-5 h-5" fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
                 </button>
-                <button onClick={() => toggleCompare(product.id)} className={`p-2.5 rounded-xl border transition-colors ${compareList.includes(product.id) ? 'bg-[#F97316]/20 border-[#F97316] text-[#F97316]' : 'border-[#334155] text-[#64748B] hover:border-[#F97316] hover:text-[#F97316]'}`}>
+                <button onClick={() => toggleCompare(product.id)} className={`p-2.5 rounded-xl border transition-colors ${compareList.includes(product.id) ? 'bg-[#C49A6C]/20 border-[#C49A6C] text-[#C49A6C]' : 'border-[rgba(255,255,255,0.1)] text-[#D8CCBC] hover:border-[#C49A6C] hover:text-[#C49A6C]'}`}>
                   <GitCompare className="w-5 h-5" />
                 </button>
               </div>

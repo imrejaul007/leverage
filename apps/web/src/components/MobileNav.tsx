@@ -4,29 +4,32 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
+  Home,
   Search,
-  PlusSquare,
-  MessageCircle,
+  Plus,
+  MessageSquare,
   User,
-  Ship,
+  Package,
   FileText,
-  BarChart3,
-  Settings,
+  Truck,
   CreditCard,
+  Settings,
+  BarChart3,
 } from 'lucide-react';
 
 const mainNavItems = [
-  { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Search', href: '/marketplace', icon: Search },
-  { name: 'Post RFQ', href: '/rfqs/new', icon: PlusSquare, isAction: true },
-  { name: 'Messages', href: '/marketplace/inbox', icon: MessageCircle },
+  { name: 'Post', href: '/rfqs/new', icon: Plus, isAction: true },
+  { name: 'Inbox', href: '/marketplace/inbox', icon: MessageSquare },
   { name: 'Profile', href: '/settings', icon: User },
 ];
 
 const secondaryNavItems = [
-  { name: 'My Orders', href: '/orders', icon: Ship },
+  { name: 'Orders', href: '/orders', icon: Package },
+  { name: 'RFQs', href: '/rfqs', icon: FileText },
   { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Billing', href: '/billing', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
@@ -39,7 +42,7 @@ export default function MobileNav() {
   return (
     <>
       {/* Main Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0A1628] border-t border-[#1E293B] safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0E3B36] border-t border-[rgba(255,255,255,0.1)] safe-area-bottom">
         <div className="flex items-center justify-around px-1 py-2">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -52,10 +55,10 @@ export default function MobileNav() {
                   href={item.href}
                   className="flex flex-col items-center justify-center -mt-6"
                 >
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#F97316] to-[#EA580C] flex items-center justify-center shadow-lg shadow-orange-500/30">
-                    <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
+                  <div className="w-14 h-14 rounded-full bg-[#C49A6C] flex items-center justify-center shadow-lg shadow-[#C49A6C]/30">
+                    <Icon className="w-7 h-7 text-[#081512]" strokeWidth={2.5} />
                   </div>
-                  <span className="text-[10px] text-[#F97316] font-semibold mt-1">
+                  <span className="text-[10px] text-[#C49A6C] font-semibold mt-1">
                     {item.name}
                   </span>
                 </Link>
@@ -70,21 +73,21 @@ export default function MobileNav() {
                   isActive ? 'scale-110' : ''
                 }`}
               >
-                <div className={`relative ${isActive ? 'text-[#F97316]' : 'text-[#64748B]'}`}>
+                <div className={`relative ${isActive ? 'text-[#C49A6C]' : 'text-[#D8CCBC]/60'}`}>
                   <Icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
-                  {item.name === 'Messages' && (
-                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#EF4444] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {item.name === 'Inbox' && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                       3
                     </span>
                   )}
                 </div>
                 <span className={`text-[10px] font-medium ${
-                  isActive ? 'text-[#F97316] font-semibold' : 'text-[#64748B]'
+                  isActive ? 'text-[#C49A6C] font-semibold' : 'text-[#D8CCBC]/60'
                 }`}>
                   {item.name}
                 </span>
                 {isActive && (
-                  <span className="absolute bottom-0 w-1 h-1 bg-[#F97316] rounded-full" />
+                  <span className="absolute bottom-0 w-1 h-1 bg-[#C49A6C] rounded-full" />
                 )}
               </Link>
             );
@@ -95,14 +98,14 @@ export default function MobileNav() {
       {/* More Menu Button */}
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-20 right-4 z-50 w-12 h-12 bg-[#1E293B] rounded-full flex items-center justify-center shadow-lg border border-[#334155]"
+        className="fixed bottom-20 right-4 z-50 w-12 h-12 bg-[#C49A6C] rounded-full flex items-center justify-center shadow-lg border-2 border-[#081512]"
       >
         <svg
-          className={`w-6 h-6 text-white transition-transform ${showMenu ? 'rotate-45' : ''}`}
+          className={`w-6 h-6 text-[#081512] transition-transform ${showMenu ? 'rotate-45' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          strokeWidth={2}
+          strokeWidth={2.5}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
         </svg>
@@ -111,11 +114,11 @@ export default function MobileNav() {
       {/* More Menu Overlay */}
       {showMenu && (
         <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
-          <div className="absolute bottom-24 left-4 right-4 bg-[#0F172A] rounded-2xl border border-[#1E293B] shadow-2xl overflow-hidden">
-            <div className="p-4 border-b border-[#1E293B]">
-              <h3 className="text-white font-semibold text-sm">Quick Access</h3>
+          <div className="absolute bottom-24 left-4 right-4 bg-[#0E3B36] rounded-2xl border border-[rgba(255,255,255,0.1)] shadow-2xl overflow-hidden">
+            <div className="p-4 border-b border-[rgba(255,255,255,0.05)]">
+              <h3 className="text-[#F4F1EA] font-semibold text-sm">Quick Access</h3>
             </div>
-            <div className="grid grid-cols-3 gap-1 p-2">
+            <div className="grid grid-cols-3 gap-2 p-3">
               {secondaryNavItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 const Icon = item.icon;
@@ -126,12 +129,12 @@ export default function MobileNav() {
                     onClick={() => setShowMenu(false)}
                     className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors ${
                       isActive
-                        ? 'bg-[#F97316]/20 text-[#F97316]'
-                        : 'text-[#94A3B8] hover:bg-[#1E293B]'
+                        ? 'bg-[#C49A6C]/20 text-[#C49A6C]'
+                        : 'text-[#D8CCBC] hover:bg-[rgba(255,255,255,0.05)]'
                     }`}
                   >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      isActive ? 'bg-[#F97316]/20' : 'bg-[#1E293B]'
+                      isActive ? 'bg-[#C49A6C]/20' : 'bg-[rgba(255,255,255,0.05)]'
                     }`}>
                       <Icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
                     </div>

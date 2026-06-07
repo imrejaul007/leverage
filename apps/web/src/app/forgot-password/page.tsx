@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
               <span className="text-white font-bold text-xl">L</span>
             </div>
-            <span className="text-white text-xl font-semibold">Leverage by Lerar</span>
+            <span className="text-white text-xl font-semibold">Leverge</span>
           </Link>
           <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
             <h1 className="text-2xl font-bold text-white mb-4">Check your email</h1>
@@ -51,7 +51,7 @@ export default function ForgotPasswordPage() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
               <span className="text-white font-bold text-xl">L</span>
             </div>
-            <span className="text-white text-xl font-semibold">Leverage by Lerar</span>
+            <span className="text-white text-xl font-semibold">Leverge</span>
           </Link>
         </div>
         <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">

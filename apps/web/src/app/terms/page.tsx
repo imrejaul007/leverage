@@ -9,7 +9,7 @@ export default function TermsPage() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
               <span className="text-white font-bold text-xl">L</span>
             </div>
-            <span className="text-white text-xl font-semibold">Leverage by Lerar</span>
+            <span className="text-white text-xl font-semibold">Leverge</span>
           </Link>
         </div>
       </header>

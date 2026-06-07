@@ -89,7 +89,7 @@ export default function CampaignDetailPage() {
                 <span className="text-white font-bold">L</span>
               </div>
               <div>
-                <p className="text-gray-800 font-semibold">Leverage by Lerar</p>
+                <p className="text-gray-800 font-semibold">Leverge</p>
                 <p className="text-gray-500 text-sm">Sponsored</p>
               </div>
             </div>
