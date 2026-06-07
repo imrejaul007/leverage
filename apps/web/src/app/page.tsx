@@ -93,26 +93,26 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#081512]">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#081512]/95 backdrop-blur-lg border-b border-[rgba(255,255,255,0.05)]">
-        <div className="container mx-auto px-4 sm:px-8 py-4">
+        <div className="container mx-auto px-4 sm:px-8 py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="LEVERAGE" width={180} height={60} className="object-contain" />
+              <Image src="/logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
             </Link>
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/marketplace" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors">
+              <Link href="/marketplace" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors text-sm">
                 Marketplace
               </Link>
-              <Link href="/freight" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors">
+              <Link href="/freight" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors text-sm">
                 Freight
               </Link>
-              <Link href="/compliance" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors">
+              <Link href="/compliance" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors text-sm">
                 Compliance
               </Link>
-              <Link href="/about" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors">
+              <Link href="/about" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors text-sm">
                 About
               </Link>
             </nav>
-            <Link href="/login" className="px-5 py-2.5 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] font-semibold rounded-xl transition-opacity">
+            <Link href="/login" className="px-4 py-2 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] font-semibold rounded-lg transition-opacity text-sm">
               Sign In
             </Link>
           </div>
@@ -120,7 +120,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-8 relative overflow-hidden">
+      <section className="pt-28 pb-20 px-4 sm:px-8 relative overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C49A6C]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
 

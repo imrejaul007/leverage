@@ -60,31 +60,31 @@ export default function MobileHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E3B36] border-b border-[rgba(255,255,255,0.05)]">
       {/* Main Header */}
-      <div className="flex items-center justify-between px-4 h-16">
+      <div className="flex items-center justify-between px-4 h-14">
         {/* Logo& Title */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Link href="/dashboard">
-            <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+            <Image src="/logo.png" alt="LEVERAGE" width={96} height={32} className="object-contain" />
           </Link>
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {/* Search Button */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="p-2.5 text-[#D8CCBC] hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-xl transition-colors"
+            className="p-2 text-[#D8CCBC] hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-lg transition-colors"
           >
-            <Search className="w-5 h-5" />
+            <Search className="w-4 h-4" />
           </button>
 
           {/* Notifications */}
           <Link
             href="/marketplace/inbox"
-            className="relative p-2.5 text-[#D8CCBC] hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-xl transition-colors"
+            className="relative p-2 text-[#D8CCBC] hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-lg transition-colors"
           >
-            <Bell className="w-5 h-5" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#C49A6C] text-[#081512] text-[10px] font-bold rounded-full flex items-center justify-center">
+            <Bell className="w-4 h-4" />
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#C49A6C] text-[#081512] text-[9px] font-bold rounded-full flex items-center justify-center">
               3
             </span>
           </Link>
@@ -92,44 +92,44 @@ export default function MobileHeader() {
           {/* Quick Post */}
           <Link
             href="/rfqs/new"
-            className="flex items-center gap-1.5 px-3 py-2 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] rounded-xl transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#081512] rounded-lg transition-colors"
           >
-            <Plus className="w-4 h-4" strokeWidth={2.5} />
-            <span className="text-sm font-semibold hidden sm:inline">Post RFQ</span>
+            <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
+            <span className="text-xs font-semibold hidden sm:inline">Post RFQ</span>
           </Link>
         </div>
       </div>
 
       {/* Mobile Page Title (only on sm+) */}
-      <div className="sm:hidden px-4 pb-3">
-        <h1 className="text-[#F4F1EA] font-semibold">{currentPageInfo.title}</h1>
+      <div className="sm:hidden px-4 pb-2.5">
+        <h1 className="text-[#F4F1EA] font-semibold text-sm">{currentPageInfo.title}</h1>
         <p className="text-[#D8CCBC]/60 text-xs">{currentPageInfo.subtitle}</p>
       </div>
 
       {/* Search Overlay */}
       {showSearch && (
-        <div className="absolute top-full left-0 right-0 bg-[#0E3B36] border-b border-[rgba(255,255,255,0.05)] p-4 shadow-xl">
+        <div className="absolute top-full left-0 right-0 bg-[#0E3B36] border-b border-[rgba(255,255,255,0.05)] p-3 shadow-xl">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D8CCBC]/50" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#D8CCBC]/50" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products, suppliers, HS codes..."
-              className="w-full h-12 pl-12 pr-12 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-white placeholder-[#D8CCBC]/50 focus:outline-none focus:border-[#C49A6C]"
+              className="w-full h-10 pl-10 pr-10 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white placeholder-[#D8CCBC]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
               autoFocus
             />
             <button
               type="button"
               onClick={() => setShowSearch(false)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#D8CCBC] hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#D8CCBC] hover:text-white"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </form>
 
           {/* Quick Search Suggestions */}
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
             {['Electronics', 'Textiles', 'Machinery', 'Chemicals'].map((term) => (
               <button
                 key={term}
@@ -138,7 +138,7 @@ export default function MobileHeader() {
                   router.push(`/marketplace?search=${encodeURIComponent(term)}`);
                   setShowSearch(false);
                 }}
-                className="px-3 py-1.5 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] text-sm rounded-full hover:bg-[rgba(255,255,255,0.1)] hover:text-white transition-colors"
+                className="px-2.5 py-1 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] text-xs rounded-full hover:bg-[rgba(255,255,255,0.1)] hover:text-white transition-colors"
               >
                 {term}
               </button>
