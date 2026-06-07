@@ -22,7 +22,7 @@ export default function Logo({ size = 'md', showTagline = false, className = '' 
       <div className="relative" style={{ width: s.icon, height: s.icon }}>
         <Image
           src="/logo.png"
-          alt="LEVERAGE Logo"
+          alt="LEVERGE Logo"
           width={s.icon}
           height={s.icon}
           className="object-contain"
@@ -30,7 +30,7 @@ export default function Logo({ size = 'md', showTagline = false, className = '' 
         />
       </div>
       <div className="flex flex-col">
-        <span className={`${s.text} text-[#C49A6C] font-bold brand-font leading-none`}>LEVERAGE</span>
+        <span className={`${s.text} text-[#C49A6C] font-bold brand-font leading-none`}>LEVERGE</span>
         {showTagline && (
           <span className={`${s.tagline} text-[#D8CCBC]/60 leading-none mt-0.5`}>Connecting Dots to Ports</span>
         )}

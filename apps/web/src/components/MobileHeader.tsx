@@ -3,42 +3,39 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { Search, Bell, Plus, Menu, X, ChevronDown } from 'lucide-react';
 
 const pageTitles: Record<string, string> = {
   '/dashboard': 'Dashboard',
-  '/marketplace': 'Marketplace',
-  '/marketplace/inbox': 'My Inbox',
+  '/marketplace': 'Browse Products',
+  '/marketplace/inbox': 'Messages',
   '/marketplace/compare': 'Compare',
-  '/rfqs': 'RFQs',
-  '/rfqs/new': 'New RFQ',
+  '/rfqs': 'My RFQs',
+  '/rfqs/new': 'Post New RFQ',
   '/documents': 'Documents',
-  '/consultations': 'Consultations',
+  '/consultations': 'Expert Help',
   '/ai': 'AI Assistant',
-  '/freight': 'Freight',
+  '/freight': 'Freight Quotes',
   '/compliance': 'Compliance',
   '/messages': 'Messages',
-  '/orders': 'Orders',
-  '/products': 'Products',
+  '/orders': 'My Orders',
+  '/products': 'My Products',
   '/analytics': 'Analytics',
   '/billing': 'Billing',
-  '/settings': 'Settings',
+  '/settings': 'Profile',
   '/network': 'Network',
-  '/ads': 'Ads',
+  '/ads': 'Advertisements',
 };
-
-const quickActions = [
-  { name: 'Browse', href: '/marketplace', icon: 'M3 3h18v18H3V3zm2 6h14v2H5V9zm0 4h14v2H5v-2zm0 4h10v2H5v-2z' },
-  { name: 'New RFQ', href: '/rfqs/new', icon: 'M12 4v16m8-8H4' },
-  { name: 'My Inbox', href: '/marketplace/inbox', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M14 15a2 2 0 11-4 0 2 2 0 014 0z' },
-  { name: 'AI Chat', href: '/ai', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-];
 
 export default function MobileHeader() {
   const pathname = usePathname();
-  const [showActions, setShowActions] = useState(false);
+  const router = useRouter();
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [unreadCount, setUnreadCount] = useState(3);
   const user = useSelector((state: RootState) => state.auth.user);
 
   const getPageTitle = () => {
@@ -50,67 +47,117 @@ export default function MobileHeader() {
     return 'LEVERAGE';
   };
 
-  const isInbox = pathname.includes('/inbox') || pathname.includes('/messages');
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/marketplace?search=${encodeURIComponent(searchQuery)}`);
+      setShowSearch(false);
+      setSearchQuery('');
+    }
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E3B36]/95 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-[#0A1628] border-b border-[#1E293B]">
+      {/* Main Header */}
       <div className="flex items-center justify-between px-4 h-16">
-        {/* Logo & Title */}
+        {/* Logo& Title */}
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Logo" width={32} height={32} className="object-contain" />
-            <span className="text-[#C49A6C] font-bold text-lg brand-font">{getPageTitle()}</span>
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#F97316] to-[#EA580C] flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21V8l9-5 9 5v13M3 8l9 5 9-5M9 21V12h6v9" />
+              </svg>
+            </div>
+            <div>
+              <span className="text-white font-bold text-lg brand-font">LEVERAGE</span>
+              <p className="text-[#64748B] text-[10px] -mt-0.5">Global Trade</p>
+            </div>
           </Link>
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
-          {/* Inbox Notification */}
-          <Link
-            href="/marketplace/inbox"
-            className="relative p-2 text-[#D8CCBC] hover:text-white transition-colors"
+        <div className="flex items-center gap-1">
+          {/* Search Button */}
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="p-2.5 text-[#94A3B8] hover:text-white hover:bg-[#1E293B] rounded-xl transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M14 15a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#C49A6C] text-[#081512] text-xs font-bold rounded-full flex items-center justify-center">
-              3
-            </span>
-          </Link>
-
-          {/* Notifications */}
-          <button className="relative p-2 text-[#D8CCBC] hover:text-white transition-colors">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            <Search className="w-5 h-5" />
           </button>
 
-          {/* Profile */}
-          <Link href="/settings" className="w-9 h-9 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] font-bold text-sm">
-            {user?.firstName?.[0] || 'U'}
+          {/* Notifications */}
+          <Link
+            href="/marketplace/inbox"
+            className="relative p-2.5 text-[#94A3B8] hover:text-white hover:bg-[#1E293B] rounded-xl transition-colors"
+          >
+            <Bell className="w-5 h-5" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 w-4 h-4 bg-[#EF4444] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Quick Post */}
+          <Link
+            href="/rfqs/new"
+            className="flex items-center gap-1.5 px-3 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-xl transition-colors"
+          >
+            <Plus className="w-4 h-4" strokeWidth={2.5} />
+            <span className="text-sm font-semibold">Post RFQ</span>
           </Link>
         </div>
       </div>
 
-      {/* Quick Actions Dropdown */}
-      {showActions && (
-        <div className="absolute top-full left-0 right-0 bg-[#0E3B36] border-b border-[rgba(255,255,255,0.1)] p-4">
-          <div className="grid grid-cols-4 gap-2">
-            {quickActions.map(action => (
-              <Link
-                key={action.name}
-                href={action.href}
-                onClick={() => setShowActions(false)}
-                className="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+      {/* Page Title Bar */}
+      <div className="px-4 py-2 bg-[#0F172A] border-t border-[#1E293B]">
+        <div className="flex items-center justify-between">
+          <h1 className="text-white font-semibold text-base">{getPageTitle()}</h1>
+          <div className="flex items-center gap-2 text-[#64748B] text-xs">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              Live
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Search Overlay */}
+      {showSearch && (
+        <div className="absolute top-full left-0 right-0 bg-[#0F172A] border-b border-[#1E293B] p-4 shadow-xl">
+          <form onSubmit={handleSearch} className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#64748B]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products, suppliers, HS codes..."
+              className="w-full h-12 pl-12 pr-4 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-[#64748B] focus:outline-none focus:border-[#F97316]"
+              autoFocus
+            />
+            <button
+              type="button"
+              onClick={() => setShowSearch(false)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </form>
+
+          {/* Quick Search Suggestions */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {['Electronics', 'Textiles', 'Machinery', 'Chemicals'].map((term) => (
+              <button
+                key={term}
+                onClick={() => {
+                  setSearchQuery(term);
+                  router.push(`/marketplace?search=${encodeURIComponent(term)}`);
+                  setShowSearch(false);
+                }}
+                className="px-3 py-1.5 bg-[#1E293B] text-[#94A3B8] text-xs rounded-full hover:bg-[#334155] hover:text-white transition-colors"
               >
-                <div className="w-10 h-10 rounded-full bg-[#081512] flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[#C49A6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d={action.icon} />
-                  </svg>
-                </div>
-                <span className="text-[#F4F1EA] text-xs font-medium">{action.name}</span>
-              </Link>
+                {term}
+              </button>
             ))}
           </div>
         </div>

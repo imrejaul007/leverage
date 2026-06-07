@@ -9,28 +9,47 @@ import { RootState } from '@/store';
 import { getUserInitials } from '@/hooks/useAuth';
 import MobileNav from '@/components/MobileNav';
 import MobileHeader from '@/components/MobileHeader';
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Mail,
+  FileText,
+  Package,
+  MessageSquare,
+  Truck,
+  Shield,
+  Bot,
+  BarChart3,
+  CreditCard,
+  Settings,
+  Search,
+  Bell,
+  LogOut,
+  ChevronRight,
+  Users,
+  Plus,
+} from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-  { name: 'Marketplace', href: '/marketplace', icon: '🛒' },
-  { name: 'My Inbox', href: '/marketplace/inbox', icon: '📨' },
-  { name: 'RFQs', href: '/rfqs', icon: '📋' },
-  { name: 'Documents', href: '/documents', icon: '📄' },
-  { name: 'Orders', href: '/orders', icon: '📦' },
-  { name: 'Consultations', href: '/consultations', icon: '💬' },
-  { name: 'Freight', href: '/freight', icon: '🚢' },
-  { name: 'Compliance', href: '/compliance', icon: '✅' },
-  { name: 'AI Assistant', href: '/ai', icon: '🤖' },
-  { name: 'Analytics', href: '/analytics', icon: '📈' },
-  { name: 'Billing', href: '/billing', icon: '💳' },
-  { name: 'Settings', href: '/settings', icon: '⚙️' },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Browse Products', href: '/marketplace', icon: ShoppingCart },
+  { name: 'My Messages', href: '/marketplace/inbox', icon: Mail },
+  { name: 'My RFQs', href: '/rfqs', icon: FileText },
+  { name: 'Orders', href: '/orders', icon: Package },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'Network', href: '/network', icon: Users },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -48,13 +67,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
-    router.push('/');
+    router.push('/login');
   };
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#081512] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#C49A6C] border-t-transparent"></div>
+      <div className="min-h-screen bg-[#0A1628] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-orange-500 border-t-transparent"></div>
       </div>
     );
   }
@@ -64,9 +83,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Mobile: Show MobileHeader with hamburger + bottom nav
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-[#081512]">
+      <div className="min-h-screen bg-[#0A1628]">
         <MobileHeader />
-        <main className="pt-28 pb-24 px-4">
+        <main className="pt-32 pb-24 px-4">
           {children}
         </main>
         <MobileNav />
@@ -74,19 +93,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  // Desktop: Always show sidebar (no hamburger)
+  // Desktop: Always show sidebar
   return (
-    <div className="min-h-screen bg-[#081512] flex">
-      {/* Sidebar - Always visible on desktop */}
-      <aside className="w-[280px] bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full">
+    <div className="min-h-screen bg-[#0A1628] flex">
+      {/* Sidebar */}
+      <aside className="w-[280px] bg-[#0F172A] border-r border-[#1E293B] flex flex-col fixed h-full">
         {/* Logo */}
-        <div className="p-6 border-b border-[rgba(255,255,255,0.05)]">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="LEVERGE Logo" width={40} height={40} className="object-contain" />
-            <div className="flex flex-col">
-              <span className="text-[#C49A6C] text-xl font-bold brand-font leading-none">LEVERGE</span>
-              <span className="text-[#D8CCBC]/60 text-xs leading-none">Connecting Dots to Ports</span>
+        <div className="p-5 border-b border-[#1E293B]">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F97316] to-[#EA580C] flex items-center justify-center shadow-lg shadow-orange-500/20">
+              <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21V8l9-5 9 5v13M3 8l9 5 9-5M9 21V12h6v9" />
+              </svg>
             </div>
+            <div>
+              <span className="text-white text-xl font-bold brand-font">LEVERAGE</span>
+              <p className="text-[#64748B] text-xs">Global Trade Platform</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Post RFQ Button */}
+        <div className="p-4 border-b border-[#1E293B]">
+          <Link
+            href="/rfqs/new"
+            className="flex items-center justify-center gap-2 w-full h-12 bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-orange-500/20"
+          >
+            <Plus className="w-5 h-5" />
+            Post New RFQ
           </Link>
         </div>
 
@@ -94,37 +128,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <nav className="flex-1 py-4 overflow-y-auto">
           {navigation.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            const Icon = item.icon;
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-6 py-3 transition-all ${
+                className={`flex items-center gap-3 px-5 py-3 mx-2 rounded-xl transition-all ${
                   isActive
-                    ? 'bg-[rgba(255,255,255,0.08)] text-[#F4F1EA] border-r-2 border-[#C49A6C]'
-                    : 'text-[#D8CCBC]/70 hover:bg-[rgba(255,255,255,0.06)] hover:text-[#F4F1EA]'
+                    ? 'bg-[#F97316]/15 text-[#F97316] border-l-2 border-[#F97316]'
+                    : 'text-[#94A3B8] hover:bg-[#1E293B] hover:text-white'
                 }`}
               >
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.name}</span>
+                <Icon className={`w-5 h-5 ${isActive ? 'text-[#F97316]' : ''}`} />
+                <span className="font-medium text-sm">{item.name}</span>
+                {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
               </Link>
             );
           })}
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-[rgba(255,255,255,0.05)]">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)]">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center text-[#081512] font-semibold">
+        <div className="p-4 border-t border-[#1E293B]">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-[#1E293B]">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#F97316] to-[#EA580C] flex items-center justify-center text-white font-bold text-sm">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[#F4F1EA] font-medium truncate">{user?.firstName || 'User'}</p>
-              <p className="text-[#D8CCBC]/50 text-sm truncate">{user?.email || ''}</p>
+              <p className="text-white font-medium text-sm truncate">{user?.firstName || 'User'}</p>
+              <p className="text-[#64748B] text-xs truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={handleLogout} className="text-[#D8CCBC]/50 hover:text-red-400 transition-colors">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
+            <button onClick={handleLogout} className="p-2 text-[#64748B] hover:text-red-400 hover:bg-[#334155] rounded-lg transition-colors" title="Logout">
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -133,33 +167,35 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content */}
       <div className="flex-1 ml-[280px]">
         {/* Top Header */}
-        <header className="h-[80px] bg-[#0E3B36]/50 backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between px-8 sticky top-0 z-40">
+        <header className="h-[72px] bg-[#0F172A]/80 backdrop-blur-xl border-b border-[#1E293B] flex items-center justify-between px-8 sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <div className="relative">
+              <Search className="w-5 h-5 text-[#64748B] absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search..."
-                className="w-80 h-10 pl-10 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/50 focus:outline-none focus:border-[#C49A6C]"
+                placeholder="Search products, suppliers, HS codes..."
+                className="w-96 h-11 pl-12 pr-4 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-[#64748B] focus:outline-none focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20 transition-all"
               />
-              <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Live Status */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1E293B] rounded-full">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              <span className="text-[#94A3B8] text-xs font-medium">Live</span>
+            </div>
+
             {/* Notifications */}
-            <button className="relative p-2 text-[#D8CCBC]/70 hover:text-[#F4F1EA] transition-colors">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#C49A6C] rounded-full"></span>
+            <button className="relative p-2.5 text-[#94A3B8] hover:text-white hover:bg-[#1E293B] rounded-xl transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
 
-            {/* AI Quick Action */}
-            <Link href="/ai" className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors flex items-center gap-2">
-              <span>🤖</span>
-              <span>AI</span>
+            {/* AI Button */}
+            <Link href="/ai" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-orange-500/20">
+              <Bot className="w-5 h-5" />
+              <span className="text-sm">AI Assistant</span>
             </Link>
           </div>
         </header>

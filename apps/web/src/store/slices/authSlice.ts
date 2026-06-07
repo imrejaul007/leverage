@@ -7,6 +7,8 @@ export interface User {
   lastName: string;
   avatar?: string;
   role: string;
+  company?: string;
+  phone?: string;
 }
 
 export interface AuthState {

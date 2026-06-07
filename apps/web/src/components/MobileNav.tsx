@@ -1,152 +1,157 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  LayoutDashboard,
+  Search,
+  PlusSquare,
+  MessageCircle,
+  User,
+  Ship,
+  FileText,
+  BarChart3,
+  Settings,
+  CreditCard,
+} from 'lucide-react';
 
-const navItems = [
-  { name: 'Home', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { name: 'Market', href: '/marketplace', icon: 'M3 3h18v18H3V3zm2 6h14v2H5V9zm0 4h14v2H5v-2zm0 4h10v2H5v-2z' },
-  { name: 'Inbox', href: '/marketplace/inbox', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M14 15a2 2 0 11-4 0 2 2 0 014 0z' },
-  { name: 'RFQs', href: '/rfqs', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6 4h.01M9 16h.01' },
-  { name: 'AI', href: '/ai', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+const mainNavItems = [
+  { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Search', href: '/marketplace', icon: Search },
+  { name: 'Post RFQ', href: '/rfqs/new', icon: PlusSquare, isAction: true },
+  { name: 'Messages', href: '/marketplace/inbox', icon: MessageCircle },
+  { name: 'Profile', href: '/settings', icon: User },
 ];
 
-const moreItems = [
-  { name: 'Consultations', href: '/consultations', icon: '💬' },
-  { name: 'Documents', href: '/documents', icon: '📄' },
-  { name: 'Orders', href: '/orders', icon: '📦' },
-  { name: 'Freight', href: '/freight', icon: '🚢' },
-  { name: 'Compliance', href: '/compliance', icon: '✅' },
-  { name: 'Analytics', href: '/analytics', icon: '📊' },
-  { name: 'Billing', href: '/billing', icon: '💳' },
-  { name: 'Network', href: '/network', icon: '🌐' },
-  { name: 'Settings', href: '/settings', icon: '⚙️' },
+const secondaryNavItems = [
+  { name: 'My Orders', href: '/orders', icon: Ship },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function MobileNav() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [showMore, setShowMore] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
-
-  // Close more menu on route change
-  useEffect(() => {
-    setShowMore(false);
-  }, [pathname]);
+  const [showMenu, setShowMenu] = useState(false);
 
   return (
     <>
-      <nav
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ${
-          isVisible ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
-        <div className="bg-[#0E3B36]/98 backdrop-blur-xl border-t border-[rgba(255,255,255,0.1)] safe-area-bottom">
-          <div className="flex items-center justify-around px-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+      {/* Main Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0A1628] border-t border-[#1E293B] safe-area-bottom">
+        <div className="flex items-center justify-around px-1 py-2">
+          {mainNavItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            const Icon = item.icon;
+
+            if (item.isAction) {
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex flex-col items-center justify-center gap-1 px-2 py-3 min-w-[60px] transition-colors ${
-                    isActive
-                      ? 'text-[#C49A6C]'
-                      : 'text-[#D8CCBC]/60 hover:text-[#D8CCBC]'
-                  }`}
+                  className="flex flex-col items-center justify-center -mt-6"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={isActive ? 2.5 : 2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                  </svg>
-                  <span className={`text-[10px] font-medium ${isActive ? 'font-semibold' : ''}`}>
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#F97316] to-[#EA580C] flex items-center justify-center shadow-lg shadow-orange-500/30">
+                    <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[10px] text-[#F97316] font-semibold mt-1">
                     {item.name}
                   </span>
                 </Link>
               );
-            })}
+            }
 
-            {/* More Button */}
-            <button
-              onClick={() => setShowMore(!showMore)}
-              className={`flex flex-col items-center justify-center gap-1 px-2 py-3 min-w-[60px] transition-colors ${
-                showMore
-                  ? 'text-[#C49A6C]'
-                  : 'text-[#D8CCBC]/60 hover:text-[#D8CCBC]'
-              }`}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-all ${
+                  isActive ? 'scale-110' : ''
+                }`}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <span className="text-[10px] font-medium">More</span>
-            </button>
-          </div>
+                <div className={`relative ${isActive ? 'text-[#F97316]' : 'text-[#64748B]'}`}>
+                  <Icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
+                  {item.name === 'Messages' && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#EF4444] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                      3
+                    </span>
+                  )}
+                </div>
+                <span className={`text-[10px] font-medium ${
+                  isActive ? 'text-[#F97316] font-semibold' : 'text-[#64748B]'
+                }`}>
+                  {item.name}
+                </span>
+                {isActive && (
+                  <span className="absolute bottom-0 w-1 h-1 bg-[#F97316] rounded-full" />
+                )}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 
+      {/* More Menu Button */}
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="fixed bottom-20 right-4 z-50 w-12 h-12 bg-[#1E293B] rounded-full flex items-center justify-center shadow-lg border border-[#334155]"
+      >
+        <svg
+          className={`w-6 h-6 text-white transition-transform ${showMenu ? 'rotate-45' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
+
       {/* More Menu Overlay */}
-      {showMore && (
-        <div className="fixed inset-0 z-[60]" onClick={() => setShowMore(false)}>
-          <div className="absolute bottom-20 left-0 right-0 bg-[#0E3B36] rounded-t-3xl border-t border-[rgba(255,255,255,0.1)] shadow-2xl max-h-[60vh] overflow-y-auto">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[#F4F1EA] font-semibold">More Options</h3>
-                <button onClick={() => setShowMore(false)} className="text-[#D8CCBC] hover:text-white">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="grid grid-cols-4 gap-3">
-                {moreItems.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setShowMore(false)}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-colors ${
-                        isActive
-                          ? 'bg-[#C49A6C]/20 text-[#C49A6C]'
-                          : 'text-[#D8CCBC] hover:bg-[rgba(255,255,255,0.05)]'
-                      }`}
-                    >
-                      <span className="text-2xl">{item.icon}</span>
-                      <span className="text-xs font-medium text-center">{item.name}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+      {showMenu && (
+        <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
+          <div className="absolute bottom-24 left-4 right-4 bg-[#0F172A] rounded-2xl border border-[#1E293B] shadow-2xl overflow-hidden">
+            <div className="p-4 border-b border-[#1E293B]">
+              <h3 className="text-white font-semibold text-sm">Quick Access</h3>
+            </div>
+            <div className="grid grid-cols-3 gap-1 p-2">
+              {secondaryNavItems.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setShowMenu(false)}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors ${
+                      isActive
+                        ? 'bg-[#F97316]/20 text-[#F97316]'
+                        : 'text-[#94A3B8] hover:bg-[#1E293B]'
+                    }`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                      isActive ? 'bg-[#F97316]/20' : 'bg-[#1E293B]'
+                    }`}>
+                      <Icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
+                    </div>
+                    <span className="text-xs font-medium text-center leading-tight">
+                      {item.name}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
+      )}
+
+      {/* Overlay backdrop */}
+      {showMenu && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[55]"
+          onClick={() => setShowMenu(false)}
+        />
       )}
     </>
   );

@@ -6,16 +6,16 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Leverage by Lerar | Global Trade Operating System',
+  title: 'Leverge | Global Trade Operating System',
   description: 'The complete B2B marketplace for importers, exporters, manufacturers, and freight forwarders. AI-powered compliance, integrated logistics, and seamless trade documentation.',
   keywords: ['B2B marketplace', 'trade', 'import', 'export', 'logistics', 'freight', 'compliance', 'documentation'],
-  authors: [{ name: 'Lorar Technologies' }],
+  authors: [{ name: 'Leverge' }],
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
   },
   openGraph: {
-    title: 'Leverage by Lerar',
+    title: 'Leverge',
     description: 'Global Trade Operating System',
     type: 'website',
   },

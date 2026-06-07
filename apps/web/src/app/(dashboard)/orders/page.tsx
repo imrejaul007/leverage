@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Search, Package, Clock, CheckCircle, Truck, X, FileText } from 'lucide-react';
 
 interface Order {
   id: string;
@@ -24,12 +25,12 @@ const initialOrders: Order[] = [
   { id: '5', orderNumber: 'ORD-2024-005', status: 'PROCESSING', total: 22500, currency: 'USD', buyer: 'Mumbai Pharma Ltd', product: 'Pharmaceutical Raw Materials', quantity: '500 kg', createdAt: '2024-01-19', updatedAt: '2024-01-21' },
 ];
 
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-amber-500/20 text-amber-400',
-  PROCESSING: 'bg-blue-500/20 text-blue-400',
-  SHIPPED: 'bg-purple-500/20 text-purple-400',
-  DELIVERED: 'bg-emerald-500/20 text-emerald-400',
-  CANCELLED: 'bg-red-500/20 text-red-400',
+const statusConfig: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
+  PENDING: { color: 'text-amber-400', bg: 'bg-amber-500/20', icon: <Clock className="w-4 h-4" /> },
+  PROCESSING: { color: 'text-blue-400', bg: 'bg-blue-500/20', icon: <Package className="w-4 h-4" /> },
+  SHIPPED: { color: 'text-purple-400', bg: 'bg-purple-500/20', icon: <Truck className="w-4 h-4" /> },
+  DELIVERED: { color: 'text-green-400', bg: 'bg-green-500/20', icon: <CheckCircle className="w-4 h-4" /> },
+  CANCELLED: { color: 'text-red-400', bg: 'bg-red-500/20', icon: <X className="w-4 h-4" /> },
 };
 
 const statusLabels: Record<string, string> = {
@@ -57,11 +58,6 @@ export default function OrdersPage() {
     }
     setIsLoading(false);
   }, []);
-
-  const saveOrders = (data: Order[]) => {
-    setOrders(data);
-    localStorage.setItem('leverage_orders', JSON.stringify(data));
-  };
 
   const tabs = [
     { id: 'all', label: 'All' },
@@ -91,30 +87,29 @@ export default function OrdersPage() {
   const counts = getStatusCounts();
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">Orders</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">{filteredOrders.length} orders</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">My Orders</h1>
+          <p className="text-[#64748B] text-sm">{filteredOrders.length} orders</p>
         </div>
-        <Link href="/rfqs/new" className="w-full sm:w-auto px-4 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-center text-sm block">
-          + Create Order
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#F97316] text-white font-semibold rounded-xl hover:bg-[#EA580C] transition-colors">
+          <Package className="w-5 h-5" />
+          Create Order
         </Link>
       </div>
 
       {/* Search */}
       <div className="relative">
+        <Search className="w-5 h-5 text-[#64748B] absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Search orders..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] text-sm"
+          className="w-full h-12 pl-12 pr-4 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-[#64748B] focus:outline-none focus:border-[#F97316]"
         />
-        <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
       </div>
 
       {/* Tabs */}
@@ -123,10 +118,10 @@ export default function OrdersPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-shrink-0 px-4 py-2 rounded-xl font-medium text-sm ${
+            className={`flex-shrink-0 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
               activeTab === tab.id
-                ? 'bg-[#C49A6C] text-[#081512]'
-                : 'bg-[#0E3B36] text-[#D8CCBC]'
+                ? 'bg-[#F97316] text-white'
+                : 'bg-[#1E293B] text-[#94A3B8] hover:bg-[#334155]'
             }`}
           >
             {tab.label} ({counts[tab.id as keyof typeof counts]})
@@ -137,14 +132,14 @@ export default function OrdersPage() {
       {/* Loading */}
       {isLoading && (
         <div className="space-y-3">
-          {[1,2,3].map(i => (
-            <div key={i} className="card animate-pulse">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="bg-[#111827] border border-[#1E293B] rounded-2xl p-4 animate-pulse">
               <div className="flex justify-between">
                 <div className="space-y-2">
-                  <div className="h-4 bg-[#0E3B36]/50 rounded w-24"></div>
-                  <div className="h-3 bg-[#0E3B36]/50 rounded w-32"></div>
+                  <div className="h-5 bg-[#1E293B] rounded w-32"></div>
+                  <div className="h-4 bg-[#1E293B] rounded w-48"></div>
                 </div>
-                <div className="h-6 bg-[#0E3B36]/50 rounded w-20"></div>
+                <div className="h-8 bg-[#1E293B] rounded w-24"></div>
               </div>
             </div>
           ))}
@@ -154,10 +149,10 @@ export default function OrdersPage() {
       {/* Empty State */}
       {!isLoading && filteredOrders.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">📋</span>
+          <div className="w-16 h-16 bg-[#1E293B] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Package className="w-8 h-8 text-[#64748B]" />
           </div>
-          <p className="text-[#D8CCBC]/50 text-sm">No orders found</p>
+          <p className="text-[#64748B] text-sm">No orders found</p>
         </div>
       )}
 
@@ -168,22 +163,23 @@ export default function OrdersPage() {
             <div
               key={order.id}
               onClick={() => setViewingOrder(order)}
-              className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all"
+              className="bg-[#111827] border border-[#1E293B] rounded-2xl p-4 cursor-pointer hover:border-[#F97316]/30 transition-all"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[#C49A6C] font-mono text-xs sm:text-sm">{order.orderNumber}</span>
-                    <span className={`px-2 py-0.5 text-xs rounded-full capitalize ${statusColors[order.status]}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[#F97316] font-mono text-sm">{order.orderNumber}</span>
+                    <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${statusConfig[order.status].bg} ${statusConfig[order.status].color}`}>
+                      {statusConfig[order.status].icon}
                       {statusLabels[order.status]}
                     </span>
                   </div>
-                  <p className="text-[#F4F1EA] text-sm font-medium truncate">{order.product}</p>
-                  <p className="text-[#C49A6C] text-xs truncate">{order.buyer}</p>
+                  <p className="text-white font-medium">{order.product}</p>
+                  <p className="text-[#64748B] text-sm">{order.buyer}</p>
                 </div>
                 <div className="text-left sm:text-right flex-shrink-0">
-                  <p className="text-lg sm:text-xl font-bold text-[#C49A6C]">{order.currency} {order.total.toLocaleString()}</p>
-                  <p className="text-[#D8CCBC]/50 text-xs">{order.createdAt}</p>
+                  <p className="text-xl font-bold text-[#22C55E]">{order.currency} {order.total.toLocaleString()}</p>
+                  <p className="text-[#64748B] text-xs">{order.quantity}</p>
                 </div>
               </div>
             </div>
@@ -193,68 +189,83 @@ export default function OrdersPage() {
 
       {/* View Order Modal */}
       {viewingOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setViewingOrder(null)}>
+          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-[#F4F1EA]">{viewingOrder.orderNumber}</h2>
-                <span className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${statusColors[viewingOrder.status]}`}>
+                <h2 className="text-xl font-bold text-white">{viewingOrder.orderNumber}</h2>
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold mt-2 ${statusConfig[viewingOrder.status].bg} ${statusConfig[viewingOrder.status].color}`}>
+                  {statusConfig[viewingOrder.status].icon}
                   {statusLabels[viewingOrder.status]}
                 </span>
               </div>
-              <button onClick={() => setViewingOrder(null)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
+              <button onClick={() => setViewingOrder(null)} className="p-2 text-[#64748B] hover:text-white hover:bg-[#1E293B] rounded-xl transition-colors">
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(255,255,255,0.03)] rounded-xl">
+              <div className="grid grid-cols-2 gap-4 p-4 bg-[#111827] rounded-xl">
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Product</p>
-                  <p className="text-[#F4F1EA]">{viewingOrder.product}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Product</p>
+                  <p className="text-white font-medium">{viewingOrder.product}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Quantity</p>
-                  <p className="text-[#F4F1EA]">{viewingOrder.quantity}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Quantity</p>
+                  <p className="text-white">{viewingOrder.quantity}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Buyer</p>
-                  <p className="text-[#F4F1EA]">{viewingOrder.buyer}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Buyer</p>
+                  <p className="text-white">{viewingOrder.buyer}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Total</p>
-                  <p className="text-[#C49A6C] text-xl font-bold">{viewingOrder.currency} {viewingOrder.total.toLocaleString()}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Total</p>
+                  <p className="text-[#22C55E] text-xl font-bold">{viewingOrder.currency} {viewingOrder.total.toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Created</p>
-                  <p className="text-[#F4F1EA]">{viewingOrder.createdAt}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Created</p>
+                  <p className="text-white">{viewingOrder.createdAt}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Last Updated</p>
-                  <p className="text-[#F4F1EA]">{viewingOrder.updatedAt}</p>
+                  <p className="text-[#64748B] text-xs mb-1">Updated</p>
+                  <p className="text-white">{viewingOrder.updatedAt}</p>
                 </div>
               </div>
 
               {/* Status Timeline */}
-              <div>
-                <p className="text-[#D8CCBC] text-sm mb-3">Order Timeline</p>
-                <div className="space-y-3">
-                  {['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'].map((status, i) => {
-                    const isActive = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'].indexOf(viewingOrder.status) >= i;
+              <div className="p-4 bg-[#111827] rounded-xl">
+                <p className="text-white text-sm font-semibold mb-4">Order Progress</p>
+                <div className="flex items-center justify-between">
+                  {['Pending', 'Processing', 'Shipped', 'Delivered'].map((status, i) => {
+                    const statuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
+                    const isActive = statuses.indexOf(viewingOrder.status) >= i;
+                    const currentIndex = statuses.indexOf(viewingOrder.status);
+                    const isLast = i === 3;
                     return (
-                      <div key={status} className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${isActive ? 'bg-[#C49A6C]' : 'bg-[rgba(255,255,255,0.1)]'}`}></div>
-                        <span className={`text-sm ${isActive ? 'text-[#F4F1EA]' : 'text-[#D8CCBC]/50'}`}>{statusLabels[status]}</span>
+                      <div key={status} className="flex items-center">
+                        <div className="flex flex-col items-center">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isActive ? 'bg-[#F97316]' : 'bg-[#1E293B]'}`}>
+                            {isActive ? <CheckCircle className="w-5 h-5 text-white" /> : <span className="text-[#64748B] text-sm">{i + 1}</span>}
+                          </div>
+                          <span className={`text-xs mt-2 ${isActive ? 'text-white' : 'text-[#64748B]'}`}>{status}</span>
+                        </div>
+                        {!isLast && (
+                          <div className={`w-8 sm:w-16 h-0.5 mx-1 ${currentIndex >= i ? 'bg-[#F97316]' : 'bg-[#1E293B]'}`} />
+                        )}
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => { saveOrders(orders.filter(o => o.id !== viewingOrder.id)); setViewingOrder(null); }} className="py-3 px-6 bg-red-500/20 text-red-400 rounded-xl font-medium">
-                  Cancel Order
-                </button>
-                <Link href="/documents" className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-center">
-                  View Documents
+              <div className="flex gap-3">
+                <Link href="/documents" className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#1E293B] text-white font-semibold rounded-xl hover:bg-[#334155] transition-colors">
+                  <FileText className="w-5 h-5" />
+                  Documents
+                </Link>
+                <Link href="/freight" className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#F97316] text-white font-semibold rounded-xl hover:bg-[#EA580C] transition-colors">
+                  <Truck className="w-5 h-5" />
+                  Track Shipment
                 </Link>
               </div>
             </div>
