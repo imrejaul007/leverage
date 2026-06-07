@@ -63,12 +63,8 @@ export default function MobileHeader() {
       <div className="flex items-center justify-between px-4 h-16">
         {/* Logo& Title */}
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="LEVERAGE" width={36} height={36} className="object-contain" />
-            <div className="hidden sm:block">
-              <span className="text-[#C49A6C] font-bold text-lg brand-font">{currentPageInfo.title}</span>
-              <p className="text-[#D8CCBC]/60 text-[10px] -mt-1">{currentPageInfo.subtitle}</p>
-            </div>
+          <Link href="/dashboard">
+            <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
           </Link>
         </div>
 

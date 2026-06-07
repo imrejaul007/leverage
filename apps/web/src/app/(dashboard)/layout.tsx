@@ -100,12 +100,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-[280px] bg-[#0E3B36] border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full">
         {/* Logo */}
         <div className="p-5 border-b border-[rgba(255,255,255,0.05)]">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="LEVERAGE" width={48} height={48} className="object-contain" />
-            <div>
-              <span className="text-[#C49A6C] text-xl font-bold brand-font">LEVERAGE</span>
-              <p className="text-[#D8CCBC] text-xs">Global Trade Platform</p>
-            </div>
+          <Link href="/dashboard">
+            <Image src="/logo.png" alt="LEVERAGE" width={180} height={60} className="object-contain" />
           </Link>
         </div>
 

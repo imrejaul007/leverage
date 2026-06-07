@@ -63,12 +63,8 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="mb-8">
-            <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="LEVERAGE" width={48} height={48} className="object-contain" />
-              <div>
-                <span className="text-[#C49A6C] text-2xl font-bold brand-font">LEVERAGE</span>
-                <p className="text-[#D8CCBC] text-xs">Global Trade Platform</p>
-              </div>
+            <Link href="/">
+              <Image src="/logo.png" alt="LEVERAGE" width={200} height={65} className="object-contain" />
             </Link>
           </div>
 

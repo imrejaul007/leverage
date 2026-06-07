@@ -96,11 +96,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="LEVERAGE" width={40} height={40} className="object-contain" />
-              <div>
-                <span className="text-[#C49A6C] text-xl font-bold brand-font">LEVERAGE</span>
-                <p className="text-[#D8CCBC] text-xs">Global Trade Platform</p>
-              </div>
+              <Image src="/logo.png" alt="LEVERAGE" width={180} height={60} className="object-contain" />
             </Link>
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/marketplace" className="text-[#D8CCBC] hover:text-[#C49A6C] transition-colors">
@@ -324,8 +320,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="mb-4">
-                <span className="text-[#C49A6C] text-xl font-bold brand-font">LEVERAGE</span>
-                <p className="text-[#D8CCBC] text-xs mt-1">Global Trade Platform</p>
+                <Image src="/logo.png" alt="LEVERAGE" width={160} height={50} className="object-contain" />
               </div>
               <p className="text-[#D8CCBC] text-sm">
                 The operating system for global trade.
