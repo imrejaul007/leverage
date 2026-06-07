@@ -15,24 +15,28 @@ import {
   CreditCard,
   Settings,
   BarChart3,
+  Briefcase,
+  CheckSquare,
+  Compass,
 } from 'lucide-react';
 
 const mainNavItems = [
   { name: 'Home', href: '/dashboard', icon: Home },
-  { name: 'Search', href: '/marketplace', icon: Search },
-  { name: 'Post', href: '/rfqs/new', icon: Plus, isAction: true },
+  { name: 'Browse', href: '/marketplace', icon: Compass },
+  { name: 'Post RFQ', href: '/rfqs/new', icon: Plus, isAction: true },
   { name: 'Inbox', href: '/marketplace/inbox', icon: MessageSquare },
-  { name: 'Profile', href: '/settings', icon: User },
+  { name: 'Account', href: '/settings', icon: User },
 ];
 
 const secondaryNavItems = [
-  { name: 'Orders', href: '/orders', icon: Package },
-  { name: 'RFQs', href: '/rfqs', icon: FileText },
-  { name: 'Documents', href: '/documents', icon: FileText },
-  { name: 'Freight', href: '/freight', icon: Truck },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Billing', href: '/billing', icon: CreditCard },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'My Orders', href: '/orders', icon: Package, desc: 'Track shipments' },
+  { name: 'My RFQs', href: '/rfqs', icon: FileText, desc: 'Manage quotes' },
+  { name: 'Documents', href: '/documents', icon: FileText, desc: 'Trade papers' },
+  { name: 'Freight', href: '/freight', icon: Truck, desc: 'Shipping' },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3, desc: 'Reports' },
+  { name: 'Billing', href: '/billing', icon: CreditCard, desc: 'Payments' },
+  { name: 'Network', href: '/network', icon: Briefcase, desc: 'Suppliers' },
+  { name: 'Settings', href: '/settings', icon: Settings, desc: 'Account' },
 ];
 
 export default function MobileNav() {
@@ -116,7 +120,8 @@ export default function MobileNav() {
         <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
           <div className="absolute bottom-24 left-4 right-4 bg-[#0E3B36] rounded-2xl border border-[rgba(255,255,255,0.1)] shadow-2xl overflow-hidden">
             <div className="p-4 border-b border-[rgba(255,255,255,0.05)]">
-              <h3 className="text-[#F4F1EA] font-semibold text-sm">Quick Access</h3>
+              <h3 className="text-[#F4F1EA] font-semibold text-sm">Trade Menu</h3>
+              <p className="text-[#D8CCBC]/60 text-xs mt-1">Quick access to all features</p>
             </div>
             <div className="grid grid-cols-3 gap-2 p-3">
               {secondaryNavItems.map((item) => {

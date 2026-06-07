@@ -17,6 +17,8 @@ import {
   BarChart3,
   Shield,
   Users,
+  ShoppingCart,
+  Briefcase,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -69,7 +71,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-5">
-      {/* Header Stats */}
+      {/* Trade Stats Grid - Mobile optimized 2x2 */}
       <div className="grid grid-cols-2 gap-3">
         {quickStats.map((stat) => (
           <div key={stat.label} className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4">
@@ -115,7 +117,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Trade focused grid */}
       <div className="grid grid-cols-4 gap-2">
         <Link href="/marketplace" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/50 transition-colors">
           <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
@@ -135,7 +137,7 @@ export default function DashboardPage() {
           <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
             <MessageSquare className="w-6 h-6 text-purple-400" />
           </div>
-          <span className="text-[#D8CCBC] text-xs font-medium text-center">Messages</span>
+          <span className="text-[#D8CCBC] text-xs font-medium text-center">Inbox</span>
           {stats.unreadMessages > 0 && (
             <span className="absolute top-2 right-2 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
               {stats.unreadMessages}
@@ -143,18 +145,21 @@ export default function DashboardPage() {
           )}
         </Link>
 
-        <Link href="/ai" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/50 transition-colors">
+        <Link href="/orders" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] hover:border-[#C49A6C]/50 transition-colors">
           <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-            <BarChart3 className="w-6 h-6 text-emerald-400" />
+            <Truck className="w-6 h-6 text-emerald-400" />
           </div>
-          <span className="text-[#D8CCBC] text-xs font-medium text-center">AI Help</span>
+          <span className="text-[#D8CCBC] text-xs font-medium text-center">Orders</span>
         </Link>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Activity - Trade Updates */}
       <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
-          <h2 className="text-[#F4F1EA] font-semibold">Recent Activity</h2>
+          <div>
+            <h2 className="text-[#F4F1EA] font-semibold">Trade Updates</h2>
+            <p className="text-[#D8CCBC]/60 text-xs">Recent activity on your trades</p>
+          </div>
           <Link href="/marketplace/inbox" className="text-[#C49A6C] text-sm font-medium flex items-center gap-1">
             View All <ArrowRight className="w-4 h-4" />
           </Link>
@@ -192,7 +197,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center">
-              <Package className="w-7 h-7 text-[#081512]" />
+              <Briefcase className="w-7 h-7 text-[#081512]" />
             </div>
             <div>
               <h3 className="text-[#F4F1EA] font-semibold text-lg">Global Marketplace</h3>
@@ -203,27 +208,44 @@ export default function DashboardPage() {
         </div>
       </Link>
 
-      {/* Documents Section */}
+      {/* Trade Documents Quick Stats */}
       <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[#F4F1EA] font-semibold">Trade Documents</h2>
+          <div>
+            <h2 className="text-[#F4F1EA] font-semibold">Trade Documents</h2>
+            <p className="text-[#D8CCBC]/60 text-xs">Bill of Lading, Invoice, COO</p>
+          </div>
           <Link href="/documents" className="text-[#C49A6C] text-sm font-medium">Manage</Link>
         </div>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 bg-[rgba(255,255,255,0.05)] rounded-xl">
             <p className="text-2xl font-bold text-[#F4F1EA]">{stats.documents}</p>
-            <p className="text-[#D8CCBC] text-xs mt-1">Documents</p>
+            <p className="text-[#D8CCBC] text-xs mt-1">Total Docs</p>
           </div>
           <div className="text-center p-3 bg-[rgba(255,255,255,0.05)] rounded-xl">
-            <p className="text-2xl font-bold text-[#F4F1EA]">23</p>
+            <p className="text-2xl font-bold text-emerald-400">23</p>
             <p className="text-[#D8CCBC] text-xs mt-1">Verified</p>
           </div>
           <div className="text-center p-3 bg-[rgba(255,255,255,0.05)] rounded-xl">
-            <p className="text-2xl font-bold text-[#F4F1EA]">5</p>
+            <p className="text-2xl font-bold text-amber-400">5</p>
             <p className="text-[#D8CCBC] text-xs mt-1">Pending</p>
           </div>
         </div>
       </div>
+
+      {/* AI Assistant Quick Access */}
+      <Link href="/ai" className="block bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-2xl p-4 hover:border-purple-500/50 transition-colors">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+            <BarChart3 className="w-6 h-6 text-purple-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-[#F4F1EA] font-semibold">AI Trade Assistant</h3>
+            <p className="text-[#D8CCBC] text-xs">HS codes, duties & compliance help</p>
+          </div>
+          <ArrowRight className="w-5 h-5 text-purple-400" />
+        </div>
+      </Link>
     </div>
   );
 }
