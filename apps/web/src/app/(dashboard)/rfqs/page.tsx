@@ -29,10 +29,10 @@ const initialRFQs: RFQ[] = [
 ];
 
 const statusConfig: Record<string, { color: string; bg: string }> = {
-  OPEN: { color: 'text-blue-400', bg: 'bg-blue-500/20' },
-  QUOTED: { color: 'text-amber-400', bg: 'bg-amber-500/20' },
-  ACCEPTED: { color: 'text-green-400', bg: 'bg-green-500/20' },
-  CLOSED: { color: 'text-gray-400', bg: 'bg-gray-500/20' },
+  OPEN: { color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  QUOTED: { color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  ACCEPTED: { color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  CLOSED: { color: 'text-[#8a8f94]', bg: 'bg-white/5' },
 };
 
 const statusLabels: Record<string, string> = {
@@ -70,28 +70,28 @@ export default function RFQsPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">My RFQs</h1>
-          <p className="text-[#D8CCBC] text-sm">{filteredRFQs.length} requests for quotes</p>
+          <h1 className="text-lg sm:text-xl font-bold text-[#F4F1EA]">My RFQs</h1>
+          <p className="text-[#8a8f94] text-sm">{filteredRFQs.length} requests for quotes</p>
         </div>
-        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors">
-          <Plus className="w-5 h-5" />
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg hover:bg-[#D4AA82] transition-colors text-sm">
+          <Plus className="w-4 h-4" />
           Create RFQ
         </Link>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-[#8a8f94]/50 absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Search RFQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/50 focus:outline-none focus:border-[#C49A6C]"
+          className="w-full h-11 pl-11 pr-4 bg-[#121820] border border-white/5 rounded-lg text-[#F4F1EA] placeholder-[#8a8f94]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
         />
       </div>
 
@@ -101,10 +101,10 @@ export default function RFQsPage() {
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
-            className={`flex-shrink-0 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+            className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === s
-                ? 'bg-[#C49A6C] text-[#081512]'
-                : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] hover:bg-[rgba(255,255,255,0.1)]'
+                ? 'bg-[#C49A6C] text-[#0a0f14]'
+                : 'bg-white/5 text-[#8a8f94] hover:bg-white/10 hover:text-[#F4F1EA]'
             }`}
           >
             {s === 'all' ? 'All' : statusLabels[s] || s}
@@ -116,13 +116,13 @@ export default function RFQsPage() {
       {isLoading && (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 animate-pulse">
+            <div key={i} className="bg-[#151c24] border border-white/5 rounded-xl p-4 animate-pulse">
               <div className="flex justify-between">
                 <div className="space-y-2">
-                  <div className="h-5 bg-[rgba(255,255,255,0.05)] rounded w-48"></div>
-                  <div className="h-4 bg-[rgba(255,255,255,0.05)] rounded w-32"></div>
+                  <div className="h-5 bg-white/5 rounded w-48"></div>
+                  <div className="h-4 bg-white/5 rounded w-32"></div>
                 </div>
-                <div className="h-8 bg-[rgba(255,255,255,0.05)] rounded w-20"></div>
+                <div className="h-8 bg-white/5 rounded w-20"></div>
               </div>
             </div>
           ))}
@@ -132,10 +132,10 @@ export default function RFQsPage() {
       {/* Empty State */}
       {!isLoading && filteredRFQs.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-[rgba(255,255,255,0.05)] rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <MessageSquare className="w-8 h-8 text-[#D8CCBC]" />
+          <div className="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <MessageSquare className="w-7 h-7 text-[#8a8f94]" />
           </div>
-          <p className="text-[#D8CCBC] text-sm mb-4">No RFQs found</p>
+          <p className="text-[#8a8f94] text-sm mb-4">No RFQs found</p>
           <Link href="/rfqs/new" className="text-[#C49A6C] hover:underline font-medium text-sm">
             Create your first RFQ
           </Link>
@@ -144,35 +144,35 @@ export default function RFQsPage() {
 
       {/* RFQ List */}
       {!isLoading && filteredRFQs.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {filteredRFQs.map(rfq => (
             <div
               key={rfq.id}
               onClick={() => setViewingRFQ(rfq)}
-              className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 cursor-pointer hover:border-[#C49A6C]/30 transition-all"
+              className="bg-[#151c24] border border-white/5 rounded-xl p-4 cursor-pointer hover:border-white/10 transition-all"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[#C49A6C] font-mono text-sm">RFQ-{rfq.id}</span>
-                    <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${statusConfig[rfq.status].bg} ${statusConfig[rfq.status].color}`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[#C49A6C] font-mono text-xs">RFQ-{rfq.id}</span>
+                    <span className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[rfq.status].bg} ${statusConfig[rfq.status].color}`}>
                       {statusLabels[rfq.status]}
                     </span>
                   </div>
-                  <h3 className="text-[#F4F1EA] font-semibold truncate">{rfq.title}</h3>
-                  <p className="text-[#D8CCBC] text-sm">
+                  <h3 className="text-[#F4F1EA] font-medium text-sm truncate">{rfq.title}</h3>
+                  <p className="text-[#8a8f94] text-xs mt-0.5">
                     {rfq.quantity} {rfq.unit} • {rfq.origin} → {rfq.destination}
                   </p>
                 </div>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-emerald-400 font-bold">{rfq.currency} {rfq.targetPrice}/{rfq.unit}</p>
-                    <div className="flex items-center gap-1 text-[#D8CCBC] text-xs">
+                    <p className="text-emerald-400 font-semibold text-sm">{rfq.currency} {rfq.targetPrice}/{rfq.unit}</p>
+                    <div className="flex items-center gap-1 text-[#8a8f94] text-xs">
                       <MessageSquare className="w-3 h-3" />
                       {rfq.responses} quotes
                     </div>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-[#D8CCBC]" />
+                  <ArrowRight className="w-4 h-4 text-[#8a8f94]" />
                 </div>
               </div>
             </div>
@@ -183,70 +183,70 @@ export default function RFQsPage() {
       {/* View RFQ Modal */}
       {viewingRFQ && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setViewingRFQ(null)}>
-          <div className="bg-[#0E3B36] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
+          <div className="bg-[#121820] border border-white/10 rounded-xl p-5 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-xl font-bold text-[#F4F1EA]">{viewingRFQ.title}</h2>
-                <span className="text-[#C49A6C] font-mono text-sm">RFQ-{viewingRFQ.id}</span>
+                <h2 className="text-lg font-bold text-[#F4F1EA]">{viewingRFQ.title}</h2>
+                <span className="text-[#C49A6C] font-mono text-xs">RFQ-{viewingRFQ.id}</span>
               </div>
-              <button onClick={() => setViewingRFQ(null)} className="p-2 text-[#D8CCBC] hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-xl transition-colors">
-                <X className="w-5 h-5" />
+              <button onClick={() => setViewingRFQ(null)} className="p-2 text-[#8a8f94] hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${statusConfig[viewingRFQ.status].bg} ${statusConfig[viewingRFQ.status].color}`}>
+                <span className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[viewingRFQ.status].bg} ${statusConfig[viewingRFQ.status].color}`}>
                   {statusLabels[viewingRFQ.status]}
                 </span>
-                <span className="text-[#D8CCBC] text-sm">{viewingRFQ.category}</span>
+                <span className="text-[#8a8f94] text-xs">{viewingRFQ.category}</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-[#151c24] rounded-lg">
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Quantity</p>
-                  <p className="text-[#F4F1EA] font-medium">{viewingRFQ.quantity} {viewingRFQ.unit}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Quantity</p>
+                  <p className="text-[#F4F1EA] font-medium text-sm">{viewingRFQ.quantity} {viewingRFQ.unit}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Target Price</p>
-                  <p className="text-emerald-400 font-bold">{viewingRFQ.currency} {viewingRFQ.targetPrice}/{viewingRFQ.unit}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Target Price</p>
+                  <p className="text-emerald-400 font-semibold text-sm">{viewingRFQ.currency} {viewingRFQ.targetPrice}/{viewingRFQ.unit}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Origin</p>
-                  <p className="text-[#F4F1EA]">{viewingRFQ.origin}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Origin</p>
+                  <p className="text-[#F4F1EA] text-sm">{viewingRFQ.origin}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Destination</p>
-                  <p className="text-[#F4F1EA]">{viewingRFQ.destination}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Destination</p>
+                  <p className="text-[#F4F1EA] text-sm">{viewingRFQ.destination}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Created</p>
-                  <p className="text-[#F4F1EA]">{viewingRFQ.createdAt}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Created</p>
+                  <p className="text-[#F4F1EA] text-sm">{viewingRFQ.createdAt}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC] text-xs mb-1">Expires</p>
-                  <p className="text-[#F4F1EA]">{viewingRFQ.expiresAt}</p>
+                  <p className="text-[#8a8f94] text-xs mb-1">Expires</p>
+                  <p className="text-[#F4F1EA] text-sm">{viewingRFQ.expiresAt}</p>
                 </div>
               </div>
 
-              <div className="p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+              <div className="p-4 bg-[#151c24] rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#D8CCBC] text-sm">Quotes Received</span>
-                  <span className="text-[#F4F1EA] font-bold">{viewingRFQ.responses}</span>
+                  <span className="text-[#8a8f94] text-sm">Quotes Received</span>
+                  <span className="text-[#F4F1EA] font-semibold text-sm">{viewingRFQ.responses}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#D8CCBC] text-sm">
-                  <Clock className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-[#8a8f94] text-xs">
+                  <Clock className="w-3 h-3" />
                   <span>Expires in 7 days</span>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <Link href="/marketplace/inbox" className="flex-1 flex items-center justify-center gap-2 py-3 bg-[rgba(255,255,255,0.1)] text-[#F4F1EA] font-semibold rounded-xl hover:bg-[rgba(255,255,255,0.15)] transition-colors">
-                  <MessageSquare className="w-5 h-5" />
+              <div className="flex gap-2">
+                <Link href="/marketplace/inbox" className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white/5 text-[#F4F1EA] font-medium rounded-lg hover:bg-white/10 transition-colors text-sm">
+                  <MessageSquare className="w-4 h-4" />
                   View Quotes
                 </Link>
-                <Link href="/rfqs/new" className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors">
-                  <Plus className="w-5 h-5" />
+                <Link href="/rfqs/new" className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-medium rounded-lg hover:bg-[#D4AA82] transition-colors text-sm">
+                  <Plus className="w-4 h-4" />
                   Create Similar
                 </Link>
               </div>
