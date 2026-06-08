@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Plus, Clock, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Document {
   id: string;
@@ -54,13 +55,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -549,37 +543,10 @@ export default function DocumentsPage() {
         </div>
 
         {/* Bottom Navigation - Mobile */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2 z-40">
-          <div className="flex items-center justify-around">
-            {bottomNavLinks.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-colors ${
-                  item.primary
-                    ? 'relative -mt-4'
-                    : item.label === 'Home'
-                    ? 'text-[#154230]'
-                    : 'text-[#4A4A4A]'
-                }`}
-              >
-                {item.primary ? (
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-full flex items-center justify-center shadow-lg">
-                    <item.icon className="w-6 h-6 text-white" />
-                  </div>
-                ) : (
-                  <>
-                    <item.icon className="w-5 h-5" />
-                    <span className="text-[10px] font-semibold">{item.label}</span>
-                  </>
-                )}
-              </Link>
-            ))}
-          </div>
-        </nav>
-      </div>
+      <BottomNav activeItem="documents" />
+    </div>
 
-      {/* View Document Modal - Mobile Bottom Sheet */}
+    {/* View Document Modal - Mobile Bottom Sheet */}
       {viewingDoc && (
         <div className="lg:hidden fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={() => setViewingDoc(null)}>
           <div

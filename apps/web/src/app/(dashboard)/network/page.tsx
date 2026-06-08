@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, Send, Globe, Handshake, TrendingUp, Menu, X, Settings, LogOut, Home, User, Plus, FileText, Truck, Package, BarChart3, Bell } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Connection {
   id: string;
@@ -38,13 +39,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 export default function NetworkPage() {
   const [activeTab, setActiveTab] = useState('connections');
@@ -412,40 +406,7 @@ export default function NetworkPage() {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-30 px-2 pb-2 pt-1">
-        <div className="flex items-center justify-around">
-          {bottomNavLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
-            if (link.primary) {
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex flex-col items-center -mt-4"
-                >
-                  <div className="w-14 h-14 bg-[#154230] rounded-full flex items-center justify-center shadow-lg">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-[10px] font-medium text-[#154230] mt-1">{link.label}</span>
-                </Link>
-              );
-            }
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex flex-col items-center py-1 px-2 ${
-                  isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium mt-1">{link.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <BottomNav activeItem="network" />
     </div>
   );
 }

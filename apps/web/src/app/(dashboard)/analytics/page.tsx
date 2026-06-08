@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, X, LogOut, Plus } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 const sidebarLinks = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -17,13 +18,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 interface ChartData {
   label: string;
@@ -316,29 +310,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] h-[72px] flex items-center justify-around z-30">
-        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-[#666]">
-          <span className="text-2xl">🏠</span>
-          <span className="text-[10px] font-medium">Home</span>
-        </Link>
-        <Link href="/marketplace" className="flex flex-col items-center gap-1 text-[#666]">
-          <span className="text-2xl">🔍</span>
-          <span className="text-[10px] font-medium">Browse</span>
-        </Link>
-        <Link href="/rfqs/new" className="flex flex-col items-center -mt-4">
-          <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
-            +
-          </div>
-        </Link>
-        <Link href="/marketplace/inbox" className="flex flex-col items-center gap-1 text-[#666]">
-          <span className="text-2xl">💬</span>
-          <span className="text-[10px] font-medium">Inbox</span>
-        </Link>
-        <Link href="/account" className="flex flex-col items-center gap-1 text-[#666]">
-          <span className="text-2xl">👤</span>
-          <span className="text-[10px] font-medium">Account</span>
-        </Link>
-      </nav>
+      <BottomNav activeItem="ai" />
     </div>
   );
 }

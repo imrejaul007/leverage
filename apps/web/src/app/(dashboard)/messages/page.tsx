@@ -22,6 +22,7 @@ import {
   Bell,
   ChevronLeft,
 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Message {
   id: string;
@@ -51,13 +52,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/messages', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 const initialConversations: Conversation[] = [
   {
@@ -552,34 +546,7 @@ export default function MessagesPage() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2 pb-6 z-30">
-        <div className="flex items-center justify-around max-w-md mx-auto">
-          {bottomNavLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex flex-col items-center gap-1 px-3 py-2 ${
-                  isActive && !link.primary ? 'text-[#154230]' : 'text-[#4A4A4A]'
-                }`}
-              >
-                {link.primary ? (
-                  <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center -mt-5">
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                ) : (
-                  <Icon className="w-5 h-5" />
-                )}
-                <span className={`text-xs font-medium ${link.primary ? 'text-[#154230]' : ''}`}>
-                  {link.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <BottomNav activeItem="inbox" />
 
       {/* New Chat Modal */}
       {showNewChat && (

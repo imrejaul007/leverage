@@ -8,6 +8,7 @@ import {
   Anchor, Globe, Bell, Menu, Settings, LogOut, Home, User, Plus,
   MessageSquare, FileText, Package, BarChart3
 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Quote {
   id: string;
@@ -49,13 +50,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 export default function FreightPage() {
   const [origin, setOrigin] = useState('');
@@ -435,38 +429,7 @@ export default function FreightPage() {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 px-4 py-2 z-30">
-        <div className="flex items-center justify-around">
-          {bottomNavLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = link.href === '/freight';
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex flex-col items-center gap-1 py-2 px-3 ${
-                  link.primary ? '-mt-4' : ''
-                }`}
-              >
-                {link.primary ? (
-                  <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center shadow-lg">
-                    <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
-                  </div>
-                ) : (
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    isActive ? 'bg-[#154230]' : 'bg-[#E6E2DA]'
-                  }`}>
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-[#4A4A4A]'}`} />
-                  </div>
-                )}
-                <span className={`text-xs font-medium ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
-                  {link.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <BottomNav activeItem="browse" />
 
       {/* Booking Modal */}
       {showBookingModal && selectedQuote && (

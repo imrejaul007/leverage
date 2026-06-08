@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Search, Bell, Menu, Home, Package, MessageSquare, User, FileText, CheckCircle, Globe } from 'lucide-react';
+import { Search, Bell, Menu, Home, Package, MessageSquare, User, FileText, CheckCircle, Globe, Plus } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 const hsCodesData = [
   { code: '8471.30', description: 'Portable digital automatic data processing machines', duty: '0%', origin: 'USA', flag: '🇺🇸' },
@@ -259,32 +260,7 @@ export default function CompliancePage() {
       </button>
 
       {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white flex justify-around items-center h-[70px] border-t border-[#eee] z-50 max-w-[480px] mx-auto">
-        <button className="flex flex-col items-center gap-1 px-3 py-2">
-          <Home className="w-6 h-6 text-[#555]" />
-          <span className="text-[11px] text-[#555]">Home</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 px-3 py-2">
-          <Package className="w-6 h-6 text-[#555]" />
-          <span className="text-[11px] text-[#555]">Browse</span>
-        </button>
-        <button className="flex flex-col items-center -mt-4">
-          <div className="w-12 h-12 rounded-full bg-[#0b5c3f] flex items-center justify-center text-white text-2xl shadow-lg">
-            +
-          </div>
-        </button>
-        <button className="flex flex-col items-center gap-1 px-3 py-2 relative">
-          <MessageSquare className="w-6 h-6 text-[#555]" />
-          <span className="text-[11px] text-[#555]">Inbox</span>
-          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#b89b3f] flex items-center justify-center">
-            <span className="text-white text-[9px] font-bold">3</span>
-          </span>
-        </button>
-        <button className="flex flex-col items-center gap-1 px-3 py-2">
-          <User className="w-6 h-6 text-[#555]" />
-          <span className="text-[11px] text-[#555]">Account</span>
-        </button>
-      </nav>
+      <BottomNav activeItem="browse" />
     </div>
   );
 }

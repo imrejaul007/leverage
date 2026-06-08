@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Bot, Send, Sparkles, Loader2, Globe, Shield, FileText, Home, Search, Mail, User, Bell, Package, Truck, CheckCircle, Plus, Menu, X, Settings, LogOut, MessageSquare, BarChart3 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Message {
   id: string;
@@ -39,13 +40,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 export default function AIPage() {
   const [messages, setMessages] = useState<Message[]>([
@@ -393,27 +387,8 @@ export default function AIPage() {
         </div>
       </main>
 
-      {/* Mobile Bottom Navigation - Hidden on desktop */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-2 pb-6 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          {bottomNavLinks.map((item) => {
-            const Icon = item.icon;
-            const isActive = item.href === '/ai';
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-              >
-                <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${item.primary ? 'bg-[#154230] shadow-lg shadow-[#154230]/30' : isActive ? 'bg-[#154230] shadow-lg shadow-[#154230]/30' : ''}`}>
-                  <Icon className={`w-5 h-5 ${item.primary ? 'text-white' : isActive ? 'text-white' : ''}`} strokeWidth={item.primary ? 2.5 : 2} />
-                </div>
-                <span className="text-[10px] font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      {/* Mobile Bottom Navigation */}
+      <BottomNav activeItem="ai" />
     </div>
   );
 }

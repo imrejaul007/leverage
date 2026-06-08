@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Package, Clock, ArrowRight, Bell, Menu, X, Settings, LogOut, Home, User, Plus, MessageSquare, FileText, Truck, BarChart3 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Order {
   id: string;
@@ -46,13 +47,6 @@ const sidebarLinks = [
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
-];
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -358,24 +352,7 @@ export default function OrdersPage() {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-2 py-2 z-40">
-        <div className="flex items-center justify-around">
-          {bottomNavLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors ${
-                link.primary
-                  ? 'bg-[#154230] text-white -mt-4 rounded-full px-4 py-3 shadow-lg'
-                  : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-              }`}
-            >
-              <link.icon className={`w-5 h-5 ${link.primary ? '' : ''}`} />
-              {!link.primary && <span className="text-[10px] font-medium">{link.label}</span>}
-            </Link>
-          ))}
-        </div>
-      </nav>
+      <BottomNav activeItem="orders" />
     </div>
   );
 }
