@@ -109,8 +109,8 @@ export default function AnalyticsPage() {
 
         <div className="bg-white border border-black/5 rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-[#A6824A]" />
+            <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-[#5D1E21]" />
             </div>
             <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
               <TrendingUp className="w-3 h-3" /> +8.3%
@@ -135,8 +135,8 @@ export default function AnalyticsPage() {
 
         <div className="bg-white border border-black/5 rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
-              <Package className="w-5 h-5 text-[#A6824A]" />
+            <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+              <Package className="w-5 h-5 text-[#5D1E21]" />
             </div>
             <span className="text-[#4A4A4A] text-xs">Active</span>
           </div>
@@ -214,7 +214,7 @@ export default function AnalyticsPage() {
       <div className="bg-white border border-black/5 rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[#101111] font-semibold text-sm">Orders Trend</h2>
-          <span className="text-[#A6824A] text-xs font-medium">{stats.orders} orders</span>
+          <span className="text-[#5D1E21] text-xs font-medium">{stats.orders} orders</span>
         </div>
         <div className="h-32 flex items-end gap-1">
           {ordersData.map((item, i) => (

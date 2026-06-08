@@ -35,7 +35,7 @@ const documentTypes: Record<string, { icon: string; label: string }> = {
 
 const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
   DRAFT: { color: 'text-[#4A4A4A]', bg: 'bg-[#E6E2DA]', label: 'Draft' },
-  PENDING: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10', label: 'Pending' },
+  PENDING: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Pending' },
   VALIDATED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Validated' },
   APPROVED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Approved' },
   REJECTED: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Rejected' },
@@ -95,7 +95,7 @@ export default function DocumentsPage() {
           <p className="text-[#4A4A4A] text-xs">Total</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-[#A6824A]">{stats.pending}</p>
+          <p className="text-2xl font-bold text-[#5D1E21]">{stats.pending}</p>
           <p className="text-[#4A4A4A] text-xs">Pending</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
@@ -157,7 +157,7 @@ export default function DocumentsPage() {
             <FileText className="w-7 h-7 text-[#4A4A4A]" />
           </div>
           <p className="text-[#4A4A4A] text-sm mb-4">No documents found</p>
-          <button className="text-[#A6824A] hover:underline font-medium text-sm">
+          <button className="text-[#5D1E21] hover:underline font-medium text-sm">
             Create your first document
           </button>
         </div>

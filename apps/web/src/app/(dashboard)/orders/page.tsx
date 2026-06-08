@@ -26,7 +26,7 @@ const initialOrders: Order[] = [
 ];
 
 const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
-  PENDING: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10', label: 'Pending' },
+  PENDING: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Pending' },
   PROCESSING: { color: 'text-blue-600', bg: 'bg-blue-100', label: 'Processing' },
   SHIPPED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Shipped' },
   DELIVERED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Delivered' },
@@ -88,7 +88,7 @@ export default function OrdersPage() {
           <p className="text-[#4A4A4A] text-xs">Total Orders</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-[#A6824A]">{stats.active}</p>
+          <p className="text-2xl font-bold text-[#5D1E21]">{stats.active}</p>
           <p className="text-[#4A4A4A] text-xs">In Progress</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
@@ -154,7 +154,7 @@ export default function OrdersPage() {
             <Package className="w-7 h-7 text-[#4A4A4A]" />
           </div>
           <p className="text-[#4A4A4A] text-sm mb-4">No orders found</p>
-          <Link href="/marketplace" className="text-[#A6824A] hover:underline font-medium text-sm">
+          <Link href="/marketplace" className="text-[#5D1E21] hover:underline font-medium text-sm">
             Browse products
           </Link>
         </div>
@@ -172,7 +172,7 @@ export default function OrdersPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#A6824A] font-mono text-xs">{order.orderNumber}</span>
+                    <span className="text-[#5D1E21] font-mono text-xs">{order.orderNumber}</span>
                     <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[order.status].bg} ${statusConfig[order.status].color}`}>
                       {statusConfig[order.status].label}
                     </span>

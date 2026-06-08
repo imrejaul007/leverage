@@ -29,7 +29,7 @@ const inboxItems: InboxItem[] = [
 ];
 
 const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
-  pending: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10', label: 'Pending' },
+  pending: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Pending' },
   viewed: { color: 'text-[#4A4A4A]', bg: 'bg-[#E6E2DA]', label: 'Viewed' },
   responded: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Responded' },
   accepted: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Accepted' },
@@ -37,7 +37,7 @@ const statusConfig: Record<string, { color: string; bg: string; label: string }>
 };
 
 const typeConfig: Record<string, { icon: React.ReactNode; color: string }> = {
-  quote: { icon: <DollarSign className="w-4 h-4" />, color: 'text-[#A6824A]' },
+  quote: { icon: <DollarSign className="w-4 h-4" />, color: 'text-[#5D1E21]' },
   bid: { icon: <Package className="w-4 h-4" />, color: 'text-[#154230]' },
   requirement: { icon: <CheckCircle className="w-4 h-4" />, color: 'text-blue-600' },
   response: { icon: <MessageSquare className="w-4 h-4" />, color: 'text-[#154230]' },

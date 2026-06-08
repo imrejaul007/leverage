@@ -48,7 +48,7 @@ export default function BillingPage() {
 
   const statusConfig: Record<string, { color: string; bg: string }> = {
     completed: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
-    pending: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10' },
+    pending: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },
     failed: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },
     paid: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
     overdue: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },

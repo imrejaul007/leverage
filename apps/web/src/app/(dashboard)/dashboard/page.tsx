@@ -43,8 +43,8 @@ export default function DashboardPage() {
   ];
 
   const activityConfig: Record<string, { icon: React.ReactNode; bg: string; color: string }> = {
-    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#A6824A]/10', color: 'text-[#A6824A]' },
-    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#A6824A]/10', color: 'text-[#A6824A]' },
+    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#5D1E21]/10', color: 'text-[#5D1E21]' },
+    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#5D1E21]/10', color: 'text-[#5D1E21]' },
     payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
     document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
     order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
@@ -90,8 +90,8 @@ export default function DashboardPage() {
               <p className="text-[#4A4A4A] text-xs mb-1">Trade Volume</p>
               <p className="text-2xl font-bold text-[#101111]">${stats.tradeVolume}M</p>
             </div>
-            <div className="w-14 h-14 rounded-full bg-[#A6824A]/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-[#A6824A]" />
+            <div className="w-14 h-14 rounded-full bg-[#5D1E21]/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-[#5D1E21]" />
             </div>
           </div>
           <div className="flex items-center gap-1 mt-3 text-[#154230] text-xs font-medium">
@@ -104,8 +104,8 @@ export default function DashboardPage() {
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-4 gap-3">
         <Link href="/rfqs" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center mb-3">
-            <FileText className="w-5 h-5 text-[#A6824A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
+            <FileText className="w-5 h-5 text-[#5D1E21]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
           <p className="text-[#4A4A4A] text-xs mt-1">Active RFQs</p>
@@ -128,13 +128,13 @@ export default function DashboardPage() {
         </Link>
 
         <Link href="/marketplace/inbox" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all relative">
-          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center mb-3">
-            <MessageSquare className="w-5 h-5 text-[#A6824A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
+            <MessageSquare className="w-5 h-5 text-[#5D1E21]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
           <p className="text-[#4A4A4A] text-xs mt-1">Messages</p>
           {stats.unreadMessages > 0 && (
-            <span className="absolute top-3 right-3 w-4 h-4 bg-[#A6824A] rounded-full"></span>
+            <span className="absolute top-3 right-3 w-4 h-4 bg-[#5D1E21] rounded-full"></span>
           )}
         </Link>
       </div>
@@ -149,8 +149,8 @@ export default function DashboardPage() {
         </Link>
 
         <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
-            <Plus className="w-5 h-5 text-[#A6824A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-[#5D1E21]" />
           </div>
           <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
         </Link>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
       <div className="bg-white border border-black/5 rounded-xl overflow-hidden">
         <div className="p-4 border-b border-black/5 flex items-center justify-between">
           <h2 className="text-[#101111] font-semibold text-sm">Recent Activity</h2>
-          <Link href="/marketplace/inbox" className="text-[#A6824A] text-xs font-medium flex items-center gap-1">
+          <Link href="/marketplace/inbox" className="text-[#5D1E21] text-xs font-medium flex items-center gap-1">
             View All <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               {activity.status === 'unread' && (
-                <div className="w-1.5 h-1.5 bg-[#A6824A] rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-[#5D1E21] rounded-full"></div>
               )}
             </Link>
           ))}
@@ -226,7 +226,7 @@ export default function DashboardPage() {
       <div className="bg-white border border-black/5 rounded-xl p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[#101111] font-semibold text-sm">Document Status</h2>
-          <Link href="/documents" className="text-[#A6824A] text-xs font-medium">Manage</Link>
+          <Link href="/documents" className="text-[#5D1E21] text-xs font-medium">Manage</Link>
         </div>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
@@ -234,8 +234,8 @@ export default function DashboardPage() {
             <p className="text-lg font-bold text-[#101111]">{stats.documents}</p>
             <p className="text-[#4A4A4A] text-xs">Verified</p>
           </div>
-          <div className="text-center p-3 bg-[#A6824A]/5 rounded-lg">
-            <AlertCircle className="w-5 h-5 text-[#A6824A] mx-auto mb-2" />
+          <div className="text-center p-3 bg-[#5D1E21]/5 rounded-lg">
+            <AlertCircle className="w-5 h-5 text-[#5D1E21] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">5</p>
             <p className="text-[#4A4A4A] text-xs">Pending</p>
           </div>

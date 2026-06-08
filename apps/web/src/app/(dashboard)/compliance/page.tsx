@@ -112,9 +112,9 @@ export default function CompliancePage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[#A6824A] font-mono font-semibold text-sm">{code.code}</span>
+                      <span className="text-[#5D1E21] font-mono font-semibold text-sm">{code.code}</span>
                       <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        code.duty === '0%' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#A6824A]/10 text-[#A6824A]'
+                        code.duty === '0%' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'
                       }`}>
                         {code.duty} duty
                       </span>
@@ -168,8 +168,8 @@ export default function CompliancePage() {
 
           <div className="bg-white border border-black/5 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-[#A6824A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-[#5D1E21]" />
               </div>
               <div>
                 <h3 className="text-[#101111] font-semibold text-sm">EU Product Standards</h3>
@@ -239,7 +239,7 @@ export default function CompliancePage() {
             <div className="p-4 border-b border-black/5 flex items-center justify-between">
               <div>
                 <h2 className="text-[#101111] font-semibold text-sm">HS Code Details</h2>
-                <p className="text-[#A6824A] font-mono text-xs">{selectedHsCode.code}</p>
+                <p className="text-[#5D1E21] font-mono text-xs">{selectedHsCode.code}</p>
               </div>
               <button onClick={() => setSelectedHsCode(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
                 <X className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function CompliancePage() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-[#E6E2DA] rounded-lg">
                   <p className="text-[#4A4A4A] text-xs mb-1">Import Duty</p>
-                  <p className={`text-sm font-semibold ${selectedHsCode.duty === '0%' ? 'text-[#154230]' : 'text-[#A6824A]'}`}>
+                  <p className={`text-sm font-semibold ${selectedHsCode.duty === '0%' ? 'text-[#154230]' : 'text-[#5D1E21]'}`}>
                     {selectedHsCode.duty}
                   </p>
                 </div>

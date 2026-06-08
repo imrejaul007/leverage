@@ -84,7 +84,7 @@ export default function MobileNav() {
                 <div className={`relative ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
                   <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.name === 'Inbox' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#A6824A] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
                       3
                     </span>
                   )}
@@ -103,7 +103,7 @@ export default function MobileNav() {
       {/* More Menu Button */}
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center shadow-lg border-2 border-white"
+        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#5D1E21] rounded-full flex items-center justify-center shadow-lg border-2 border-white"
       >
         <svg
           className={`w-5 h-5 text-white transition-transform ${showMenu ? 'rotate-45' : ''}`}

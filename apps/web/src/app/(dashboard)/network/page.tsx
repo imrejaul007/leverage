@@ -169,7 +169,7 @@ export default function NetworkPage() {
                     </div>
                     <p className="text-[#4A4A4A] text-xs">{conn.role} at {conn.company}</p>
                   </div>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${conn.status === 'connected' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#A6824A]/10 text-[#A6824A]'}`}>
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${conn.status === 'connected' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'}`}>
                     {conn.status}
                   </span>
                   <button className="p-2 text-[#4A4A4A] hover:text-[#154230] hover:bg-[#E6E2DA] rounded-lg transition-colors">

@@ -108,7 +108,7 @@ export default function ConsultationsPage() {
                   </div>
                   <p className="text-[#4A4A4A] text-xs">{expert.title}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="flex items-center gap-1 text-[#A6824A] text-xs">
+                    <span className="flex items-center gap-1 text-[#5D1E21] text-xs">
                       <Star className="w-3 h-3 fill-current" />
                       {expert.rating}
                     </span>
@@ -194,7 +194,7 @@ export default function ConsultationsPage() {
                   </div>
                   <p className="text-[#4A4A4A] text-sm">{selectedExpert.title}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="flex items-center gap-1 text-[#A6824A] text-sm font-medium">
+                    <span className="flex items-center gap-1 text-[#5D1E21] text-sm font-medium">
                       <Star className="w-4 h-4 fill-current" />
                       {selectedExpert.rating}
                     </span>

@@ -30,7 +30,7 @@ const initialRFQs: RFQ[] = [
 
 const statusConfig: Record<string, { color: string; bg: string }> = {
   OPEN: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
-  QUOTED: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10' },
+  QUOTED: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },
   ACCEPTED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
   CLOSED: { color: 'text-[#4A4A4A]', bg: 'bg-[#E6E2DA]' },
 };
@@ -136,7 +136,7 @@ export default function RFQsPage() {
             <MessageSquare className="w-7 h-7 text-[#4A4A4A]" />
           </div>
           <p className="text-[#4A4A4A] text-sm mb-4">No RFQs found</p>
-          <Link href="/rfqs/new" className="text-[#A6824A] hover:underline font-medium text-sm">
+          <Link href="/rfqs/new" className="text-[#5D1E21] hover:underline font-medium text-sm">
             Create your first RFQ
           </Link>
         </div>
@@ -154,7 +154,7 @@ export default function RFQsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#A6824A] font-mono text-xs">RFQ-{rfq.id}</span>
+                    <span className="text-[#5D1E21] font-mono text-xs">RFQ-{rfq.id}</span>
                     <span className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[rfq.status].bg} ${statusConfig[rfq.status].color}`}>
                       {statusLabels[rfq.status]}
                     </span>
@@ -187,7 +187,7 @@ export default function RFQsPage() {
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h2 className="text-lg font-bold text-[#101111]">{viewingRFQ.title}</h2>
-                <span className="text-[#A6824A] font-mono text-xs">RFQ-{viewingRFQ.id}</span>
+                <span className="text-[#5D1E21] font-mono text-xs">RFQ-{viewingRFQ.id}</span>
               </div>
               <button onClick={() => setViewingRFQ(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
                 <X className="w-4 h-4" />
