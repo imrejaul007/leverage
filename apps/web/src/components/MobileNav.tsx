@@ -44,7 +44,7 @@ export default function MobileNav() {
   return (
     <>
       {/* Main Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0D0F14]/95 backdrop-blur-xl border-t border-white/5 safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-black/5 safe-area-bottom">
         <div className="flex items-center justify-around px-1 py-1.5">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -57,10 +57,10 @@ export default function MobileNav() {
                   href={item.href}
                   className="flex flex-col items-center justify-center -mt-5"
                 >
-                  <div className="w-12 h-12 rounded-full bg-[#C49A6C] flex items-center justify-center shadow-lg shadow-[#C49A6C]/20">
-                    <Icon className="w-6 h-6 text-[#0D0F14]" strokeWidth={2.5} />
+                  <div className="w-12 h-12 rounded-full bg-[#3E6A47] flex items-center justify-center shadow-lg shadow-[#3E6A47]/20">
+                    <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
-                  <span className="text-[9px] text-[#C49A6C] font-semibold mt-1">
+                  <span className="text-[9px] text-[#3E6A47] font-semibold mt-1">
                     {item.name}
                   </span>
                 </Link>
@@ -75,7 +75,7 @@ export default function MobileNav() {
                   isActive ? 'scale-105' : ''
                 }`}
               >
-                <div className={`relative ${isActive ? 'text-[#C49A6C]' : 'text-[#6B7280]'}`}>
+                <div className={`relative ${isActive ? 'text-[#3E6A47]' : 'text-gray-400'}`}>
                   <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.name === 'Inbox' && (
                     <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
@@ -84,12 +84,12 @@ export default function MobileNav() {
                   )}
                 </div>
                 <span className={`text-[9px] font-medium ${
-                  isActive ? 'text-[#C49A6C] font-semibold' : 'text-[#6B7280]'
+                  isActive ? 'text-[#3E6A47] font-semibold' : 'text-gray-400'
                 }`}>
                   {item.name}
                 </span>
                 {isActive && (
-                  <span className="absolute bottom-0 w-1 h-1 bg-[#C49A6C] rounded-full" />
+                  <span className="absolute bottom-0 w-1 h-1 bg-[#3E6A47] rounded-full" />
                 )}
               </Link>
             );
@@ -100,7 +100,7 @@ export default function MobileNav() {
       {/* More Menu Button */}
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#3E6A47] rounded-full flex items-center justify-center shadow-lg shadow-[#3E6A47]/20 border-2 border-[#0D0F14]"
+        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#C49A6C] rounded-full flex items-center justify-center shadow-lg border-2 border-white"
       >
         <svg
           className={`w-5 h-5 text-white transition-transform ${showMenu ? 'rotate-45' : ''}`}
@@ -116,10 +116,10 @@ export default function MobileNav() {
       {/* More Menu Overlay */}
       {showMenu && (
         <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
-          <div className="absolute bottom-20 left-4 right-4 bg-[#13161B] rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-            <div className="p-3 border-b border-white/5">
-              <h3 className="text-[#F4F1EA] font-semibold text-sm">Trade Menu</h3>
-              <p className="text-[#6B7280] text-xs">Quick access to all features</p>
+          <div className="absolute bottom-20 left-4 right-4 bg-white rounded-2xl border border-black/5 shadow-2xl overflow-hidden">
+            <div className="p-3 border-b border-black/5">
+              <h3 className="text-gray-900 font-semibold text-sm">Trade Menu</h3>
+              <p className="text-gray-500 text-xs">Quick access to all features</p>
             </div>
             <div className="grid grid-cols-3 gap-1.5 p-2.5">
               {secondaryNavItems.map((item) => {
@@ -132,12 +132,12 @@ export default function MobileNav() {
                     onClick={() => setShowMenu(false)}
                     className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-colors ${
                       isActive
-                        ? 'bg-[#C49A6C]/10 text-[#C49A6C]'
-                        : 'text-[#6B7280] hover:bg-white/5'
+                        ? 'bg-[#3E6A47]/10 text-[#3E6A47]'
+                        : 'text-gray-500 hover:bg-gray-50'
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      isActive ? 'bg-[#C49A6C]/10' : 'bg-white/5'
+                      isActive ? 'bg-[#3E6A47]/10' : 'bg-gray-100'
                     }`}>
                       <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                     </div>
@@ -155,7 +155,7 @@ export default function MobileNav() {
       {/* Overlay backdrop */}
       {showMenu && (
         <div
-          className="fixed inset-0 bg-black/60 z-[55]"
+          className="fixed inset-0 bg-black/20 z-[55]"
           onClick={() => setShowMenu(false)}
         />
       )}

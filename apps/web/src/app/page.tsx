@@ -74,29 +74,29 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0D0F14]">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0D0F14]/90 backdrop-blur-xl border-b border-white/5">
-        <div className="container mx-auto px-4 sm:px-8 py-3">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-black/5">
+        <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
             </Link>
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/marketplace" className="text-[#6B7280] hover:text-[#F4F1EA] transition-colors text-sm">
+              <Link href="/marketplace" className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium">
                 Marketplace
               </Link>
-              <Link href="/freight" className="text-[#6B7280] hover:text-[#F4F1EA] transition-colors text-sm">
+              <Link href="/freight" className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium">
                 Freight
               </Link>
-              <Link href="/compliance" className="text-[#6B7280] hover:text-[#F4F1EA] transition-colors text-sm">
+              <Link href="/compliance" className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium">
                 Compliance
               </Link>
-              <Link href="/about" className="text-[#6B7280] hover:text-[#F4F1EA] transition-colors text-sm">
+              <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium">
                 About
               </Link>
             </nav>
-            <Link href="/login" className="px-4 py-2 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#0D0F14] font-semibold rounded-lg transition-all text-sm">
+            <Link href="/login" className="px-5 py-2.5 bg-[#3E6A47] hover:bg-[#4A7D55] text-white font-semibold rounded-lg transition-all text-sm">
               Sign In
             </Link>
           </div>
@@ -104,39 +104,39 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-28 pb-20 px-4 sm:px-8 relative overflow-hidden">
+      <section className="pt-32 pb-20 px-4 sm:px-8 relative overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#C49A6C]/5 rounded-full blur-[120px]" />
 
         <div className={`container mx-auto text-center max-w-5xl transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] border border-black/5 rounded-full mb-8">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3E6A47] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3E6A47]"></span>
             </span>
-            <span className="text-[#6B7280] text-sm">Connecting Dots to Ports</span>
+            <span className="text-gray-600 text-sm font-medium">Connecting Dots to Ports</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#F4F1EA] mb-6 leading-tight tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
             Trade Smarter.
             <br />
-            <span className="text-[#C49A6C]">Globally.</span>
+            <span className="text-[#3E6A47]">Globally.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl text-[#6B7280] mb-10 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             Streamline your import/export operations with AI-powered compliance,
             smart documents, and integrated logistics — all in one platform.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
-            <Link href="/signup" className="px-8 py-4 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#0D0F14] font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link href="/signup" className="px-8 py-4 bg-[#3E6A47] hover:bg-[#4A7D55] text-white font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
               Start Free Trial
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/marketplace" className="px-8 py-4 bg-white/5 border border-white/10 text-[#F4F1EA] hover:bg-white/10 font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+            <Link href="/marketplace" className="px-8 py-4 bg-[#F7F9FB] border border-black/10 text-gray-900 hover:bg-gray-100 font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
               <Globe className="w-5 h-5" />
               Explore Marketplace
             </Link>
@@ -145,9 +145,9 @@ export default function HomePage() {
           {/* Feature Pills */}
           <div className="flex flex-wrap justify-center gap-3">
             {['500+ Suppliers', 'HS Code Classification', 'AI Compliance', 'Real-time Tracking'].map((feature) => (
-              <div key={feature} className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/5 rounded-full">
+              <div key={feature} className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] border border-black/5 rounded-full">
                 <Check className="w-4 h-4 text-[#3E6A47]" />
-                <span className="text-[#6B7280] text-sm">{feature}</span>
+                <span className="text-gray-600 text-sm">{feature}</span>
               </div>
             ))}
           </div>
@@ -155,13 +155,13 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-8 border-y border-white/5">
+      <section className="py-16 px-4 sm:px-8 bg-[#F7F9FB] border-y border-black/5">
         <div className="container mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-3xl sm:text-4xl font-bold text-[#C49A6C] mb-2">{stat.value}</p>
-                <p className="text-[#6B7280] text-sm">{stat.label}</p>
+                <p className="text-3xl sm:text-4xl font-bold text-[#3E6A47] mb-2">{stat.value}</p>
+                <p className="text-gray-600 text-sm">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -169,30 +169,30 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
               Everything You Need for Global Trade
             </h2>
-            <p className="text-base text-[#6B7280] max-w-2xl mx-auto">
+            <p className="text-base text-gray-600 max-w-2xl mx-auto">
               From RFQ to delivery, manage your entire trade lifecycle with our comprehensive platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => {
               const Icon = feature.icon;
               return (
                 <div
                   key={i}
-                  className="group p-6 bg-[#1A1E24] border border-white/5 rounded-xl hover:border-[#C49A6C]/20 transition-all duration-300"
+                  className="group p-6 bg-white border border-black/5 rounded-xl hover:shadow-lg hover:border-[#3E6A47]/20 transition-all duration-300"
                 >
-                  <div className="w-11 h-11 rounded-lg bg-[#3E6A47]/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
-                    <Icon className="w-5 h-5 text-[#3E6A47]" />
+                  <div className="w-12 h-12 rounded-xl bg-[#3E6A47]/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
+                    <Icon className="w-6 h-6 text-[#3E6A47]" />
                   </div>
-                  <h3 className="text-base font-semibold text-[#F4F1EA] mb-2 tracking-tight">{feature.title}</h3>
-                  <p className="text-sm text-[#6B7280] leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 tracking-tight">{feature.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{feature.description}</p>
                 </div>
               );
             })}
@@ -201,34 +201,34 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-24 px-4 sm:px-8 bg-[#13161B]">
+      <section className="py-24 px-4 sm:px-8 bg-[#F7F9FB]">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
               How It Works
             </h2>
-            <p className="text-base text-[#6B7280]">
+            <p className="text-base text-gray-600">
               Get started in minutes, not days
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               { step: '1', title: 'Create Account', desc: 'Sign up in seconds with your email. No credit card required.', icon: Zap },
-              { step: '2', title: 'Connect& Trade', desc: 'Browse marketplace, create RFQs, and manage documents.', icon: Globe },
+              { step: '2', title: 'Connect & Trade', desc: 'Browse marketplace, create RFQs, and manage documents.', icon: Globe },
               { step: '3', title: 'Scale Globally', desc: 'Grow your business with AI insights and expert consultations.', icon: BarChart3 },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
                 <div key={i} className="relative text-center">
                   {i < 2 && (
-                    <div className="hidden md:block absolute top-10 right-0 w-full h-px bg-gradient-to-r from-[#C49A6C]/20 to-transparent" />
+                    <div className="hidden md:block absolute top-10 right-0 w-full h-px bg-gradient-to-r from-[#3E6A47]/20 to-transparent" />
                   )}
-                  <div className="w-16 h-16 rounded-full bg-[#1A1E24] border border-[#C49A6C]/20 flex items-center justify-center mx-auto mb-5 relative">
-                    <Icon className="w-7 h-7 text-[#C49A6C]" />
+                  <div className="w-16 h-16 rounded-full bg-white border-2 border-[#3E6A47]/20 flex items-center justify-center mx-auto mb-5 relative shadow-sm">
+                    <Icon className="w-7 h-7 text-[#3E6A47]" />
                   </div>
-                  <h3 className="text-base font-semibold text-[#F4F1EA] mb-2 tracking-tight">{item.title}</h3>
-                  <p className="text-sm text-[#6B7280] leading-relaxed">{item.desc}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 tracking-tight">{item.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
                 </div>
               );
             })}
@@ -237,17 +237,17 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
               Trusted by Traders Worldwide
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <div key={i} className="p-6 bg-[#1A1E24] border border-white/5 rounded-xl">
+              <div key={i} className="p-6 bg-white border border-black/5 rounded-xl shadow-sm">
                 <div className="flex gap-1 mb-4">
                   {[1,2,3,4,5].map(star => (
                     <svg key={star} className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
@@ -255,14 +255,14 @@ export default function HomePage() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-sm text-[#6B7280] mb-5 leading-relaxed">"{t.quote}"</p>
+                <p className="text-sm text-gray-700 mb-5 leading-relaxed">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-[#C49A6C] flex items-center justify-center text-[#0D0F14] font-bold text-xs">
+                  <div className="w-10 h-10 rounded-lg bg-[#3E6A47] flex items-center justify-center text-white font-bold text-sm">
                     {t.avatar}
                   </div>
                   <div>
-                    <p className="text-[#F4F1EA] font-medium text-sm">{t.author}</p>
-                    <p className="text-[#6B7280] text-xs">{t.role}</p>
+                    <p className="text-gray-900 font-medium text-sm">{t.author}</p>
+                    <p className="text-gray-500 text-xs">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -272,23 +272,23 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 sm:px-8">
+      <section className="py-24 px-4 sm:px-8 bg-[#F7F9FB]">
         <div className="container mx-auto max-w-4xl">
-          <div className="relative bg-[#1A1E24] rounded-2xl p-10 sm:p-14 text-center border border-[#C49A6C]/10 overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#C49A6C]/5 rounded-full blur-[100px]" />
+          <div className="relative bg-white rounded-2xl p-10 sm:p-14 text-center border border-black/5 shadow-sm overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#3E6A47]/5 rounded-full blur-[100px]" />
             <div className="relative">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#F4F1EA] mb-4 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
                 Ready to Transform Your Trade Business?
               </h2>
-              <p className="text-base text-[#6B7280] mb-8 max-w-xl mx-auto">
+              <p className="text-base text-gray-600 mb-8 max-w-xl mx-auto">
                 Join thousands of traders who have already streamlined their global trade operations with Leverge.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/signup" className="px-8 py-4 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#0D0F14] font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/signup" className="px-8 py-4 bg-[#3E6A47] hover:bg-[#4A7D55] text-white font-bold rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
                   Get Started Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
-                <Link href="/contact" className="px-8 py-4 bg-white/5 border border-white/10 text-[#F4F1EA] hover:bg-white/10 font-semibold rounded-xl transition-all">
+                <Link href="/contact" className="px-8 py-4 bg-white border border-black/10 text-gray-900 hover:bg-gray-50 font-semibold rounded-xl transition-all">
                   Talk to Sales
                 </Link>
               </div>
@@ -298,56 +298,56 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-8 border-t border-white/5">
+      <footer className="py-12 px-4 sm:px-8 bg-white border-t border-black/5">
         <div className="container mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="mb-4">
                 <Image src="/logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain" />
               </div>
-              <p className="text-[#6B7280] text-sm">
+              <p className="text-gray-600 text-sm">
                 The operating system for global trade.
               </p>
             </div>
             <div>
-              <h4 className="text-[#F4F1EA] font-semibold mb-4 text-sm">Product</h4>
-              <ul className="space-y-2 text-sm text-[#6B7280]">
-                <li><Link href="/marketplace" className="hover:text-[#C49A6C] transition-colors">Marketplace</Link></li>
-                <li><Link href="/freight" className="hover:text-[#C49A6C] transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-[#C49A6C] transition-colors">Compliance</Link></li>
-                <li><Link href="/ai" className="hover:text-[#C49A6C] transition-colors">AI Assistant</Link></li>
+              <h4 className="text-gray-900 font-semibold mb-4 text-sm">Product</h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li><Link href="/marketplace" className="hover:text-[#3E6A47] transition-colors">Marketplace</Link></li>
+                <li><Link href="/freight" className="hover:text-[#3E6A47] transition-colors">Freight</Link></li>
+                <li><Link href="/compliance" className="hover:text-[#3E6A47] transition-colors">Compliance</Link></li>
+                <li><Link href="/ai" className="hover:text-[#3E6A47] transition-colors">AI Assistant</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-[#F4F1EA] font-semibold mb-4 text-sm">Company</h4>
-              <ul className="space-y-2 text-sm text-[#6B7280]">
-                <li><Link href="/about" className="hover:text-[#C49A6C] transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-[#C49A6C] transition-colors">Contact</Link></li>
-                <li><Link href="/careers" className="hover:text-[#C49A6C] transition-colors">Careers</Link></li>
-                <li><Link href="/blog" className="hover:text-[#C49A6C] transition-colors">Blog</Link></li>
+              <h4 className="text-gray-900 font-semibold mb-4 text-sm">Company</h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li><Link href="/about" className="hover:text-[#3E6A47] transition-colors">About</Link></li>
+                <li><Link href="/contact" className="hover:text-[#3E6A47] transition-colors">Contact</Link></li>
+                <li><Link href="/careers" className="hover:text-[#3E6A47] transition-colors">Careers</Link></li>
+                <li><Link href="/blog" className="hover:text-[#3E6A47] transition-colors">Blog</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-[#F4F1EA] font-semibold mb-4 text-sm">Legal</h4>
-              <ul className="space-y-2 text-sm text-[#6B7280]">
-                <li><Link href="/privacy" className="hover:text-[#C49A6C] transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-[#C49A6C] transition-colors">Terms</Link></li>
-                <li><Link href="/security" className="hover:text-[#C49A6C] transition-colors">Security</Link></li>
+              <h4 className="text-gray-900 font-semibold mb-4 text-sm">Legal</h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li><Link href="/privacy" className="hover:text-[#3E6A47] transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#3E6A47] transition-colors">Terms</Link></li>
+                <li><Link href="/security" className="hover:text-[#3E6A47] transition-colors">Security</Link></li>
               </ul>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-[#6B7280] text-sm">
+          <div className="pt-8 border-t border-black/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-gray-500 text-sm">
               © 2026 Leverge. All rights reserved.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-[#6B7280] hover:text-[#C49A6C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#3E6A47] transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
               </a>
-              <a href="#" className="text-[#6B7280] hover:text-[#C49A6C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#3E6A47] transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               </a>
-              <a href="#" className="text-[#6B7280] hover:text-[#C49A6C] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#3E6A47] transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.756v20.487C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.244V1.756C24 .774 23.2 0 22.222 0h.003z"/></svg>
               </a>
             </div>

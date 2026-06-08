@@ -40,7 +40,7 @@ const suppliers: Supplier[] = [
 ];
 
 const products: Product[] = [
-  { id: '1', name: 'Premium Basmati Rice 1121', description: 'Extra long grain, aromatic basmati rice. Aged 2 years.', price: 850, originalPrice: 950, currency: 'USD', moq: '50 MT', category: 'Food & Agriculture', supplier: suppliers[0], tradeTerms: ['FOB', 'CIF', 'EXW'], featured: true, reviews: 128, salesCount: 1248, isNew: false },
+  { id: '1', name: 'Premium Basmati Rice 1121', description: 'Extra long grain, aromatic basmati rice. Aged 2 years.', price: 850, originalPrice: 950, currency: 'USD', moq: '50 MT', category: 'Food& Agriculture', supplier: suppliers[0], tradeTerms: ['FOB', 'CIF', 'EXW'], featured: true, reviews: 128, salesCount: 1248, isNew: false },
   { id: '2', name: 'Organic Cotton Yarn 40/1', description: '100% organic cotton yarn. OEKO-TEX certified.', price: 3.20, currency: 'USD', moq: '10 MT', category: 'Textiles', supplier: suppliers[0], tradeTerms: ['FOB', 'CIF'], reviews: 45, salesCount: 520 },
   { id: '3', name: 'Solar Panels 550W Mono PERC', description: 'Tier 1 solar panels. 25-year warranty.', price: 165, currency: 'USD', moq: '100 units', category: 'Energy', supplier: suppliers[1], tradeTerms: ['FOB', 'CIF', 'DDP'], featured: true, reviews: 89, salesCount: 2100 },
   { id: '4', name: 'Steel Billets Grade A', description: 'IS 2062 certified steel billets.', price: 620, originalPrice: 680, currency: 'USD', moq: '100 MT', category: 'Metals & Minerals', supplier: suppliers[2], tradeTerms: ['FOB', 'CIF'], reviews: 32, salesCount: 890 },
@@ -49,7 +49,7 @@ const products: Product[] = [
   { id: '7', name: 'LED Solar Street Lights', description: 'All-in-one solar LED street lighting.', price: 89, currency: 'USD', moq: '50 units', category: 'Energy', supplier: suppliers[4], tradeTerms: ['FOB', 'EXW'], reviews: 52, salesCount: 4500, isNew: true },
 ];
 
-const categories = ['All', 'Food & Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Energy'];
+const categories = ['All', 'Food& Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Energy'];
 
 type SortOption = 'featured' | 'newest' | 'price-low' | 'price-high' | 'popular';
 
@@ -110,10 +110,10 @@ export default function MarketplacePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#F4F1EA]">Browse Products</h1>
-          <p className="text-[#6B7280] text-sm">{products.length} products from verified suppliers</p>
+          <h1 className="text-lg sm:text-xl font-bold text-gray-900">Browse Products</h1>
+          <p className="text-gray-500 text-sm">{products.length} products from verified suppliers</p>
         </div>
-        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg hover:bg-[#D4AA82] transition-colors text-sm">
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#3E6A47] text-white font-semibold rounded-lg hover:bg-[#4A7D55] transition-colors text-sm">
           <Plus className="w-4 h-4" />
           Post RFQ
         </Link>
@@ -121,13 +121,13 @@ export default function MarketplacePage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-4 h-4 text-[#6B7280]/50 absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search products, suppliers..."
-          className="w-full h-11 pl-11 pr-4 bg-[#13161B] border border-white/5 rounded-lg text-[#F4F1EA] placeholder-[#8a8f94]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
+          className="w-full h-11 pl-11 pr-4 bg-white border border-black/5 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A6C] text-sm"
         />
       </div>
 
@@ -139,8 +139,8 @@ export default function MarketplacePage() {
             onClick={() => setSelectedCategory(cat)}
             className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               selectedCategory === cat
-                ? 'bg-[#C49A6C] text-[#0a0f14]'
-                : 'bg-white/5 text-[#6B7280] hover:bg-white/10 hover:text-[#F4F1EA]'
+                ? 'bg-[#3E6A47] text-white'
+                : 'bg-white text-gray-600 hover:bg-gray-50 border border-black/5'
             }`}
           >
             {cat}
@@ -150,11 +150,11 @@ export default function MarketplacePage() {
 
       {/* Sort */}
       <div className="flex items-center justify-between">
-        <span className="text-[#6B7280] text-sm">{filteredProducts.length} products</span>
+        <span className="text-gray-500 text-sm">{filteredProducts.length} products</span>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="h-10 px-3 bg-[#13161B] border border-white/5 rounded-lg text-[#F4F1EA] text-sm focus:outline-none focus:border-[#C49A6C]"
+          className="h-10 px-3 bg-white border border-black/5 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-[#C49A6C]"
         >
           <option value="featured">Featured</option>
           <option value="newest">Newest</option>
@@ -166,12 +166,12 @@ export default function MarketplacePage() {
 
       {/* Compare Bar */}
       {compareList.length > 0 && (
-        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-[#13161B] border border-white/10 rounded-xl p-4 shadow-2xl z-50">
+        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-white border border-black/5 rounded-xl p-4 shadow-2xl z-50">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[#F4F1EA] font-semibold text-sm">Compare ({compareList.length}/3)</span>
-            <button onClick={() => setCompareList([])} className="text-[#6B7280] hover:text-white text-xs">Clear</button>
+            <span className="text-gray-900 font-semibold text-sm">Compare ({compareList.length}/3)</span>
+            <button onClick={() => setCompareList([])} className="text-gray-500 hover:text-gray-900 text-xs">Clear</button>
           </div>
-          <Link href={`/marketplace/compare?ids=${compareList.join(',')}`} className="block w-full py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg text-center text-sm">
+          <Link href={`/marketplace/compare?ids=${compareList.join(',')}`} className="block w-full py-2.5 bg-[#3E6A47] text-white font-semibold rounded-lg text-center text-sm">
             Compare Products
           </Link>
         </div>
@@ -180,18 +180,18 @@ export default function MarketplacePage() {
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.map(product => (
-          <div key={product.id} className="bg-[#1A1E24] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all group">
+          <div key={product.id} className="bg-white border border-black/5 rounded-xl overflow-hidden hover:shadow-md transition-all group">
             <Link href={`/marketplace/${product.id}`} className="block">
-              <div className="aspect-square bg-gradient-to-br from-[#121820] to-[#0a0f14] flex items-center justify-center relative p-8">
+              <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center relative p-8">
                 <span className="text-5xl group-hover:scale-110 transition-transform">{product.category === 'Food & Agriculture' ? '🍚' : product.category === 'Textiles' ? '🧶' : product.category === 'Energy' ? '☀️' : '📦'}</span>
                 {product.featured && (
-                  <span className="absolute top-3 left-3 px-2 py-0.5 bg-[#C49A6C] text-[#0a0f14] text-[10px] font-semibold rounded-md">Featured</span>
+                  <span className="absolute top-3 left-3 px-2 py-0.5 bg-[#C49A6C] text-white text-[10px] font-semibold rounded-md">Featured</span>
                 )}
                 {product.isNew && (
-                  <span className="absolute top-3 right-3 px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold rounded-md">NEW</span>
+                  <span className="absolute top-3 right-3 px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[10px] font-semibold rounded-md">NEW</span>
                 )}
                 {product.originalPrice && (
-                  <span className="absolute bottom-3 left-3 px-2 py-0.5 bg-red-500/20 text-red-400 text-[10px] font-semibold rounded-md">
+                  <span className="absolute bottom-3 left-3 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-semibold rounded-md">
                     {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
                   </span>
                 )}
@@ -201,20 +201,20 @@ export default function MarketplacePage() {
             <div className="p-4 space-y-3">
               <div>
                 <Link href={`/marketplace/${product.id}`}>
-                  <h3 className="text-[#F4F1EA] font-medium text-sm line-clamp-1 hover:text-[#C49A6C] transition-colors">{product.name}</h3>
+                  <h3 className="text-gray-900 font-medium text-sm line-clamp-1 hover:text-[#C49A6C] transition-colors">{product.name}</h3>
                 </Link>
-                <p className="text-[#6B7280] text-xs line-clamp-2 mt-1">{product.description}</p>
+                <p className="text-gray-500 text-xs line-clamp-2 mt-1">{product.description}</p>
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-lg font-bold text-[#F4F1EA]">${product.price}</span>
-                  <span className="text-[#6B7280] text-xs">/{product.currency}</span>
+                  <span className="text-lg font-bold text-gray-900">${product.price}</span>
+                  <span className="text-gray-500 text-xs">/{product.currency}</span>
                 </div>
-                <span className="text-[#6B7280] text-xs">MOQ: {product.moq}</span>
+                <span className="text-gray-500 text-xs">MOQ: {product.moq}</span>
               </div>
 
-              <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+              <div className="flex items-center gap-3 text-xs text-gray-500">
                 <span className="flex items-center gap-1">
                   <Star className="w-3 h-3 text-[#C49A6C] fill-[#C49A6C]" />
                   {product.reviews}
@@ -222,31 +222,31 @@ export default function MarketplacePage() {
                 <span>{product.salesCount.toLocaleString()} sold</span>
               </div>
 
-              <div className="pt-3 border-t border-white/5">
+              <div className="pt-3 border-t border-black/5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center text-xs font-bold text-[#C49A6C]">
+                    <div className="w-7 h-7 rounded-md bg-gray-100 flex items-center justify-center text-xs font-bold text-[#C49A6C]">
                       {product.supplier.country.charAt(0)}
                     </div>
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className="text-[#F4F1EA] text-xs">{product.supplier.name}</span>
-                        {product.supplier.verified && <CheckCircle className="w-3 h-3 text-emerald-400" />}
+                        <span className="text-gray-900 text-xs">{product.supplier.name}</span>
+                        {product.supplier.verified && <CheckCircle className="w-3 h-3 text-emerald-500" />}
                       </div>
-                      <span className="text-[#6B7280] text-xs">{product.supplier.responseTime}</span>
+                      <span className="text-gray-400 text-xs">{product.supplier.responseTime}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Link href={`/marketplace/${product.id}`} className="flex-1 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg text-center text-xs hover:bg-[#D4AA82] transition-colors">
+                <Link href={`/marketplace/${product.id}`} className="flex-1 py-2.5 bg-[#3E6A47] text-white font-semibold rounded-lg text-center text-xs hover:bg-[#4A7D55] transition-colors">
                   View Details
                 </Link>
-                <button onClick={() => toggleFavorite(product.id)} className={`p-2 rounded-lg border transition-colors ${favorites.has(product.id) ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'border-white/5 text-[#6B7280] hover:border-red-500/30 hover:text-red-400'}`}>
+                <button onClick={() => toggleFavorite(product.id)} className={`p-2 rounded-lg border transition-colors ${favorites.has(product.id) ? 'bg-red-50 border-red-200 text-red-500' : 'border-black/5 text-gray-400 hover:border-red-200 hover:text-red-500'}`}>
                   <Heart className="w-4 h-4" fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
                 </button>
-                <button onClick={() => toggleCompare(product.id)} className={`p-2 rounded-lg border transition-colors ${compareList.includes(product.id) ? 'bg-[#C49A6C]/10 border-[#C49A6C]/30 text-[#C49A6C]' : 'border-white/5 text-[#6B7280] hover:border-[#C49A6C]/30 hover:text-[#C49A6C]'}`}>
+                <button onClick={() => toggleCompare(product.id)} className={`p-2 rounded-lg border transition-colors ${compareList.includes(product.id) ? 'bg-[#C49A6C]/10 border-[#C49A6C]/30 text-[#C49A6C]' : 'border-black/5 text-gray-400 hover:border-[#C49A6C]/30 hover:text-[#C49A6C]'}`}>
                   <GitCompare className="w-4 h-4" />
                 </button>
               </div>

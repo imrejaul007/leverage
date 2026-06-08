@@ -58,7 +58,7 @@ export default function MobileHeader() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-[#0D0F14]/95 backdrop-blur-xl border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-black/5">
       {/* Main Header */}
       <div className="flex items-center justify-between px-4 h-14">
         {/* Logo& Title */}
@@ -73,7 +73,7 @@ export default function MobileHeader() {
           {/* Search Button */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="p-2 text-[#6B7280] hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+            className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -81,10 +81,10 @@ export default function MobileHeader() {
           {/* Notifications */}
           <Link
             href="/marketplace/inbox"
-            className="relative p-2 text-[#6B7280] hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+            className="relative p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#C49A6C] text-[#0D0F14] text-[9px] font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#C49A6C] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
               3
             </span>
           </Link>
@@ -92,7 +92,7 @@ export default function MobileHeader() {
           {/* Quick Post */}
           <Link
             href="/rfqs/new"
-            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#C49A6C] hover:bg-[#D4AA82] text-[#0D0F14] rounded-lg transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#3E6A47] hover:bg-[#4A7D55] text-white rounded-lg transition-colors"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
             <span className="text-xs font-semibold hidden sm:inline">Post RFQ</span>
@@ -102,27 +102,27 @@ export default function MobileHeader() {
 
       {/* Mobile Page Title (only on sm+) */}
       <div className="sm:hidden px-4 pb-2.5">
-        <h1 className="text-[#F4F1EA] font-semibold text-sm">{currentPageInfo.title}</h1>
-        <p className="text-[#6B7280] text-xs">{currentPageInfo.subtitle}</p>
+        <h1 className="text-gray-900 font-semibold text-sm">{currentPageInfo.title}</h1>
+        <p className="text-gray-500 text-xs">{currentPageInfo.subtitle}</p>
       </div>
 
       {/* Search Overlay */}
       {showSearch && (
-        <div className="absolute top-full left-0 right-0 bg-[#0D0F14] border-b border-white/5 p-3 shadow-xl">
+        <div className="absolute top-full left-0 right-0 bg-white border-b border-black/5 p-3 shadow-lg">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]/50" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products, suppliers, HS codes..."
-              className="w-full h-10 pl-10 pr-10 bg-[#13161B] border border-white/5 rounded-lg text-[#F4F1EA] placeholder-[#6B7280]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
+              className="w-full h-10 pl-10 pr-10 bg-gray-50 border border-black/5 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A6C] text-sm"
               autoFocus
             />
             <button
               type="button"
               onClick={() => setShowSearch(false)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900"
             >
               <X className="w-4 h-4" />
             </button>
@@ -138,7 +138,7 @@ export default function MobileHeader() {
                   router.push(`/marketplace?search=${encodeURIComponent(term)}`);
                   setShowSearch(false);
                 }}
-                className="px-2.5 py-1 bg-white/5 text-[#6B7280] text-xs rounded-full hover:bg-white/10 hover:text-white transition-colors"
+                className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
               >
                 {term}
               </button>
