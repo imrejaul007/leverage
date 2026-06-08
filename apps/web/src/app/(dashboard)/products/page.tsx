@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Package, Search, Plus, Edit, Trash2, Globe, TrendingUp, CheckCircle } from 'lucide-react';
+import { Package, Search, Plus, Edit, Trash2, Globe, TrendingUp, CheckCircle, Bell, Home, ShoppingCart, FileText, Mail, User } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -29,6 +29,14 @@ const initialProducts: Product[] = [
 
 const categories = ['Food & Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Healthcare', 'Automotive', 'Chemicals', 'Other'];
 const currencies = ['USD', 'EUR', 'GBP', 'AED', 'INR'];
+
+const navItems = [
+  { icon: Home, label: 'Home', href: '/dashboard' },
+  { icon: ShoppingCart, label: 'Browse', href: '/marketplace' },
+  { icon: FileText, label: 'Post RFQ', href: '/rfqs/new', primary: true },
+  { icon: Mail, label: 'Inbox', href: '/marketplace/inbox' },
+  { icon: User, label: 'Account', href: '/settings' },
+];
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -142,165 +150,63 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 relative overflow-hidden">
-      {/* Background decorations - Products/Inventory themed */}
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        {/* Large Globe with Product Routes */}
-        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_70s_linear_infinite]">
-          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
-            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
-            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
-            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
-            <circle cx="200" cy="200" r="90" fill="none" stroke="#154230" strokeWidth="0.5" />
-            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
-            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
-            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
-            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(-60 200 200)" />
-            <line x1="20" y1="200" x2="380" y2="200" stroke="#154230" strokeWidth="0.5" />
-            <line x1="200" y1="20" x2="200" y2="380" stroke="#154230" strokeWidth="0.5" />
-          </svg>
+    <div className="space-y-4 pb-28">
+      {/* Mobile Page Header - Green Gradient */}
+      <div className="bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pt-4 pb-6 -mx-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-white font-bold text-lg">My Products</h1>
+            <p className="text-white/70 text-xs mt-0.5">Connecting Dots to Ports</p>
+          </div>
+          <div className="relative">
+            <Bell className="w-5 h-5 text-white" />
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+              3
+            </span>
+          </div>
         </div>
 
-        {/* Product/Catalog Grid Pattern */}
-        <svg className="absolute top-0 left-0 w-[350px] h-[300px] opacity-[0.05]" viewBox="0 0 350 300">
-          {/* Product boxes grid */}
-          <rect x="20" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="90" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="160" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="230" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="20" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
-          <rect x="90" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
-          <rect x="160" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
-          <rect x="230" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
-          <rect x="20" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="90" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="160" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-          <rect x="230" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
-        </svg>
-
-        {/* Supply Chain Arrows */}
-        <svg className="absolute bottom-10 left-10 w-[200px] h-[100px] opacity-[0.06]" viewBox="0 0 200 100">
-          <rect x="10" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
-          <path d="M55,45 L70,45 L65,40 M70,45 L65,50" fill="none" stroke="#A6824A" strokeWidth="1" />
-          <rect x="75" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
-          <path d="M120,45 L135,45 L130,40 M135,45 L130,50" fill="none" stroke="#A6824A" strokeWidth="1" />
-          <rect x="140" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
-        </svg>
-
-        {/* Floating Product Particles */}
-        {[...Array(18)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-sm"
-            style={{
-              left: `${4 + (i * 5)}%`,
-              top: `${12 + (i % 9) * 10}%`,
-              width: i % 3 === 0 ? '8px' : i % 3 === 1 ? '6px' : '10px',
-              height: i % 3 === 0 ? '8px' : i % 3 === 1 ? '6px' : '10px',
-              backgroundColor: i % 4 === 0 ? '#A6824A' : i % 4 === 1 ? '#154230' : i % 4 === 2 ? '#5D1E21' : '#154230',
-              animation: `pulse ${2 + (i % 3)}s ease-in-out infinite`,
-              animationDelay: `${i * 0.2}s`,
-              opacity: 0.1 + (i % 4) * 0.05,
-            }}
-          />
-        ))}
-
-        {/* Connection Lines */}
-        <svg className="absolute top-1/3 right-0 w-[300px] h-[150px] opacity-[0.05]" viewBox="0 0 300 150">
-          <path d="M0,75 Q75,0 150,75 Q225,150 300,75" fill="none" stroke="#A6824A" strokeWidth="1" />
-          <circle cx="0" cy="75" r="3" fill="#A6824A" />
-          <circle cx="150" cy="75" r="4" fill="#A6824A" />
-          <circle cx="300" cy="75" r="3" fill="#A6824A" />
-        </svg>
-
-        {/* Wave Pattern */}
-        <svg className="absolute bottom-0 left-0 right-0 h-20" viewBox="0 0 1440 80" preserveAspectRatio="none">
-          <path d="M0,40 Q180,0 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#154230" opacity="0.02" />
-        </svg>
-      </div>
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          {/* Package icon */}
-          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
-            <Package className="w-6 h-6 text-white" />
+        {/* LEVERAGE Logo */}
+        <div className="flex items-center gap-2 mb-4">
+          <div className="bg-white/10 rounded-lg px-3 py-1.5">
+            <span className="text-white font-bold text-sm tracking-wide">LEVERAGE</span>
           </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#101111]">My Products</h1>
-            <p className="text-[#4A4A4A] text-sm">{filteredProducts.length} products in catalog</p>
-          </div>
+          <span className="text-white/60 text-xs">CONNECTING DOTS TO PORTS</span>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-lg"
-        >
-          <Plus className="w-4 h-4" />
-          Add Product
-        </button>
-      </div>
 
-      {/* Products Stats Bar */}
-      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
-            <Package className="w-5 h-5 text-[#154230]" />
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="bg-white/10 rounded-xl p-3 text-center">
+            <p className="text-white font-bold text-lg">{products.length}</p>
+            <p className="text-white/60 text-[10px]">Total</p>
           </div>
-          <div>
-            <p className="text-lg font-bold text-[#101111]">{products.length}</p>
-            <p className="text-[#4A4A4A] text-xs">Total</p>
+          <div className="bg-white/10 rounded-xl p-3 text-center">
+            <p className="text-white font-bold text-lg">{products.filter(p => p.status === 'active').length}</p>
+            <p className="text-white/60 text-[10px]">Active</p>
           </div>
-        </div>
-        <div className="h-8 w-px bg-black/5" />
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
-            <CheckCircle className="w-5 h-5 text-[#154230]" />
-          </div>
-          <div>
-            <p className="text-lg font-bold text-[#101111]">{products.filter(p => p.status === 'active').length}</p>
-            <p className="text-[#4A4A4A] text-xs">Active</p>
-          </div>
-        </div>
-        <div className="h-8 w-px bg-black/5" />
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-[#A6824A]" />
-          </div>
-          <div>
-            <p className="text-lg font-bold text-[#101111]">$45.2K</p>
-            <p className="text-[#4A4A4A] text-xs">Total Value</p>
-          </div>
-        </div>
-        <div className="h-8 w-px bg-black/5" />
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-            <Globe className="w-5 h-5 text-[#5D1E21]" />
-          </div>
-          <div>
-            <p className="text-lg font-bold text-[#101111]">8</p>
-            <p className="text-[#4A4A4A] text-xs">Categories</p>
+          <div className="bg-white/10 rounded-xl p-3 text-center">
+            <p className="text-white font-bold text-lg">8</p>
+            <p className="text-white/60 text-[10px]">Categories</p>
           </div>
         </div>
       </div>
 
       {/* Search & Filter */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
           <input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] text-sm"
+            className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm shadow-sm"
           />
-          <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
         </div>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#D8CCBC] text-sm focus:outline-none focus:border-[#C49A6C]"
+          className="w-full h-12 px-4 bg-white border border-black/5 rounded-xl text-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A] shadow-sm appearance-none"
         >
           <option value="all">All Categories</option>
           {categories.map(c => (
@@ -309,14 +215,23 @@ export default function ProductsPage() {
         </select>
       </div>
 
+      {/* Add Product Button */}
+      <button
+        onClick={() => setShowCreateModal(true)}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-md"
+      >
+        <Plus className="w-4 h-4" />
+        Add Product
+      </button>
+
       {/* Loading */}
       {isLoading && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {[1,2,3,4].map(i => (
-            <div key={i} className="card animate-pulse">
-              <div className="aspect-square bg-[#0E3B36]/50 rounded-xl mb-4"></div>
-              <div className="h-5 bg-[#0E3B36]/50 rounded w-3/4 mb-2"></div>
-              <div className="h-6 bg-[#0E3B36]/50 rounded w-1/3"></div>
+            <div key={i} className="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
+              <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3"></div>
+              <div className="h-4 bg-[#E6E2DA] rounded w-3/4 mb-2"></div>
+              <div className="h-6 bg-[#E6E2DA] rounded w-1/3"></div>
             </div>
           ))}
         </div>
@@ -324,12 +239,12 @@ export default function ProductsPage() {
 
       {/* Empty State */}
       {!isLoading && filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">📦</span>
+        <div className="text-center py-12 bg-white rounded-2xl shadow-sm">
+          <div className="w-16 h-16 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Package className="w-8 h-8 text-[#154230]" />
           </div>
-          <p className="text-[#D8CCBC]/50 text-sm mb-4">No products found</p>
-          <button onClick={() => setShowCreateModal(true)} className="text-[#C49A6C] hover:text-[#D4AA82] font-medium text-sm">
+          <p className="text-[#4A4A4A] text-sm mb-4">No products found</p>
+          <button onClick={() => setShowCreateModal(true)} className="text-[#154230] hover:text-[#1d5240] font-semibold text-sm">
             Add your first product
           </button>
         </div>
@@ -337,23 +252,23 @@ export default function ProductsPage() {
 
       {/* Products Grid */}
       {!isLoading && filteredProducts.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {filteredProducts.map(product => (
             <div
               key={product.id}
               onClick={() => setViewingProduct(product)}
-              className="card p-3 sm:p-4 hover:border-[#C49A6C]/30 transition-all cursor-pointer"
+              className="bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer"
             >
-              <div className="aspect-square bg-[#0E3B36]/50 rounded-xl mb-3 flex items-center justify-center">
-                <span className="text-4xl sm:text-5xl opacity-50">📦</span>
+              <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3 flex items-center justify-center">
+                <Package className="w-12 h-12 text-[#154230]/30" />
               </div>
-              <h3 className="text-[#F4F1EA] font-medium text-sm sm:text-base line-clamp-2 mb-1">{product.name}</h3>
-              <p className="text-[#D8CCBC]/50 text-xs mb-2 truncate">{product.category}</p>
+              <h3 className="text-[#101111] font-semibold text-sm line-clamp-2 mb-1">{product.name}</h3>
+              <p className="text-[#4A4A4A] text-xs mb-2 truncate">{product.category}</p>
               <div className="flex items-center justify-between">
-                <span className="text-lg sm:text-xl font-bold text-[#C49A6C]">
+                <span className="text-[#154230] font-bold text-lg">
                   ${product.price.toFixed(2)}
                 </span>
-                <span className={`text-xs ${product.stock < 10 ? 'text-red-400' : 'text-[#D8CCBC]/50'}`}>
+                <span className={`text-xs ${product.stock < 10 ? 'text-[#5D1E21]' : 'text-[#4A4A4A]'}`}>
                   {product.stock} in stock
                 </span>
               </div>
@@ -362,60 +277,119 @@ export default function ProductsPage() {
         </div>
       )}
 
+      {/* Burgundy Bottom Stats Bar */}
+      <div className="fixed bottom-[72px] left-0 right-0 bg-[#5D1E21] px-4 py-3">
+        <div className="flex items-center justify-around">
+          <div className="text-center">
+            <p className="text-white font-bold text-sm">${(products.reduce((acc, p) => acc + p.price * p.stock, 0) / 1000).toFixed(1)}K</p>
+            <p className="text-white/60 text-[10px]">Total Value</p>
+          </div>
+          <div className="h-8 w-px bg-white/20"></div>
+          <div className="text-center">
+            <p className="text-white font-bold text-sm">{products.length}</p>
+            <p className="text-white/60 text-[10px]">Products</p>
+          </div>
+          <div className="h-8 w-px bg-white/20"></div>
+          <div className="text-center">
+            <p className="text-white font-bold text-sm">{products.reduce((acc, p) => acc + p.stock, 0).toLocaleString()}</p>
+            <p className="text-white/60 text-[10px]">Total Stock</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-40">
+        <div className="flex items-center justify-around h-[72px]">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = false;
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`flex flex-col items-center justify-center gap-1 w-16 h-full ${
+                  item.primary ? '' : ''
+                }`}
+              >
+                {item.primary ? (
+                  <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                ) : (
+                  <>
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`} />
+                    <span className={`text-[10px] ${isActive ? 'text-[#154230] font-semibold' : 'text-[#4A4A4A]'}`}>
+                      {item.label}
+                    </span>
+                  </>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
       {/* View Product Modal */}
       {viewingProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Product Details</h2>
-              <button onClick={() => setViewingProduct(null)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
+              <h2 className="text-[#101111] font-bold text-lg">Product Details</h2>
+              <button onClick={() => setViewingProduct(null)} className="text-[#4A4A4A] hover:text-[#101111] text-2xl leading-none">
+                &times;
+              </button>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-[#0E3B36]/50 rounded-xl flex items-center justify-center text-4xl">
-                  📦
+                <div className="w-20 h-20 bg-[#E6E2DA] rounded-xl flex items-center justify-center">
+                  <Package className="w-10 h-10 text-[#154230]/30" />
                 </div>
                 <div>
-                  <h3 className="text-[#F4F1EA] text-lg font-semibold">{viewingProduct.name}</h3>
-                  <p className="text-[#C49A6C] text-sm">SKU: {viewingProduct.sku}</p>
+                  <h3 className="text-[#101111] font-semibold">{viewingProduct.name}</h3>
+                  <p className="text-[#A6824A] text-sm font-medium">SKU: {viewingProduct.sku}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(255,255,255,0.03)] rounded-xl">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-[#E6E2DA] rounded-xl">
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Price</p>
-                  <p className="text-[#C49A6C] text-xl font-bold">${viewingProduct.price.toFixed(2)} {viewingProduct.currency}</p>
+                  <p className="text-[#4A4A4A] text-xs">Price</p>
+                  <p className="text-[#154230] font-bold text-lg">${viewingProduct.price.toFixed(2)} {viewingProduct.currency}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Stock</p>
-                  <p className={`text-xl font-bold ${viewingProduct.stock < 10 ? 'text-red-400' : 'text-[#F4F1EA]'}`}>
+                  <p className="text-[#4A4A4A] text-xs">Stock</p>
+                  <p className={`font-bold text-lg ${viewingProduct.stock < 10 ? 'text-[#5D1E21]' : 'text-[#101111]'}`}>
                     {viewingProduct.stock} units
                   </p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Category</p>
-                  <p className="text-[#F4F1EA]">{viewingProduct.category}</p>
+                  <p className="text-[#4A4A4A] text-xs">Category</p>
+                  <p className="text-[#101111] font-medium text-sm">{viewingProduct.category}</p>
                 </div>
                 <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Min Order</p>
-                  <p className="text-[#F4F1EA]">{viewingProduct.minOrder}</p>
+                  <p className="text-[#4A4A4A] text-xs">Min Order</p>
+                  <p className="text-[#101111] font-medium text-sm">{viewingProduct.minOrder}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-[#D8CCBC]/50 text-xs mb-1">Description</p>
-                <p className="text-[#F4F1EA]">{viewingProduct.description}</p>
+                <p className="text-[#4A4A4A] text-xs mb-1">Description</p>
+                <p className="text-[#101111]">{viewingProduct.description}</p>
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => handleDelete(viewingProduct.id)} className="py-3 px-6 bg-red-500/20 text-red-400 rounded-xl font-medium">
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => handleDelete(viewingProduct.id)}
+                  className="py-3 px-4 bg-[#5D1E21]/10 text-[#5D1E21] rounded-xl font-semibold text-sm flex items-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" />
                   Delete
                 </button>
                 <button
                   onClick={() => { setViewingProduct(null); openEditModal(viewingProduct); }}
-                  className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold"
+                  className="flex-1 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                 >
+                  <Edit className="w-4 h-4" />
                   Edit Product
                 </button>
               </div>
@@ -426,61 +400,112 @@ export default function ProductsPage() {
 
       {/* Create/Edit Modal */}
       {(showCreateModal || showEditModal) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">{showEditModal ? 'Edit Product' : 'Add Product'}</h2>
-              <button onClick={() => { setShowCreateModal(false); setShowEditModal(false); setSelectedProduct(null); resetForm(); }} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
+              <h2 className="text-[#101111] font-bold text-lg">{showEditModal ? 'Edit Product' : 'Add Product'}</h2>
+              <button onClick={() => { setShowCreateModal(false); setShowEditModal(false); setSelectedProduct(null); resetForm(); }} className="text-[#4A4A4A] hover:text-[#101111] text-2xl leading-none">
+                &times;
+              </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Product Name *</label>
-                <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full input" placeholder="Premium Basmati Rice" />
+                <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Product Name *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                  placeholder="Premium Basmati Rice"
+                />
               </div>
               <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">SKU</label>
-                <input type="text" value={formData.sku} onChange={(e) => setFormData({ ...formData, sku: e.target.value })} className="w-full input" placeholder="RICE-1121" />
+                <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">SKU</label>
+                <input
+                  type="text"
+                  value={formData.sku}
+                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                  className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                  placeholder="RICE-1121"
+                />
               </div>
               <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Category</label>
-                <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full input">
+                <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Category</label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm appearance-none"
+                >
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#D8CCBC] text-sm mb-2">Price *</label>
-                  <input type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full input" placeholder="850" />
+                  <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Price *</label>
+                  <input
+                    type="number"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                    placeholder="850"
+                  />
                 </div>
                 <div>
-                  <label className="block text-[#D8CCBC] text-sm mb-2">Currency</label>
-                  <select value={formData.currency} onChange={(e) => setFormData({ ...formData, currency: e.target.value })} className="w-full input">
+                  <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Currency</label>
+                  <select
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                    className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm appearance-none"
+                  >
                     {currencies.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#D8CCBC] text-sm mb-2">Stock</label>
-                  <input type="number" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} className="w-full input" placeholder="500" />
+                  <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Stock</label>
+                  <input
+                    type="number"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                    placeholder="500"
+                  />
                 </div>
                 <div>
-                  <label className="block text-[#D8CCBC] text-sm mb-2">Min Order</label>
-                  <input type="text" value={formData.minOrder} onChange={(e) => setFormData({ ...formData, minOrder: e.target.value })} className="w-full input" placeholder="50 MT" />
+                  <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Min Order</label>
+                  <input
+                    type="text"
+                    value={formData.minOrder}
+                    onChange={(e) => setFormData({ ...formData, minOrder: e.target.value })}
+                    className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                    placeholder="50 MT"
+                  />
                 </div>
               </div>
               <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Description</label>
-                <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full input resize-none" rows={3} placeholder="Product description..." />
+                <label className="block text-[#4A4A4A] text-sm mb-2 font-medium">Description</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm resize-none"
+                  rows={3}
+                  placeholder="Product description..."
+                />
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => { setShowCreateModal(false); setShowEditModal(false); setSelectedProduct(null); resetForm(); }} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => { setShowCreateModal(false); setShowEditModal(false); setSelectedProduct(null); resetForm(); }}
+                  className="flex-1 py-3 bg-[#E6E2DA] text-[#4A4A4A] rounded-xl font-semibold text-sm"
+                >
+                  Cancel
+                </button>
                 <button
                   onClick={showEditModal ? handleUpdate : handleCreate}
                   disabled={!formData.name || !formData.price}
-                  className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50"
+                  className="flex-1 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm disabled:opacity-50"
                 >
                   {showEditModal ? 'Save Changes' : 'Add Product'}
                 </button>
