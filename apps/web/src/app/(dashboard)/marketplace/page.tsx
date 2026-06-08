@@ -211,20 +211,7 @@ export default function MarketplacePage() {
       {/* Desktop Sidebar - Fixed on left */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         <div className="p-6 border-b border-black/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="12" r="2" fill="currentColor" />
-                <circle cx="18" cy="12" r="2" fill="currentColor" />
-                <circle cx="12" cy="6" r="2" fill="currentColor" />
-                <circle cx="12" cy="18" r="2" fill="currentColor" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
-              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-            </div>
-          </div>
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
         </div>
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -275,20 +262,7 @@ export default function MarketplacePage() {
       {/* Mobile Sidebar */}
       <aside className={`lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-white z-50 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-black/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="12" r="2" fill="currentColor" />
-                <circle cx="18" cy="12" r="2" fill="currentColor" />
-                <circle cx="12" cy="6" r="2" fill="currentColor" />
-                <circle cx="12" cy="18" r="2" fill="currentColor" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
-              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-            </div>
-          </div>
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
           <button
             onClick={() => setSidebarOpen(false)}
             className="w-9 h-9 bg-[#E6E2DA] rounded-full flex items-center justify-center"
@@ -343,15 +317,7 @@ export default function MarketplacePage() {
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
-            <div className="w-8 h-8 bg-[#154230] rounded-lg flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="12" r="2" fill="currentColor" />
-                <circle cx="18" cy="12" r="2" fill="currentColor" />
-                <circle cx="12" cy="6" r="2" fill="currentColor" />
-                <circle cx="12" cy="18" r="2" fill="currentColor" />
-              </svg>
-            </div>
-            <span className="text-[#154230] font-bold text-lg">LEVERAGE</span>
+            <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
           </div>
           <div className="flex items-center gap-2">
             <Link href="/rfqs/new" className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">

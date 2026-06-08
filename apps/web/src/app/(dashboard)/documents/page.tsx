@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Plus, Clock, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
 
 interface Document {
@@ -102,20 +103,7 @@ export default function DocumentsPage() {
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         {/* Logo */}
         <div className="p-6 border-b border-black/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="12" r="2" fill="currentColor" />
-                <circle cx="18" cy="12" r="2" fill="currentColor" />
-                <circle cx="12" cy="6" r="2" fill="currentColor" />
-                <circle cx="12" cy="18" r="2" fill="currentColor" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
-              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-            </div>
-          </div>
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
         </div>
 
         {/* Navigation Links */}
@@ -167,18 +155,7 @@ export default function DocumentsPage() {
                 <Menu className="w-6 h-6" />
               </button>
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="6" cy="12" r="2" fill="currentColor" />
-                    <circle cx="18" cy="12" r="2" fill="currentColor" />
-                    <circle cx="12" cy="6" r="2" fill="currentColor" />
-                    <circle cx="12" cy="18" r="2" fill="currentColor" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-white font-bold text-sm tracking-tight">LEVERAGE</p>
-                  <p className="text-white/50 text-[9px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-                </div>
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
               </div>
             </div>
             <button className="relative p-2 text-white">
@@ -200,20 +177,7 @@ export default function DocumentsPage() {
             <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
             <aside className="relative w-72 bg-white h-full flex flex-col shadow-xl">
               <div className="flex items-center justify-between p-6 border-b border-black/5">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="6" cy="12" r="2" fill="currentColor" />
-                      <circle cx="18" cy="12" r="2" fill="currentColor" />
-                      <circle cx="12" cy="6" r="2" fill="currentColor" />
-                      <circle cx="12" cy="18" r="2" fill="currentColor" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
-                    <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-                  </div>
-                </div>
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
                 <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-[#E6E2DA] rounded-lg">
                   <X className="w-5 h-5 text-[#4A4A4A]" />
                 </button>

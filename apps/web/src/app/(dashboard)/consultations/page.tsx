@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, Star, CheckCircle, Calendar, MessageSquare, Bell, Home, FileText, User, X, Menu, Settings, LogOut, Plus, Truck, Package, BarChart3 } from 'lucide-react';
@@ -64,20 +65,7 @@ export default function ConsultationsPage() {
       {/* ============================================ */}
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 z-40">
         <div className="p-6 border-b border-black/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="12" r="2" fill="currentColor" />
-                <circle cx="18" cy="12" r="2" fill="currentColor" />
-                <circle cx="12" cy="6" r="2" fill="currentColor" />
-                <circle cx="12" cy="18" r="2" fill="currentColor" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
-              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-            </div>
-          </div>
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => {
@@ -115,20 +103,7 @@ export default function ConsultationsPage() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileSidebarOpen(false)} />
           <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white z-50 flex flex-col">
             <div className="p-6 border-b border-black/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="6" cy="12" r="2" fill="currentColor" />
-                    <circle cx="18" cy="12" r="2" fill="currentColor" />
-                    <circle cx="12" cy="6" r="2" fill="currentColor" />
-                    <circle cx="12" cy="18" r="2" fill="currentColor" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-[#101111] font-bold text-sm">LEVERAGE</h1>
-                  <p className="text-[#4A4A4A] text-[9px]">CONNECTING DOTS TO PORTS</p>
-                </div>
-              </div>
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
               <button onClick={() => setMobileSidebarOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#E6E2DA]">
                 <X className="w-5 h-5 text-[#4A4A4A]" />
               </button>
@@ -175,17 +150,7 @@ export default function ConsultationsPage() {
               <button onClick={() => setMobileSidebarOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-[#e9e3da] transition-colors">
                 <Menu className="w-5 h-5 text-[#4A4A4A]" />
               </button>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-[#154230] rounded-lg flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="6" cy="12" r="2" fill="currentColor" />
-                    <circle cx="18" cy="12" r="2" fill="currentColor" />
-                    <circle cx="12" cy="6" r="2" fill="currentColor" />
-                    <circle cx="12" cy="18" r="2" fill="currentColor" />
-                  </svg>
-                </div>
-                <span className="text-[#101111] font-bold text-lg sm:text-xl tracking-tight">LEVERAGE</span>
-              </div>
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <button className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-[#e9e3da] transition-colors relative">
@@ -298,18 +263,7 @@ export default function ConsultationsPage() {
           {/* Top Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="6" cy="12" r="2" fill="currentColor" />
-                  <circle cx="18" cy="12" r="2" fill="currentColor" />
-                  <circle cx="12" cy="6" r="2" fill="currentColor" />
-                  <circle cx="12" cy="18" r="2" fill="currentColor" />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-[#101111] font-bold text-xl tracking-tight">LEVERAGE</h1>
-                <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
-              </div>
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-[#e9e3da]">
