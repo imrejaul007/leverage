@@ -73,7 +73,7 @@ export default function MobileHeader() {
           {/* Search Button */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -81,10 +81,10 @@ export default function MobileHeader() {
           {/* Notifications */}
           <Link
             href="/marketplace/inbox"
-            className="relative p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="relative p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#C49A6C] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
               3
             </span>
           </Link>
@@ -92,7 +92,7 @@ export default function MobileHeader() {
           {/* Quick Post */}
           <Link
             href="/rfqs/new"
-            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#3E6A47] hover:bg-[#4A7D55] text-white rounded-lg transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#154230] hover:bg-[#1d5240] text-white rounded-lg transition-colors"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
             <span className="text-xs font-semibold hidden sm:inline">Post RFQ</span>
@@ -102,27 +102,27 @@ export default function MobileHeader() {
 
       {/* Mobile Page Title (only on sm+) */}
       <div className="sm:hidden px-4 pb-2.5">
-        <h1 className="text-gray-900 font-semibold text-sm">{currentPageInfo.title}</h1>
-        <p className="text-gray-500 text-xs">{currentPageInfo.subtitle}</p>
+        <h1 className="text-[#101111] font-semibold text-sm">{currentPageInfo.title}</h1>
+        <p className="text-[#5A5A5A] text-xs">{currentPageInfo.subtitle}</p>
       </div>
 
       {/* Search Overlay */}
       {showSearch && (
         <div className="absolute top-full left-0 right-0 bg-white border-b border-black/5 p-3 shadow-lg">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A5A5A]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products, suppliers, HS codes..."
-              className="w-full h-10 pl-10 pr-10 bg-gray-50 border border-black/5 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A6C] text-sm"
+              className="w-full h-10 pl-10 pr-10 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] text-sm"
               autoFocus
             />
             <button
               type="button"
               onClick={() => setShowSearch(false)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A5A5A] hover:text-[#101111]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -138,7 +138,7 @@ export default function MobileHeader() {
                   router.push(`/marketplace?search=${encodeURIComponent(term)}`);
                   setShowSearch(false);
                 }}
-                className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 hover:text-gray-900 transition-colors"
+                className="px-2.5 py-1 bg-[#E6E2DA] text-[#5A5A5A] text-xs rounded-full hover:bg-[#154230] hover:text-white transition-colors"
               >
                 {term}
               </button>

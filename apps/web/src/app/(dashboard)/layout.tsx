@@ -72,8 +72,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#F7F9FB] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#3E6A47] border-t-transparent"></div>
+      <div className="min-h-screen bg-[#E6E2DA] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#154230] border-t-transparent"></div>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Mobile: Show MobileHeader with hamburger + bottom nav
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-[#F7F9FB]">
+      <div className="min-h-screen bg-[#E6E2DA]">
         <MobileHeader />
         <main className="pt-32 pb-24 px-4">
           {children}
@@ -95,7 +95,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Desktop: Always show sidebar
   return (
-    <div className="min-h-screen bg-[#F7F9FB] flex">
+    <div className="min-h-screen bg-[#E6E2DA] flex">
       {/* Sidebar */}
       <aside className="w-[260px] bg-white border-r border-black/5 flex flex-col fixed h-full">
         {/* Logo */}
@@ -109,7 +109,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-4 border-b border-black/5">
           <Link
             href="/rfqs/new"
-            className="flex items-center justify-center gap-2 w-full h-11 bg-[#3E6A47] text-white font-semibold rounded-xl hover:bg-[#4A7D55] transition-colors"
+            className="flex items-center justify-center gap-2 w-full h-11 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors"
           >
             <Plus className="w-4 h-4" />
             Post New RFQ
@@ -127,13 +127,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-2.5 mx-3 rounded-lg transition-all text-sm ${
                   isActive
-                    ? 'bg-[#3E6A47]/10 text-[#3E6A47] font-medium'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-[#154230] text-white font-medium'
+                    : 'text-[#5A5A5A] hover:bg-[#E6E2DA] hover:text-[#101111]'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-[#3E6A47]' : ''}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
                 <span className="font-medium">{item.name}</span>
-                {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
               </Link>
             );
           })}
@@ -141,15 +140,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* User Profile */}
         <div className="p-4 border-t border-black/5">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50">
-            <div className="w-10 h-10 rounded-lg bg-[#3E6A47] flex items-center justify-center text-white font-bold text-sm">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#E6E2DA]">
+            <div className="w-10 h-10 rounded-lg bg-[#154230] flex items-center justify-center text-white font-bold text-sm">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-gray-900 font-medium text-sm truncate">{user?.firstName || 'User'}</p>
-              <p className="text-gray-500 text-xs truncate">{user?.email || ''}</p>
+              <p className="text-[#101111] font-medium text-sm truncate">{user?.firstName || 'User'}</p>
+              <p className="text-[#5A5A5A] text-xs truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-red-500 hover:bg-gray-100 rounded-lg transition-colors" title="Logout">
+            <button onClick={handleLogout} className="p-2 text-[#5A5A5A] hover:text-[#5D1E21] hover:bg-white rounded-lg transition-colors" title="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -159,33 +158,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content */}
       <div className="flex-1 ml-[260px]">
         {/* Top Header */}
-        <header className="h-[72px] bg-white/80 backdrop-blur-xl border-b border-black/5 flex items-center justify-between px-8 sticky top-0 z-40">
+        <header className="h-[72px] bg-white/90 backdrop-blur-xl border-b border-black/5 flex items-center justify-between px-8 sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-5 h-5 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search products, suppliers, HS codes..."
-                className="w-96 h-11 pl-12 pr-4 bg-gray-50 border border-black/5 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#C49A6C] focus:ring-2 focus:ring-[#C49A6C]/20 transition-all"
+                className="w-96 h-11 pl-12 pr-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Live Status */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-full">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-emerald-600 text-xs font-medium">Live</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#E6E2DA] rounded-full">
+              <span className="w-2 h-2 bg-[#154230] rounded-full animate-pulse"></span>
+              <span className="text-[#154230] text-xs font-medium">Live</span>
             </div>
 
             {/* Notifications */}
-            <button className="relative p-2.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors">
+            <button className="relative p-2.5 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#5D1E21] rounded-full"></span>
             </button>
 
             {/* AI Button */}
-            <Link href="/ai" className="flex items-center gap-2 px-4 py-2 bg-[#C49A6C] text-white font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors">
+            <Link href="/ai" className="flex items-center gap-2 px-4 py-2 bg-[#A6824A] text-white font-semibold rounded-lg hover:bg-[#b89560] transition-colors">
               <Bot className="w-5 h-5" />
               <span className="text-sm">AI Assistant</span>
             </Link>

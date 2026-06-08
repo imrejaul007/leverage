@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -12,7 +13,6 @@ interface Document {
   updatedAt: string;
   fileSize: string;
   description?: string;
-  content?: string;
 }
 
 const initialDocuments: Document[] = [
@@ -24,37 +24,31 @@ const initialDocuments: Document[] = [
   { id: '6', name: 'Insurance Certificate - Marine', type: 'INSURANCE', status: 'APPROVED', createdAt: '2024-01-15', updatedAt: '2024-01-15', fileSize: '78 KB', description: 'Marine insurance for sea cargo' },
 ];
 
-const documentTypes = [
-  { value: 'INVOICE', label: 'Invoice', icon: '📄' },
-  { value: 'BILL_OF_LADING', label: 'Bill of Lading', icon: '📋' },
-  { value: 'PACKING_LIST', label: 'Packing List', icon: '📦' },
-  { value: 'CERTIFICATE_OF_ORIGIN', label: 'Certificate of Origin', icon: '🏛️' },
-  { value: 'CUSTOMS_DECLARATION', label: 'Customs Declaration', icon: '📝' },
-  { value: 'INSURANCE', label: 'Insurance', icon: '🛡️' },
-  { value: 'LC', label: 'Letter of Credit', icon: '📜' },
-  { value: 'OTHER', label: 'Other', icon: '📎' },
-];
+const documentTypes: Record<string, { icon: string; label: string }> = {
+  INVOICE: { icon: '📄', label: 'Invoice' },
+  BILL_OF_LADING: { icon: '📋', label: 'Bill of Lading' },
+  PACKING_LIST: { icon: '📦', label: 'Packing List' },
+  CERTIFICATE_OF_ORIGIN: { icon: '🏛️', label: 'Certificate of Origin' },
+  CUSTOMS_DECLARATION: { icon: '📝', label: 'Customs Declaration' },
+  INSURANCE: { icon: '🛡️', label: 'Insurance' },
+};
+
+const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
+  DRAFT: { color: 'text-[#5A5A5A]', bg: 'bg-[#E6E2DA]', label: 'Draft' },
+  PENDING: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10', label: 'Pending' },
+  VALIDATED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Validated' },
+  APPROVED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Approved' },
+  REJECTED: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Rejected' },
+};
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState('all');
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+  const [statusFilter, setStatusFilter] = useState('all');
   const [viewingDoc, setViewingDoc] = useState<Document | null>(null);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    type: 'INVOICE',
-    description: '',
-    content: '',
-  });
-
   useEffect(() => {
-    // Load from localStorage or use initial data
     const stored = localStorage.getItem('leverage_documents');
     if (stored) {
       setDocuments(JSON.parse(stored));
@@ -65,373 +59,195 @@ export default function DocumentsPage() {
     setIsLoading(false);
   }, []);
 
-  const saveDocuments = (docs: Document[]) => {
-    setDocuments(docs);
-    localStorage.setItem('leverage_documents', JSON.stringify(docs));
-  };
+  const statusFilters = ['all', 'DRAFT', 'PENDING', 'VALIDATED', 'APPROVED', 'REJECTED'];
 
-  const types = ['all', ...new Set(documents.map(d => d.type))];
-
-  const statusColors: Record<string, string> = {
-    DRAFT: 'bg-gray-500/20 text-gray-400',
-    PENDING: 'bg-amber-500/20 text-amber-400',
-    VALIDATED: 'bg-emerald-500/20 text-emerald-400',
-    APPROVED: 'bg-emerald-500/20 text-emerald-400',
-    REJECTED: 'bg-red-500/20 text-red-400',
-  };
-
-  const statusLabels: Record<string, string> = {
-    DRAFT: 'Draft',
-    PENDING: 'Pending',
-    VALIDATED: 'Validated',
-    APPROVED: 'Approved',
-    REJECTED: 'Rejected',
-  };
-
-  const filteredDocuments = documents.filter(doc => {
+  const filteredDocs = documents.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = selectedType === 'all' || doc.type === selectedType;
-    return matchesSearch && matchesType;
+      doc.type.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || doc.status === statusFilter;
+    return matchesSearch && matchesStatus;
   });
 
-  const handleCreate = () => {
-    const newDoc: Document = {
-      id: Date.now().toString(),
-      name: formData.name,
-      type: formData.type,
-      status: 'DRAFT',
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0],
-      fileSize: `${Math.floor(Math.random() * 500) + 50} KB`,
-      description: formData.description,
-      content: formData.content,
-    };
-    saveDocuments([newDoc, ...documents]);
-    setShowCreateModal(false);
-    setFormData({ name: '', type: 'INVOICE', description: '', content: '' });
-  };
-
-  const handleUpdate = () => {
-    if (!selectedDoc) return;
-    const updated = documents.map(d =>
-      d.id === selectedDoc.id
-        ? { ...d, ...formData, updatedAt: new Date().toISOString().split('T')[0] }
-        : d
-    );
-    saveDocuments(updated);
-    setShowEditModal(false);
-    setSelectedDoc(null);
-    setFormData({ name: '', type: 'INVOICE', description: '', content: '' });
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this document?')) {
-      saveDocuments(documents.filter(d => d.id !== id));
-      setViewingDoc(null);
-    }
-  };
-
-  const openEditModal = (doc: Document) => {
-    setSelectedDoc(doc);
-    setFormData({
-      name: doc.name,
-      type: doc.type,
-      description: doc.description || '',
-      content: doc.content || '',
-    });
-    setShowEditModal(true);
+  const stats = {
+    total: documents.length,
+    pending: documents.filter(d => d.status === 'PENDING').length,
+    validated: documents.filter(d => d.status === 'VALIDATED' || d.status === 'APPROVED').length,
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">Documents</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">{filteredDocuments.length} documents</p>
+          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My Documents</h1>
+          <p className="text-[#5A5A5A] text-sm">{documents.length} trade documents</p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="w-full sm:w-auto px-4 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm"
-        >
-          + Create Document
+        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+          <Plus className="w-4 h-4" />
+          New Document
         </button>
       </div>
 
-      {/* Search & Filter */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Search documents..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] text-sm"
-          />
-          <svg className="w-5 h-5 text-[#D8CCBC]/50 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-[#101111]">{stats.total}</p>
+          <p className="text-[#5A5A5A] text-xs">Total</p>
         </div>
-        <select
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-          className="h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#D8CCBC] text-sm focus:outline-none focus:border-[#C49A6C]"
-        >
-          {types.map(type => (
-            <option key={type} value={type}>{type === 'all' ? 'All Types' : type.replace('_', ' ')}</option>
-          ))}
-        </select>
+        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-[#A6824A]">{stats.pending}</p>
+          <p className="text-[#5A5A5A] text-xs">Pending</p>
+        </div>
+        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-[#154230]">{stats.validated}</p>
+          <p className="text-[#5A5A5A] text-xs">Validated</p>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <Search className="w-4 h-4 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+        <input
+          type="text"
+          placeholder="Search documents..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-11 pl-11 pr-4 bg-white border border-black/5 rounded-lg text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] text-sm"
+        />
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+        {statusFilters.map(s => (
+          <button
+            key={s}
+            onClick={() => setStatusFilter(s)}
+            className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+              statusFilter === s
+                ? 'bg-[#154230] text-white'
+                : 'bg-white text-[#5A5A5A] hover:bg-[#E6E2DA] border border-black/5'
+            }`}
+          >
+            {s === 'all' ? 'All' : statusConfig[s]?.label || s}
+          </button>
+        ))}
       </div>
 
       {/* Loading */}
       {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1,2,3].map(i => (
-            <div key={i} className="card animate-pulse">
-              <div className="h-12 w-12 bg-[#0E3B36]/50 rounded-xl mb-4"></div>
-              <div className="h-5 bg-[#0E3B36]/50 rounded w-3/4 mb-3"></div>
-              <div className="h-4 bg-[#0E3B36]/50 rounded w-1/2"></div>
+        <div className="space-y-3">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="bg-white border border-black/5 rounded-xl p-4 animate-pulse">
+              <div className="flex justify-between">
+                <div className="space-y-2">
+                  <div className="h-5 bg-[#E6E2DA] rounded w-48"></div>
+                  <div className="h-4 bg-[#E6E2DA] rounded w-32"></div>
+                </div>
+                <div className="h-8 bg-[#E6E2DA] rounded w-20"></div>
+              </div>
             </div>
           ))}
         </div>
       )}
 
       {/* Empty State */}
-      {!isLoading && filteredDocuments.length === 0 && (
+      {!isLoading && filteredDocs.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">📄</span>
+          <div className="w-14 h-14 bg-[#E6E2DA] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <FileText className="w-7 h-7 text-[#5A5A5A]" />
           </div>
-          <p className="text-[#D8CCBC]/50 text-sm mb-4">No documents found</p>
-          <button onClick={() => setShowCreateModal(true)} className="text-[#C49A6C] hover:text-[#D4AA82] font-medium text-sm">
+          <p className="text-[#5A5A5A] text-sm mb-4">No documents found</p>
+          <button className="text-[#A6824A] hover:underline font-medium text-sm">
             Create your first document
           </button>
         </div>
       )}
 
-      {/* Documents Grid */}
-      {!isLoading && filteredDocuments.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredDocuments.map(doc => {
-            const docType = documentTypes.find(t => t.value === doc.type);
-            return (
-              <div
-                key={doc.id}
-                onClick={() => setViewingDoc(doc)}
-                className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all"
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 bg-[#0E3B36] rounded-xl flex items-center justify-center flex-shrink-0 text-2xl">
-                    {docType?.icon || '📄'}
+      {/* Documents List */}
+      {!isLoading && filteredDocs.length > 0 && (
+        <div className="space-y-2">
+          {filteredDocs.map(doc => (
+            <div
+              key={doc.id}
+              onClick={() => setViewingDoc(doc)}
+              className="bg-white border border-black/5 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-[#E6E2DA] flex items-center justify-center text-xl">
+                  {documentTypes[doc.type]?.icon || '📄'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-[#101111] font-medium text-sm truncate">{doc.name}</h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-[#5A5A5A] text-xs">{documentTypes[doc.type]?.label}</span>
+                    <span className="text-[#5A5A5A] text-xs">•</span>
+                    <span className="text-[#5A5A5A] text-xs">{doc.fileSize}</span>
+                    <span className="text-[#5A5A5A] text-xs">•</span>
+                    <span className="text-[#5A5A5A] text-xs flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {doc.updatedAt}
+                    </span>
                   </div>
-                  <span className={`px-2 py-1 text-xs rounded-full ${statusColors[doc.status]}`}>
-                    {statusLabels[doc.status]}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={`px-2 py-1 rounded-md text-xs font-medium ${statusConfig[doc.status].bg} ${statusConfig[doc.status].color}`}>
+                    {statusConfig[doc.status].label}
                   </span>
                 </div>
-                <h3 className="text-[#F4F1EA] font-semibold mb-1 line-clamp-2 text-sm sm:text-base">{doc.name}</h3>
-                <p className="text-[#D8CCBC]/50 text-xs mb-3">{doc.type.replace('_', ' ')}</p>
-                <div className="flex items-center justify-between text-xs text-[#D8CCBC]/40 pt-3 border-t border-[rgba(255,255,255,0.05)]">
-                  <span>{doc.createdAt}</span>
-                  <span>{doc.fileSize}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Create Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Create Document</h2>
-              <button onClick={() => setShowCreateModal(false)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Document Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full input"
-                  placeholder="e.g., Commercial Invoice - Order #1234"
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Document Type *</label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full input"
-                >
-                  {documentTypes.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full input resize-none"
-                  rows={3}
-                  placeholder="Brief description of the document..."
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Content</label>
-                <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full input resize-none"
-                  rows={6}
-                  placeholder="Document content..."
-                />
-              </div>
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => setShowCreateModal(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">
-                  Cancel
-                </button>
-                <button
-                  onClick={handleCreate}
-                  disabled={!formData.name}
-                  className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50"
-                >
-                  Create
-                </button>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       )}
 
       {/* View Document Modal */}
       {viewingDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Document Details</h2>
-              <button onClick={() => setViewingDoc(null)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-[#0E3B36] rounded-xl flex items-center justify-center text-3xl">
-                  {documentTypes.find(t => t.value === viewingDoc.type)?.icon || '📄'}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setViewingDoc(null)}>
+          <div className="bg-white border border-black/5 rounded-xl p-5 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-[#E6E2DA] flex items-center justify-center text-xl">
+                  {documentTypes[viewingDoc.type]?.icon || '📄'}
                 </div>
                 <div>
-                  <h3 className="text-[#F4F1EA] text-lg font-semibold">{viewingDoc.name}</h3>
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full mt-1 ${statusColors[viewingDoc.status]}`}>
-                    {statusLabels[viewingDoc.status]}
+                  <h2 className="text-lg font-bold text-[#101111]">{viewingDoc.name}</h2>
+                  <p className="text-[#5A5A5A] text-xs">{documentTypes[viewingDoc.type]?.label}</p>
+                </div>
+              </div>
+              <button onClick={() => setViewingDoc(null)} className="p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-[#E6E2DA] rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[#5A5A5A] text-sm">Status</span>
+                  <span className={`px-2 py-1 rounded-md text-xs font-medium ${statusConfig[viewingDoc.status].bg} ${statusConfig[viewingDoc.status].color}`}>
+                    {statusConfig[viewingDoc.status].label}
                   </span>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4 p-4 bg-[rgba(255,255,255,0.03)] rounded-xl">
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Type</p>
-                  <p className="text-[#F4F1EA]">{viewingDoc.type.replace('_', ' ')}</p>
-                </div>
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Created</p>
-                  <p className="text-[#F4F1EA]">{viewingDoc.createdAt}</p>
-                </div>
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Size</p>
-                  <p className="text-[#F4F1EA]">{viewingDoc.fileSize}</p>
-                </div>
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs">Last Updated</p>
-                  <p className="text-[#F4F1EA]">{viewingDoc.updatedAt}</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#5A5A5A]">File Size</span>
+                  <span className="text-[#101111] font-medium">{viewingDoc.fileSize}</span>
                 </div>
               </div>
-              {viewingDoc.description && (
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs mb-1">Description</p>
-                  <p className="text-[#F4F1EA]">{viewingDoc.description}</p>
-                </div>
-              )}
-              {viewingDoc.content && (
-                <div>
-                  <p className="text-[#D8CCBC]/50 text-xs mb-1">Content</p>
-                  <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl text-[#F4F1EA] text-sm whitespace-pre-wrap max-h-40 overflow-y-auto">
-                    {viewingDoc.content}
-                  </div>
-                </div>
-              )}
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => handleDelete(viewingDoc.id)} className="py-3 px-6 bg-red-500/20 text-red-400 rounded-xl font-medium">
-                  Delete
-                </button>
-                <button onClick={() => { setViewingDoc(null); openEditModal(viewingDoc); }} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">
-                  Edit
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Edit Modal */}
-      {showEditModal && selectedDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Edit Document</h2>
-              <button onClick={() => setShowEditModal(false)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Document Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full input"
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Document Type</label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full input"
-                >
-                  {documentTypes.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full input resize-none"
-                  rows={3}
-                />
-              </div>
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Content</label>
-                <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full input resize-none"
-                  rows={6}
-                />
-              </div>
-              <div className="flex gap-3 pt-4">
-                <button onClick={() => setShowEditModal(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">
-                  Cancel
+              {viewingDoc.description && (
+                <div className="p-4 bg-[#E6E2DA] rounded-lg">
+                  <p className="text-[#5A5A5A] text-xs mb-1">Description</p>
+                  <p className="text-[#101111] text-sm">{viewingDoc.description}</p>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#E6E2DA] text-[#101111] font-medium rounded-lg hover:bg-[#D4CCBE] transition-colors text-sm">
+                  <Eye className="w-4 h-4" />
+                  Preview
                 </button>
-                <button
-                  onClick={handleUpdate}
-                  disabled={!formData.name}
-                  className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50"
-                >
-                  Save Changes
+                <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#154230] text-white font-medium rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+                  <Download className="w-4 h-4" />
+                  Download
                 </button>
               </div>
             </div>

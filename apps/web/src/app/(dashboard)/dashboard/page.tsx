@@ -43,11 +43,11 @@ export default function DashboardPage() {
   ];
 
   const activityConfig: Record<string, { icon: React.ReactNode; bg: string; color: string }> = {
-    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#C49A6C]/10', color: 'text-[#C49A6C]' },
-    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-blue-100', color: 'text-blue-600' },
-    payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-emerald-100', color: 'text-emerald-600' },
-    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-gray-100', color: 'text-gray-500' },
-    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-gray-100', color: 'text-gray-500' },
+    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#A6824A]/10', color: 'text-[#A6824A]' },
+    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+    payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#5A5A5A]' },
+    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#5A5A5A]' },
   };
 
   useEffect(() => {
@@ -57,44 +57,44 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F9FB]">
-        <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#C49A6C] border-t-transparent"></div>
+      <div className="min-h-screen flex items-center justify-center bg-[#E6E2DA]">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-[#154230] border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* Top Stats Row */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         {/* Compliance Score */}
-        <div className="bg-white border border-black/5 rounded-xl p-4">
+        <div className="bg-white border border-black/5 rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-xs mb-1">Compliance Score</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.complianceScore}%</p>
+              <p className="text-[#5A5A5A] text-xs mb-1">Compliance Score</p>
+              <p className="text-2xl font-bold text-[#101111]">{stats.complianceScore}%</p>
             </div>
-            <div className="w-14 h-14 rounded-full bg-[#3E6A47]/10 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-[#3E6A47]" />
+            <div className="w-14 h-14 rounded-full bg-[#154230]/10 flex items-center justify-center">
+              <Shield className="w-6 h-6 text-[#154230]" />
             </div>
           </div>
-          <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-[#3E6A47] rounded-full" style={{ width: `${stats.complianceScore}%` }}></div>
+          <div className="mt-4 h-1.5 bg-[#E6E2DA] rounded-full overflow-hidden">
+            <div className="h-full bg-[#154230] rounded-full" style={{ width: `${stats.complianceScore}%` }}></div>
           </div>
         </div>
 
         {/* Trade Volume */}
-        <div className="bg-white border border-black/5 rounded-xl p-4">
+        <div className="bg-white border border-black/5 rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-xs mb-1">Trade Volume</p>
-              <p className="text-2xl font-bold text-gray-900">${stats.tradeVolume}M</p>
+              <p className="text-[#5A5A5A] text-xs mb-1">Trade Volume</p>
+              <p className="text-2xl font-bold text-[#101111]">${stats.tradeVolume}M</p>
             </div>
-            <div className="w-14 h-14 rounded-full bg-[#C49A6C]/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-[#C49A6C]" />
+            <div className="w-14 h-14 rounded-full bg-[#A6824A]/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-[#A6824A]" />
             </div>
           </div>
-          <div className="flex items-center gap-1 mt-2 text-emerald-600 text-xs">
+          <div className="flex items-center gap-1 mt-3 text-[#154230] text-xs font-medium">
             <TrendingUp className="w-3 h-3" />
             +12.5% this month
           </div>
@@ -102,79 +102,79 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-4 gap-2">
-        <Link href="/rfqs" className="bg-white border border-black/5 rounded-xl p-3 hover:shadow-md transition-all">
-          <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center mb-3">
-            <FileText className="w-4 h-4 text-blue-600" />
+      <div className="grid grid-cols-4 gap-3">
+        <Link href="/rfqs" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center mb-3">
+            <FileText className="w-5 h-5 text-[#154230]" />
           </div>
-          <p className="text-xl font-bold text-gray-900">{stats.activeRFQs}</p>
-          <p className="text-gray-500 text-xs mt-0.5">Active RFQs</p>
+          <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
+          <p className="text-[#5A5A5A] text-xs mt-1">Active RFQs</p>
         </Link>
 
-        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-3 hover:shadow-md transition-all">
-          <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center mb-3">
-            <Truck className="w-4 h-4 text-emerald-600" />
+        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center mb-3">
+            <Truck className="w-5 h-5 text-[#154230]" />
           </div>
-          <p className="text-xl font-bold text-gray-900">{stats.shipments}</p>
-          <p className="text-gray-500 text-xs mt-0.5">In Transit</p>
+          <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
+          <p className="text-[#5A5A5A] text-xs mt-1">In Transit</p>
         </Link>
 
-        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-3 hover:shadow-md transition-all">
-          <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center mb-3">
-            <Package className="w-4 h-4 text-gray-500" />
+        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center mb-3">
+            <Package className="w-5 h-5 text-[#5A5A5A]" />
           </div>
-          <p className="text-xl font-bold text-gray-900">{stats.orders}</p>
-          <p className="text-gray-500 text-xs mt-0.5">Total Orders</p>
+          <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
+          <p className="text-[#5A5A5A] text-xs mt-1">Total Orders</p>
         </Link>
 
-        <Link href="/marketplace/inbox" className="bg-white border border-black/5 rounded-xl p-3 hover:shadow-md transition-all relative">
-          <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center mb-3">
-            <MessageSquare className="w-4 h-4 text-purple-600" />
+        <Link href="/marketplace/inbox" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all relative">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
+            <MessageSquare className="w-5 h-5 text-[#5D1E21]" />
           </div>
-          <p className="text-xl font-bold text-gray-900">{stats.unreadMessages}</p>
-          <p className="text-gray-500 text-xs mt-0.5">Messages</p>
+          <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
+          <p className="text-[#5A5A5A] text-xs mt-1">Messages</p>
           {stats.unreadMessages > 0 && (
-            <span className="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full"></span>
+            <span className="absolute top-3 right-3 w-4 h-4 bg-[#5D1E21] rounded-full"></span>
           )}
         </Link>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-4 gap-2">
-        <Link href="/marketplace" className="flex flex-col items-center gap-2 p-3 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-            <Search className="w-5 h-5 text-blue-600" />
+      <div className="grid grid-cols-4 gap-3">
+        <Link href="/marketplace" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
+            <Search className="w-5 h-5 text-[#5A5A5A]" />
           </div>
-          <span className="text-gray-500 text-xs">Browse</span>
+          <span className="text-[#5A5A5A] text-xs font-medium">Browse</span>
         </Link>
 
-        <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-3 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#C49A6C]/10 flex items-center justify-center">
-            <Plus className="w-5 h-5 text-[#C49A6C]" />
+        <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-[#A6824A]" />
           </div>
-          <span className="text-gray-500 text-xs">Post RFQ</span>
+          <span className="text-[#5A5A5A] text-xs font-medium">Post RFQ</span>
         </Link>
 
-        <Link href="/documents" className="flex flex-col items-center gap-2 p-3 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#3E6A47]/10 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-[#3E6A47]" />
+        <Link href="/documents" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-[#154230]" />
           </div>
-          <span className="text-gray-500 text-xs">Documents</span>
+          <span className="text-[#5A5A5A] text-xs font-medium">Documents</span>
         </Link>
 
-        <Link href="/ai" className="flex flex-col items-center gap-2 p-3 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-gray-500" />
+        <Link href="/ai" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
+          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
+            <BarChart3 className="w-5 h-5 text-[#5A5A5A]" />
           </div>
-          <span className="text-gray-500 text-xs">AI Assist</span>
+          <span className="text-[#5A5A5A] text-xs font-medium">AI Assist</span>
         </Link>
       </div>
 
       {/* Recent Activity */}
       <div className="bg-white border border-black/5 rounded-xl overflow-hidden">
         <div className="p-4 border-b border-black/5 flex items-center justify-between">
-          <h2 className="text-gray-900 font-semibold text-sm">Recent Activity</h2>
-          <Link href="/marketplace/inbox" className="text-[#C49A6C] text-xs font-medium flex items-center gap-1">
+          <h2 className="text-[#101111] font-semibold text-sm">Recent Activity</h2>
+          <Link href="/marketplace/inbox" className="text-[#A6824A] text-xs font-medium flex items-center gap-1">
             View All <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -184,22 +184,22 @@ export default function DashboardPage() {
             <Link
               key={activity.id}
               href={activity.link}
-              className="flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 hover:bg-[#E6E2DA]/50 transition-colors"
             >
-              <div className={`w-9 h-9 rounded-lg ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
+              <div className={`w-10 h-10 rounded-lg ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
                 {activityConfig[activity.type]?.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-sm ${activity.status === 'unread' ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+                <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-medium' : 'text-[#5A5A5A]'}`}>
                   {activity.text}
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <Clock className="w-3 h-3 text-gray-400" />
-                  <span className="text-gray-400 text-xs">{activity.time}</span>
+                  <Clock className="w-3 h-3 text-[#5A5A5A]/50" />
+                  <span className="text-[#5A5A5A] text-xs">{activity.time}</span>
                 </div>
               </div>
               {activity.status === 'unread' && (
-                <div className="w-1.5 h-1.5 bg-[#C49A6C] rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-[#A6824A] rounded-full"></div>
               )}
             </Link>
           ))}
@@ -207,42 +207,42 @@ export default function DashboardPage() {
       </div>
 
       {/* Marketplace CTA */}
-      <Link href="/marketplace" className="block bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
+      <Link href="/marketplace" className="block bg-[#154230] rounded-xl p-5 hover:opacity-90 transition-opacity">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
+              <Briefcase className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-gray-900 font-semibold text-sm">Global Marketplace</h3>
-              <p className="text-gray-500 text-xs">500+ verified suppliers</p>
+              <h3 className="text-white font-semibold text-sm">Global Marketplace</h3>
+              <p className="text-white/70 text-xs">500+ verified suppliers</p>
             </div>
           </div>
-          <ArrowRight className="w-5 h-5 text-gray-400" />
+          <ArrowRight className="w-5 h-5 text-white/70" />
         </div>
       </Link>
 
       {/* Document Status */}
-      <div className="bg-white border border-black/5 rounded-xl p-4">
+      <div className="bg-white border border-black/5 rounded-xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-gray-900 font-semibold text-sm">Document Status</h2>
-          <Link href="/documents" className="text-[#C49A6C] text-xs font-medium">Manage</Link>
+          <h2 className="text-[#101111] font-semibold text-sm">Document Status</h2>
+          <Link href="/documents" className="text-[#A6824A] text-xs font-medium">Manage</Link>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <CheckCircle className="w-5 h-5 text-emerald-600 mx-auto mb-2" />
-            <p className="text-lg font-bold text-gray-900">{stats.documents}</p>
-            <p className="text-gray-500 text-xs">Verified</p>
+          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
+            <CheckCircle className="w-5 h-5 text-[#154230] mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#101111]">{stats.documents}</p>
+            <p className="text-[#5A5A5A] text-xs">Verified</p>
           </div>
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <AlertCircle className="w-5 h-5 text-amber-500 mx-auto mb-2" />
-            <p className="text-lg font-bold text-gray-900">5</p>
-            <p className="text-gray-500 text-xs">Pending</p>
+          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
+            <AlertCircle className="w-5 h-5 text-[#A6824A] mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#101111]">5</p>
+            <p className="text-[#5A5A5A] text-xs">Pending</p>
           </div>
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <Clock className="w-5 h-5 text-blue-500 mx-auto mb-2" />
-            <p className="text-lg font-bold text-gray-900">12</p>
-            <p className="text-gray-500 text-xs">Processing</p>
+          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
+            <Clock className="w-5 h-5 text-[#5A5A5A] mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#101111]">12</p>
+            <p className="text-[#5A5A5A] text-xs">Processing</p>
           </div>
         </div>
       </div>

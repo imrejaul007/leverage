@@ -57,10 +57,10 @@ export default function MobileNav() {
                   href={item.href}
                   className="flex flex-col items-center justify-center -mt-5"
                 >
-                  <div className="w-12 h-12 rounded-full bg-[#3E6A47] flex items-center justify-center shadow-lg shadow-[#3E6A47]/20">
+                  <div className="w-12 h-12 rounded-full bg-[#154230] flex items-center justify-center shadow-lg">
                     <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
-                  <span className="text-[9px] text-[#3E6A47] font-semibold mt-1">
+                  <span className="text-[9px] text-[#154230] font-semibold mt-1">
                     {item.name}
                   </span>
                 </Link>
@@ -75,22 +75,19 @@ export default function MobileNav() {
                   isActive ? 'scale-105' : ''
                 }`}
               >
-                <div className={`relative ${isActive ? 'text-[#3E6A47]' : 'text-gray-400'}`}>
+                <div className={`relative ${isActive ? 'text-[#154230]' : 'text-[#5A5A5A]'}`}>
                   <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.name === 'Inbox' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                       3
                     </span>
                   )}
                 </div>
                 <span className={`text-[9px] font-medium ${
-                  isActive ? 'text-[#3E6A47] font-semibold' : 'text-gray-400'
+                  isActive ? 'text-[#154230] font-semibold' : 'text-[#5A5A5A]'
                 }`}>
                   {item.name}
                 </span>
-                {isActive && (
-                  <span className="absolute bottom-0 w-1 h-1 bg-[#3E6A47] rounded-full" />
-                )}
               </Link>
             );
           })}
@@ -100,7 +97,7 @@ export default function MobileNav() {
       {/* More Menu Button */}
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#C49A6C] rounded-full flex items-center justify-center shadow-lg border-2 border-white"
+        className="fixed bottom-16 right-4 z-50 w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center shadow-lg border-2 border-white"
       >
         <svg
           className={`w-5 h-5 text-white transition-transform ${showMenu ? 'rotate-45' : ''}`}
@@ -118,8 +115,8 @@ export default function MobileNav() {
         <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
           <div className="absolute bottom-20 left-4 right-4 bg-white rounded-2xl border border-black/5 shadow-2xl overflow-hidden">
             <div className="p-3 border-b border-black/5">
-              <h3 className="text-gray-900 font-semibold text-sm">Trade Menu</h3>
-              <p className="text-gray-500 text-xs">Quick access to all features</p>
+              <h3 className="text-[#101111] font-semibold text-sm">Trade Menu</h3>
+              <p className="text-[#5A5A5A] text-xs">Quick access to all features</p>
             </div>
             <div className="grid grid-cols-3 gap-1.5 p-2.5">
               {secondaryNavItems.map((item) => {
@@ -132,12 +129,12 @@ export default function MobileNav() {
                     onClick={() => setShowMenu(false)}
                     className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-colors ${
                       isActive
-                        ? 'bg-[#3E6A47]/10 text-[#3E6A47]'
-                        : 'text-gray-500 hover:bg-gray-50'
+                        ? 'bg-[#154230]/10 text-[#154230]'
+                        : 'text-[#5A5A5A] hover:bg-[#E6E2DA]'
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      isActive ? 'bg-[#3E6A47]/10' : 'bg-gray-100'
+                      isActive ? 'bg-[#154230]/10' : 'bg-[#E6E2DA]'
                     }`}>
                       <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                     </div>
