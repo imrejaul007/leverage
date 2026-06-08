@@ -43,8 +43,8 @@ export default function DashboardPage() {
   ];
 
   const activityConfig: Record<string, { icon: React.ReactNode; bg: string; color: string }> = {
-    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#5D1E21]/10', color: 'text-[#5D1E21]' },
-    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#5D1E21]/10', color: 'text-[#5D1E21]' },
+    quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
     payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
     document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
     order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
@@ -65,92 +65,92 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Stats Row */}
+      {/* Top Stats Row - 60% Emerald Green, 40% Burgundy */}
       <div className="grid grid-cols-2 gap-4">
-        {/* Compliance Score */}
-        <div className="bg-white border border-black/5 rounded-xl p-5">
+        {/* Compliance Score - Emerald Green */}
+        <div className="bg-[#154230] rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#4A4A4A] text-xs mb-1">Compliance Score</p>
-              <p className="text-2xl font-bold text-[#101111]">{stats.complianceScore}%</p>
+              <p className="text-white/70 text-xs mb-1">Compliance Score</p>
+              <p className="text-2xl font-bold text-white">{stats.complianceScore}%</p>
             </div>
-            <div className="w-14 h-14 rounded-full bg-[#154230]/10 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-[#154230]" />
+            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
             </div>
           </div>
-          <div className="mt-4 h-1.5 bg-[#E6E2DA] rounded-full overflow-hidden">
-            <div className="h-full bg-[#154230] rounded-full" style={{ width: `${stats.complianceScore}%` }}></div>
+          <div className="mt-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
+            <div className="h-full bg-white rounded-full" style={{ width: `${stats.complianceScore}%` }}></div>
           </div>
         </div>
 
-        {/* Trade Volume */}
-        <div className="bg-white border border-black/5 rounded-xl p-5">
+        {/* Trade Volume - Burgundy */}
+        <div className="bg-[#5D1E21] rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#4A4A4A] text-xs mb-1">Trade Volume</p>
-              <p className="text-2xl font-bold text-[#101111]">${stats.tradeVolume}M</p>
+              <p className="text-white/70 text-xs mb-1">Trade Volume</p>
+              <p className="text-2xl font-bold text-white">${stats.tradeVolume}M</p>
             </div>
-            <div className="w-14 h-14 rounded-full bg-[#5D1E21]/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-[#5D1E21]" />
+            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-white" />
             </div>
           </div>
-          <div className="flex items-center gap-1 mt-3 text-[#154230] text-xs font-medium">
+          <div className="flex items-center gap-1 mt-3 text-white/90 text-xs font-medium">
             <TrendingUp className="w-3 h-3" />
             +12.5% this month
           </div>
         </div>
       </div>
 
-      {/* Quick Stats Grid */}
+      {/* Quick Stats Grid - 60% Emerald, 40% mixed */}
       <div className="grid grid-cols-4 gap-3">
-        <Link href="/rfqs" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
-            <FileText className="w-5 h-5 text-[#5D1E21]" />
+        <Link href="/rfqs" className="bg-[#154230] rounded-xl p-4 hover:opacity-90 transition-opacity">
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <FileText className="w-5 h-5 text-white" />
           </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
-          <p className="text-[#4A4A4A] text-xs mt-1">Active RFQs</p>
+          <p className="text-2xl font-bold text-white">{stats.activeRFQs}</p>
+          <p className="text-white/70 text-xs mt-1">Active RFQs</p>
         </Link>
 
-        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center mb-3">
-            <Truck className="w-5 h-5 text-[#154230]" />
+        <Link href="/orders" className="bg-[#154230] rounded-xl p-4 hover:opacity-90 transition-opacity">
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <Truck className="w-5 h-5 text-white" />
           </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
-          <p className="text-[#4A4A4A] text-xs mt-1">In Transit</p>
+          <p className="text-2xl font-bold text-white">{stats.shipments}</p>
+          <p className="text-white/70 text-xs mt-1">In Transit</p>
         </Link>
 
-        <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center mb-3">
-            <Package className="w-5 h-5 text-[#4A4A4A]" />
+        <Link href="/orders" className="bg-[#5D1E21] rounded-xl p-4 hover:opacity-90 transition-opacity">
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <Package className="w-5 h-5 text-white" />
           </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
-          <p className="text-[#4A4A4A] text-xs mt-1">Total Orders</p>
+          <p className="text-2xl font-bold text-white">{stats.orders}</p>
+          <p className="text-white/70 text-xs mt-1">Total Orders</p>
         </Link>
 
-        <Link href="/marketplace/inbox" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all relative">
-          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
-            <MessageSquare className="w-5 h-5 text-[#5D1E21]" />
+        <Link href="/marketplace/inbox" className="bg-[#5D1E21] rounded-xl p-4 hover:opacity-90 transition-opacity relative">
+          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+            <MessageSquare className="w-5 h-5 text-white" />
           </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
-          <p className="text-[#4A4A4A] text-xs mt-1">Messages</p>
+          <p className="text-2xl font-bold text-white">{stats.unreadMessages}</p>
+          <p className="text-white/70 text-xs mt-1">Messages</p>
           {stats.unreadMessages > 0 && (
-            <span className="absolute top-3 right-3 w-4 h-4 bg-[#5D1E21] rounded-full"></span>
+            <span className="absolute top-3 right-3 w-4 h-4 bg-white rounded-full"></span>
           )}
         </Link>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Emerald Green buttons */}
       <div className="grid grid-cols-4 gap-3">
         <Link href="/marketplace" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
-            <Search className="w-5 h-5 text-[#4A4A4A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Search className="w-5 h-5 text-[#154230]" />
           </div>
           <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
         </Link>
 
         <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-            <Plus className="w-5 h-5 text-[#5D1E21]" />
+          <div className="w-10 h-10 rounded-lg bg-[#154230] flex items-center justify-center">
+            <Plus className="w-5 h-5 text-white" />
           </div>
           <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
         </Link>
@@ -163,8 +163,8 @@ export default function DashboardPage() {
         </Link>
 
         <Link href="/ai" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#4A4A4A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <BarChart3 className="w-5 h-5 text-[#154230]" />
           </div>
           <span className="text-[#4A4A4A] text-xs font-medium">AI Assist</span>
         </Link>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
       <div className="bg-white border border-black/5 rounded-xl overflow-hidden">
         <div className="p-4 border-b border-black/5 flex items-center justify-between">
           <h2 className="text-[#101111] font-semibold text-sm">Recent Activity</h2>
-          <Link href="/marketplace/inbox" className="text-[#5D1E21] text-xs font-medium flex items-center gap-1">
+          <Link href="/marketplace/inbox" className="text-[#154230] text-xs font-medium flex items-center gap-1">
             View All <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Marketplace CTA */}
+      {/* Marketplace CTA - Emerald Green */}
       <Link href="/marketplace" className="block bg-[#154230] rounded-xl p-5 hover:opacity-90 transition-opacity">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -222,25 +222,25 @@ export default function DashboardPage() {
         </div>
       </Link>
 
-      {/* Document Status */}
+      {/* Document Status - 60% Emerald, 40% Burgundy */}
       <div className="bg-white border border-black/5 rounded-xl p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[#101111] font-semibold text-sm">Document Status</h2>
-          <Link href="/documents" className="text-[#5D1E21] text-xs font-medium">Manage</Link>
+          <Link href="/documents" className="text-[#154230] text-xs font-medium">Manage</Link>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
+          <div className="text-center p-3 bg-[#154230]/10 rounded-lg">
             <CheckCircle className="w-5 h-5 text-[#154230] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">{stats.documents}</p>
             <p className="text-[#4A4A4A] text-xs">Verified</p>
           </div>
-          <div className="text-center p-3 bg-[#5D1E21]/5 rounded-lg">
+          <div className="text-center p-3 bg-[#5D1E21]/10 rounded-lg">
             <AlertCircle className="w-5 h-5 text-[#5D1E21] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">5</p>
             <p className="text-[#4A4A4A] text-xs">Pending</p>
           </div>
-          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
-            <Clock className="w-5 h-5 text-[#4A4A4A] mx-auto mb-2" />
+          <div className="text-center p-3 bg-[#154230]/10 rounded-lg">
+            <Clock className="w-5 h-5 text-[#154230] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">12</p>
             <p className="text-[#4A4A4A] text-xs">Processing</p>
           </div>
