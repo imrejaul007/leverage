@@ -19,7 +19,7 @@ const sidebarLinks = [
 const bottomNavLinks = [
   { href: '/dashboard', icon: Home, label: 'Home' },
   { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Link, label: 'Post RFQ', primary: true },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
   { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
   { href: '/account', icon: User, label: 'Account' },
 ];
