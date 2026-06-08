@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3 } from 'lucide-react';
 
 interface ChartData {
   label: string;
   value: number;
 }
-
-const chartColors = ['#C49A6C', '#0E3B36', '#D4AA82', '#F4F1EA', '#81C784', '#64B5F6'];
 
 export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState('30d');
@@ -25,7 +24,6 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     setIsLoading(true);
-    // Generate mock data based on date range
     const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
     const revenue: ChartData[] = [];
     const orders: ChartData[] = [];
@@ -42,7 +40,6 @@ export default function AnalyticsPage() {
     setRevenueData(revenue);
     setOrdersData(orders);
 
-    // Update totals based on range
     const multiplier = days / 30;
     setStats({
       totalRevenue: Math.floor(847500 * multiplier),
@@ -58,162 +55,180 @@ export default function AnalyticsPage() {
     { name: 'Industrial Sensors X200', sales: 1250, revenue: 374625 },
     { name: 'Premium Steel Bearings', sales: 890, revenue: 79605 },
     { name: 'LED Display Module', sales: 720, revenue: 32400 },
-    { name: 'Hydraulic Pump HP-500', sales: 145, revenue: 181250 },
-    { name: 'Safety Gloves (Box)', sales: 2100, revenue: 52479 },
+    { name: 'Power Converter 500W', sales: 580, revenue: 29000 },
   ];
 
   const topMarkets = [
-    { country: 'United States', revenue: 425000, percentage: 50 },
-    { country: 'Germany', revenue: 170000, percentage: 20 },
-    { country: 'United Kingdom', revenue: 127125, percentage: 15 },
-    { country: 'Japan', revenue: 84750, percentage: 10 },
-    { country: 'Australia', revenue: 40625, percentage: 5 },
+    { country: 'United States', value: 285000, percentage: 34 },
+    { country: 'Germany', value: 156000, percentage: 18 },
+    { country: 'UAE', value: 124000, percentage: 15 },
+    { country: 'Singapore', value: 98000, percentage: 12 },
+    { country: 'UK', value: 72000, percentage: 8 },
   ];
 
   const maxRevenue = Math.max(...revenueData.map(d => d.value));
   const maxOrders = Math.max(...ordersData.map(d => d.value));
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#081512] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#C49A6C] border-t-transparent"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#F4F1EA]">Analytics</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">Track your business performance</p>
+          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Analytics</h1>
+          <p className="text-[#4A4A4A] text-sm">Track your trade performance</p>
         </div>
-        <select value={dateRange} onChange={(e) => setDateRange(e.target.value)} className="h-10 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] text-sm focus:outline-none focus:border-[#C49A6C]">
-          <option value="7d">Last 7 days</option>
-          <option value="30d">Last 30 days</option>
-          <option value="90d">Last 90 days</option>
-        </select>
+        <div className="flex gap-1 bg-white border border-black/5 rounded-lg p-1">
+          {['7d', '30d', '90d'].map(range => (
+            <button
+              key={range}
+              onClick={() => setDateRange(range)}
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                dateRange === range ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+              }`}
+            >
+              {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, change: '+12.5%', up: true },
-          { label: 'Orders', value: stats.orders.toLocaleString(), change: '+8.2%', up: true },
-          { label: 'Avg. Order Value', value: `$${stats.avgOrderValue.toLocaleString()}`, change: '+4.1%', up: true },
-          { label: 'Active Products', value: stats.activeProducts.toString(), change: '+15', up: true },
-        ].map((stat, i) => (
-          <div key={i} className="card">
-            <p className="text-[#D8CCBC]/50 text-xs mb-2">{stat.label}</p>
-            <p className="text-2xl font-bold text-[#F4F1EA]">{stat.value}</p>
-            <div className="flex items-center gap-1 mt-2">
-              <svg className={`w-4 h-4 ${stat.up ? 'text-emerald-400' : 'text-red-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.up ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'} />
-              </svg>
-              <span className={`text-xs ${stat.up ? 'text-emerald-400' : 'text-red-400'}`}>{stat.change}</span>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-[#154230]" />
             </div>
+            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
+              <TrendingUp className="w-3 h-3" /> +12.5%
+            </span>
           </div>
-        ))}
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Chart */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Revenue Trend</h2>
-          <div className="h-64 flex items-end gap-1">
-            {revenueData.map((data, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center">
-                <div
-                  className="w-full bg-gradient-to-t from-[#0E3B36] to-[#C49A6C] rounded-t transition-all duration-300 hover:opacity-80"
-                  style={{ height: `${(data.value / maxRevenue) * 100}%` }}
-                  title={`$${data.value.toLocaleString()}`}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-4 text-[#D8CCBC]/50 text-xs overflow-x-auto">
-            {revenueData.filter((_, i) => i % Math.ceil(revenueData.length / 7) === 0).map((d, i) => (
-              <span key={i}>{d.label}</span>
-            ))}
-          </div>
+          <p className="text-2xl font-bold text-[#101111]">${(stats.totalRevenue / 1000).toFixed(0)}K</p>
+          <p className="text-[#4A4A4A] text-xs">Total Revenue</p>
         </div>
 
-        {/* Orders Chart */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Orders Trend</h2>
-          <div className="h-64 flex items-end gap-1">
-            {ordersData.map((data, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center">
-                <div
-                  className="w-full bg-gradient-to-t from-[#0E3B36] to-[#D4AA82] rounded-t transition-all duration-300 hover:opacity-80"
-                  style={{ height: `${(data.value / maxOrders) * 100}%` }}
-                  title={data.value.toString()}
-                />
-              </div>
-            ))}
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-[#A6824A]" />
+            </div>
+            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
+              <TrendingUp className="w-3 h-3" /> +8.3%
+            </span>
           </div>
-          <div className="flex justify-between mt-4 text-[#D8CCBC]/50 text-xs overflow-x-auto">
-            {ordersData.filter((_, i) => i % Math.ceil(ordersData.length / 7) === 0).map((d, i) => (
-              <span key={i}>{d.label}</span>
-            ))}
+          <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
+          <p className="text-[#4A4A4A] text-xs">Total Orders</p>
+        </div>
+
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-[#154230]" />
+            </div>
+            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
+              <TrendingUp className="w-3 h-3" /> +5.1%
+            </span>
           </div>
+          <p className="text-2xl font-bold text-[#101111]">${stats.avgOrderValue}</p>
+          <p className="text-[#4A4A4A] text-xs">Avg Order Value</p>
+        </div>
+
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+              <Package className="w-5 h-5 text-[#A6824A]" />
+            </div>
+            <span className="text-[#4A4A4A] text-xs">Active</span>
+          </div>
+          <p className="text-2xl font-bold text-[#101111]">{stats.activeProducts}</p>
+          <p className="text-[#4A4A4A] text-xs">Active Products</p>
         </div>
       </div>
 
-      {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Revenue Chart */}
+      <div className="bg-white border border-black/5 rounded-xl p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[#101111] font-semibold text-sm">Revenue Trend</h2>
+          <span className="text-[#154230] text-xs font-medium">${(stats.totalRevenue / 1000).toFixed(0)}K total</span>
+        </div>
+        <div className="h-48 flex items-end gap-1">
+          {revenueData.map((item, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                className="w-full bg-[#154230] rounded-t transition-all"
+                style={{ height: `${(item.value / maxRevenue) * 100}%`, minHeight: '4px' }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-2 text-[#4A4A4A] text-xs">
+          <span>{revenueData[0]?.label}</span>
+          <span>{revenueData[revenueData.length - 1]?.label}</span>
+        </div>
+      </div>
+
+      {/* Two Column Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Top Products */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Top Products</h2>
-          <div className="space-y-4">
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <h2 className="text-[#101111] font-semibold text-sm mb-3">Top Products</h2>
+          <div className="space-y-2">
             {topProducts.map((product, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <span className="text-[#C49A6C] font-bold w-6">{i + 1}</span>
-                <div className="flex-1">
-                  <p className="text-[#F4F1EA] font-medium">{product.name}</p>
-                  <div className="flex items-center gap-4 mt-1">
-                    <span className="text-[#D8CCBC]/50 text-sm">{product.sales} sales</span>
-                    <div className="flex-1 h-2 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#C49A6C] rounded-full"
-                        style={{ width: `${(product.revenue / topProducts[0].revenue) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-[#C49A6C] font-medium text-sm">${(product.revenue / 1000).toFixed(0)}K</span>
-                  </div>
+              <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#E6E2DA] transition-colors">
+                <span className="w-6 h-6 rounded bg-[#E6E2DA] text-[#4A4A4A] text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#101111] text-sm font-medium truncate">{product.name}</p>
+                  <p className="text-[#4A4A4A] text-xs">{product.sales} sales</p>
                 </div>
+                <span className="text-[#154230] text-sm font-semibold">${(product.revenue / 1000).toFixed(0)}K</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Top Markets */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Top Markets</h2>
-          <div className="space-y-4">
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <h2 className="text-[#101111] font-semibold text-sm mb-3">Top Markets</h2>
+          <div className="space-y-3">
             {topMarkets.map((market, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <span className="text-[#C49A6C] font-bold w-6">{i + 1}</span>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-[#F4F1EA]">{market.country}</p>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[#D8CCBC]/50 text-sm">{market.percentage}%</span>
-                      <span className="text-[#C49A6C] font-medium">${(market.revenue / 1000).toFixed(0)}K</span>
-                    </div>
-                  </div>
-                  <div className="h-2 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${market.percentage}%`, backgroundColor: chartColors[i] || '#C49A6C' }}
-                    />
-                  </div>
+              <div key={i}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[#101111] text-sm">{market.country}</span>
+                  <span className="text-[#4A4A4A] text-xs">${(market.value / 1000).toFixed(0)}K ({market.percentage}%)</span>
+                </div>
+                <div className="h-2 bg-[#E6E2DA] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[#154230] rounded-full transition-all"
+                    style={{ width: `${market.percentage}%` }}
+                  />
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Orders Chart */}
+      <div className="bg-white border border-black/5 rounded-xl p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[#101111] font-semibold text-sm">Orders Trend</h2>
+          <span className="text-[#A6824A] text-xs font-medium">{stats.orders} orders</span>
+        </div>
+        <div className="h-32 flex items-end gap-1">
+          {ordersData.map((item, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                className="w-full bg-[#A6824A] rounded-t transition-all"
+                style={{ height: `${(item.value / maxOrders) * 100}%`, minHeight: '4px' }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-2 text-[#4A4A4A] text-xs">
+          <span>{ordersData[0]?.label}</span>
+          <span>{ordersData[ordersData.length - 1]?.label}</span>
         </div>
       </div>
     </div>

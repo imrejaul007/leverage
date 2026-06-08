@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Search, FileText, Shield, CheckCircle, AlertTriangle, Copy, Download, X } from 'lucide-react';
 
 interface HSCode {
   code: string;
@@ -17,7 +18,7 @@ const hsCodes: HSCode[] = [
   { code: '8471.70', description: 'Storage units', duty: '0%', origin: 'USA' },
   { code: '1006.30', description: 'Semi-milled or wholly milled rice', duty: '6%', origin: 'USA' },
   { code: '5201.00', description: 'Cotton, not carded or combed', duty: '4.5%', origin: 'USA' },
-  { code: '8542.31', description: 'Electronic integrated circuits - processors and controllers', duty: '0%', origin: 'USA' },
+  { code: '8542.31', description: 'Electronic integrated circuits - processors', duty: '0%', origin: 'USA' },
   { code: '8542.39', description: 'Electronic integrated circuits - other', duty: '0%', origin: 'USA' },
   { code: '7210.41', description: 'Flat-rolled iron or non-alloy steel, width >= 600mm', duty: '20%', origin: 'USA' },
   { code: '3004.90', description: 'Medicaments, measured doses', duty: '0%', origin: 'USA' },
@@ -36,168 +37,238 @@ const countries = [
 export default function CompliancePage() {
   const [activeTab, setActiveTab] = useState('hs-codes');
   const [searchQuery, setSearchQuery] = useState('');
-  const [hsCodeResults, setHsCodeResults] = useState<HSCode[]>([]);
   const [selectedHsCode, setSelectedHsCode] = useState<HSCode | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const [calcForm, setCalcForm] = useState({ origin: '', destination: '', hsCode: '', value: '' });
-  const [calcResult, setCalcResult] = useState<{ duty: number; vat: number; processingFee: number; total: number } | null>(null);
+  const filteredCodes = hsCodes.filter(code =>
+    code.code.includes(searchQuery) ||
+    code.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const [sanctionQuery, setSanctionQuery] = useState('');
-  const [sanctionResult, setSanctionResult] = useState<'clear' | 'warning' | null>(null);
-
-  const handleSearchHsCode = () => {
-    if (!searchQuery) { setHsCodeResults(hsCodes); return; }
-    const filtered = hsCodes.filter(hs => hs.code.includes(searchQuery) || hs.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    setHsCodeResults(filtered);
+  const handleCopy = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
-
-  const handleDutyCalculate = () => {
-    if (!calcForm.origin || !calcForm.destination || !calcForm.hsCode || !calcForm.value) return;
-    const value = parseFloat(calcForm.value);
-    const hsCode = hsCodes.find(h => h.code === calcForm.hsCode) || hsCodes[0];
-    const dutyRate = parseFloat(hsCode.duty.replace('%', '')) / 100;
-    const duty = value * dutyRate;
-    const vat = (value + duty) * 0.1;
-    const processingFee = 50;
-    setCalcResult({ duty, vat, processingFee, total: duty + vat + processingFee });
-  };
-
-  const handleSanctionCheck = () => {
-    if (!sanctionQuery.trim()) return;
-    const blockedTerms = ['sanction', 'prohibited', 'restricted', 'blocked'];
-    const warnings = ['iran', 'north korea', 'syria', 'russia', 'crimea'];
-    const query = sanctionQuery.toLowerCase();
-    if (blockedTerms.some(term => query.includes(term))) setSanctionResult('warning');
-    else if (warnings.some(term => query.includes(term))) setSanctionResult('warning');
-    else setSanctionResult('clear');
-  };
-
-  if (hsCodeResults.length === 0 && searchQuery === '') setHsCodeResults(hsCodes);
 
   return (
-    <div className="space-y-6">
-      <div><h1 className="text-2xl font-bold text-[#F4F1EA]">Trade Compliance</h1><p className="text-[#D8CCBC]/60 text-sm">HS codes, duty calculations, and sanctions screening</p></div>
+    <div className="space-y-4">
+      {/* Header */}
+      <div>
+        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Compliance</h1>
+        <p className="text-[#4A4A4A] text-sm">HS codes, duties, and trade regulations</p>
+      </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {[{ id: 'hs-codes', label: 'HS Codes', icon: '📋' }, { id: 'duty-calc', label: 'Duty Calculator', icon: '💰' }, { id: 'sanctions', label: 'Sanctions', icon: '⚠️' }, { id: 'documents', label: 'Document Check', icon: '📄' }].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === tab.id ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC] hover:bg-[#0E3B36]/80'}`}>
-            <span>{tab.icon}</span>{tab.label}
-          </button>
-        ))}
+      {/* Tabs */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setActiveTab('hs-codes')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'hs-codes' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          HS Codes
+        </button>
+        <button
+          onClick={() => setActiveTab('regulations')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'regulations' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          Regulations
+        </button>
+        <button
+          onClick={() => setActiveTab('checklist')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'checklist' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          Checklist
+        </button>
       </div>
 
       {activeTab === 'hs-codes' && (
-        <div className="space-y-6">
-          <div className="card">
-            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-6">HS Code Classification</h2>
-            <div className="flex gap-4">
-              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSearchHsCode()} placeholder="Enter product description or HS code..." className="flex-1 input" />
-              <button onClick={handleSearchHsCode} className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors">Search</button>
-            </div>
-            <Link href="/compliance/hs-codes" className="inline-flex items-center gap-2 text-[#C49A6C] hover:text-[#D4AA82] text-sm mt-4"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>Browse full HS Code database</Link>
+        <>
+          {/* Search */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by HS code or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-11 pl-11 pr-4 bg-white border border-black/5 rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+            />
           </div>
-          <div className="space-y-4">
-            {hsCodeResults.map(hs => (
-              <div key={hs.code} onClick={() => setSelectedHsCode(hs)} className="card cursor-pointer hover:border-[#C49A6C]/30 transition-all">
+
+          {/* HS Codes List */}
+          <div className="space-y-2">
+            {filteredCodes.map(code => (
+              <div
+                key={code.code}
+                onClick={() => setSelectedHsCode(code)}
+                className="bg-white border border-black/5 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all"
+              >
                 <div className="flex items-start justify-between">
-                  <div className="flex-1"><span className="text-[#C49A6C] font-mono font-semibold text-lg">{hs.code}</span><p className="text-[#F4F1EA] mt-2">{hs.description}</p></div>
-                  <div className="text-right ml-4"><span className="text-emerald-400 font-semibold">{hs.duty} duty</span><p className="text-[#D8CCBC]/50 text-sm">{hs.origin}</p></div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[#A6824A] font-mono font-semibold text-sm">{code.code}</span>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        code.duty === '0%' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#A6824A]/10 text-[#A6824A]'
+                      }`}>
+                        {code.duty} duty
+                      </span>
+                    </div>
+                    <p className="text-[#101111] text-sm">{code.description}</p>
+                    <p className="text-[#4A4A4A] text-xs mt-1">Origin: {code.origin}</p>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopy(code.code);
+                    }}
+                    className="p-2 text-[#4A4A4A] hover:text-[#154230] hover:bg-[#E6E2DA] rounded-lg transition-colors"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-          {hsCodeResults.length === 0 && searchQuery && <div className="card text-center py-12"><div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">🔍</span></div><p className="text-[#D8CCBC]/50 mb-4">No HS codes found for "{searchQuery}"</p></div>}
 
-          {selectedHsCode && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-              <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg">
-                <div className="flex items-center justify-between mb-6"><h2 className="text-xl font-bold text-[#F4F1EA]">HS Code Details</h2><button onClick={() => setSelectedHsCode(null)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button></div>
-                <div className="space-y-4">
-                  <div><p className="text-[#D8CCBC]/50 text-xs">HS Code</p><p className="text-[#C49A6C] font-mono text-xl font-bold">{selectedHsCode.code}</p></div>
-                  <div><p className="text-[#D8CCBC]/50 text-xs">Description</p><p className="text-[#F4F1EA]">{selectedHsCode.description}</p></div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl"><p className="text-[#D8CCBC]/50 text-xs">Import Duty</p><p className="text-emerald-400 text-xl font-bold">{selectedHsCode.duty}</p></div>
-                    <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl"><p className="text-[#D8CCBC]/50 text-xs">Origin</p><p className="text-[#F4F1EA] text-xl font-bold">{selectedHsCode.origin}</p></div>
-                  </div>
-                  <button onClick={() => { setCalcForm({ ...calcForm, hsCode: selectedHsCode.code }); setActiveTab('duty-calc'); setSelectedHsCode(null); }} className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors">Calculate Duty for this Code</button>
-                </div>
-              </div>
+          {copied && (
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#154230] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              Copied to clipboard!
             </div>
           )}
-        </div>
+        </>
       )}
 
-      {activeTab === 'duty-calc' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card">
-            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-6">Import Duty Calculator</h2>
-            <div className="space-y-4">
-              <div><label className="block text-[#D8CCBC]/80 text-sm mb-2">Product Value (USD)</label><input type="number" value={calcForm.value} onChange={(e) => setCalcForm({ ...calcForm, value: e.target.value })} placeholder="10000" className="w-full input" /></div>
-              <div><label className="block text-[#D8CCBC]/80 text-sm mb-2">HS Code</label><input type="text" value={calcForm.hsCode} onChange={(e) => setCalcForm({ ...calcForm, hsCode: e.target.value })} placeholder="8471.30" className="w-full input" /></div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><label className="block text-[#D8CCBC]/80 text-sm mb-2">Origin Country</label><select value={calcForm.origin} onChange={(e) => setCalcForm({ ...calcForm, origin: e.target.value })} className="w-full input"><option value="">Select...</option>{countries.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}</select></div>
-                <div><label className="block text-[#D8CCBC]/80 text-sm mb-2">Destination</label><select value={calcForm.destination} onChange={(e) => setCalcForm({ ...calcForm, destination: e.target.value })} className="w-full input"><option value="">Select...</option>{countries.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}</select></div>
+      {activeTab === 'regulations' && (
+        <div className="space-y-3">
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-[#154230]" />
               </div>
-              <button onClick={handleDutyCalculate} disabled={!calcForm.origin || !calcForm.destination || !calcForm.hsCode || !calcForm.value} className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors disabled:opacity-50">Calculate Duty</button>
+              <div>
+                <h3 className="text-[#101111] font-semibold text-sm">USA Import Regulations</h3>
+                <p className="text-[#4A4A4A] text-xs">Last updated: Jan 15, 2024</p>
+              </div>
             </div>
-            <Link href="/compliance/duty-calculator" className="inline-flex items-center gap-2 text-[#C49A6C] hover:text-[#D4AA82] text-sm mt-4"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>Advanced duty calculator</Link>
+            <p className="text-[#101111] text-sm mb-3">All imports to the USA must comply with CBP regulations, including proper classification, valuation, and country of origin marking.</p>
+            <div className="flex gap-2">
+              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#E6E2DA] text-[#101111] rounded-lg text-xs font-medium hover:bg-[#D4CCBE] transition-colors">
+                <Download className="w-3 h-3" />
+                Download Guide
+              </button>
+            </div>
           </div>
 
-          {calcResult && (
-            <div className="card">
-              <h3 className="text-lg font-semibold text-[#F4F1EA] mb-6">Estimated Costs</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between py-3 border-b border-[rgba(255,255,255,0.05)]"><span className="text-[#D8CCBC]">Product Value</span><span className="text-[#F4F1EA] font-medium">${parseFloat(calcForm.value).toLocaleString()}</span></div>
-                <div className="flex justify-between py-3 border-b border-[rgba(255,255,255,0.05)]"><span className="text-[#D8CCBC]">Import Duty</span><span className="text-[#C49A6C] font-medium">${calcResult.duty.toFixed(2)}</span></div>
-                <div className="flex justify-between py-3 border-b border-[rgba(255,255,255,0.05)]"><span className="text-[#D8CCBC]">VAT/Tax</span><span className="text-[#C49A6C] font-medium">${calcResult.vat.toFixed(2)}</span></div>
-                <div className="flex justify-between py-3 border-b border-[rgba(255,255,255,0.05)]"><span className="text-[#D8CCBC]">Processing Fee</span><span className="text-[#C49A6C] font-medium">${calcResult.processingFee.toFixed(2)}</span></div>
-                <div className="flex justify-between py-4 bg-[#0E3B36]/50 rounded-xl px-4"><span className="text-[#F4F1EA] font-semibold">Total Estimated Cost</span><span className="text-[#C49A6C] font-bold text-xl">${calcResult.total.toFixed(2)}</span></div>
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-[#A6824A]" />
+              </div>
+              <div>
+                <h3 className="text-[#101111] font-semibold text-sm">EU Product Standards</h3>
+                <p className="text-[#4A4A4A] text-xs">Last updated: Jan 10, 2024</p>
               </div>
             </div>
-          )}
-          {!calcResult && <div className="card flex items-center justify-center"><div className="text-center"><div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">🧮</span></div><p className="text-[#D8CCBC]/50">Enter values to calculate duties</p></div></div>}
-        </div>
-      )}
-
-      {activeTab === 'sanctions' && (
-        <div className="space-y-6">
-          <div className="card">
-            <h2 className="text-xl font-semibold text-[#F4F1EA] mb-6">Sanctions Screening</h2>
-            <div className="flex gap-4">
-              <input type="text" value={sanctionQuery} onChange={(e) => setSanctionQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSanctionCheck()} placeholder="Enter company name, address, or ID..." className="flex-1 input" />
-              <button onClick={handleSanctionCheck} disabled={!sanctionQuery.trim()} className="px-6 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors disabled:opacity-50">Screen</button>
+            <p className="text-[#101111] text-sm mb-3">Products entering the EU must meet CE marking requirements, REACH regulations, and proper documentation.</p>
+            <div className="flex gap-2">
+              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#E6E2DA] text-[#101111] rounded-lg text-xs font-medium hover:bg-[#D4CCBE] transition-colors">
+                <Download className="w-3 h-3" />
+                Download Guide
+              </button>
             </div>
           </div>
-          {sanctionResult === 'clear' && (
-            <div className="p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-              <div className="flex items-center gap-3"><div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center"><svg className="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg></div><div><p className="text-emerald-400 font-semibold">No Matches Found</p><p className="text-[#D8CCBC]/60 text-sm">This entity has not been flagged on any sanctions lists</p></div></div>
+
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-[#5D1E21]" />
+              </div>
+              <div>
+                <h3 className="text-[#101111] font-semibold text-sm">Restricted Items Notice</h3>
+                <p className="text-[#4A4A4A] text-xs">Updated daily</p>
+              </div>
             </div>
-          )}
-          {sanctionResult === 'warning' && (
-            <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-              <div className="flex items-center gap-3"><div className="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center"><svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg></div><div><p className="text-amber-400 font-semibold">Potential Match - Manual Review Required</p><p className="text-[#D8CCBC]/60 text-sm">This entity requires additional verification.</p></div></div>
+            <p className="text-[#101111] text-sm mb-3">Certain products require special licenses for import/export. Check the restricted items list before shipping.</p>
+            <div className="flex gap-2">
+              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#5D1E21]/10 text-[#5D1E21] rounded-lg text-xs font-medium hover:bg-[#5D1E21]/20 transition-colors">
+                View Restricted Items
+              </button>
             </div>
-          )}
-          {!sanctionResult && <div className="card"><div className="text-center py-8"><div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">🔍</span></div><p className="text-[#D8CCBC]/50">Enter a search term to check sanctions lists</p></div></div>}
+          </div>
         </div>
       )}
 
-      {activeTab === 'documents' && (
-        <div className="card">
-          <h2 className="text-xl font-semibold text-[#F4F1EA] mb-6">Document Compliance Check</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-8 border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-xl text-center">
-              <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><svg className="w-8 h-8 text-[#C49A6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg></div>
-              <p className="text-[#F4F1EA] mb-2">Drop files here or click to upload</p><p className="text-[#D8CCBC]/50 text-sm">Invoice, Packing List, BL, COO</p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-[#F4F1EA] font-medium">Check Results</h3>
-              {[{ name: 'Invoice Validation', status: 'pass' }, { name: 'HS Code Match', status: 'pass' }, { name: 'Value Consistency', status: 'pass' }, { name: 'Country of Origin', status: 'warning' }].map(item => (
-                <div key={item.name} className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.02)] rounded-xl">
-                  <span className="text-[#F4F1EA]">{item.name}</span>
-                  {item.status === 'pass' ? <span className="text-emerald-400 flex items-center gap-1"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>Pass</span> : <span className="text-amber-400 flex items-center gap-1"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>Warning</span>}
-                </div>
+      {activeTab === 'checklist' && (
+        <div className="space-y-3">
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <h3 className="text-[#101111] font-semibold text-sm mb-3">Pre-Shipment Checklist</h3>
+            <div className="space-y-2">
+              {[
+                { item: 'HS Code Classification', done: true },
+                { item: 'Duty Calculation', done: true },
+                { item: 'Country of Origin Certificate', done: true },
+                { item: 'Commercial Invoice', done: false },
+                { item: 'Packing List', done: false },
+                { item: 'Bill of Lading / Airway Bill', done: false },
+                { item: 'Insurance Certificate', done: false },
+                { item: 'Import License (if required)', done: false },
+              ].map((check, i) => (
+                <label key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#E6E2DA] cursor-pointer transition-colors">
+                  <input type="checkbox" checked={check.done} className="w-5 h-5 rounded border-[#154230] text-[#154230] accent-[#154230]" />
+                  <span className={`text-sm ${check.done ? 'text-[#4A4A4A] line-through' : 'text-[#101111]'}`}>
+                    {check.item}
+                  </span>
+                </label>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* HS Code Detail Modal */}
+      {selectedHsCode && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setSelectedHsCode(null)}>
+          <div className="bg-white border border-black/5 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-black/5 flex items-center justify-between">
+              <div>
+                <h2 className="text-[#101111] font-semibold text-sm">HS Code Details</h2>
+                <p className="text-[#A6824A] font-mono text-xs">{selectedHsCode.code}</p>
+              </div>
+              <button onClick={() => setSelectedHsCode(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              <div className="p-3 bg-[#E6E2DA] rounded-lg">
+                <p className="text-[#4A4A4A] text-xs mb-1">Description</p>
+                <p className="text-[#101111] text-sm">{selectedHsCode.description}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-[#E6E2DA] rounded-lg">
+                  <p className="text-[#4A4A4A] text-xs mb-1">Import Duty</p>
+                  <p className={`text-sm font-semibold ${selectedHsCode.duty === '0%' ? 'text-[#154230]' : 'text-[#A6824A]'}`}>
+                    {selectedHsCode.duty}
+                  </p>
+                </div>
+                <div className="p-3 bg-[#E6E2DA] rounded-lg">
+                  <p className="text-[#4A4A4A] text-xs mb-1">Origin</p>
+                  <p className="text-[#101111] text-sm font-semibold">{selectedHsCode.origin}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => handleCopy(selectedHsCode.code)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#154230] text-white font-semibold rounded-lg text-sm hover:bg-[#1d5240] transition-colors"
+              >
+                <Copy className="w-4 h-4" />
+                Copy HS Code
+              </button>
             </div>
           </div>
         </div>

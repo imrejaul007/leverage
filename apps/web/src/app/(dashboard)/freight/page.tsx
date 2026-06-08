@@ -2,22 +2,26 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X } from 'lucide-react';
 
 interface Quote {
   id: string;
   carrier: string;
+  logo: string;
   type: string;
   transit: string;
   price: number;
   currency: string;
+  rating: number;
 }
 
 const mockQuotes: Quote[] = [
-  { id: '1', carrier: 'Maersk Line', type: 'Sea Freight', transit: '25-30 days', price: 2800, currency: 'USD' },
-  { id: '2', carrier: 'MSC', type: 'Sea Freight', transit: '28-32 days', price: 2600, currency: 'USD' },
-  { id: '3', carrier: 'COSCO', type: 'Sea Freight', transit: '30-35 days', price: 2400, currency: 'USD' },
-  { id: '4', carrier: 'DHL Air', type: 'Air Freight', transit: '3-5 days', price: 8500, currency: 'USD' },
-  { id: '5', carrier: 'FedEx Air', type: 'Air Freight', transit: '4-6 days', price: 9200, currency: 'USD' },
+  { id: '1', carrier: 'Maersk Line', logo: '🚢', type: 'Sea Freight', transit: '25-30 days', price: 2800, currency: 'USD', rating: 4.8 },
+  { id: '2', carrier: 'MSC', logo: '🚢', type: 'Sea Freight', transit: '28-32 days', price: 2600, currency: 'USD', rating: 4.6 },
+  { id: '3', carrier: 'COSCO', logo: '🚢', type: 'Sea Freight', transit: '30-35 days', price: 2400, currency: 'USD', rating: 4.5 },
+  { id: '4', carrier: 'DHL Air', logo: '✈️', type: 'Air Freight', transit: '3-5 days', price: 8500, currency: 'USD', rating: 4.9 },
+  { id: '5', carrier: 'FedEx Air', logo: '✈️', type: 'Air Freight', transit: '4-6 days', price: 9200, currency: 'USD', rating: 4.7 },
+  { id: '6', carrier: 'Emirates SkyCargo', logo: '✈️', type: 'Air Freight', transit: '4-7 days', price: 7800, currency: 'USD', rating: 4.8 },
 ];
 
 const popularRoutes = [
@@ -30,7 +34,6 @@ const popularRoutes = [
 export default function FreightPage() {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
-  const [weight, setWeight] = useState('');
   const [shippingType, setShippingType] = useState<'sea' | 'air'>('sea');
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,135 +42,181 @@ export default function FreightPage() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const [bookingForm, setBookingForm] = useState({
-    container: '',
+    containerType: '20ft',
     cargoType: '',
     shipperName: '',
     shipperAddress: '',
     consigneeName: '',
     consigneeAddress: '',
-    eta: '',
   });
 
   const handleGetQuote = () => {
-    if (!origin || !destination || !weight) return;
+    if (!origin || !destination) return;
     setIsLoading(true);
     setTimeout(() => {
       const filtered = mockQuotes.filter(q =>
-        (shippingType === 'sea' && q.type === 'Sea Freight') ||
-        (shippingType === 'air' && q.type === 'Air Freight')
+        shippingType === 'air' ? q.type === 'Air Freight' : q.type === 'Sea Freight'
       );
       setQuotes(filtered);
       setIsLoading(false);
     }, 1000);
   };
 
-  const handleBookNow = (quote: Quote) => {
-    setSelectedQuote(quote);
-    setShowBookingModal(true);
-  };
-
-  const handleConfirmBooking = () => {
-    if (!selectedQuote) return;
-    if (!bookingForm.container || !bookingForm.cargoType || !bookingForm.shipperName || !bookingForm.consigneeName) return;
-
-    const shipments = JSON.parse(localStorage.getItem('leverage_shipments') || '[]');
-    const newShipment = {
-      id: `SHP-${Date.now().toString().slice(-6)}`,
-      trackingNumber: `TRK${Date.now().toString().slice(-10)}`,
-      container: bookingForm.container || 'PENDING',
-      origin: origin,
-      destination: destination,
-      status: 'pending' as const,
-      eta: bookingForm.eta || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      carrier: selectedQuote.carrier,
-      createdAt: new Date().toISOString().split('T')[0],
-      lastUpdate: new Date().toISOString().split('T')[0],
-      events: [{ date: new Date().toISOString().split('T')[0], location: origin, description: 'Booking confirmed' }],
-    };
-    shipments.unshift(newShipment);
-    localStorage.setItem('leverage_shipments', JSON.stringify(shipments));
-
+  const handleBook = () => {
+    setShowBookingModal(false);
     setBookingSuccess(true);
-    setTimeout(() => {
-      setShowBookingModal(false);
-      setBookingSuccess(false);
-      setSelectedQuote(null);
-      setBookingForm({ container: '', cargoType: '', shipperName: '', shipperAddress: '', consigneeName: '', consigneeAddress: '', eta: '' });
-      setQuotes([]);
-    }, 2000);
+    setTimeout(() => setBookingSuccess(false), 3000);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[#F4F1EA]">Freight & Logistics</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">Get quotes and book shipments worldwide</p>
-        </div>
-        <Link href="/freight/shipments" className="px-4 py-2 bg-[#0E3B36] text-[#F4F1EA] rounded-xl font-medium text-sm hover:bg-[#0f4a42] transition-colors">
-          View My Shipments
-        </Link>
+    <div className="space-y-4">
+      {/* Header */}
+      <div>
+        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Freight Rates</h1>
+        <p className="text-[#4A4A4A] text-sm">Compare shipping rates from top carriers</p>
       </div>
 
-      {/* Get Quote Form */}
-      <div className="card">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-6">Get Freight Quote</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Quote Form */}
+      <div className="bg-white border border-black/5 rounded-xl p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Origin</label>
-            <input type="text" placeholder="City or Port" value={origin} onChange={(e) => setOrigin(e.target.value)} className="w-full input" />
+            <label className="block text-[#101111] text-xs font-medium mb-1.5">Origin</label>
+            <div className="relative">
+              <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                placeholder="City or Port"
+                className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Destination</label>
-            <input type="text" placeholder="City or Port" value={destination} onChange={(e) => setDestination(e.target.value)} className="w-full input" />
+            <label className="block text-[#101111] text-xs font-medium mb-1.5">Destination</label>
+            <div className="relative">
+              <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="City or Port"
+                className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Weight (kg)</label>
-            <input type="number" placeholder="1000" value={weight} onChange={(e) => setWeight(e.target.value)} className="w-full input" />
-          </div>
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Shipping Type</label>
-            <select value={shippingType} onChange={(e) => setShippingType(e.target.value as 'sea' | 'air')} className="w-full input">
-              <option value="sea">Sea Freight</option>
-              <option value="air">Air Freight</option>
-            </select>
+            <label className="block text-[#101111] text-xs font-medium mb-1.5">Shipping Type</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShippingType('sea')}
+                className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-lg font-medium text-sm transition-colors ${
+                  shippingType === 'sea'
+                    ? 'bg-[#154230] text-white'
+                    : 'bg-[#E6E2DA] text-[#101111]'
+                }`}
+              >
+                <Ship className="w-4 h-4" />
+                Sea
+              </button>
+              <button
+                onClick={() => setShippingType('air')}
+                className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-lg font-medium text-sm transition-colors ${
+                  shippingType === 'air'
+                    ? 'bg-[#154230] text-white'
+                    : 'bg-[#E6E2DA] text-[#101111]'
+                }`}
+              >
+                <Plane className="w-4 h-4" />
+                Air
+              </button>
+            </div>
           </div>
         </div>
-        <button onClick={handleGetQuote} disabled={!origin || !destination || !weight || isLoading} className="w-full py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold hover:bg-[#D4AA82] transition-colors disabled:opacity-50">
+        <button
+          onClick={handleGetQuote}
+          disabled={!origin || !destination || isLoading}
+          className="w-full h-12 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors disabled:opacity-50"
+        >
           {isLoading ? 'Getting Quotes...' : 'Get Quotes'}
         </button>
       </div>
 
-      {/* Popular Routes */}
-      <div className="card">
-        <h3 className="text-[#F4F1EA] font-semibold mb-4">Popular Routes</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {popularRoutes.map((route, i) => (
-            <button key={i} onClick={() => { setOrigin(route.from); setDestination(route.to); }} className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl text-left hover:bg-[rgba(255,255,255,0.06)] transition-colors">
-              <p className="text-[#F4F1EA] font-medium text-sm">{route.from} → {route.to}</p>
-              <p className="text-[#C49A6C] text-xs mt-1">Sea: ${route.seaPrice} | Air: ${route.airPrice}</p>
-            </button>
-          ))}
+      {/* Success Message */}
+      {bookingSuccess && (
+        <div className="bg-[#154230] text-white p-4 rounded-xl flex items-center gap-3">
+          <CheckCircle className="w-5 h-5" />
+          <span className="font-medium">Booking confirmed! You will receive confirmation via email.</span>
         </div>
-      </div>
+      )}
 
-      {/* Quote Results */}
+      {/* Quotes */}
       {quotes.length > 0 && (
-        <div className="card">
-          <h3 className="text-[#F4F1EA] font-semibold mb-4">Available Quotes</h3>
-          <div className="space-y-3">
-            {quotes.map((quote) => (
-              <div key={quote.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-[rgba(255,255,255,0.03)] rounded-xl gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#0E3B36] rounded-lg flex items-center justify-center"><span className="text-2xl">{quote.type === 'Sea Freight' ? '🚢' : '✈️'}</span></div>
-                  <div>
-                    <p className="text-[#F4F1EA] font-semibold">{quote.carrier}</p>
-                    <p className="text-[#D8CCBC]/50 text-sm">{quote.type} • {quote.transit}</p>
+        <div className="space-y-2">
+          <h2 className="text-[#101111] font-semibold text-sm">{quotes.length} quotes found</h2>
+          {quotes.map(quote => (
+            <div key={quote.id} className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-2xl">
+                  {quote.logo}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-[#101111] font-semibold text-sm">{quote.carrier}</h3>
+                    <span className="flex items-center gap-1 text-[#A6824A] text-xs">
+                      ★ {quote.rating}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-[#4A4A4A] text-xs">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {quote.transit}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Truck className="w-3 h-3" />
+                      {quote.type}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right"><p className="text-[#C49A6C] text-2xl font-bold">${quote.price.toLocaleString()}</p><p className="text-[#D8CCBC]/50 text-sm">USD</p></div>
-                  <button onClick={() => handleBookNow(quote)} className="px-6 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm hover:bg-[#D4AA82] transition-colors">Book Now</button>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-[#101111]">${quote.price.toLocaleString()}</p>
+                  <p className="text-[#4A4A4A] text-xs">per container</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedQuote(quote);
+                    setShowBookingModal(true);
+                  }}
+                  className="px-4 py-2 bg-[#154230] text-white font-semibold rounded-lg text-sm hover:bg-[#1d5240] transition-colors"
+                >
+                  Book
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Popular Routes */}
+      {quotes.length === 0 && (
+        <div className="bg-white border border-black/5 rounded-xl p-4">
+          <h2 className="text-[#101111] font-semibold text-sm mb-3">Popular Routes</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {popularRoutes.map((route, i) => (
+              <div key={i} className="p-3 bg-[#E6E2DA] rounded-lg">
+                <div className="flex items-center gap-2 text-[#101111] text-sm font-medium">
+                  <MapPin className="w-3 h-3 text-[#A6824A]" />
+                  {route.from}
+                  <span className="text-[#4A4A4A]">→</span>
+                  {route.to}
+                </div>
+                <div className="flex gap-3 mt-2 text-xs">
+                  <span className="flex items-center gap-1 text-[#4A4A4A]">
+                    <Ship className="w-3 h-3" /> ${route.seaPrice}
+                  </span>
+                  <span className="flex items-center gap-1 text-[#4A4A4A]">
+                    <Plane className="w-3 h-3" /> ${route.airPrice}
+                  </span>
                 </div>
               </div>
             ))}
@@ -177,41 +226,63 @@ export default function FreightPage() {
 
       {/* Booking Modal */}
       {showBookingModal && selectedQuote && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Book Shipment</h2>
-              <button onClick={() => setShowBookingModal(false)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setShowBookingModal(false)}>
+          <div className="bg-white border border-black/5 rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-black/5 flex items-center justify-between">
+              <div>
+                <h2 className="text-[#101111] font-semibold text-sm">Book with {selectedQuote.carrier}</h2>
+                <p className="text-[#4A4A4A] text-xs">{selectedQuote.type} • {selectedQuote.transit}</p>
+              </div>
+              <button onClick={() => setShowBookingModal(false)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
             </div>
-
-            {bookingSuccess ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4"><svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg></div>
-                <p className="text-[#F4F1EA] font-medium">Booking Confirmed!</p>
-                <p className="text-[#D8CCBC]/50 text-sm mt-2">Redirecting to shipments...</p>
+            <div className="p-4 space-y-3">
+              <div>
+                <label className="block text-[#101111] text-xs font-medium mb-1.5">Container Type</label>
+                <select
+                  value={bookingForm.containerType}
+                  onChange={(e) => setBookingForm({ ...bookingForm, containerType: e.target.value })}
+                  className="w-full h-11 px-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm"
+                >
+                  <option value="20ft">20ft Container</option>
+                  <option value="40ft">40ft Container</option>
+                  <option value="40hq">40ft High Cube</option>
+                </select>
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl">
-                  <p className="text-[#C49A6C] font-semibold">{selectedQuote.carrier}</p>
-                  <p className="text-[#D8CCBC]/50 text-sm">{selectedQuote.type} • {selectedQuote.transit}</p>
-                  <p className="text-[#C49A6C] text-xl font-bold mt-2">${selectedQuote.price.toLocaleString()} USD</p>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Container/Tracking #</label><input type="text" value={bookingForm.container} onChange={(e) => setBookingForm({ ...bookingForm, container: e.target.value })} className="w-full input" placeholder="Auto-generated if empty" /></div>
-                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Cargo Type</label><input type="text" value={bookingForm.cargoType} onChange={(e) => setBookingForm({ ...bookingForm, cargoType: e.target.value })} className="w-full input" placeholder="General Cargo" /></div>
-                </div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Shipper Name *</label><input type="text" value={bookingForm.shipperName} onChange={(e) => setBookingForm({ ...bookingForm, shipperName: e.target.value })} className="w-full input" /></div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Shipper Address</label><input type="text" value={bookingForm.shipperAddress} onChange={(e) => setBookingForm({ ...bookingForm, shipperAddress: e.target.value })} className="w-full input" /></div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Consignee Name *</label><input type="text" value={bookingForm.consigneeName} onChange={(e) => setBookingForm({ ...bookingForm, consigneeName: e.target.value })} className="w-full input" /></div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Consignee Address</label><input type="text" value={bookingForm.consigneeAddress} onChange={(e) => setBookingForm({ ...bookingForm, consigneeAddress: e.target.value })} className="w-full input" /></div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Expected Delivery</label><input type="date" value={bookingForm.eta} onChange={(e) => setBookingForm({ ...bookingForm, eta: e.target.value })} className="w-full input" /></div>
-                <div className="flex gap-3 pt-4">
-                  <button onClick={() => setShowBookingModal(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
-                  <button onClick={handleConfirmBooking} disabled={!bookingForm.container || !bookingForm.cargoType || !bookingForm.shipperName || !bookingForm.consigneeName} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50">Confirm Booking</button>
+              <div>
+                <label className="block text-[#101111] text-xs font-medium mb-1.5">Shipper Name</label>
+                <input
+                  type="text"
+                  value={bookingForm.shipperName}
+                  onChange={(e) => setBookingForm({ ...bookingForm, shipperName: e.target.value })}
+                  placeholder="Enter shipper name"
+                  className="w-full h-11 px-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-[#101111] text-xs font-medium mb-1.5">Consignee Name</label>
+                <input
+                  type="text"
+                  value={bookingForm.consigneeName}
+                  onChange={(e) => setBookingForm({ ...bookingForm, consigneeName: e.target.value })}
+                  placeholder="Enter consignee name"
+                  className="w-full h-11 px-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                />
+              </div>
+              <div className="p-3 bg-[#E6E2DA] rounded-lg">
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#4A4A4A]">Estimated Cost</span>
+                  <span className="text-[#101111] font-semibold">${selectedQuote.price.toLocaleString()} {selectedQuote.currency}</span>
                 </div>
               </div>
-            )}
+              <button
+                onClick={handleBook}
+                className="w-full h-12 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors"
+              >
+                Confirm Booking
+              </button>
+            </div>
           </div>
         </div>
       )}
