@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Search, Star, CheckCircle, Clock, MessageSquare, Video, Phone, ChevronRight, X } from 'lucide-react';
 
 interface Expert {
   id: string;
@@ -24,203 +25,225 @@ const experts: Expert[] = [
   { id: '3', name: 'Vikram Singh', title: 'Logistics Expert', image: 'VS', rating: 4.9, reviews: 74, price: 3500, subPrice: 2625, online: true, verified: true, specialties: ['Supply Chain', 'Warehouse', 'Distribution'], bio: 'Expert in optimizing supply chain operations.' },
   { id: '4', name: 'Neha Bansal', title: 'Trade Finance', image: 'NB', rating: 4.8, reviews: 63, price: 2800, subPrice: 2100, online: false, verified: true, specialties: ['Letters of Credit', 'Payment Terms', 'Insurance'], bio: 'Specialist in trade finance solutions.' },
   { id: '5', name: 'David Lee', title: 'Supply Chain', image: 'DL', rating: 4.9, reviews: 58, price: 3200, subPrice: 2400, online: false, verified: true, specialties: ['Sourcing', 'Vendor Management', 'Quality Control'], bio: '20 years in global supply chain management.' },
-  { id: '6', name: 'Maria Santos', title: 'Import Export', image: 'MS', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true, specialties: ['Regulations', 'Documentation', 'Compliance'], bio: 'Expert in cross-border trade regulations.' },
-];
-
-const categories = [
-  { name: 'Shipping', count: 42, icon: '🚢' },
-  { name: 'Customs', count: 38, icon: '✅' },
-  { name: 'Trade', count: 31, icon: '💰' },
-  { name: 'Legal', count: 28, icon: '⚖️' },
+  { id: '6', name: 'Maria Santos', title: 'Import Export', image: 'MS', rating: 4.7, reviews: 45, price: 2900, subPrice: 2175, online: true, verified: true, specialties: ['Documentation', 'Incoterms', 'Contract Management'], bio: 'Legal expert in international trade contracts.' },
 ];
 
 export default function ConsultationsPage() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState('book');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [bookingType, setBookingType] = useState<'one-time' | 'subscription'>('one-time');
-  const [duration, setDuration] = useState('30');
-  const [filterCategory, setFilterCategory] = useState('All');
+  const [consultationType, setConsultationType] = useState<'instant' | 'scheduled'>('instant');
 
-  const [bookingForm, setBookingForm] = useState({
-    date: '',
-    time: '',
-    topic: '',
-    description: '',
-  });
-
-  const getPrice = (expert: Expert) => {
-    const base = bookingType === 'subscription' ? expert.subPrice : expert.price;
-    return base * (parseInt(duration) / 30);
-  };
-
-  const handleBookExpert = (expert: Expert) => {
-    setSelectedExpert(expert);
-    setShowBookingModal(true);
-  };
-
-  const handleConfirmBooking = () => {
-    if (!selectedExpert || !bookingForm.date || !bookingForm.time || !bookingForm.topic) return;
-
-    const bookings = JSON.parse(localStorage.getItem('leverage_bookings') || '[]');
-    bookings.push({
-      id: Date.now().toString(),
-      expertId: selectedExpert.id,
-      expertName: selectedExpert.name,
-      expertTitle: selectedExpert.title,
-      date: bookingForm.date,
-      time: bookingForm.time,
-      topic: bookingForm.topic,
-      description: bookingForm.description,
-      price: getPrice(selectedExpert),
-      status: 'confirmed',
-      createdAt: new Date().toISOString(),
-    });
-    localStorage.setItem('leverage_bookings', JSON.stringify(bookings));
-
-    setBookingSuccess(true);
-    setTimeout(() => {
-      setShowBookingModal(false);
-      setBookingSuccess(false);
-      setSelectedExpert(null);
-      setBookingForm({ date: '', time: '', topic: '', description: '' });
-      router.push('/messages');
-    }, 2000);
-  };
-
-  const filteredExperts = filterCategory === 'All'
-    ? experts
-    : experts.filter(e => e.specialties.some(s => s.toLowerCase().includes(filterCategory.toLowerCase())));
+  const filteredExperts = experts.filter(expert =>
+    expert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    expert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    expert.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#F4F1EA]">Expert Consultations</h1>
-        <p className="text-[#D8CCBC]/60 text-sm">Book consultations with trade experts</p>
+        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Expert Consultations</h1>
+        <p className="text-[#4A4A4A] text-sm">Get expert advice on trade matters</p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {[{ id: 'book', label: 'Book Expert', icon: '📅' }, { id: 'my', label: 'My Bookings', icon: '📋' }].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === tab.id ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC] hover:bg-[#0E3B36]/80'}`}>
-            <span>{tab.icon}</span>{tab.label}
-          </button>
-        ))}
+      {/* Search */}
+      <div className="relative">
+        <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
+        <input
+          type="text"
+          placeholder="Search by name, specialty..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-11 pl-11 pr-4 bg-white border border-black/5 rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+        />
       </div>
 
-      {activeTab === 'book' && (
-        <>
-          {/* Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            <button onClick={() => setFilterCategory('All')} className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === 'All' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>All</button>
-            {categories.map(cat => (
-              <button key={cat.name} onClick={() => setFilterCategory(cat.name)} className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === cat.name ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>{cat.icon} {cat.name}</button>
-            ))}
-          </div>
+      {/* Consultation Type Toggle */}
+      <div className="flex gap-2 bg-white border border-black/5 rounded-lg p-1">
+        <button
+          onClick={() => setConsultationType('instant')}
+          className={`flex-1 py-2.5 rounded-lg font-medium text-sm transition-colors ${
+            consultationType === 'instant' ? 'bg-[#154230] text-white' : 'text-[#4A4A4A]'
+          }`}
+        >
+          Instant Consultation
+        </button>
+        <button
+          onClick={() => setConsultationType('scheduled')}
+          className={`flex-1 py-2.5 rounded-lg font-medium text-sm transition-colors ${
+            consultationType === 'scheduled' ? 'bg-[#154230] text-white' : 'text-[#4A4A4A]'
+          }`}
+        >
+          Schedule Call
+        </button>
+      </div>
 
-          {/* Booking Type Toggle */}
-          <div className="card">
-            <div className="flex gap-3">
-              <button onClick={() => setBookingType('one-time')} className={`flex-1 py-3 rounded-xl font-medium transition-colors ${bookingType === 'one-time' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]'}`}>One-time Session</button>
-              <button onClick={() => setBookingType('subscription')} className={`flex-1 py-3 rounded-xl font-medium transition-colors ${bookingType === 'subscription' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]'}`}>Subscription</button>
-            </div>
-            <div className="mt-4">
-              <label className="text-[#D8CCBC] text-sm mb-2 block">Duration</label>
-              <select value={duration} onChange={(e) => setDuration(e.target.value)} className="input">
-                <option value="30">30 minutes</option>
-                <option value="60">60 minutes</option>
-                <option value="90">90 minutes</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Expert Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredExperts.map(expert => (
-              <div key={expert.id} className="card hover:border-[#C49A6C]/30 transition-all">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="relative">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20 text-lg">{expert.image}</div>
-                    {expert.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#081512]"></div>}
+      {/* Online Experts First */}
+      <div>
+        <h2 className="text-[#101111] font-semibold text-sm mb-2 flex items-center gap-2">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          Available Now
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {filteredExperts.filter(e => e.online).map(expert => (
+            <div
+              key={expert.id}
+              onClick={() => setSelectedExpert(expert)}
+              className="bg-white border border-black/5 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all"
+            >
+              <div className="flex items-start gap-3">
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230] flex items-center justify-center text-white font-bold text-lg">
+                    {expert.image}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-[#F4F1EA] font-semibold">{expert.name}</h3>
-                      {expert.verified && <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>}
-                    </div>
-                    <p className="text-[#C49A6C] text-sm">{expert.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                      <span className="text-[#F4F1EA] text-sm">{expert.rating}</span>
-                      <span className="text-[#D8CCBC]/50 text-sm">({expert.reviews} reviews)</span>
-                    </div>
+                  {expert.online && (
+                    <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-[#101111] font-semibold text-sm truncate">{expert.name}</h3>
+                    {expert.verified && <CheckCircle className="w-3.5 h-3.5 text-[#154230] flex-shrink-0" />}
+                  </div>
+                  <p className="text-[#4A4A4A] text-xs">{expert.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="flex items-center gap-1 text-[#A6824A] text-xs">
+                      <Star className="w-3 h-3 fill-current" />
+                      {expert.rating}
+                    </span>
+                    <span className="text-[#4A4A4A] text-xs">({expert.reviews})</span>
                   </div>
                 </div>
-                <p className="text-[#D8CCBC]/70 text-sm mb-4 line-clamp-2">{expert.bio}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {expert.specialties.map(s => (
-                    <span key={s} className="px-2 py-1 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC]/50 text-xs rounded">{s}</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {expert.specialties.slice(0, 2).map((spec, i) => (
+                  <span key={i} className="px-2 py-0.5 bg-[#E6E2DA] text-[#4A4A4A] text-xs rounded">
+                    {spec}
+                  </span>
+                ))}
+              </div>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-black/5">
+                <div>
+                  <p className="text-[#101111] font-bold text-sm">${expert.price}</p>
+                  <p className="text-[#4A4A4A] text-xs">per session</p>
+                </div>
+                <button className="px-3 py-1.5 bg-[#154230] text-white font-medium rounded-lg text-xs hover:bg-[#1d5240] transition-colors">
+                  Connect
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Offline Experts */}
+      <div>
+        <h2 className="text-[#101111] font-semibold text-sm mb-2 flex items-center gap-2">
+          <Clock className="w-4 h-4 text-[#4A4A4A]" />
+          Available Soon
+        </h2>
+        <div className="space-y-2">
+          {filteredExperts.filter(e => !e.online).map(expert => (
+            <div
+              key={expert.id}
+              onClick={() => setSelectedExpert(expert)}
+              className="bg-white border border-black/5 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[#A6824A] flex items-center justify-center text-white font-bold">
+                  {expert.image}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-[#101111] font-semibold text-sm">{expert.name}</h3>
+                    {expert.verified && <CheckCircle className="w-3.5 h-3.5 text-[#154230]" />}
+                  </div>
+                  <p className="text-[#4A4A4A] text-xs">{expert.title}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[#101111] font-bold text-sm">${expert.price}</p>
+                  <p className="text-[#4A4A4A] text-xs">per session</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Expert Detail Modal */}
+      {selectedExpert && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30" onClick={() => setSelectedExpert(null)}>
+          <div className="bg-white border border-black/5 rounded-t-2xl sm:rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white p-4 border-b border-black/5 flex items-center justify-between">
+              <h2 className="text-[#101111] font-semibold text-sm">Expert Profile</h2>
+              <button onClick={() => setSelectedExpert(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              {/* Expert Info */}
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-xl bg-[#154230] flex items-center justify-center text-white font-bold text-xl">
+                  {selectedExpert.image}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-[#101111] font-bold text-lg">{selectedExpert.name}</h3>
+                    {selectedExpert.verified && <CheckCircle className="w-4 h-4 text-[#154230]" />}
+                  </div>
+                  <p className="text-[#4A4A4A] text-sm">{selectedExpert.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="flex items-center gap-1 text-[#A6824A] text-sm font-medium">
+                      <Star className="w-4 h-4 fill-current" />
+                      {selectedExpert.rating}
+                    </span>
+                    <span className="text-[#4A4A4A] text-sm">({selectedExpert.reviews} reviews)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bio */}
+              <div className="p-3 bg-[#E6E2DA] rounded-lg">
+                <p className="text-[#101111] text-sm">{selectedExpert.bio}</p>
+              </div>
+
+              {/* Specialties */}
+              <div>
+                <h4 className="text-[#101111] font-medium text-sm mb-2">Specialties</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedExpert.specialties.map((spec, i) => (
+                    <span key={i} className="px-3 py-1.5 bg-[#E6E2DA] text-[#101111] text-sm rounded-lg">
+                      {spec}
+                    </span>
                   ))}
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-[rgba(255,255,255,0.05)]">
-                  <div><span className="text-[#C49A6C] text-xl font-bold">${getPrice(expert).toLocaleString()}</span><span className="text-[#D8CCBC]/50 text-sm ml-1">/{duration}min</span></div>
-                  <button onClick={() => handleBookExpert(expert)} className="px-4 py-2 bg-[#C49A6C] text-[#081512] rounded-lg font-semibold text-sm hover:bg-[#D4AA82] transition-colors">Book Now</button>
+              </div>
+
+              {/* Pricing */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-[#E6E2DA] rounded-lg text-center">
+                  <p className="text-[#4A4A4A] text-xs mb-1">Per Session</p>
+                  <p className="text-[#101111] font-bold text-lg">${selectedExpert.price}</p>
+                </div>
+                <div className="p-3 bg-[#154230]/10 rounded-lg text-center">
+                  <p className="text-[#154230] text-xs mb-1">Monthly Subscription</p>
+                  <p className="text-[#154230] font-bold text-lg">${selectedExpert.subPrice}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </>
-      )}
 
-      {activeTab === 'my' && (
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">My Bookings</h2>
-          <div id="bookings-list" className="text-center py-8">
-            <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">📅</span></div>
-            <p className="text-[#D8CCBC]/50 mb-4">No bookings yet</p>
-            <button onClick={() => setActiveTab('book')} className="text-[#C49A6C] hover:text-[#D4AA82] font-medium">Browse Experts</button>
-          </div>
-        </div>
-      )}
-
-      {/* Booking Modal */}
-      {showBookingModal && selectedExpert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#F4F1EA]">Book Consultation</h2>
-              <button onClick={() => setShowBookingModal(false)} className="text-[#D8CCBC] hover:text-[#F4F1EA]">✕</button>
+              {/* Contact Options */}
+              <div className="grid grid-cols-2 gap-3">
+                <button className="flex items-center justify-center gap-2 py-3 bg-[#154230] text-white font-semibold rounded-lg text-sm hover:bg-[#1d5240] transition-colors">
+                  <Video className="w-4 h-4" />
+                  Video Call
+                </button>
+                <button className="flex items-center justify-center gap-2 py-3 bg-[#E6E2DA] text-[#101111] font-semibold rounded-lg text-sm hover:bg-[#D4CCBE] transition-colors">
+                  <MessageSquare className="w-4 h-4" />
+                  Message
+                </button>
+              </div>
             </div>
-
-            {bookingSuccess ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4"><svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg></div>
-                <p className="text-[#F4F1EA] font-medium">Booking Confirmed!</p>
-                <p className="text-[#D8CCBC]/50 text-sm mt-2">Redirecting to messages...</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-xl flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold border border-[#C49A6C]/20">{selectedExpert.image}</div>
-                  <div><p className="text-[#F4F1EA] font-semibold">{selectedExpert.name}</p><p className="text-[#C49A6C] text-sm">{selectedExpert.title}</p></div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Date *</label><input type="date" value={bookingForm.date} onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })} className="w-full input" min={new Date().toISOString().split('T')[0]} /></div>
-                  <div><label className="block text-[#D8CCBC] text-sm mb-2">Time *</label><select value={bookingForm.time} onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })} className="w-full input"><option value="">Select time</option><option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option><option value="11:00">11:00 AM</option><option value="14:00">02:00 PM</option><option value="15:00">03:00 PM</option><option value="16:00">04:00 PM</option></select></div>
-                </div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Topic *</label><input type="text" value={bookingForm.topic} onChange={(e) => setBookingForm({ ...bookingForm, topic: e.target.value })} className="w-full input" placeholder="Brief description of your topic" /></div>
-                <div><label className="block text-[#D8CCBC] text-sm mb-2">Additional Details</label><textarea value={bookingForm.description} onChange={(e) => setBookingForm({ ...bookingForm, description: e.target.value })} className="w-full input resize-none" rows={3} placeholder="Any specific questions or requirements..." /></div>
-                <div className="p-4 bg-[#0E3B36]/50 rounded-xl flex items-center justify-between">
-                  <span className="text-[#D8CCBC]">Total</span><span className="text-[#C49A6C] text-xl font-bold">${getPrice(selectedExpert).toLocaleString()}</span>
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <button onClick={() => setShowBookingModal(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
-                  <button onClick={handleConfirmBooking} disabled={!bookingForm.date || !bookingForm.time || !bookingForm.topic} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50">Confirm Booking</button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}

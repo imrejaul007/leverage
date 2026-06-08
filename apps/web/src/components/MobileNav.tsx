@@ -16,6 +16,9 @@ import {
   Settings,
   BarChart3,
   Briefcase,
+  Shield,
+  Bot,
+  Headphones,
 } from 'lucide-react';
 
 const mainNavItems = [
@@ -31,9 +34,12 @@ const secondaryNavItems = [
   { name: 'My RFQs', href: '/rfqs', icon: FileText },
   { name: 'Documents', href: '/documents', icon: FileText },
   { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Consultations', href: '/consultations', icon: Headphones },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'Network', href: '/network', icon: Briefcase },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Billing', href: '/billing', icon: CreditCard },
-  { name: 'Network', href: '/network', icon: Briefcase },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -115,7 +121,7 @@ export default function MobileNav() {
         <div className="fixed inset-0 z-[60]" onClick={() => setShowMenu(false)}>
           <div className="absolute bottom-20 left-4 right-4 bg-white rounded-2xl border border-black/5 shadow-2xl overflow-hidden">
             <div className="p-3 border-b border-black/5">
-              <h3 className="text-[#101111] font-semibold text-sm">Trade Menu</h3>
+              <h3 className="text-[#101111] font-semibold text-sm">More Options</h3>
               <p className="text-[#4A4A4A] text-xs">Quick access to all features</p>
             </div>
             <div className="grid grid-cols-3 gap-1.5 p-2.5">
