@@ -38,18 +38,18 @@ const sidebarLinks = [
 ];
 
 const bottomNavLinks = [
-  { href: '/dashboard', icon: Home, label: 'Home' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { href: '/account', icon: User, label: 'Account' },
+  { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
+  { id: 'browse', href: '/marketplace', icon: Search, label: 'Browse' },
+  { id: 'post', href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { id: 'inbox', href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { id: 'account', href: '/account', icon: User, label: 'Account' },
 ];
 
 export default function ConsultationsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [activeNav, setActiveNav] = useState('consult');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const filteredExperts = experts.filter(expert =>
     expert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -58,11 +58,11 @@ export default function ConsultationsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#E6E2DA]">
+    <div className="min-h-screen bg-[#F7F4EF]">
       {/* ============================================ */}
       {/* DESKTOP SIDEBAR (lg and above) */}
       {/* ============================================ */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
+      <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 z-40">
         <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
@@ -108,15 +108,72 @@ export default function ConsultationsPage() {
       </aside>
 
       {/* ============================================ */}
-      {/* MOBILE& TABLET HEADER (below lg) */}
+      {/* MOBILE SIDEBAR OVERLAY */}
+      {/* ============================================ */}
+      {mobileSidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileSidebarOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white z-50 flex flex-col">
+            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="6" cy="12" r="2" fill="currentColor" />
+                    <circle cx="18" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="6" r="2" fill="currentColor" />
+                    <circle cx="12" cy="18" r="2" fill="currentColor" />
+                  </svg>
+                </div>
+                <div>
+                  <h1 className="text-[#101111] font-bold text-sm">LEVERAGE</h1>
+                  <p className="text-[#4A4A4A] text-[9px]">CONNECTING DOTS TO PORTS</p>
+                </div>
+              </div>
+              <button onClick={() => setMobileSidebarOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#E6E2DA]">
+                <X className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
+            </div>
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              {sidebarLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.active;
+                return (
+                  <Link key={link.href} href={link.href} onClick={() => setMobileSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium text-sm">{link.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            <div className="p-4 border-t border-black/5">
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">JD</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                  <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                </div>
+              </div>
+              <button className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA] rounded-xl mt-2">
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium text-sm">Logout</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* ============================================ */}
+      {/* MOBILE & TABLET HEADER (below lg) */}
       {/* ============================================ */}
       <div className="lg:hidden">
         <div className="bg-[#F7F4EF] px-4 sm:px-5 pt-4 sm:pt-6 pb-3">
-          {/* Top Header Row - Hamburger + Logo + Bell */}
+          {/* Top Header Row */}
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-[#e9e3da] transition-colors">
-                {sidebarOpen ? <X className="w-5 h-5 text-[#4A4A4A]" /> : <Menu className="w-5 h-5 text-[#4A4A4A]" />}
+              <button onClick={() => setMobileSidebarOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-[#e9e3da] transition-colors">
+                <Menu className="w-5 h-5 text-[#4A4A4A]" />
               </button>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 bg-[#154230] rounded-lg flex items-center justify-center">
@@ -131,7 +188,7 @@ export default function ConsultationsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <button className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-lg sm:text-xl rounded-full hover:bg-[#e9e3da] transition-colors relative">
+              <button className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-[#e9e3da] transition-colors relative">
                 <Bell className="w-5 h-5 text-[#4A4A4A]" />
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#7A161A] rounded-full text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center">3</span>
               </button>
@@ -151,14 +208,14 @@ export default function ConsultationsPage() {
           </div>
         </div>
 
-        {/* Main Section - with padding for bottom nav */}
+        {/* Main Section */}
         <div className="bg-[#f4f0ea] px-4 sm:px-5 pt-4 sm:pt-5 pb-24">
           <div className="text-[18px] sm:text-[20px] md:text-[22px] text-[#154230] font-bold">Expert Consultations</div>
           <p className="text-[#777] text-xs sm:text-sm">Get expert advice on trade matters</p>
 
           {/* Search */}
-          <div className="bg-white rounded-xl p-3 sm:p-4 mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 text-[#999]">
-            <Search className="w-5 h-5" />
+          <div className="bg-white rounded-xl p-3 sm:p-4 mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
+            <Search className="w-5 h-5 text-[#999]" />
             <input
               type="text"
               placeholder="Search by name, specialty or topic..."
@@ -192,13 +249,10 @@ export default function ConsultationsPage() {
           {filteredExperts.map((expert) => (
             <div key={expert.id} onClick={() => setSelectedExpert(expert)} className="bg-white rounded-2xl p-3 sm:p-4 mt-2 sm:mt-3 border border-[#eee] cursor-pointer active:scale-[0.98] transition-transform">
               <div className="flex gap-2 sm:gap-3">
-                {/* Avatar */}
                 <div className="relative flex-shrink-0">
                   <div className="w-[56px] h-[56px] sm:w-[64px] sm:h-[64px] md:w-[72px] md:h-[72px] rounded-full bg-[#7A161A] text-white text-[18px] sm:text-[20px] md:text-[22px] font-bold flex items-center justify-center">{expert.initials}</div>
                   {expert.online && <div className="absolute right-0 bottom-0 w-[12px] h-[12px] sm:w-[14px] sm:h-[14px] rounded-full bg-[#28b463] border-2 border-white"></div>}
                 </div>
-
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="text-[14px] sm:text-[16px] md:text-[18px] font-semibold text-[#1f1f1f] truncate">{expert.name}</div>
                   <div className="text-[#666] text-[11px] sm:text-[12px] md:text-sm">{expert.title}</div>
@@ -210,8 +264,6 @@ export default function ConsultationsPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Bottom */}
               <div className="flex justify-between items-center mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-[#eee]">
                 <div>
                   <div className="text-[20px] sm:text-[24px] md:text-[28px] font-bold text-[#1f1f1f]">₹{expert.price}</div>
@@ -237,7 +289,7 @@ export default function ConsultationsPage() {
           </div>
         </div>
 
-        {/* FAB Button - positioned above bottom nav */}
+        {/* FAB Button */}
         <button className="fixed right-3 sm:right-4 bottom-[88px] sm:bottom-[95px] w-[50px] h-[50px] sm:w-[58px] sm:h-[58px] rounded-full bg-[#154230] text-white text-[28px] sm:text-[32px] flex items-center justify-center shadow-lg z-40 active:scale-95 transition-transform">+</button>
       </div>
 
@@ -283,8 +335,8 @@ export default function ConsultationsPage() {
             <p className="text-[#777] text-sm mt-1">Get expert advice on trade matters</p>
 
             {/* Search */}
-            <div className="bg-white rounded-xl p-4 mt-4 flex items-center gap-3 text-[#999]">
-              <Search className="w-5 h-5" />
+            <div className="bg-white rounded-xl p-4 mt-4 flex items-center gap-3">
+              <Search className="w-5 h-5 text-[#999]" />
               <input
                 type="text"
                 placeholder="Search by name, specialty or topic..."
@@ -430,11 +482,24 @@ export default function ConsultationsPage() {
       {/* MOBILE BOTTOM NAV */}
       {/* ============================================ */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] h-[70px] sm:h-[82px] flex justify-around items-center z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        <div className="text-center text-[10px] sm:text-xs cursor-pointer active:text-[#154230] transition-colors">🏠<br /><small>Home</small></div>
-        <div className="text-center text-[10px] sm:text-xs cursor-pointer active:text-[#154230] transition-colors">🔍<br /><small>Browse</small></div>
-        <Link href="/rfqs/new" className="w-[52px] h-[52px] sm:w-[62px] sm:h-[62px] rounded-full bg-[#154230] text-white flex items-center justify-center text-[28px] sm:text-[34px] mt-[-20px] sm:mt-[-30px] shadow-lg active:scale-95 transition-transform">+</Link>
-        <div className="text-center text-[10px] sm:text-xs cursor-pointer active:text-[#154230] transition-colors">💬<br /><small>Inbox</small></div>
-        <div className="text-center text-[10px] sm:text-xs cursor-pointer active:text-[#154230] transition-colors">👤<br /><small>Account</small></div>
+        {bottomNavLinks.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeNav === item.id;
+          return (
+            <Link key={item.id} href={item.href} onClick={() => setActiveNav(item.id)} className={`flex flex-col items-center gap-0.5 py-2 px-3 rounded-xl transition-colors ${item.primary ? '' : isActive ? 'text-[#154230]' : 'text-[#777]'}`}>
+              {item.primary ? (
+                <div className="w-[52px] h-[52px] sm:w-[62px] sm:h-[62px] rounded-full bg-[#154230] text-white flex items-center justify-center text-[28px] sm:text-[34px] mt-[-24px] sm:mt-[-30px] shadow-lg">
+                  <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                </div>
+              ) : (
+                <>
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="text-[10px] sm:text-xs font-medium">{item.label}</span>
+                </>
+              )}
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
