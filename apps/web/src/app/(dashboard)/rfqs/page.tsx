@@ -3,7 +3,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Plus, Clock, MessageSquare, ArrowRight, X, Bell, ChevronDown } from 'lucide-react';
+import {
+  Search,
+  Plus,
+  Clock,
+  MessageSquare,
+  ArrowRight,
+  X,
+  Bell,
+  ChevronDown,
+  Menu,
+  Settings,
+  LogOut,
+  Home,
+  User,
+  FileText,
+  Truck,
+  Package,
+  BarChart3,
+} from 'lucide-react';
 
 interface RFQ {
   id: string;
@@ -43,12 +61,174 @@ const statusLabels: Record<string, string> = {
   CLOSED: 'Closed',
 };
 
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs', active: true },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
+];
+
+// Desktop Sidebar Component
+function DesktopSidebar() {
+  return (
+    <div className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 lg:bg-white lg:border-r lg:border-black/5 lg:z-40">
+      {/* Logo */}
+      <div className="p-6 border-b border-black/5">
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <Image src="/logo.png" alt="LEVERAGE" width={140} height={48} className="object-contain" />
+        </Link>
+      </div>
+
+      {/* Navigation Links */}
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {sidebarLinks.map((link) => {
+          const Icon = link.icon;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                link.active
+                  ? 'bg-[#154230] text-white shadow-md'
+                  : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-black/5">
+        <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111] transition-all">
+          <LogOut className="w-5 h-5" />
+          <span>Log Out</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Mobile Sidebar Overlay Component
+function MobileSidebarOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+
+      {/* Sidebar */}
+      <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-xl overflow-y-auto">
+        {/* Header */}
+        <div className="p-6 border-b border-black/5 flex items-center justify-between">
+          <Image src="/logo.png" alt="LEVERAGE" width={140} height={48} className="object-contain" />
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-[#E6E2DA] flex items-center justify-center hover:bg-[#D4CCBE] transition-colors"
+          >
+            <X className="w-5 h-5 text-[#4A4A4A]" />
+          </button>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="p-4 space-y-1">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  link.active
+                    ? 'bg-[#154230] text-white shadow-md'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Logout */}
+        <div className="p-4 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111] transition-all">
+            <LogOut className="w-5 h-5" />
+            <span>Log Out</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Bottom Navigation Component
+function BottomNavigation() {
+  return (
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-40 safe-area-bottom">
+      <div className="flex items-center justify-around px-2 py-2">
+        {bottomNavLinks.map((link) => {
+          const Icon = link.icon;
+          const isActive = typeof window !== 'undefined' && window.location.pathname === link.href;
+
+          if (link.primary) {
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex flex-col items-center gap-1 p-2"
+              >
+                <div className="w-12 h-12 rounded-full bg-[#154230] flex items-center justify-center shadow-lg -mt-6">
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-[10px] font-medium text-[#154230]">{link.label}</span>
+              </Link>
+            );
+          }
+
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex flex-col items-center gap-1 p-2 ${
+                isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'
+              }`}
+            >
+              <Icon className="w-6 h-6" />
+              <span className="text-[10px] font-medium">{link.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function RFQsPage() {
   const [rfqs, setRfqs] = useState<RFQ[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewingRFQ, setViewingRFQ] = useState<RFQ | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_rfqs');
@@ -79,11 +259,23 @@ export default function RFQsPage() {
 
   return (
     <div className="min-h-screen bg-[#E6E2DA]">
-      {/* Green Gradient Header with rounded bottom corners */}
-      <div className="bg-gradient-to-br from-[#154230] via-[#1a5240] to-[#154230] rounded-b-[32px] px-4 pt-6 pb-8 relative">
+      {/* Desktop Sidebar */}
+      <DesktopSidebar />
+
+      {/* Mobile Sidebar Overlay */}
+      <MobileSidebarOverlay isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+      {/* Mobile Header - Green Gradient */}
+      <div className="lg:hidden bg-gradient-to-br from-[#154230] via-[#1a5240] to-[#154230] rounded-b-[32px] px-4 pt-6 pb-8 relative">
         {/* Header Content */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            >
+              <Menu className="w-5 h-5 text-white" />
+            </button>
             <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain brightness-0 invert" />
           </div>
           <Link
@@ -109,8 +301,36 @@ export default function RFQsPage() {
         </p>
       </div>
 
-      {/* Main Content */}
-      <div className="px-4 -mt-4 space-y-4 pb-6">
+      {/* Desktop Header */}
+      <div className="hidden lg:block bg-white border-b border-black/5 px-8 py-4 sticky top-0 z-30">
+        <div className="flex items-center justify-between ml-64">
+          <div>
+            <h1 className="text-xl font-bold text-[#101111]">My RFQs</h1>
+            <p className="text-sm text-[#4A4A4A]">Manage your requests for quotes</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/marketplace/inbox"
+              className="relative p-2.5 bg-[#E6E2DA] hover:bg-[#D4CCBE] rounded-full transition-colors"
+            >
+              <Bell className="w-5 h-5 text-[#4A4A4A]" />
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">
+                3
+              </span>
+            </Link>
+            <Link
+              href="/rfqs/new"
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span>New RFQ</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content - Mobile */}
+      <div className="lg:hidden px-4 -mt-4 space-y-4 pb-24">
         {/* Search Bar */}
         <div className="relative">
           <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
@@ -124,7 +344,7 @@ export default function RFQsPage() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {statusFilters.map(s => (
             <button
               key={s}
@@ -210,8 +430,137 @@ export default function RFQsPage() {
         )}
       </div>
 
-      {/* Burgundy Bottom Stats Bar */}
-      <div className="fixed bottom-20 left-0 right-0 bg-[#5D1E21] px-4 py-3 shadow-lg">
+      {/* Main Content - Desktop */}
+      <div className="hidden lg:block lg:ml-64 px-8 py-6 space-y-6">
+        {/* Desktop Stats Cards */}
+        <div className="grid grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <p className="text-[#4A4A4A] text-sm font-medium mb-1">Total RFQs</p>
+            <p className="text-3xl font-bold text-[#101111]">{stats.total}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <p className="text-[#4A4A4A] text-sm font-medium mb-1">Open</p>
+            <p className="text-3xl font-bold text-[#154230]">{stats.open}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <p className="text-[#4A4A4A] text-sm font-medium mb-1">Quoted</p>
+            <p className="text-3xl font-bold text-[#5D1E21]">{stats.quoted}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <p className="text-[#4A4A4A] text-sm font-medium mb-1">Accepted</p>
+            <p className="text-3xl font-bold text-[#154230]">{stats.accepted}</p>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative max-w-2xl">
+          <Search className="w-5 h-5 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search RFQs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-2xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#A6824A] text-sm shadow-sm"
+          />
+        </div>
+
+        {/* Filter Tabs */}
+        <div className="flex gap-2">
+          {statusFilters.map(s => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+                statusFilter === s
+                  ? 'bg-[#154230] text-white shadow-md'
+                  : 'bg-white text-[#4A4A4A] hover:bg-white/80 shadow-sm border border-black/5'
+              }`}
+            >
+              {s === 'all' ? 'All' : statusLabels[s] || s}
+            </button>
+          ))}
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="space-y-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm animate-pulse">
+                <div className="flex justify-between">
+                  <div className="space-y-2">
+                    <div className="h-5 bg-[#E6E2DA] rounded w-64"></div>
+                    <div className="h-4 bg-[#E6E2DA] rounded w-48"></div>
+                  </div>
+                  <div className="h-10 bg-[#E6E2DA] rounded w-28"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && filteredRFQs.length === 0 && (
+          <div className="bg-white rounded-2xl p-12 shadow-sm text-center">
+            <div className="w-16 h-16 bg-[#E6E2DA] rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="w-8 h-8 text-[#4A4A4A]" />
+            </div>
+            <p className="text-[#4A4A4A] text-base mb-4">No RFQs found</p>
+            <Link href="/rfqs/new" className="text-[#154230] hover:underline font-semibold">
+              Create your first RFQ
+            </Link>
+          </div>
+        )}
+
+        {/* Desktop RFQ List */}
+        {!isLoading && filteredRFQs.length > 0 && (
+          <div className="space-y-4">
+            {filteredRFQs.map(rfq => (
+              <div
+                key={rfq.id}
+                onClick={() => setViewingRFQ(rfq)}
+                className="bg-white rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md transition-all"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-[#5D1E21] font-mono text-sm font-medium">RFQ-{rfq.id}</span>
+                      <span className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold ${statusConfig[rfq.status].bg} ${statusConfig[rfq.status].color}`}>
+                        {statusLabels[rfq.status]}
+                      </span>
+                      <span className="text-[#4A4A4A] text-sm">{rfq.category}</span>
+                    </div>
+                    <h3 className="text-[#101111] font-semibold text-lg mb-2">{rfq.title}</h3>
+                    <div className="flex items-center gap-4 text-sm text-[#4A4A4A]">
+                      <span>{rfq.quantity} {rfq.unit}</span>
+                      <span>&bull;</span>
+                      <span>{rfq.origin}</span>
+                      <ArrowRight className="w-4 h-4" />
+                      <span>{rfq.destination}</span>
+                    </div>
+                    <div className="flex items-center gap-1 mt-3 text-sm text-[#4A4A4A]">
+                      <Clock className="w-4 h-4" />
+                      <span>Expires {rfq.expiresAt}</span>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-[#154230] font-bold text-xl">{rfq.currency} {rfq.targetPrice}/{rfq.unit}</p>
+                    <div className="flex items-center justify-end gap-1 mt-3 text-[#4A4A4A] text-sm">
+                      <MessageSquare className="w-4 h-4" />
+                      <span>{rfq.responses} quotes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNavigation />
+
+      {/* Mobile Burgundy Stats Bar */}
+      <div className="lg:hidden fixed bottom-20 left-0 right-0 bg-[#5D1E21] px-4 py-3 shadow-lg z-30">
         <div className="flex items-center justify-around">
           <div className="text-center">
             <p className="text-white text-lg font-bold">{stats.total}</p>

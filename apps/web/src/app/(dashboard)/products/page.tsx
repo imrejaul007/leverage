@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Package, Search, Plus, Edit, Trash2, Globe, TrendingUp, CheckCircle, Bell, Home, ShoppingCart, FileText, Mail, User } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Package, Search, Plus, Edit, Trash2, Bell, Home, FileText, Mail, User, Menu, X, Settings, LogOut, MessageSquare, Truck, BarChart3, Briefcase } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -30,12 +31,25 @@ const initialProducts: Product[] = [
 const categories = ['Food & Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Healthcare', 'Automotive', 'Chemicals', 'Other'];
 const currencies = ['USD', 'EUR', 'GBP', 'AED', 'INR'];
 
-const navItems = [
-  { icon: Home, label: 'Home', href: '/dashboard' },
-  { icon: ShoppingCart, label: 'Browse', href: '/marketplace' },
-  { icon: FileText, label: 'Post RFQ', href: '/rfqs/new', primary: true },
-  { icon: Mail, label: 'Inbox', href: '/marketplace/inbox' },
-  { icon: User, label: 'Account', href: '/settings' },
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/products', icon: Briefcase, label: 'Products', active: true },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
 ];
 
 export default function ProductsPage() {
@@ -47,11 +61,13 @@ export default function ProductsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
 
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    category: 'Food & Agriculture',
+    category: 'Food& Agriculture',
     price: '',
     currency: 'USD',
     stock: '',
@@ -125,7 +141,7 @@ export default function ProductsPage() {
     setFormData({
       name: '',
       description: '',
-      category: 'Food & Agriculture',
+      category: 'Food& Agriculture',
       price: '',
       currency: 'USD',
       stock: '',
@@ -150,184 +166,309 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="space-y-4 pb-28">
-      {/* Mobile Page Header - Green Gradient */}
-      <div className="bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pt-4 pb-6 -mx-4">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-white font-bold text-lg">My Products</h1>
-            <p className="text-white/70 text-xs mt-0.5">Connecting Dots to Ports</p>
-          </div>
-          <div className="relative">
-            <Bell className="w-5 h-5 text-white" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-              3
-            </span>
-          </div>
-        </div>
-
-        {/* LEVERAGE Logo */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="bg-white/10 rounded-lg px-3 py-1.5">
-            <span className="text-white font-bold text-sm tracking-wide">LEVERAGE</span>
-          </div>
-          <span className="text-white/60 text-xs">CONNECTING DOTS TO PORTS</span>
-        </div>
-
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-white/10 rounded-xl p-3 text-center">
-            <p className="text-white font-bold text-lg">{products.length}</p>
-            <p className="text-white/60 text-[10px]">Total</p>
-          </div>
-          <div className="bg-white/10 rounded-xl p-3 text-center">
-            <p className="text-white font-bold text-lg">{products.filter(p => p.status === 'active').length}</p>
-            <p className="text-white/60 text-[10px]">Active</p>
-          </div>
-          <div className="bg-white/10 rounded-xl p-3 text-center">
-            <p className="text-white font-bold text-lg">8</p>
-            <p className="text-white/60 text-[10px]">Categories</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Search & Filter */}
-      <div className="flex flex-col gap-3">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm shadow-sm"
-          />
-        </div>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="w-full h-12 px-4 bg-white border border-black/5 rounded-xl text-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A] shadow-sm appearance-none"
-        >
-          <option value="all">All Categories</option>
-          {categories.map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Add Product Button */}
-      <button
-        onClick={() => setShowCreateModal(true)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-md"
-      >
-        <Plus className="w-4 h-4" />
-        Add Product
-      </button>
-
-      {/* Loading */}
-      {isLoading && (
-        <div className="grid grid-cols-2 gap-3">
-          {[1,2,3,4].map(i => (
-            <div key={i} className="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
-              <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3"></div>
-              <div className="h-4 bg-[#E6E2DA] rounded w-3/4 mb-2"></div>
-              <div className="h-6 bg-[#E6E2DA] rounded w-1/3"></div>
+    <div className="min-h-screen bg-[#F5F2ED]">
+      {/* Desktop Sidebar - Fixed Left */}
+      <aside className="hidden lg:flex fixed left-0 top-0 w-64 h-screen bg-white border-r border-black/5 flex-col z-30">
+        {/* Logo */}
+        <div className="p-6 border-b border-black/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-sm">L</span>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!isLoading && filteredProducts.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-2xl shadow-sm">
-          <div className="w-16 h-16 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Package className="w-8 h-8 text-[#154230]" />
-          </div>
-          <p className="text-[#4A4A4A] text-sm mb-4">No products found</p>
-          <button onClick={() => setShowCreateModal(true)} className="text-[#154230] hover:text-[#1d5240] font-semibold text-sm">
-            Add your first product
-          </button>
-        </div>
-      )}
-
-      {/* Products Grid */}
-      {!isLoading && filteredProducts.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
-          {filteredProducts.map(product => (
-            <div
-              key={product.id}
-              onClick={() => setViewingProduct(product)}
-              className="bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer"
-            >
-              <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3 flex items-center justify-center">
-                <Package className="w-12 h-12 text-[#154230]/30" />
-              </div>
-              <h3 className="text-[#101111] font-semibold text-sm line-clamp-2 mb-1">{product.name}</h3>
-              <p className="text-[#4A4A4A] text-xs mb-2 truncate">{product.category}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-[#154230] font-bold text-lg">
-                  ${product.price.toFixed(2)}
-                </span>
-                <span className={`text-xs ${product.stock < 10 ? 'text-[#5D1E21]' : 'text-[#4A4A4A]'}`}>
-                  {product.stock} in stock
-                </span>
-              </div>
+            <div>
+              <span className="text-[#101111] font-bold text-lg tracking-wide">LEVERAGE</span>
+              <p className="text-[#4A4A4A] text-[10px]">Connecting Dots to Ports</p>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Burgundy Bottom Stats Bar */}
-      <div className="fixed bottom-[72px] left-0 right-0 bg-[#5D1E21] px-4 py-3">
-        <div className="flex items-center justify-around">
-          <div className="text-center">
-            <p className="text-white font-bold text-sm">${(products.reduce((acc, p) => acc + p.price * p.stock, 0) / 1000).toFixed(1)}K</p>
-            <p className="text-white/60 text-[10px]">Total Value</p>
-          </div>
-          <div className="h-8 w-px bg-white/20"></div>
-          <div className="text-center">
-            <p className="text-white font-bold text-sm">{products.length}</p>
-            <p className="text-white/60 text-[10px]">Products</p>
-          </div>
-          <div className="h-8 w-px bg-white/20"></div>
-          <div className="text-center">
-            <p className="text-white font-bold text-sm">{products.reduce((acc, p) => acc + p.stock, 0).toLocaleString()}</p>
-            <p className="text-white/60 text-[10px]">Total Stock</p>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-40">
-        <div className="flex items-center justify-around h-[72px]">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = false;
+        {/* Navigation Links */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.active || pathname === link.href;
             return (
               <Link
-                key={item.label}
-                href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 w-16 h-full ${
-                  item.primary ? '' : ''
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-[#154230] text-white'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
                 }`}
               >
-                {item.primary ? (
-                  <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center -mt-6 shadow-lg">
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                ) : (
-                  <>
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`} />
-                    <span className={`text-[10px] ${isActive ? 'text-[#154230] font-semibold' : 'text-[#4A4A4A]'}`}>
-                      {item.label}
-                    </span>
-                  </>
-                )}
+                <Icon className="w-5 h-5" />
+                {link.label}
               </Link>
             );
           })}
+        </nav>
+
+        {/* Logout */}
+        <div className="p-4 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#5D1E21]/10 hover:text-[#5D1E21] transition-colors">
+            <LogOut className="w-5 h-5" />
+            Log Out
+          </button>
         </div>
-      </nav>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-40">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
+          <aside className="absolute left-0 top-0 w-72 h-full bg-white flex flex-col">
+            {/* Logo */}
+            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">L</span>
+                </div>
+                <div>
+                  <span className="text-[#101111] font-bold text-lg tracking-wide">LEVERAGE</span>
+                  <p className="text-[#4A4A4A] text-[10px]">Connecting Dots to Ports</p>
+                </div>
+              </div>
+              <button onClick={() => setSidebarOpen(false)} className="p-2">
+                <X className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              {sidebarLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.active || pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-[#154230] text-white'
+                        : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Logout */}
+            <div className="p-4 border-t border-black/5">
+              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#5D1E21]/10 hover:text-[#5D1E21] transition-colors">
+                <LogOut className="w-5 h-5" />
+                Log Out
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* Main Content - Desktop: ml-64, Mobile: full width */}
+      <main className="lg:ml-64 min-h-screen">
+        {/* Mobile Page Header - Green Gradient */}
+        <div className="lg:hidden bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pt-4 pb-6 -mx-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2">
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <div>
+                <h1 className="text-white font-bold text-lg">My Products</h1>
+                <p className="text-white/70 text-xs mt-0.5">Connecting Dots to Ports</p>
+              </div>
+            </div>
+            <div className="relative">
+              <Bell className="w-5 h-5 text-white" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                3
+              </span>
+            </div>
+          </div>
+
+          {/* Stats Row */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <p className="text-white font-bold text-lg">{products.length}</p>
+              <p className="text-white/60 text-[10px]">Total</p>
+            </div>
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <p className="text-white font-bold text-lg">{products.filter(p => p.status === 'active').length}</p>
+              <p className="text-white/60 text-[10px]">Active</p>
+            </div>
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <p className="text-white font-bold text-lg">8</p>
+              <p className="text-white/60 text-[10px]">Categories</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-white border-b border-black/5 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-[#101111] font-bold text-xl">My Products</h1>
+              <p className="text-[#4A4A4A] text-sm">Manage your product catalog</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Bell className="w-5 h-5 text-[#4A4A4A]" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  3
+                </span>
+              </div>
+              <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">JD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="p-4 lg:p-6 space-y-4 pb-28 lg:pb-6">
+          {/* Search& Filter */}
+          <div className="flex flex-col gap-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm shadow-sm"
+              />
+            </div>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-full h-12 px-4 bg-white border border-black/5 rounded-xl text-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A] shadow-sm appearance-none"
+            >
+              <option value="all">All Categories</option>
+              {categories.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Add Product Button */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-md"
+          >
+            <Plus className="w-4 h-4" />
+            Add Product
+          </button>
+
+          {/* Loading */}
+          {isLoading && (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
+                  <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3"></div>
+                  <div className="h-4 bg-[#E6E2DA] rounded w-3/4 mb-2"></div>
+                  <div className="h-6 bg-[#E6E2DA] rounded w-1/3"></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && filteredProducts.length === 0 && (
+            <div className="text-center py-12 bg-white rounded-2xl shadow-sm">
+              <div className="w-16 h-16 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="w-8 h-8 text-[#154230]" />
+              </div>
+              <p className="text-[#4A4A4A] text-sm mb-4">No products found</p>
+              <button onClick={() => setShowCreateModal(true)} className="text-[#154230] hover:text-[#1d5240] font-semibold text-sm">
+                Add your first product
+              </button>
+            </div>
+          )}
+
+          {/* Products Grid */}
+          {!isLoading && filteredProducts.length > 0 && (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {filteredProducts.map(product => (
+                <div
+                  key={product.id}
+                  onClick={() => setViewingProduct(product)}
+                  className="bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                >
+                  <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-3 flex items-center justify-center">
+                    <Package className="w-12 h-12 text-[#154230]/30" />
+                  </div>
+                  <h3 className="text-[#101111] font-semibold text-sm line-clamp-2 mb-1">{product.name}</h3>
+                  <p className="text-[#4A4A4A] text-xs mb-2 truncate">{product.category}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#154230] font-bold text-lg">
+                      ${product.price.toFixed(2)}
+                    </span>
+                    <span className={`text-xs ${product.stock < 10 ? 'text-[#5D1E21]' : 'text-[#4A4A4A]'}`}>
+                      {product.stock} in stock
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Mobile Only: Burgundy Bottom Stats Bar */}
+          <div className="lg:hidden fixed bottom-[72px] left-0 right-0 bg-[#5D1E21] px-4 py-3">
+            <div className="flex items-center justify-around">
+              <div className="text-center">
+                <p className="text-white font-bold text-sm">${(products.reduce((acc, p) => acc + p.price * p.stock, 0) / 1000).toFixed(1)}K</p>
+                <p className="text-white/60 text-[10px]">Total Value</p>
+              </div>
+              <div className="h-8 w-px bg-white/20"></div>
+              <div className="text-center">
+                <p className="text-white font-bold text-sm">{products.length}</p>
+                <p className="text-white/60 text-[10px]">Products</p>
+              </div>
+              <div className="h-8 w-px bg-white/20"></div>
+              <div className="text-center">
+                <p className="text-white font-bold text-sm">{products.reduce((acc, p) => acc + p.stock, 0).toLocaleString()}</p>
+                <p className="text-white/60 text-[10px]">Total Stock</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Bottom Navigation - Fixed at bottom */}
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-40">
+          <div className="flex items-center justify-around h-[72px]">
+            {bottomNavLinks.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex flex-col items-center justify-center gap-1 w-16 h-full ${
+                    item.primary ? '' : ''
+                  }`}
+                >
+                  {item.primary ? (
+                    <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                  ) : (
+                    <>
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`} />
+                      <span className={`text-[10px] ${isActive ? 'text-[#154230] font-semibold' : 'text-[#4A4A4A]'}`}>
+                        {item.label}
+                      </span>
+                    </>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      </main>
 
       {/* View Product Modal */}
       {viewingProduct && (

@@ -3,7 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X, Anchor, Globe, Bell } from 'lucide-react';
+import {
+  Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X,
+  Anchor, Globe, Bell, Menu, Settings, LogOut, Home, User, Plus,
+  MessageSquare, FileText, Package, BarChart3
+} from 'lucide-react';
 
 interface Quote {
   id: string;
@@ -32,6 +36,27 @@ const popularRoutes = [
   { from: 'Singapore', to: 'Mumbai', seaPrice: 1200, airPrice: 4800 },
 ];
 
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/freight', icon: Ship, label: 'Freight', active: true },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
+];
+
 export default function FreightPage() {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
@@ -41,6 +66,7 @@ export default function FreightPage() {
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [bookingForm, setBookingForm] = useState({
     containerType: '20ft',
@@ -70,212 +96,377 @@ export default function FreightPage() {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header with Green Gradient */}
-      <div className="bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pb-6 pt-4 -mx-4 relative">
-        {/* Bell Notification */}
-        <div className="flex justify-end mb-3">
-          <button className="relative p-2 text-white/80 hover:text-white transition-colors">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
+    <div className="min-h-screen bg-[#F5F2ED]">
+      {/* Desktop Sidebar - Fixed on left */}
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:h-full lg:w-64 lg:bg-white lg:border-r lg:border-black/5 lg:z-40">
+        {/* Logo */}
+        <div className="h-16 flex items-center px-6 border-b border-black/5">
+          <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-colors ${
+                  link.active
+                    ? 'bg-[#154230] text-white'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Logout Button */}
+        <div className="p-3 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111] transition-colors">
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/30 z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside className={`lg:hidden fixed top-0 left-0 h-full w-72 bg-white z-50 transform transition-transform duration-300 ${
+        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {/* Logo */}
+        <div className="h-16 flex items-center justify-between px-6 border-b border-black/5">
+          <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Logo and Tagline */}
-        <div className="flex items-center gap-3">
-          <Image src="/logo-white.png" alt="LEVERAGE" width={80} height={28} className="object-contain" />
-        </div>
-        <p className="text-white/60 text-xs mt-2 font-medium">CONNECTING DOTS TO PORTS</p>
-
-        {/* Page Title */}
-        <div className="mt-4">
-          <h1 className="text-white font-bold text-xl">Freight & Logistics</h1>
-          <p className="text-white/70 text-sm mt-0.5">Compare shipping rates from top carriers worldwide</p>
-        </div>
-      </div>
-
-      {/* Freight Stats Bar - Burgundy */}
-      <div className="bg-[#5D1E21] rounded-2xl p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-              <Ship className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-white">50+</p>
-              <p className="text-white/60 text-xs font-medium">Carriers</p>
-            </div>
-          </div>
-          <div className="h-8 w-px bg-white/10" />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-              <Anchor className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-white">120+</p>
-              <p className="text-white/60 text-xs font-medium">Ports</p>
-            </div>
-          </div>
-          <div className="h-8 w-px bg-white/10" />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-              <Globe className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-white">45</p>
-              <p className="text-white/60 text-xs font-medium">Countries</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quote Form Card */}
-      <div className="bg-white rounded-2xl shadow-md p-4">
-        <div className="space-y-3 mb-4">
-          <div>
-            <label className="block text-[#101111] text-xs font-semibold mb-1.5">Origin</label>
-            <div className="relative">
-              <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                placeholder="City or Port"
-                className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-[#101111] text-xs font-semibold mb-1.5">Destination</label>
-            <div className="relative">
-              <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="City or Port"
-                className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-[#101111] text-xs font-semibold mb-1.5">Shipping Type</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShippingType('sea')}
-                className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-sm transition-colors ${
-                  shippingType === 'sea'
+        {/* Navigation Links */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-colors ${
+                  link.active
                     ? 'bg-[#154230] text-white'
-                    : 'bg-[#E6E2DA] text-[#101111]'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
                 }`}
               >
-                <Ship className="w-4 h-4" />
-                Sea
-              </button>
-              <button
-                onClick={() => setShippingType('air')}
-                className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-sm transition-colors ${
-                  shippingType === 'air'
-                    ? 'bg-[#154230] text-white'
-                    : 'bg-[#E6E2DA] text-[#101111]'
-                }`}
-              >
-                <Plane className="w-4 h-4" />
-                Air
-              </button>
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Logout Button */}
+        <div className="p-3 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111] transition-colors">
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="lg:ml-64 pb-24 lg:pb-0">
+        {/* Mobile Header with Green Gradient */}
+        <div className="lg:hidden bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pb-6 pt-4 relative">
+          {/* Hamburger Menu Button */}
+          <div className="flex items-center justify-between mb-3">
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-2 text-white/80 hover:text-white transition-colors"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <button className="relative p-2 text-white/80 hover:text-white transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
+            </button>
+          </div>
+
+          {/* Logo and Tagline */}
+          <div className="flex items-center gap-3">
+            <Image src="/logo-white.png" alt="LEVERAGE" width={80} height={28} className="object-contain" />
+          </div>
+          <p className="text-white/60 text-xs mt-2 font-medium">CONNECTING DOTS TO PORTS</p>
+
+          {/* Page Title */}
+          <div className="mt-4">
+            <h1 className="text-white font-bold text-xl">Freight & Logistics</h1>
+            <p className="text-white/70 text-sm mt-0.5">Compare shipping rates from top carriers worldwide</p>
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-b from-[#154230] to-[#1d5240] px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-white font-bold text-2xl">Freight & Logistics</h1>
+              <p className="text-white/70 text-sm mt-1">Compare shipping rates from top carriers worldwide</p>
+            </div>
+            <button className="relative p-3 text-white/80 hover:text-white transition-colors">
+              <Bell className="w-6 h-6" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-white rounded-full"></span>
+            </button>
+          </div>
+        </div>
+
+        {/* Content Container */}
+        <div className="px-4 lg:px-8 py-6 space-y-4">
+          {/* Freight Stats Bar - Burgundy */}
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                  <Ship className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">50+</p>
+                  <p className="text-white/60 text-xs font-medium">Carriers</p>
+                </div>
+              </div>
+              <div className="h-8 w-px bg-white/10" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                  <Anchor className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">120+</p>
+                  <p className="text-white/60 text-xs font-medium">Ports</p>
+                </div>
+              </div>
+              <div className="h-8 w-px bg-white/10" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">45</p>
+                  <p className="text-white/60 text-xs font-medium">Countries</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quote Form Card */}
+          <div className="bg-white rounded-2xl shadow-md p-4">
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-[#101111] text-xs font-semibold mb-1.5">Origin</label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={origin}
+                    onChange={(e) => setOrigin(e.target.value)}
+                    placeholder="City or Port"
+                    className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[#101111] text-xs font-semibold mb-1.5">Destination</label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    placeholder="City or Port"
+                    className="w-full h-11 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[#101111] text-xs font-semibold mb-1.5">Shipping Type</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShippingType('sea')}
+                    className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-sm transition-colors ${
+                      shippingType === 'sea'
+                        ? 'bg-[#154230] text-white'
+                        : 'bg-[#E6E2DA] text-[#101111]'
+                    }`}
+                  >
+                    <Ship className="w-4 h-4" />
+                    Sea
+                  </button>
+                  <button
+                    onClick={() => setShippingType('air')}
+                    className={`flex-1 flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-sm transition-colors ${
+                      shippingType === 'air'
+                        ? 'bg-[#154230] text-white'
+                        : 'bg-[#E6E2DA] text-[#101111]'
+                    }`}
+                  >
+                    <Plane className="w-4 h-4" />
+                    Air
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleGetQuote}
+              disabled={!origin || !destination || isLoading}
+              className="w-full h-12 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors disabled:opacity-50"
+            >
+              {isLoading ? 'Getting Quotes...' : 'Get Quotes'}
+            </button>
+          </div>
+
+          {/* Success Message */}
+          {bookingSuccess && (
+            <div className="bg-[#154230] text-white p-4 rounded-2xl flex items-center gap-3 shadow-md">
+              <CheckCircle className="w-5 h-5" />
+              <span className="font-medium text-sm">Booking confirmed! You will receive confirmation via email.</span>
+            </div>
+          )}
+
+          {/* Quotes */}
+          {quotes.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-[#101111] font-semibold text-sm">{quotes.length} quotes found</h2>
+              {quotes.map(quote => (
+                <div key={quote.id} className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-2xl">
+                      {quote.logo}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-[#101111] font-semibold text-sm">{quote.carrier}</h3>
+                        <span className="flex items-center gap-1 text-[#A6824A] text-xs font-medium">
+                          ★ {quote.rating}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 mt-1 text-[#4A4A4A] text-xs font-medium">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {quote.transit}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Truck className="w-3 h-3" />
+                          {quote.type}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-[#101111]">${quote.price.toLocaleString()}</p>
+                      <p className="text-[#4A4A4A] text-xs font-medium">per container</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedQuote(quote);
+                        setShowBookingModal(true);
+                      }}
+                      className="px-4 py-2 bg-[#154230] text-white font-semibold rounded-xl text-sm hover:bg-[#1d5240] transition-colors"
+                    >
+                      Book
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Popular Routes */}
+          {quotes.length === 0 && (
+            <div className="bg-white rounded-2xl shadow-md p-4">
+              <h2 className="text-[#101111] font-semibold text-sm mb-3">Popular Routes</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {popularRoutes.map((route, i) => (
+                  <div key={i} className="p-3 bg-[#E6E2DA] rounded-xl">
+                    <div className="flex items-center gap-2 text-[#101111] text-sm font-semibold">
+                      <MapPin className="w-3 h-3 text-[#A6824A]" />
+                      {route.from}
+                      <span className="text-[#4A4A4A]">→</span>
+                      {route.to}
+                    </div>
+                    <div className="flex gap-3 mt-2 text-xs font-medium">
+                      <span className="flex items-center gap-1 text-[#4A4A4A]">
+                        <Ship className="w-3 h-3" /> ${route.seaPrice}
+                      </span>
+                      <span className="flex items-center gap-1 text-[#4A4A4A]">
+                        <Plane className="w-3 h-3" /> ${route.airPrice}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bottom Stats Summary - Burgundy */}
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="flex items-center justify-center gap-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">$18M+</p>
+                <p className="text-white/60 text-xs font-medium">Saved by users</p>
+              </div>
+              <div className="h-10 w-px bg-white/20" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">2,500+</p>
+                <p className="text-white/60 text-xs font-medium">Shipments booked</p>
+              </div>
             </div>
           </div>
         </div>
-        <button
-          onClick={handleGetQuote}
-          disabled={!origin || !destination || isLoading}
-          className="w-full h-12 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors disabled:opacity-50"
-        >
-          {isLoading ? 'Getting Quotes...' : 'Get Quotes'}
-        </button>
-      </div>
+      </main>
 
-      {/* Success Message */}
-      {bookingSuccess && (
-        <div className="bg-[#154230] text-white p-4 rounded-2xl flex items-center gap-3 shadow-md">
-          <CheckCircle className="w-5 h-5" />
-          <span className="font-medium text-sm">Booking confirmed! You will receive confirmation via email.</span>
-        </div>
-      )}
-
-      {/* Quotes */}
-      {quotes.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="text-[#101111] font-semibold text-sm">{quotes.length} quotes found</h2>
-          {quotes.map(quote => (
-            <div key={quote.id} className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-all">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-2xl">
-                  {quote.logo}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-[#101111] font-semibold text-sm">{quote.carrier}</h3>
-                    <span className="flex items-center gap-1 text-[#A6824A] text-xs font-medium">
-                      ★ {quote.rating}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 mt-1 text-[#4A4A4A] text-xs font-medium">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {quote.transit}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Truck className="w-3 h-3" />
-                      {quote.type}
-                    </span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-[#101111]">${quote.price.toLocaleString()}</p>
-                  <p className="text-[#4A4A4A] text-xs font-medium">per container</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedQuote(quote);
-                    setShowBookingModal(true);
-                  }}
-                  className="px-4 py-2 bg-[#154230] text-white font-semibold rounded-xl text-sm hover:bg-[#1d5240] transition-colors"
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-30 px-2 pb-safe">
+        <div className="flex items-center justify-around h-16">
+          {bottomNavLinks.map((link) => {
+            const Icon = link.icon;
+            if (link.primary) {
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex flex-col items-center justify-center -mt-4"
                 >
-                  Book
-                </button>
-              </div>
-            </div>
-          ))}
+                  <div className="w-14 h-14 rounded-full bg-[#154230] flex items-center justify-center shadow-lg">
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-[10px] font-medium text-[#154230] mt-1">{link.label}</span>
+                </Link>
+              );
+            }
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex flex-col items-center gap-1 text-[#4A4A4A] hover:text-[#101111] transition-colors"
+              >
+                <Icon className="w-5 h-5" />
+                <span className="text-[10px] font-medium">{link.label}</span>
+              </Link>
+            );
+          })}
         </div>
-      )}
-
-      {/* Popular Routes */}
-      {quotes.length === 0 && (
-        <div className="bg-white rounded-2xl shadow-md p-4">
-          <h2 className="text-[#101111] font-semibold text-sm mb-3">Popular Routes</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {popularRoutes.map((route, i) => (
-              <div key={i} className="p-3 bg-[#E6E2DA] rounded-xl">
-                <div className="flex items-center gap-2 text-[#101111] text-sm font-semibold">
-                  <MapPin className="w-3 h-3 text-[#A6824A]" />
-                  {route.from}
-                  <span className="text-[#4A4A4A]">→</span>
-                  {route.to}
-                </div>
-                <div className="flex gap-3 mt-2 text-xs font-medium">
-                  <span className="flex items-center gap-1 text-[#4A4A4A]">
-                    <Ship className="w-3 h-3" /> ${route.seaPrice}
-                  </span>
-                  <span className="flex items-center gap-1 text-[#4A4A4A]">
-                    <Plane className="w-3 h-3" /> ${route.airPrice}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      </nav>
 
       {/* Booking Modal */}
       {showBookingModal && selectedQuote && (
@@ -339,21 +530,6 @@ export default function FreightPage() {
           </div>
         </div>
       )}
-
-      {/* Bottom Stats Summary - Burgundy */}
-      <div className="bg-[#5D1E21] rounded-2xl p-4">
-        <div className="flex items-center justify-center gap-6">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-white">$18M+</p>
-            <p className="text-white/60 text-xs font-medium">Saved by users</p>
-          </div>
-          <div className="h-10 w-px bg-white/20" />
-          <div className="text-center">
-            <p className="text-2xl font-bold text-white">2,500+</p>
-            <p className="text-white/60 text-xs font-medium">Shipments booked</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder } from 'lucide-react';
+import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -41,12 +41,24 @@ const statusConfig: Record<string, { color: string; bg: string; label: string }>
   REJECTED: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10', label: 'Rejected' },
 };
 
-const navItems = [
-  { icon: Home, label: 'Home', href: '/' },
-  { icon: Briefcase, label: 'Browse', href: '/browse' },
-  { icon: Send, label: 'Post RFQ', href: '/post-rfq' },
-  { icon: MessageSquare, label: 'Inbox', href: '/inbox' },
-  { icon: User, label: 'Account', href: '/account' },
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents', active: true },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
 ];
 
 export default function DocumentsPage() {
@@ -56,6 +68,7 @@ export default function DocumentsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewingDoc, setViewingDoc] = useState<Document | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_documents');
@@ -84,226 +97,513 @@ export default function DocumentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E6E2DA] pb-24">
-      {/* Header - Green gradient with rounded bottom */}
-      <div className="bg-gradient-to-br from-[#154230] to-[#1a5c3f] px-5 pt-12 pb-8 rounded-b-[32px] relative overflow-hidden">
-        {/* LEVERAGE Logo and Tagline */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-white tracking-wide">LEVERAGE</h1>
-            <p className="text-white/70 text-xs font-medium mt-0.5">CONNECTING DOTS TO PORTS</p>
-          </div>
-          <button className="relative p-2 bg-white/10 rounded-xl backdrop-blur-sm">
-            <Bell className="w-5 h-5 text-white" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
-              <span className="w-1.5 h-1.5 bg-white rounded-full" />
-            </span>
-          </button>
-        </div>
-
-        {/* Title and New Document Button */}
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-[#E6E2DA]">
+      {/* Desktop Sidebar - Fixed left */}
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:bg-white lg:border-r lg:border-black/5 lg:z-40">
+        {/* Logo */}
+        <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <FileCheck className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-lg">L</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Documents</h2>
-              <p className="text-white/70 text-sm font-medium">{documents.length} total documents</p>
+              <h1 className="text-xl font-bold text-[#101111] tracking-wide">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] font-medium">CONNECTING DOTS TO PORTS</p>
             </div>
           </div>
-          <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#154230] font-semibold rounded-xl shadow-lg">
-            <Plus className="w-4 h-4" />
-            New
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                link.active
+                  ? 'bg-[#154230] text-white'
+                  : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+              }`}
+            >
+              <link.icon className="w-5 h-5" />
+              <span className="font-semibold text-sm">{link.label}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Logout Button */}
+        <div className="p-4 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors">
+            <LogOut className="w-5 h-5" />
+            <span className="font-semibold text-sm">Logout</span>
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Search and Filter Section */}
-      <div className="px-5 -mt-4 relative z-10">
-        <div className="bg-white rounded-2xl shadow-lg p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex-1 relative">
-              <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search documents..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 pl-11 pr-4 bg-[#E6E2DA] rounded-xl text-[#101111] placeholder-[#5A5A5A] focus:outline-none text-sm font-medium"
-              />
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/30"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <div
+            className="absolute left-0 top-0 h-full w-72 bg-white shadow-xl"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Logo */}
+            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">L</span>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-[#101111] tracking-wide">LEVERAGE</h1>
+                  <p className="text-[#4A4A4A] text-[10px] font-medium">CONNECTING DOTS TO PORTS</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 hover:bg-[#E6E2DA] rounded-xl transition-colors"
+              >
+                <X className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
             </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`p-3 rounded-xl transition-colors ${showFilters ? 'bg-[#154230] text-white' : 'bg-[#E6E2DA] text-[#4A4A4A]'}`}
-            >
-              <Filter className="w-4 h-4" />
-            </button>
-          </div>
 
-          {/* Filter Tabs */}
-          {showFilters && (
-            <div className="flex gap-2 mt-4 overflow-x-auto pb-1 -mx-1 px-1">
-              {statusFilters.map(s => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className={`flex-shrink-0 px-4 py-2 rounded-xl font-semibold text-xs transition-colors ${
-                    statusFilter === s
+            {/* Navigation Links */}
+            <nav className="p-4 space-y-1">
+              {sidebarLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                    link.active
                       ? 'bg-[#154230] text-white'
-                      : 'bg-[#E6E2DA] text-[#4A4A4A]'
+                      : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
                   }`}
                 >
-                  {s === 'all' ? 'All' : statusConfig[s]?.label || s}
-                </button>
+                  <link.icon className="w-5 h-5" />
+                  <span className="font-semibold text-sm">{link.label}</span>
+                </Link>
               ))}
-            </div>
-          )}
-        </div>
-      </div>
+            </nav>
 
-      {/* Quick Actions */}
-      <div className="px-5 mt-5">
-        <div className="bg-white rounded-2xl shadow-lg p-4">
-          <h3 className="text-sm font-semibold text-[#101111] mb-3">Quick Actions</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
-              <div className="w-10 h-10 bg-[#154230]/10 rounded-lg flex items-center justify-center">
-                <Upload className="w-5 h-5 text-[#154230]" />
+            {/* Logout Button */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-black/5">
+              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors">
+                <LogOut className="w-5 h-5" />
+                <span className="font-semibold text-sm">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content - Offset on desktop */}
+      <div className="lg:ml-64">
+        {/* Mobile Header - Green gradient with rounded bottom */}
+        <div className="lg:hidden bg-gradient-to-br from-[#154230] to-[#1a5c3f] px-5 pt-12 pb-8 rounded-b-[32px] relative overflow-hidden">
+          {/* LEVERAGE Logo and Tagline */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 bg-white/10 rounded-xl backdrop-blur-sm"
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-white tracking-wide">LEVERAGE</h1>
+                <p className="text-white/70 text-xs font-medium mt-0.5">CONNECTING DOTS TO PORTS</p>
               </div>
-              <span className="text-xs font-medium text-[#101111]">Upload</span>
+            </div>
+            <button className="relative p-2 bg-white/10 rounded-xl backdrop-blur-sm">
+              <Bell className="w-5 h-5 text-white" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
+                <span className="w-1.5 h-1.5 bg-white rounded-full" />
+              </span>
             </button>
-            <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
-              <div className="w-10 h-10 bg-[#5D1E21]/10 rounded-lg flex items-center justify-center">
-                <Folder className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+
+          {/* Title and New Document Button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <FileCheck className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xs font-medium text-[#101111]">Folders</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
-              <div className="w-10 h-10 bg-[#A6824A]/10 rounded-lg flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#A6824A]" />
+              <div>
+                <h2 className="text-xl font-bold text-white">Documents</h2>
+                <p className="text-white/70 text-sm font-medium">{documents.length} total documents</p>
               </div>
-              <span className="text-xs font-medium text-[#101111]">Validate</span>
+            </div>
+            <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#154230] font-semibold rounded-xl shadow-lg">
+              <Plus className="w-4 h-4" />
+              New
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Documents List */}
-      <div className="px-5 mt-5">
-        <div className="space-y-3">
-          {filteredDocs.map(doc => (
-            <div
-              key={doc.id}
-              onClick={() => setViewingDoc(doc)}
-              className="bg-white rounded-2xl shadow-lg p-4 cursor-pointer hover:shadow-xl transition-shadow"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-xl">
-                  {documentTypes[doc.type]?.icon || '📄'}
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-white border-b border-black/5 px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-[#E6E2DA] rounded-xl flex items-center justify-center">
+                <FileCheck className="w-6 h-6 text-[#154230]" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-[#101111]">Documents</h2>
+                <p className="text-[#4A4A4A] text-sm font-medium">{documents.length} total documents</p>
+              </div>
+            </div>
+            <button className="flex items-center justify-center gap-2 px-5 py-3 bg-[#154230] text-white font-semibold rounded-xl shadow-lg hover:bg-[#1d5240] transition-colors">
+              <Plus className="w-5 h-5" />
+              New Document
+            </button>
+          </div>
+        </div>
+
+        {/* Search and Filter Section - Mobile */}
+        <div className="lg:hidden px-5 -mt-4 relative z-10">
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 relative">
+                <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search documents..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-11 pl-11 pr-4 bg-[#E6E2DA] rounded-xl text-[#101111] placeholder-[#5A5A5A] focus:outline-none text-sm font-medium"
+                />
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`p-3 rounded-xl transition-colors ${showFilters ? 'bg-[#154230] text-white' : 'bg-[#E6E2DA] text-[#4A4A4A]'}`}
+              >
+                <Filter className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Filter Tabs */}
+            {showFilters && (
+              <div className="flex gap-2 mt-4 overflow-x-auto pb-1 -mx-1 px-1">
+                {statusFilters.map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setStatusFilter(s)}
+                    className={`flex-shrink-0 px-4 py-2 rounded-xl font-semibold text-xs transition-colors ${
+                      statusFilter === s
+                        ? 'bg-[#154230] text-white'
+                        : 'bg-[#E6E2DA] text-[#4A4A4A]'
+                    }`}
+                  >
+                    {s === 'all' ? 'All' : statusConfig[s]?.label || s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Search and Filter Section - Desktop */}
+        <div className="hidden lg:block px-8 py-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-1 relative">
+                <Search className="w-5 h-5 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search documents by name or type..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-12 pl-12 pr-4 bg-[#E6E2DA] rounded-xl text-[#101111] placeholder-[#5A5A5A] focus:outline-none text-sm font-medium"
+                />
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`p-3 rounded-xl transition-colors ${showFilters ? 'bg-[#154230] text-white' : 'bg-[#E6E2DA] text-[#4A4A4A]'}`}
+              >
+                <Filter className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Filter Tabs - Desktop */}
+            {showFilters && (
+              <div className="flex gap-3 mt-4">
+                {statusFilters.map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setStatusFilter(s)}
+                    className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
+                      statusFilter === s
+                        ? 'bg-[#154230] text-white'
+                        : 'bg-[#E6E2DA] text-[#4A4A4A] hover:bg-[#D4CCBE]'
+                    }`}
+                  >
+                    {s === 'all' ? 'All' : statusConfig[s]?.label || s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Actions - Mobile */}
+        <div className="lg:hidden px-5 mt-5">
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <h3 className="text-sm font-semibold text-[#101111] mb-3">Quick Actions</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#154230]/10 rounded-lg flex items-center justify-center">
+                  <Upload className="w-5 h-5 text-[#154230]" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[#101111] font-bold text-sm truncate">{doc.name}</h3>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    <span className="text-[#4A4A4A] text-xs font-medium">{documentTypes[doc.type]?.label}</span>
-                    <span className="text-[#4A4A4A] text-xs">•</span>
-                    <span className="text-[#4A4A4A] text-xs font-medium">{doc.fileSize}</span>
-                    <span className="text-[#4A4A4A] text-xs">•</span>
-                    <span className="text-[#4A4A4A] text-xs font-medium flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {doc.updatedAt}
+                <span className="text-xs font-medium text-[#101111]">Upload</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#5D1E21]/10 rounded-lg flex items-center justify-center">
+                  <Folder className="w-5 h-5 text-[#5D1E21]" />
+                </div>
+                <span className="text-xs font-medium text-[#101111]">Folders</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#A6824A]/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-[#A6824A]" />
+                </div>
+                <span className="text-xs font-medium text-[#101111]">Validate</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions - Desktop */}
+        <div className="hidden lg:block px-8 mt-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-base font-semibold text-[#101111] mb-4">Quick Actions</h3>
+            <div className="flex gap-4">
+              <button className="flex items-center gap-3 px-5 py-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#154230]/10 rounded-lg flex items-center justify-center">
+                  <Upload className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-sm font-medium text-[#101111]">Upload Document</span>
+              </button>
+              <button className="flex items-center gap-3 px-5 py-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#5D1E21]/10 rounded-lg flex items-center justify-center">
+                  <Folder className="w-5 h-5 text-[#5D1E21]" />
+                </div>
+                <span className="text-sm font-medium text-[#101111]">Manage Folders</span>
+              </button>
+              <button className="flex items-center gap-3 px-5 py-3 bg-[#E6E2DA] rounded-xl hover:bg-[#D4CCBE] transition-colors">
+                <div className="w-10 h-10 bg-[#A6824A]/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-[#A6824A]" />
+                </div>
+                <span className="text-sm font-medium text-[#101111]">Validate Documents</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Documents List - Mobile */}
+        <div className="lg:hidden px-5 mt-5 pb-32">
+          <div className="space-y-3">
+            {filteredDocs.map(doc => (
+              <div
+                key={doc.id}
+                onClick={() => setViewingDoc(doc)}
+                className="bg-white rounded-2xl shadow-lg p-4 cursor-pointer hover:shadow-xl transition-shadow"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-xl">
+                    {documentTypes[doc.type]?.icon || '📄'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-[#101111] font-bold text-sm truncate">{doc.name}</h3>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="text-[#4A4A4A] text-xs font-medium">{documentTypes[doc.type]?.label}</span>
+                      <span className="text-[#4A4A4A] text-xs">•</span>
+                      <span className="text-[#4A4A4A] text-xs font-medium">{doc.fileSize}</span>
+                      <span className="text-[#4A4A4A] text-xs">•</span>
+                      <span className="text-[#4A4A4A] text-xs font-medium flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {doc.updatedAt}
+                      </span>
+                    </div>
+                  </div>
+                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${statusConfig[doc.status].bg} ${statusConfig[doc.status].color}`}>
+                    {statusConfig[doc.status].label}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Documents List - Desktop */}
+        <div className="hidden lg:block px-8 mt-6 pb-8">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="p-6 border-b border-black/5">
+              <h3 className="text-lg font-bold text-[#101111]">All Documents ({filteredDocs.length})</h3>
+            </div>
+            <div className="divide-y divide-black/5">
+              {filteredDocs.map(doc => (
+                <div
+                  key={doc.id}
+                  onClick={() => setViewingDoc(doc)}
+                  className="p-6 cursor-pointer hover:bg-[#E6E2DA]/30 transition-colors"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-2xl">
+                      {documentTypes[doc.type]?.icon || '📄'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-[#101111] font-bold text-base truncate">{doc.name}</h3>
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        <span className="text-[#4A4A4A] text-sm font-medium">{documentTypes[doc.type]?.label}</span>
+                        <span className="text-[#4A4A4A] text-sm">•</span>
+                        <span className="text-[#4A4A4A] text-sm font-medium">{doc.fileSize}</span>
+                        <span className="text-[#4A4A4A] text-sm">•</span>
+                        <span className="text-[#4A4A4A] text-sm font-medium flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {doc.updatedAt}
+                        </span>
+                      </div>
+                    </div>
+                    <span className={`px-4 py-2 rounded-lg text-sm font-semibold ${statusConfig[doc.status].bg} ${statusConfig[doc.status].color}`}>
+                      {statusConfig[doc.status].label}
                     </span>
                   </div>
                 </div>
-                <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${statusConfig[doc.status].bg} ${statusConfig[doc.status].color}`}>
-                  {statusConfig[doc.status].label}
-                </span>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Empty State */}
-      {!isLoading && filteredDocs.length === 0 && (
-        <div className="px-5 mt-5">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-            <div className="w-16 h-16 bg-[#E6E2DA] rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-[#4A4A4A]" />
-            </div>
-            <p className="text-[#4A4A4A] text-sm font-medium mb-2">No documents found</p>
-            <p className="text-[#4A4A4A] text-xs mb-4">Try adjusting your search or filters</p>
-            <button className="px-5 py-2.5 bg-[#154230] text-white font-semibold rounded-xl text-sm">
-              Upload Document
-            </button>
           </div>
         </div>
-      )}
 
-      {/* Loading Skeleton */}
-      {isLoading && (
-        <div className="px-5 mt-5 space-y-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white rounded-2xl shadow-lg p-4 animate-pulse">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#E6E2DA] rounded-xl" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-[#E6E2DA] rounded w-48" />
-                  <div className="h-3 bg-[#E6E2DA] rounded w-32" />
+        {/* Empty State - Mobile */}
+        {!isLoading && filteredDocs.length === 0 && (
+          <div className="lg:hidden px-5 mt-5 pb-32">
+            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+              <div className="w-16 h-16 bg-[#E6E2DA] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-8 h-8 text-[#4A4A4A]" />
+              </div>
+              <p className="text-[#4A4A4A] text-sm font-medium mb-2">No documents found</p>
+              <p className="text-[#4A4A4A] text-xs mb-4">Try adjusting your search or filters</p>
+              <button className="px-5 py-2.5 bg-[#154230] text-white font-semibold rounded-xl text-sm">
+                Upload Document
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State - Desktop */}
+        {!isLoading && filteredDocs.length === 0 && (
+          <div className="hidden lg:block px-8 mt-6">
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <div className="w-20 h-20 bg-[#E6E2DA] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <FileText className="w-10 h-10 text-[#4A4A4A]" />
+              </div>
+              <p className="text-[#4A4A4A] text-lg font-medium mb-2">No documents found</p>
+              <p className="text-[#4A4A4A] text-sm mb-6">Try adjusting your search or filters</p>
+              <button className="px-6 py-3 bg-[#154230] text-white font-semibold rounded-xl text-sm">
+                Upload Document
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Loading Skeleton - Mobile */}
+        {isLoading && (
+          <div className="lg:hidden px-5 mt-5 pb-32 space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white rounded-2xl shadow-lg p-4 animate-pulse">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#E6E2DA] rounded-xl" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-[#E6E2DA] rounded w-48" />
+                    <div className="h-3 bg-[#E6E2DA] rounded w-32" />
+                  </div>
+                  <div className="h-7 bg-[#E6E2DA] rounded w-16" />
                 </div>
-                <div className="h-7 bg-[#E6E2DA] rounded w-16" />
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
-      {/* Bottom Stats Bar - Burgundy */}
-      <div className="fixed bottom-16 left-0 right-0 bg-[#5D1E21] px-5 py-3">
-        <div className="flex items-center justify-around">
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{stats.total}</p>
-            <p className="text-white/60 text-xs font-medium">Total</p>
+        {/* Loading Skeleton - Desktop */}
+        {isLoading && (
+          <div className="hidden lg:block px-8 mt-6 space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white rounded-2xl shadow-lg p-6 animate-pulse">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-[#E6E2DA] rounded-xl" />
+                  <div className="flex-1 space-y-3">
+                    <div className="h-5 bg-[#E6E2DA] rounded w-64" />
+                    <div className="h-4 bg-[#E6E2DA] rounded w-40" />
+                  </div>
+                  <div className="h-8 bg-[#E6E2DA] rounded w-20" />
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{stats.pending}</p>
-            <p className="text-white/60 text-xs font-medium">Pending</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{stats.validated}</p>
-            <p className="text-white/60 text-xs font-medium">Validated</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">98%</p>
-            <p className="text-white/60 text-xs font-medium">Compliance</p>
+        )}
+
+        {/* Bottom Stats Bar - Mobile (Burgundy) */}
+        <div className="lg:hidden fixed bottom-16 left-0 right-0 bg-[#5D1E21] px-5 py-3 z-30">
+          <div className="flex items-center justify-around">
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">{stats.total}</p>
+              <p className="text-white/60 text-xs font-medium">Total</p>
+            </div>
+            <div className="w-px h-8 bg-white/20" />
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">{stats.pending}</p>
+              <p className="text-white/60 text-xs font-medium">Pending</p>
+            </div>
+            <div className="w-px h-8 bg-white/20" />
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">{stats.validated}</p>
+              <p className="text-white/60 text-xs font-medium">Validated</p>
+            </div>
+            <div className="w-px h-8 bg-white/20" />
+            <div className="text-center">
+              <p className="text-white font-bold text-lg">98%</p>
+              <p className="text-white/60 text-xs font-medium">Compliance</p>
+            </div>
           </div>
         </div>
+
+        {/* Bottom Navigation - Mobile */}
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2 z-40">
+          <div className="flex items-center justify-around">
+            {bottomNavLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-colors ${
+                  item.primary
+                    ? 'relative -mt-4'
+                    : item.label === 'Home'
+                    ? 'text-[#154230]'
+                    : 'text-[#4A4A4A]'
+                }`}
+              >
+                {item.primary ? (
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-full flex items-center justify-center shadow-lg">
+                    <item.icon className="w-6 h-6 text-white" />
+                  </div>
+                ) : (
+                  <>
+                    <item.icon className="w-5 h-5" />
+                    <span className="text-[10px] font-semibold">{item.label}</span>
+                  </>
+                )}
+              </Link>
+            ))}
+          </div>
+        </nav>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2">
-        <div className="flex items-center justify-around">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-colors ${
-                item.label === 'Home' ? 'text-[#154230]' : 'text-[#4A4A4A]'
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px] font-semibold">{item.label}</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
-
-      {/* View Document Modal */}
+      {/* View Document Modal - Mobile Bottom Sheet */}
       {viewingDoc && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={() => setViewingDoc(null)}>
+        <div className="lg:hidden fixed inset-0 z-50 flex items-end justify-center bg-black/30" onClick={() => setViewingDoc(null)}>
           <div
             className="bg-white w-full max-w-lg rounded-t-[32px] p-6 pb-8 max-h-[85vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
@@ -365,6 +665,75 @@ export default function DocumentsPage() {
                 </button>
                 <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#154230] text-white font-semibold rounded-xl text-sm hover:bg-[#1d5240] transition-colors">
                   <Download className="w-4 h-4" />
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Document Modal - Desktop Centered */}
+      {viewingDoc && (
+        <div className="hidden lg:flex fixed inset-0 z-50 items-center justify-center bg-black/40" onClick={() => setViewingDoc(null)}>
+          <div
+            className="bg-white w-full max-w-2xl rounded-2xl p-8 max-h-[85vh] overflow-y-auto shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-[#E6E2DA] flex items-center justify-center text-2xl">
+                  {documentTypes[viewingDoc.type]?.icon || '📄'}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-[#101111]">{viewingDoc.name}</h2>
+                  <p className="text-[#4A4A4A] text-sm font-semibold">{documentTypes[viewingDoc.type]?.label}</p>
+                </div>
+              </div>
+              <button onClick={() => setViewingDoc(null)} className="p-3 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-xl transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              {/* Status and Details Card */}
+              <div className="bg-[#E6E2DA] rounded-2xl p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[#4A4A4A] text-sm font-semibold">Status</span>
+                  <span className={`px-4 py-2 rounded-lg text-sm font-semibold ${statusConfig[viewingDoc.status].bg} ${statusConfig[viewingDoc.status].color}`}>
+                    {statusConfig[viewingDoc.status].label}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm py-3 border-t border-black/5">
+                  <span className="text-[#4A4A4A] font-medium">File Size</span>
+                  <span className="text-[#101111] font-bold">{viewingDoc.fileSize}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm py-3 border-t border-black/5">
+                  <span className="text-[#4A4A4A] font-medium">Created</span>
+                  <span className="text-[#101111] font-bold">{viewingDoc.createdAt}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm py-3 border-t border-black/5">
+                  <span className="text-[#4A4A4A] font-medium">Updated</span>
+                  <span className="text-[#101111] font-bold">{viewingDoc.updatedAt}</span>
+                </div>
+              </div>
+
+              {/* Description Card */}
+              {viewingDoc.description && (
+                <div className="bg-[#E6E2DA] rounded-2xl p-5">
+                  <p className="text-[#4A4A4A] text-xs font-semibold mb-2">Description</p>
+                  <p className="text-[#101111] text-sm font-medium">{viewingDoc.description}</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <button className="flex-1 flex items-center justify-center gap-2 py-4 bg-[#E6E2DA] text-[#101111] font-semibold rounded-xl text-sm hover:bg-[#D4CCBE] transition-colors">
+                  <Eye className="w-5 h-5" />
+                  Preview Document
+                </button>
+                <button className="flex-1 flex items-center justify-center gap-2 py-4 bg-[#154230] text-white font-semibold rounded-xl text-sm hover:bg-[#1d5240] transition-colors">
+                  <Download className="w-5 h-5" />
                   Download
                 </button>
               </div>

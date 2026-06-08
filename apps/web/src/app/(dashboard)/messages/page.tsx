@@ -1,7 +1,27 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { MessageSquare, Send, Search, Plus, Bell, Home, Search as Browse, FileText, Inbox, User, ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  Menu,
+  X,
+  Settings,
+  LogOut,
+  Home,
+  User,
+  Search,
+  Plus,
+  MessageSquare,
+  FileText,
+  Truck,
+  Package,
+  BarChart3,
+  Send,
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 interface Message {
   id: string;
@@ -18,6 +38,26 @@ interface Conversation {
   lastMessageAt: Date;
   unreadCount: number;
 }
+
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages', active: true },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/messages', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
+];
 
 const initialConversations: Conversation[] = [
   {
@@ -72,8 +112,10 @@ export default function MessagesPage() {
   const [newMessage, setNewMessage] = useState('');
   const [showNewChat, setShowNewChat] = useState(false);
   const [newChatName, setNewChatName] = useState('');
-  const [activeTab, setActiveTab] = useState<'home' | 'browse' | 'post' | 'inbox' | 'account'>('inbox');
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [mobileView, setMobileView] = useState<'list' | 'chat'>('list');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_conversations');
@@ -193,232 +235,377 @@ export default function MessagesPage() {
 
   const unreadCount = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
 
+  const handleConversationSelect = (conv: Conversation) => {
+    setSelectedConv(conv);
+    setMobileView('chat');
+  };
+
+  const handleBackToList = () => {
+    setSelectedConv(null);
+    setMobileView('list');
+  };
+
   return (
     <div className="min-h-screen bg-[#E6E2DA] flex flex-col max-h-screen">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#154230] to-[#1a5040] rounded-b-[32px] px-4 pt-6 pb-8">
-        <div className="flex items-center justify-between mb-4">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 bg-white border-r border-black/5 z-40">
+        {/* Logo */}
+        <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
-            <div className="text-white">
-              <p className="text-xl font-bold tracking-tight">LEVERAGE</p>
+            <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5040] rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-sm">L</span>
+            </div>
+            <div>
+              <p className="text-[#101111] font-bold tracking-tight">LEVERAGE</p>
+              <p className="text-[#4A4A4A] text-[10px] tracking-widest uppercase">Connecting Dots to Ports</p>
             </div>
           </div>
-          <button className="relative p-2">
-            <Bell className="w-6 h-6 text-white" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="flex-1 py-4 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.active || pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
+                  isActive
+                    ? 'bg-[#154230]/10 text-[#154230] border-r-2 border-[#154230]'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]/50 hover:text-[#101111]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Bottom Section */}
+        <div className="p-4 border-t border-black/5">
+          <button className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA]/50 rounded-xl transition-colors">
+            <LogOut className="w-5 h-5" />
+            <span className="text-sm font-medium">Log Out</span>
           </button>
         </div>
-        <p className="text-white/70 text-xs tracking-widest uppercase">Connecting Dots to Ports</p>
-      </div>
+      </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col -mt-4 px-4 pb-4 overflow-hidden">
-        {/* Messages List Card */}
-        <div className="bg-white rounded-2xl shadow-sm flex-1 flex flex-col overflow-hidden">
-          {/* List Header */}
-          <div className="p-4 border-b border-black/5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-white" />
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setShowMobileSidebar(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-xl flex flex-col">
+            {/* Logo */}
+            <div className="p-6 border-b border-black/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5040] rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">L</span>
+                  </div>
+                  <div>
+                    <p className="text-[#101111] font-bold tracking-tight">LEVERAGE</p>
+                    <p className="text-[#4A4A4A] text-[10px] tracking-widest uppercase">Connecting Dots to Ports</p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-lg font-bold text-[#101111]">Messages</h1>
-                  <p className="text-[#4A4A4A] text-xs">{conversations.length} conversations</p>
-                </div>
+                <button onClick={() => setShowMobileSidebar(false)} className="p-2">
+                  <X className="w-5 h-5 text-[#4A4A4A]" />
+                </button>
               </div>
-              <button
-                onClick={() => setShowNewChat(true)}
-                className="w-8 h-8 bg-[#154230] text-white rounded-lg flex items-center justify-center"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
             </div>
-            <div className="relative">
-              <Search className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search conversations..."
-                className="w-full h-10 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A]"
-              />
-            </div>
-          </div>
 
-          {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto">
-            {conversations.length === 0 ? (
-              <div className="p-8 text-center text-[#4A4A4A] text-sm">
-                No conversations yet
-              </div>
-            ) : (
-              conversations.map(conv => {
-                const initials = conv.participant.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                const isSelected = selectedConv?.id === conv.id;
-
+            {/* Navigation Links */}
+            <nav className="flex-1 py-4 overflow-y-auto">
+              {sidebarLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.active || pathname === link.href;
                 return (
-                  <button
-                    key={conv.id}
-                    onClick={() => setSelectedConv(conv)}
-                    className={`w-full flex items-start gap-3 p-4 border-b border-black/5 text-left ${
-                      isSelected ? 'bg-[#154230]/10' : 'hover:bg-[#E6E2DA]/50'
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setShowMobileSidebar(false)}
+                    className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
+                      isActive
+                        ? 'bg-[#154230]/10 text-[#154230]'
+                        : 'text-[#4A4A4A] hover:bg-[#E6E2DA]/50 hover:text-[#101111]'
                     }`}
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                      {initials}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[#101111] text-sm font-semibold truncate">{conv.participant.name}</span>
-                        <span className="text-[#4A4A4A] text-xs flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
-                      </div>
-                      {conv.participant.company && (
-                        <p className="text-[#A6824A] text-xs truncate">{conv.participant.company}</p>
-                      )}
-                      <p className="text-[#4A4A4A] text-sm truncate mt-0.5">{conv.lastMessage}</p>
-                    </div>
-                    {conv.unreadCount > 0 && (
-                      <span className="w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-                        {conv.unreadCount}
-                      </span>
-                    )}
-                  </button>
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{link.label}</span>
+                  </Link>
                 );
-              })
-            )}
+              })}
+            </nav>
+
+            {/* Bottom Section */}
+            <div className="p-4 border-t border-black/5">
+              <button className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA]/50 rounded-xl transition-colors">
+                <LogOut className="w-5 h-5" />
+                <span className="text-sm font-medium">Log Out</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <div className="lg:ml-64 flex-1 flex flex-col min-h-screen">
+        {/* Mobile Header */}
+        <div className="lg:hidden bg-gradient-to-br from-[#154230] to-[#1a5040] rounded-b-[32px] px-4 pt-6 pb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setShowMobileSidebar(true)} className="p-2 -ml-2">
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <div className="text-white">
+                <p className="text-xl font-bold tracking-tight">LEVERAGE</p>
+              </div>
+            </div>
+            <button className="relative p-2">
+              <Bell className="w-6 h-6 text-white" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+          </div>
+          <p className="text-white/70 text-xs tracking-widest uppercase">Connecting Dots to Ports</p>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-br from-[#154230] to-[#1a5040] px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Messages</h1>
+              <p className="text-white/70 text-sm">{conversations.length} conversations</p>
+            </div>
+            <button className="relative p-2">
+              <Bell className="w-6 h-6 text-white" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Chat Card (shown when conversation selected on mobile) */}
-        {selectedConv && (
-          <div className="mt-4 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden max-h-[60vh]">
-            {/* Chat Header */}
-            <div className="flex items-center gap-3 p-4 border-b border-black/5">
-              <button onClick={() => setSelectedConv(null)} className="p-1">
-                <ChevronLeft className="w-5 h-5 text-[#4A4A4A]" />
-              </button>
-              <div className="w-10 h-10 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm">
-                {selectedConv.participant.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col px-4 pb-4 lg:p-6 -mt-4 lg:mt-0 overflow-hidden">
+          {/* Mobile View: List */}
+          <div className={`flex-1 flex flex-col -mt-4 lg:mt-0 overflow-hidden ${mobileView === 'chat' ? 'hidden lg:flex' : 'flex'}`}>
+            {/* Messages List Card */}
+            <div className="bg-white rounded-2xl shadow-sm flex-1 flex flex-col overflow-hidden">
+              {/* List Header */}
+              <div className="p-4 border-b border-black/5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="lg:hidden w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="lg:hidden">
+                      <h1 className="text-lg font-bold text-[#101111]">Messages</h1>
+                      <p className="text-[#4A4A4A] text-xs">{conversations.length} conversations</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowNewChat(true)}
+                    className="w-8 h-8 bg-[#154230] text-white rounded-lg flex items-center justify-center"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="relative">
+                  <Search className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search conversations..."
+                    className="w-full h-10 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A]"
+                  />
+                </div>
               </div>
-              <div>
-                <p className="text-[#101111] text-sm font-semibold">{selectedConv.participant.name}</p>
-                {selectedConv.participant.company && (
-                  <p className="text-[#A6824A] text-xs">{selectedConv.participant.company}</p>
+
+              {/* Conversations List */}
+              <div className="flex-1 overflow-y-auto">
+                {conversations.length === 0 ? (
+                  <div className="p-8 text-center text-[#4A4A4A] text-sm">
+                    No conversations yet
+                  </div>
+                ) : (
+                  conversations.map(conv => {
+                    const initials = conv.participant.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                    const isSelected = selectedConv?.id === conv.id;
+
+                    return (
+                      <button
+                        key={conv.id}
+                        onClick={() => handleConversationSelect(conv)}
+                        className={`w-full flex items-start gap-3 p-4 border-b border-black/5 text-left ${
+                          isSelected ? 'bg-[#154230]/10' : 'hover:bg-[#E6E2DA]/50'
+                        }`}
+                      >
+                        <div className="w-12 h-12 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                          {initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[#101111] text-sm font-semibold truncate">{conv.participant.name}</span>
+                            <span className="text-[#4A4A4A] text-xs flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
+                          </div>
+                          {conv.participant.company && (
+                            <p className="text-[#A6824A] text-xs truncate">{conv.participant.company}</p>
+                          )}
+                          <p className="text-[#4A4A4A] text-sm truncate mt-0.5">{conv.lastMessage}</p>
+                        </div>
+                        {conv.unreadCount > 0 && (
+                          <span className="w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                            {conv.unreadCount}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })
                 )}
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
-              {selectedConv.messages.map(msg => (
-                <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    msg.role === 'user'
-                      ? 'bg-[#154230] text-white'
-                      : 'bg-[#E6E2DA] text-[#101111]'
-                  }`}>
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                    <p className={`text-xs mt-1 ${msg.role === 'user' ? 'text-white/60' : 'text-[#4A4A4A]'}`}>
-                      {formatTime(msg.timestamp)}
-                    </p>
-                  </div>
+            {/* Bottom Stats Bar - Mobile only */}
+            <div className="lg:hidden bg-[#5D1E21] px-4 py-3 mt-4 rounded-t-xl mb-20">
+              <div className="flex items-center justify-around">
+                <div className="text-center">
+                  <p className="text-white font-bold text-lg">{conversations.length}</p>
+                  <p className="text-white/70 text-xs">Chats</p>
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 border-t border-black/5">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                  placeholder="Type a message..."
-                  className="flex-1 h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={!newMessage.trim()}
-                  className="w-12 h-12 bg-[#154230] text-white rounded-xl flex items-center justify-center disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+                <div className="w-px h-8 bg-white/20" />
+                <div className="text-center">
+                  <p className="text-white font-bold text-lg">{conversations.filter(c => c.unreadCount > 0).length}</p>
+                  <p className="text-white/70 text-xs">Unread</p>
+                </div>
+                <div className="w-px h-8 bg-white/20" />
+                <div className="text-center">
+                  <p className="text-white font-bold text-lg">{conversations.reduce((acc, c) => acc + c.messages.length, 0)}</p>
+                  <p className="text-white/70 text-xs">Messages</p>
+                </div>
               </div>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Bottom Stats Bar */}
-      <div className="bg-[#5D1E21] px-4 py-3 mx-4 rounded-t-xl mb-16">
-        <div className="flex items-center justify-around">
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{conversations.length}</p>
-            <p className="text-white/70 text-xs">Chats</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{conversations.filter(c => c.unreadCount > 0).length}</p>
-            <p className="text-white/70 text-xs">Unread</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white font-bold text-lg">{conversations.reduce((acc, c) => acc + c.messages.length, 0)}</p>
-            <p className="text-white/70 text-xs">Messages</p>
+          {/* Mobile View: Chat */}
+          <div className={`flex-1 flex flex-col mt-4 lg:mt-0 overflow-hidden ${mobileView === 'list' ? 'hidden lg:flex' : 'flex'}`}>
+            {/* Chat Card */}
+            {selectedConv ? (
+              <div className="bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden flex-1">
+                {/* Chat Header */}
+                <div className="flex items-center gap-3 p-4 border-b border-black/5">
+                  <button onClick={handleBackToList} className="p-1 lg:hidden">
+                    <ChevronLeft className="w-5 h-5 text-[#4A4A4A]" />
+                  </button>
+                  <div className="w-10 h-10 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm">
+                    {selectedConv.participant.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-[#101111] text-sm font-semibold">{selectedConv.participant.name}</p>
+                    {selectedConv.participant.company && (
+                      <p className="text-[#A6824A] text-xs">{selectedConv.participant.company}</p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setShowNewChat(true)}
+                    className="ml-auto w-8 h-8 bg-[#E6E2DA] text-[#154230] rounded-lg flex items-center justify-center"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                  {selectedConv.messages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center">
+                      <MessageSquare className="w-12 h-12 text-[#E6E2DA] mb-4" />
+                      <p className="text-[#4A4A4A] text-sm">Start the conversation</p>
+                    </div>
+                  ) : (
+                    selectedConv.messages.map(msg => (
+                      <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                          msg.role === 'user'
+                            ? 'bg-[#154230] text-white'
+                            : 'bg-[#E6E2DA] text-[#101111]'
+                        }`}>
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                          <p className={`text-xs mt-1 ${msg.role === 'user' ? 'text-white/60' : 'text-[#4A4A4A]'}`}>
+                            {formatTime(msg.timestamp)}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input */}
+                <div className="p-4 border-t border-black/5">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                      placeholder="Type a message..."
+                      className="flex-1 h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
+                    />
+                    <button
+                      onClick={sendMessage}
+                      disabled={!newMessage.trim()}
+                      className="w-12 h-12 bg-[#154230] text-white rounded-xl flex items-center justify-center disabled:opacity-50"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="hidden lg:flex bg-white rounded-2xl shadow-sm flex-1 items-center justify-center">
+                <div className="text-center">
+                  <MessageSquare className="w-16 h-16 text-[#E6E2DA] mx-auto mb-4" />
+                  <p className="text-[#4A4A4A] text-lg">Select a conversation to start messaging</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2 pb-6">
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-4 py-2 pb-6 z-30">
         <div className="flex items-center justify-around max-w-md mx-auto">
-          <button
-            onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center gap-1 px-3 py-2 ${activeTab === 'home' ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-          >
-            <Home className="w-5 h-5" />
-            <span className="text-xs font-medium">Home</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('browse')}
-            className={`flex flex-col items-center gap-1 px-3 py-2 ${activeTab === 'browse' ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-          >
-            <Browse className="w-5 h-5" />
-            <span className="text-xs font-medium">Browse</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('post')}
-            className={`flex flex-col items-center gap-1 px-3 py-2 ${activeTab === 'post' ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-          >
-            <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center -mt-5">
-              <FileText className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xs font-medium text-[#154230]">Post RFQ</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('inbox')}
-            className={`flex flex-col items-center gap-1 px-3 py-2 relative ${activeTab === 'inbox' ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-          >
-            <Inbox className="w-5 h-5" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 right-1 w-4 h-4 bg-[#5D1E21] rounded-full text-white text-[10px] font-bold flex items-center justify-center">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-            <span className="text-xs font-medium">Inbox</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('account')}
-            className={`flex flex-col items-center gap-1 px-3 py-2 ${activeTab === 'account' ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-          >
-            <User className="w-5 h-5" />
-            <span className="text-xs font-medium">Account</span>
-          </button>
+          {bottomNavLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex flex-col items-center gap-1 px-3 py-2 ${
+                  isActive && !link.primary ? 'text-[#154230]' : 'text-[#4A4A4A]'
+                }`}
+              >
+                {link.primary ? (
+                  <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center -mt-5">
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                ) : (
+                  <Icon className="w-5 h-5" />
+                )}
+                <span className={`text-xs font-medium ${link.primary ? 'text-[#154230]' : ''}`}>
+                  {link.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
 

@@ -16,15 +16,38 @@ import {
   BarChart3,
   Shield,
   Briefcase,
-  CheckCircle,
-  AlertCircle,
   Home,
   User,
   Bell,
+  Settings,
+  LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
+
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard', active: true },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
+];
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const stats = {
     activeRFQs: 127,
@@ -61,231 +84,528 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#E6E2DA]">
-        <div className="rounded-full h-10 w-10 border-2 border-[#154230] border-t-transparent"></div>
+        <div className="rounded-full h-10 w-10 border-2 border-[#154230] border-t-transparent animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#E6E2DA] pb-24">
-      {/* Green Gradient Header */}
-      <div className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] rounded-b-[32px] px-5 pt-8 pb-6">
-        {/* Header Content */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-white font-bold text-2xl tracking-wide">LEVERAGE</h1>
-            <p className="text-white/70 text-xs mt-1 font-medium tracking-wider">CONNECTING DOTS TO PORTS</p>
+    <div className="min-h-screen bg-[#E6E2DA]">
+      {/* Desktop Sidebar - Hidden on mobile */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
+        {/* Logo */}
+        <div className="p-6 border-b border-black/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+            </div>
           </div>
-          <button className="relative p-2">
-            <Bell className="w-6 h-6 text-white" />
-            {stats.unreadMessages > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
-                <span className="text-white text-[10px] font-bold">{stats.unreadMessages}</span>
-              </span>
-            )}
-          </button>
         </div>
 
-        {/* Welcome Message */}
-        <div>
-          <h2 className="text-white font-semibold text-lg">Welcome back!</h2>
-          <p className="text-white/70 text-sm font-medium">Track your shipments and RFQs</p>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.active;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  isActive
+                    ? 'bg-[#154230] text-white'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* User Profile */}
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
+      </aside>
+
+      {/* Mobile Header & Overlay - Visible only on mobile */}
+      <div className="lg:hidden">
+        {/* Green Gradient Header */}
+        <div className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] rounded-b-[32px] px-4 pt-6 pb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="6" cy="12" r="2" fill="currentColor" />
+                  <circle cx="18" cy="12" r="2" fill="currentColor" />
+                  <circle cx="12" cy="6" r="2" fill="currentColor" />
+                  <circle cx="12" cy="18" r="2" fill="currentColor" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-bold text-sm tracking-tight">LEVERAGE</p>
+                <p className="text-white/50 text-[9px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="relative p-2 text-white">
+                <Bell className="w-5 h-5" />
+                {stats.unreadMessages > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
+                    <span className="text-white text-[10px] font-bold">{stats.unreadMessages}</span>
+                  </span>
+                )}
+              </button>
+              <button onClick={() => setSidebarOpen(true)} className="p-2 text-white">
+                <Menu className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">Welcome back!</h2>
+            <p className="text-white/70 text-sm">Track your shipments and RFQs</p>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+            <aside className="relative w-72 bg-white h-full flex flex-col shadow-xl">
+              <div className="flex items-center justify-between p-6 border-b border-black/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="6" cy="12" r="2" fill="currentColor" />
+                      <circle cx="18" cy="12" r="2" fill="currentColor" />
+                      <circle cx="12" cy="6" r="2" fill="currentColor" />
+                      <circle cx="12" cy="18" r="2" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                    <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                  </div>
+                </div>
+                <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-[#E6E2DA] rounded-lg">
+                  <X className="w-5 h-5 text-[#4A4A4A]" />
+                </button>
+              </div>
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+                {sidebarLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = link.active;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                        isActive
+                          ? 'bg-[#154230] text-white'
+                          : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium text-sm">{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="p-4 border-t border-black/5">
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">JD</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                    <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
-      <div className="px-5 -mt-4 space-y-5">
-        {/* Quick Stats Grid - 2x2 */}
-        <div className="grid grid-cols-2 gap-3">
-          <Link href="/rfqs" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
-              <FileText className="w-5 h-5 text-white" />
+      <main className="lg:ml-64 min-h-screen pb-24 lg:pb-8">
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-8 pt-8 pb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-white font-bold text-2xl">Dashboard</h2>
+              <p className="text-white/70 text-sm mt-1">Welcome back! Track your shipments and RFQs</p>
             </div>
-            <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
-            <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Active RFQs</p>
-          </Link>
-
-          <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
-              <Truck className="w-5 h-5 text-white" />
-            </div>
-            <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
-            <p className="text-[#4A4A4A] text-sm font-semibold mt-1">In Transit</p>
-          </Link>
-
-          <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
-              <Package className="w-5 h-5 text-white" />
-            </div>
-            <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
-            <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Total Orders</p>
-          </Link>
-
-          <Link href="/marketplace/inbox" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative">
-            <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
-              <MessageSquare className="w-5 h-5 text-white" />
-            </div>
-            <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
-            <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Messages</p>
-            {stats.unreadMessages > 0 && (
-              <span className="absolute top-4 right-4 w-4 h-4 bg-[#A6824A] rounded-full"></span>
-            )}
-          </Link>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-4 gap-3">
-            <Link href="/marketplace" className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                <Search className="w-5 h-5 text-[#154230]" />
-              </div>
-              <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
-            </Link>
-
-            <Link href="/rfqs/new" className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
-                <Plus className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
-            </Link>
-
-            <Link href="/documents" className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#154230]" />
-              </div>
-              <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
-            </Link>
-
-            <Link href="/ai" className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-[#154230]" />
-              </div>
-              <span className="text-[#4A4A4A] text-xs font-medium">AI Assist</span>
-            </Link>
+            <button className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
+              <Bell className="w-6 h-6" />
+              {stats.unreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#5D1E21] rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">{stats.unreadMessages}</span>
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 border-b border-black/5 flex items-center justify-between">
-            <h3 className="text-[#101111] font-bold text-base">Recent Activity</h3>
-            <Link href="/marketplace/inbox" className="text-[#154230] text-sm font-semibold flex items-center gap-1">
-              View All <ArrowRight className="w-4 h-4" />
+        {/* Mobile Content Area */}
+        <div className="lg:hidden px-4 -mt-6 space-y-5 pb-4">
+          {/* Quick Stats Grid - 2x2 */}
+          <div className="grid grid-cols-2 gap-3">
+            <Link href="/rfqs" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
+                <FileText className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
+              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Active RFQs</p>
+            </Link>
+
+            <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
+                <Truck className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
+              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">In Transit</p>
+            </Link>
+
+            <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
+                <Package className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
+              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Total Orders</p>
+            </Link>
+
+            <Link href="/marketplace/inbox" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative">
+              <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
+                <MessageSquare className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
+              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Messages</p>
+              {stats.unreadMessages > 0 && (
+                <span className="absolute top-4 right-4 w-4 h-4 bg-[#A6824A] rounded-full"></span>
+              )}
             </Link>
           </div>
 
-          <div className="divide-y divide-black/5">
-            {recentActivity.map((activity) => (
-              <Link
-                key={activity.id}
-                href={activity.link}
-                className="flex items-center gap-3 p-4 hover:bg-[#E6E2DA]/50 transition-colors"
-              >
-                <div className={`w-10 h-10 rounded-xl ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
-                  {activityConfig[activity.type]?.icon}
+          {/* Quick Actions */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-4 gap-3">
+              <Link href="/marketplace" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Search className="w-5 h-5 text-[#154230]" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-semibold' : 'text-[#4A4A4A] font-medium'}`}>
-                    {activity.text}
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <Clock className="w-3 h-3 text-[#4A4A4A]/50" />
-                    <span className="text-[#4A4A4A] text-xs font-medium">{activity.time}</span>
+                <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
+              </Link>
+
+              <Link href="/rfqs/new" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
+                  <Plus className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
+              </Link>
+
+              <Link href="/documents" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
+              </Link>
+
+              <Link href="/ai" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">AI Assist</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-black/5 flex items-center justify-between">
+              <h3 className="text-[#101111] font-bold text-base">Recent Activity</h3>
+              <Link href="/marketplace/inbox" className="text-[#154230] text-sm font-semibold flex items-center gap-1">
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="divide-y divide-black/5">
+              {recentActivity.map((activity) => (
+                <Link
+                  key={activity.id}
+                  href={activity.link}
+                  className="flex items-center gap-3 p-4 hover:bg-[#E6E2DA]/50 transition-colors"
+                >
+                  <div className={`w-10 h-10 rounded-xl ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
+                    {activityConfig[activity.type]?.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-semibold' : 'text-[#4A4A4A] font-medium'}`}>
+                      {activity.text}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <Clock className="w-3 h-3 text-[#4A4A4A]/50" />
+                      <span className="text-[#4A4A4A] text-xs font-medium">{activity.time}</span>
+                    </div>
+                  </div>
+                  {activity.status === 'unread' && (
+                    <div className="w-1.5 h-1.5 bg-[#5D1E21] rounded-full"></div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Global Marketplace CTA */}
+          <Link href="/marketplace" className="block bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
+                  <Briefcase className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-[#101111] font-bold text-base">Global Marketplace</h3>
+                  <p className="text-[#4A4A4A] text-sm font-medium">500+ verified suppliers</p>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-[#A6824A]" />
+            </div>
+          </Link>
+
+          {/* Mobile Burgundy Stats Bar */}
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/70 text-xs font-medium">Compliance</p>
+                  <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/70 text-xs font-medium">Trade Volume</p>
+                  <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Content Area */}
+        <div className="hidden lg:block px-8 py-8 space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-4 gap-6">
+            <Link href="/rfqs" className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-3xl font-bold text-[#101111]">{stats.activeRFQs}</p>
+              <p className="text-[#4A4A4A] text-sm font-medium mt-2">Active RFQs</p>
+            </Link>
+
+            <Link href="/orders" className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center mb-4">
+                <Truck className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-3xl font-bold text-[#101111]">{stats.shipments}</p>
+              <p className="text-[#4A4A4A] text-sm font-medium mt-2">In Transit</p>
+            </Link>
+
+            <Link href="/orders" className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-4">
+                <Package className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-3xl font-bold text-[#101111]">{stats.orders}</p>
+              <p className="text-[#4A4A4A] text-sm font-medium mt-2">Total Orders</p>
+            </Link>
+
+            <Link href="/marketplace/inbox" className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow relative">
+              <div className="w-12 h-12 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-4">
+                <MessageSquare className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-3xl font-bold text-[#101111]">{stats.unreadMessages}</p>
+              <p className="text-[#4A4A4A] text-sm font-medium mt-2">Messages</p>
+              {stats.unreadMessages > 0 && (
+                <span className="absolute top-6 right-6 w-5 h-5 bg-[#A6824A] rounded-full"></span>
+              )}
+            </Link>
+          </div>
+
+          {/* Quick Actions & Stats Row */}
+          <div className="grid grid-cols-3 gap-6">
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="text-[#101111] font-bold text-lg mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-4 gap-4">
+                <Link href="/marketplace" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <Search className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Browse</span>
+                </Link>
+
+                <Link href="/rfqs/new" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230] flex items-center justify-center hover:bg-[#1a5a3a] transition-colors">
+                    <Plus className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Post RFQ</span>
+                </Link>
+
+                <Link href="/documents" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <Shield className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Documents</span>
+                </Link>
+
+                <Link href="/ai" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <BarChart3 className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">AI Assist</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="col-span-2 bg-[#5D1E21] rounded-2xl p-6">
+              <div className="grid grid-cols-2 gap-6 h-full">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center">
+                    <Shield className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm font-medium">Compliance Score</p>
+                    <p className="text-white font-bold text-2xl">{stats.complianceScore}%</p>
                   </div>
                 </div>
-                {activity.status === 'unread' && (
-                  <div className="w-1.5 h-1.5 bg-[#5D1E21] rounded-full"></div>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Global Marketplace CTA */}
-        <Link href="/marketplace" className="block bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
-                <Briefcase className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-[#101111] font-bold text-base">Global Marketplace</h3>
-                <p className="text-[#4A4A4A] text-sm font-medium">500+ verified suppliers</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center">
+                    <TrendingUp className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-white/70 text-sm font-medium">Trade Volume</p>
+                    <p className="text-white font-bold text-2xl">${stats.tradeVolume}M</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <ArrowRight className="w-5 h-5 text-[#A6824A]" />
           </div>
-        </Link>
-      </div>
 
-      {/* Burgundy Bottom Stats Bar */}
-      <div className="fixed bottom-16 left-0 right-0 bg-[#5D1E21] px-5 py-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
+          {/* Recent Activity & Marketplace */}
+          <div className="grid grid-cols-3 gap-6">
+            {/* Recent Activity */}
+            <div className="col-span-2 bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div className="p-6 border-b border-black/5 flex items-center justify-between">
+                <h3 className="text-[#101111] font-bold text-lg">Recent Activity</h3>
+                <Link href="/marketplace/inbox" className="text-[#154230] text-sm font-semibold flex items-center gap-1 hover:underline">
+                  View All <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="divide-y divide-black/5">
+                {recentActivity.map((activity) => (
+                  <Link
+                    key={activity.id}
+                    href={activity.link}
+                    className="flex items-center gap-4 p-4 hover:bg-[#E6E2DA]/50 transition-colors"
+                  >
+                    <div className={`w-12 h-12 rounded-xl ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
+                      {activityConfig[activity.type]?.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-semibold' : 'text-[#4A4A4A] font-medium'}`}>
+                        {activity.text}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Clock className="w-4 h-4 text-[#4A4A4A]/50" />
+                        <span className="text-[#4A4A4A] text-xs font-medium">{activity.time}</span>
+                      </div>
+                    </div>
+                    {activity.status === 'unread' && (
+                      <div className="w-2 h-2 bg-[#5D1E21] rounded-full"></div>
+                    )}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div>
-              <p className="text-white/70 text-xs font-medium">Compliance</p>
-              <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-white/70 text-xs font-medium">Trade Volume</p>
-              <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
-            </div>
+
+            {/* Global Marketplace CTA */}
+            <Link href="/marketplace" className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#154230] flex items-center justify-center mb-4 mx-auto">
+                <Briefcase className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-[#101111] font-bold text-lg text-center mb-2">Global Marketplace</h3>
+              <p className="text-[#4A4A4A] text-sm font-medium text-center mb-4">500+ verified suppliers</p>
+              <div className="flex items-center justify-center gap-2 text-[#154230] font-semibold">
+                Browse Now <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
           </div>
         </div>
-      </div>
+      </main>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 px-4 py-2">
+      {/* Mobile Bottom Navigation - Hidden on desktop */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 px-4 py-2 z-30">
         <div className="flex items-center justify-around">
-          <Link href="/dashboard" className="flex flex-col items-center gap-1 py-2 px-4">
-            <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center">
-              <Home className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-[#154230] text-xs font-semibold">Home</span>
-          </Link>
-
-          <Link href="/marketplace" className="flex flex-col items-center gap-1 py-2 px-4">
-            <div className="w-10 h-10 rounded-xl bg-[#E6E2DA] flex items-center justify-center">
-              <Search className="w-5 h-5 text-[#4A4A4A]" />
-            </div>
-            <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
-          </Link>
-
-          <Link href="/rfqs/new" className="flex flex-col items-center gap-1 py-2 px-4 -mt-4">
-            <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center shadow-lg">
-              <Plus className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-[#4A4A4A] text-xs font-medium mt-1">Post RFQ</span>
-          </Link>
-
-          <Link href="/marketplace/inbox" className="flex flex-col items-center gap-1 py-2 px-4 relative">
-            <div className="w-10 h-10 rounded-xl bg-[#E6E2DA] flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-[#4A4A4A]" />
-            </div>
-            {stats.unreadMessages > 0 && (
-              <span className="absolute top-1 right-2 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
-                <span className="text-white text-[10px] font-bold">{stats.unreadMessages}</span>
-              </span>
-            )}
-            <span className="text-[#4A4A4A] text-xs font-medium">Inbox</span>
-          </Link>
-
-          <Link href="/account" className="flex flex-col items-center gap-1 py-2 px-4">
-            <div className="w-10 h-10 rounded-xl bg-[#E6E2DA] flex items-center justify-center">
-              <User className="w-5 h-5 text-[#4A4A4A]" />
-            </div>
-            <span className="text-[#4A4A4A] text-xs font-medium">Account</span>
-          </Link>
+          {bottomNavLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.href === '/dashboard';
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex flex-col items-center gap-1 py-2 px-3 ${
+                  link.primary ? '-mt-4' : ''
+                }`}
+              >
+                {link.primary ? (
+                  <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center shadow-lg">
+                    <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                ) : (
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    isActive ? 'bg-[#154230]' : 'bg-[#E6E2DA]'
+                  }`}>
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-[#4A4A4A]'}`} />
+                  </div>
+                )}
+                <span className={`text-xs font-medium ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
+                  {link.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>
