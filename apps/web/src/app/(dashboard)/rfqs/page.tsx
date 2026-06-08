@@ -547,31 +547,6 @@ export default function RFQsPage() {
         </div>
       </nav>
 
-      {/* Mobile Burgundy Stats Bar */}
-      <div className="lg:hidden fixed bottom-20 left-0 right-0 bg-[#5D1E21] px-4 py-3 shadow-lg z-30">
-        <div className="flex items-center justify-around">
-          <div className="text-center">
-            <p className="text-white text-lg font-bold">{stats.total}</p>
-            <p className="text-white/70 text-[10px] font-medium">Total</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white text-lg font-bold">{stats.open}</p>
-            <p className="text-white/70 text-[10px] font-medium">Open</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white text-lg font-bold">{stats.quoted}</p>
-            <p className="text-white/70 text-[10px] font-medium">Quoted</p>
-          </div>
-          <div className="w-px h-8 bg-white/20" />
-          <div className="text-center">
-            <p className="text-white text-lg font-bold">{stats.accepted}</p>
-            <p className="text-white/70 text-[10px] font-medium">Accepted</p>
-          </div>
-        </div>
-      </div>
-
       {/* View RFQ Modal */}
       {viewingRFQ && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setViewingRFQ(null)}>

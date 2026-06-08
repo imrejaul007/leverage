@@ -168,7 +168,7 @@ export default function ConsultationsPage() {
       {/* MOBILE & TABLET HEADER (below lg) */}
       {/* ============================================ */}
       <div className="lg:hidden">
-        <div className="bg-[#F7F4EF] px-4 sm:px-5 pt-4 sm:pt-6 pb-3">
+        <div className="bg-white px-4 sm:px-5 pt-4 sm:pt-6 pb-3">
           {/* Top Header Row */}
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex items-center gap-3">
@@ -288,9 +288,6 @@ export default function ConsultationsPage() {
             <div className="text-center text-[9px] sm:text-[11px]">📈<br />Results</div>
           </div>
         </div>
-
-        {/* FAB Button */}
-        <button className="fixed right-3 sm:right-4 bottom-[88px] sm:bottom-[95px] w-[50px] h-[50px] sm:w-[58px] sm:h-[58px] rounded-full bg-[#154230] text-white text-[28px] sm:text-[32px] flex items-center justify-center shadow-lg z-40 active:scale-95 transition-transform">+</button>
       </div>
 
       {/* ============================================ */}
