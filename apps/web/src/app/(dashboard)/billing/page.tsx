@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { DollarSign, CreditCard, Download, Plus, ArrowUpRight, ArrowDownRight, X, CheckCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -25,245 +26,198 @@ export default function BillingPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [showAddFunds, setShowAddFunds] = useState(false);
-  const [showWithdraw, setShowWithdraw] = useState(false);
   const [amount, setAmount] = useState('');
 
   useEffect(() => {
-    // Load from localStorage
-    const storedBalance = localStorage.getItem('leverage_balance');
-    if (storedBalance) setBalance(parseFloat(storedBalance));
+    const initialTx: Transaction[] = [
+      { id: 'TXN-001', type: 'debit', amount: 250, description: 'Consultation - Sarah Chen', date: '2024-01-15', status: 'completed' },
+      { id: 'TXN-002', type: 'credit', amount: 5000, description: 'Credit Purchase', date: '2024-01-14', status: 'completed' },
+      { id: 'TXN-003', type: 'debit', amount: 1250, description: 'Freight Booking - Maersk', date: '2024-01-12', status: 'completed' },
+      { id: 'TXN-004', type: 'debit', amount: 45, description: 'Document Verification', date: '2024-01-10', status: 'completed' },
+      { id: 'TXN-005', type: 'debit', amount: 99, description: 'Pro Subscription', date: '2024-01-08', status: 'completed' },
+    ];
+    setTransactions(initialTx);
 
-    const storedTx = localStorage.getItem('leverage_transactions');
-    if (storedTx) {
-      setTransactions(JSON.parse(storedTx));
-    } else {
-      const initialTx: Transaction[] = [
-        { id: 'TXN-001', type: 'debit', amount: 250, description: 'Consultation - Sarah Chen', date: '2024-01-15', status: 'completed' },
-        { id: 'TXN-002', type: 'credit', amount: 5000, description: 'Credit Purchase', date: '2024-01-14', status: 'completed' },
-        { id: 'TXN-003', type: 'debit', amount: 1250, description: 'Freight Booking - Maersk', date: '2024-01-12', status: 'completed' },
-        { id: 'TXN-004', type: 'debit', amount: 45, description: 'Document Verification', date: '2024-01-10', status: 'completed' },
-        { id: 'TXN-005', type: 'debit', amount: 99, description: 'Pro Subscription', date: '2024-01-08', status: 'completed' },
-      ];
-      setTransactions(initialTx);
-      localStorage.setItem('leverage_transactions', JSON.stringify(initialTx));
-    }
-
-    const storedInv = localStorage.getItem('leverage_invoices');
-    if (storedInv) {
-      setInvoices(JSON.parse(storedInv));
-    } else {
-      const initialInv: Invoice[] = [
-        { id: 'INV-2024-001', date: '2024-01-15', amount: 250, status: 'paid', description: 'Consultation Fee' },
-        { id: 'INV-2024-002', date: '2024-01-14', amount: 5000, status: 'paid', description: 'Credit Purchase' },
-        { id: 'INV-2024-003', date: '2024-01-12', amount: 1250, status: 'paid', description: 'Freight Booking' },
-        { id: 'INV-2024-004', date: '2024-01-10', amount: 45, status: 'overdue', description: 'Document Verification' },
-      ];
-      setInvoices(initialInv);
-      localStorage.setItem('leverage_invoices', JSON.stringify(initialInv));
-    }
+    const initialInvoices: Invoice[] = [
+      { id: 'INV-2024-001', date: '2024-01-20', amount: 2500, status: 'paid', description: 'Pro Plan - Monthly' },
+      { id: 'INV-2024-002', date: '2024-01-15', amount: 450, status: 'pending', description: 'Document Services' },
+      { id: 'INV-2024-003', date: '2024-01-01', amount: 2500, status: 'paid', description: 'Pro Plan - Monthly' },
+    ];
+    setInvoices(initialInvoices);
   }, []);
 
-  const handleAddFunds = () => {
-    const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0) return;
-
-    const newBalance = balance + numAmount;
-    setBalance(newBalance);
-    localStorage.setItem('leverage_balance', newBalance.toString());
-
-    const newTx: Transaction = {
-      id: `TXN-${Date.now()}`,
-      type: 'credit',
-      amount: numAmount,
-      description: 'Funds Added',
-      date: new Date().toISOString().split('T')[0],
-      status: 'completed',
-    };
-    const updatedTx = [newTx, ...transactions];
-    setTransactions(updatedTx);
-    localStorage.setItem('leverage_transactions', JSON.stringify(updatedTx));
-
-    setShowAddFunds(false);
-    setAmount('');
-  };
-
-  const handleWithdraw = () => {
-    const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0 || numAmount > balance) return;
-
-    const newBalance = balance - numAmount;
-    setBalance(newBalance);
-    localStorage.setItem('leverage_balance', newBalance.toString());
-
-    const newTx: Transaction = {
-      id: `TXN-${Date.now()}`,
-      type: 'debit',
-      amount: numAmount,
-      description: 'Withdrawal',
-      date: new Date().toISOString().split('T')[0],
-      status: 'completed',
-    };
-    const updatedTx = [newTx, ...transactions];
-    setTransactions(updatedTx);
-    localStorage.setItem('leverage_transactions', JSON.stringify(updatedTx));
-
-    setShowWithdraw(false);
-    setAmount('');
+  const statusConfig: Record<string, { color: string; bg: string }> = {
+    completed: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
+    pending: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10' },
+    failed: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },
+    paid: { color: 'text-[#154230]', bg: 'bg-[#154230]/10' },
+    overdue: { color: 'text-[#5D1E21]', bg: 'bg-[#5D1E21]/10' },
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#F4F1EA]">Billing & Payments</h1>
-        <p className="text-[#D8CCBC]/60 text-sm">Manage your wallet and transactions</p>
+        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Billing</h1>
+        <p className="text-[#4A4A4A] text-sm">Manage your payments and invoices</p>
       </div>
 
       {/* Balance Card */}
-      <div className="card bg-gradient-to-br from-[#0E3B36] to-[#081512] border-[#C49A6C]/20">
-        <p className="text-[#D8CCBC]/60 text-sm mb-2">Available Balance</p>
-        <p className="text-4xl font-bold text-[#F4F1EA] mb-4">${balance.toLocaleString()}.00</p>
-        <div className="flex gap-3">
-          <button onClick={() => setShowAddFunds(true)} className="flex-1 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm hover:bg-[#D4AA82]">
+      <div className="bg-[#154230] rounded-xl p-5 text-white">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-white/70" />
+            <span className="text-white/70 text-sm">Available Balance</span>
+          </div>
+          <CreditCard className="w-5 h-5 text-white/70" />
+        </div>
+        <p className="text-3xl font-bold mb-4">${balance.toLocaleString()}</p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowAddFunds(true)}
+            className="flex-1 py-2.5 bg-white text-[#154230] font-semibold rounded-lg text-sm hover:bg-white/90 transition-colors"
+          >
             Add Funds
           </button>
-          <button onClick={() => setShowWithdraw(true)} className="flex-1 py-2.5 bg-[rgba(255,255,255,0.05)] text-[#F4F1EA] rounded-xl font-medium text-sm border border-[rgba(255,255,255,0.1)]">
+          <button className="px-4 py-2.5 bg-white/10 text-white font-semibold rounded-lg text-sm hover:bg-white/20 transition-colors">
             Withdraw
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 overflow-x-auto">
-        {['overview', 'transactions', 'invoices'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-xl font-medium text-sm whitespace-nowrap ${
-              activeTab === tab ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'
-            }`}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setActiveTab('overview')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'overview' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          Overview
+        </button>
+        <button
+          onClick={() => setActiveTab('transactions')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'transactions' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          Transactions
+        </button>
+        <button
+          onClick={() => setActiveTab('invoices')}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+            activeTab === 'invoices' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
+          }`}
+        >
+          Invoices
+        </button>
       </div>
 
-      {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="card">
-            <p className="text-[#D8CCBC]/60 text-sm mb-2">Total Spent</p>
-            <p className="text-2xl font-bold text-[#F4F1EA]">${transactions.filter(t => t.type === 'debit').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <p className="text-[#4A4A4A] text-xs mb-1">This Month</p>
+            <p className="text-xl font-bold text-[#101111]">$2,450</p>
+            <p className="text-[#4A4A4A] text-xs">Total Spent</p>
           </div>
-          <div className="card">
-            <p className="text-[#D8CCBC]/60 text-sm mb-2">Total Received</p>
-            <p className="text-2xl font-bold text-[#F4F1EA]">${transactions.filter(t => t.type === 'credit').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}</p>
-          </div>
-          <div className="card">
-            <p className="text-[#D8CCBC]/60 text-sm mb-2">Pending</p>
-            <p className="text-2xl font-bold text-[#F4F1EA]">$0.00</p>
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <p className="text-[#4A4A4A] text-xs mb-1">Credits Used</p>
+            <p className="text-xl font-bold text-[#101111]">$5,000</p>
+            <p className="text-[#4A4A4A] text-xs">Available</p>
           </div>
         </div>
       )}
 
-      {/* Transactions Tab */}
       {activeTab === 'transactions' && (
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Transaction History</h2>
-          <div className="space-y-3">
-            {transactions.map(tx => (
-              <div key={tx.id} className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.type === 'credit' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
-                    {tx.type === 'credit' ? '↓' : '↑'}
-                  </div>
-                  <div>
-                    <p className="text-[#F4F1EA] text-sm">{tx.description}</p>
-                    <p className="text-[#D8CCBC]/50 text-xs">{tx.date}</p>
-                  </div>
-                </div>
-                <p className={`font-semibold ${tx.type === 'credit' ? 'text-emerald-400' : 'text-red-400'}`}>
+        <div className="space-y-2">
+          {transactions.map(tx => (
+            <div key={tx.id} className="bg-white border border-black/5 rounded-xl p-4 flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                tx.type === 'credit' ? 'bg-[#154230]/10' : 'bg-[#5D1E21]/10'
+              }`}>
+                {tx.type === 'credit' ? (
+                  <ArrowDownRight className="w-5 h-5 text-[#154230]" />
+                ) : (
+                  <ArrowUpRight className="w-5 h-5 text-[#5D1E21]" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[#101111] text-sm font-medium truncate">{tx.description}</p>
+                <p className="text-[#4A4A4A] text-xs">{tx.date}</p>
+              </div>
+              <div className="text-right">
+                <p className={`text-sm font-semibold ${tx.type === 'credit' ? 'text-[#154230]' : 'text-[#101111]'}`}>
                   {tx.type === 'credit' ? '+' : '-'}${tx.amount.toLocaleString()}
                 </p>
+                <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusConfig[tx.status].bg} ${statusConfig[tx.status].color}`}>
+                  {tx.status}
+                </span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Invoices Tab */}
       {activeTab === 'invoices' && (
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Invoices</h2>
-          <div className="space-y-3">
-            {invoices.map(inv => (
-              <div key={inv.id} className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.03)] rounded-xl">
-                <div>
-                  <p className="text-[#F4F1EA] text-sm font-medium">{inv.id}</p>
-                  <p className="text-[#D8CCBC]/50 text-xs">{inv.description} • {inv.date}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[#F4F1EA] font-semibold">${inv.amount}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' :
-                    inv.status === 'pending' ? 'bg-amber-500/20 text-amber-400' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {inv.status}
-                  </span>
-                </div>
+        <div className="space-y-2">
+          {invoices.map(inv => (
+            <div key={inv.id} className="bg-white border border-black/5 rounded-xl p-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
+                <Download className="w-5 h-5 text-[#4A4A4A]" />
               </div>
-            ))}
-          </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[#101111] text-sm font-medium">{inv.description}</p>
+                <p className="text-[#4A4A4A] text-xs">{inv.id} • {inv.date}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[#101111] text-sm font-semibold">${inv.amount.toLocaleString()}</p>
+                <span className={`px-2 py-0.5 rounded text-xs font-medium ${statusConfig[inv.status].bg} ${statusConfig[inv.status].color}`}>
+                  {inv.status}
+                </span>
+              </div>
+              <button className="p-2 text-[#4A4A4A] hover:text-[#154230] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <Download className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
       {/* Add Funds Modal */}
       {showAddFunds && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[#F4F1EA] mb-4">Add Funds</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Amount (USD)</label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full input"
-                  placeholder="Enter amount"
-                  autoFocus
-                />
-              </div>
-              <div className="flex gap-3">
-                <button onClick={() => setShowAddFunds(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
-                <button onClick={handleAddFunds} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">Add Funds</button>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setShowAddFunds(false)}>
+          <div className="bg-white border border-black/5 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-black/5 flex items-center justify-between">
+              <h2 className="text-[#101111] font-semibold text-sm">Add Funds</h2>
+              <button onClick={() => setShowAddFunds(false)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Withdraw Modal */}
-      {showWithdraw && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-[#F4F1EA] mb-4">Withdraw Funds</h2>
-            <div className="space-y-4">
+            <div className="p-4 space-y-4">
               <div>
-                <label className="block text-[#D8CCBC] text-sm mb-2">Amount (USD) - Max: ${balance.toLocaleString()}</label>
+                <label className="block text-[#101111] text-xs font-medium mb-1.5">Amount (USD)</label>
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full input"
                   placeholder="Enter amount"
-                  autoFocus
+                  className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-lg"
                 />
               </div>
-              <div className="flex gap-3">
-                <button onClick={() => setShowWithdraw(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">Cancel</button>
-                <button onClick={handleWithdraw} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold">Withdraw</button>
+              <div className="grid grid-cols-3 gap-2">
+                {[100, 500, 1000].map(val => (
+                  <button
+                    key={val}
+                    onClick={() => setAmount(val.toString())}
+                    className="py-2 bg-[#E6E2DA] text-[#101111] rounded-lg text-sm font-medium hover:bg-[#D4CCBE] transition-colors"
+                  >
+                    ${val}
+                  </button>
+                ))}
               </div>
+              <button className="w-full h-12 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                Proceed to Payment
+              </button>
             </div>
           </div>
         </div>
