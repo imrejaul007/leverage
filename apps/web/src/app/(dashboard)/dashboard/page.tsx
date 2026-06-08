@@ -16,6 +16,8 @@ import {
   BarChart3,
   Shield,
   Briefcase,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -28,6 +30,8 @@ export default function DashboardPage() {
     shipments: 23,
     revenue: 24500000,
     unreadMessages: 5,
+    complianceScore: 92,
+    tradeVolume: 18.5,
   };
 
   const recentActivity = [
@@ -42,16 +46,9 @@ export default function DashboardPage() {
     quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#C49A6C]/10', color: 'text-[#C49A6C]' },
     rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-blue-500/10', color: 'text-blue-400' },
     payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-emerald-500/10', color: 'text-emerald-400' },
-    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-white/5', color: 'text-[#8a8f94]' },
-    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-white/5', color: 'text-[#8a8f94]' },
+    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-white/5', color: 'text-[#6B7280]' },
+    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-white/5', color: 'text-[#6B7280]' },
   };
-
-  const quickStats = [
-    { label: 'Active RFQs', value: stats.activeRFQs, icon: <FileText className="w-4 h-4" />, color: 'accent' },
-    { label: 'In Transit', value: stats.shipments, icon: <Truck className="w-4 h-4" />, color: 'blue' },
-    { label: 'Total Orders', value: stats.orders, icon: <Package className="w-4 h-4" />, color: 'green' },
-    { label: 'Messages', value: stats.unreadMessages, icon: <MessageSquare className="w-4 h-4" />, color: 'purple' },
-  ];
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 300);
@@ -67,96 +64,116 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Trade Stats Grid - Clean 2x2 */}
+    <div className="space-y-5">
+      {/* Top Stats Row */}
       <div className="grid grid-cols-2 gap-3">
-        {quickStats.map((stat) => (
-          <div key={stat.label} className="bg-[#151c24] border border-white/5 rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                stat.color === 'accent' ? 'bg-[#C49A6C]/10 text-[#C49A6C]' :
-                stat.color === 'blue' ? 'bg-blue-500/10 text-blue-400' :
-                stat.color === 'green' ? 'bg-emerald-500/10 text-emerald-400' :
-                'bg-purple-500/10 text-purple-400'
-              }`}>
-                {stat.icon}
-              </span>
-              {stat.label === 'Messages' && stat.value > 0 && (
-                <span className="w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-                  {stat.value}
-                </span>
-              )}
+        {/* Compliance Score */}
+        <div className="bg-[#1A1E24] border border-white/5 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[#6B7280] text-xs mb-1">Compliance Score</p>
+              <p className="text-2xl font-bold text-[#F4F1EA]">{stats.complianceScore}%</p>
             </div>
-            <p className="text-2xl font-bold text-[#F4F1EA]">{stat.value}</p>
-            <p className="text-[#8a8f94] text-xs mt-1">{stat.label}</p>
+            <div className="w-14 h-14 rounded-full bg-[#3E6A47]/20 flex items-center justify-center">
+              <Shield className="w-6 h-6 text-[#3E6A47]" />
+            </div>
           </div>
-        ))}
-      </div>
-
-      {/* Revenue Card */}
-      <div className="bg-[#151c24] border border-[#C49A6C]/10 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="text-[#8a8f94] text-sm">Total Revenue</p>
-            <p className="text-2xl font-bold text-[#F4F1EA] mt-1">
-              ${(stats.revenue / 1000000).toFixed(1)}M
-            </p>
-          </div>
-          <div className="w-11 h-11 rounded-lg bg-[#C49A6C]/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-[#C49A6C]" />
+          <div className="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-full bg-[#3E6A47] rounded-full" style={{ width: `${stats.complianceScore}%` }}></div>
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-emerald-400 text-xs">
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-          +12.5% from last month
+
+        {/* Trade Volume */}
+        <div className="bg-[#1A1E24] border border-white/5 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[#6B7280] text-xs mb-1">Trade Volume</p>
+              <p className="text-2xl font-bold text-[#F4F1EA]">${stats.tradeVolume}M</p>
+            </div>
+            <div className="w-14 h-14 rounded-full bg-[#C49A6C]/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-[#C49A6C]" />
+            </div>
+          </div>
+          <div className="flex items-center gap-1 mt-2 text-emerald-400 text-xs">
+            <TrendingUp className="w-3 h-3" />
+            +12.5% this month
+          </div>
         </div>
       </div>
 
-      {/* Quick Actions - Clean grid */}
+      {/* Quick Stats Grid */}
       <div className="grid grid-cols-4 gap-2">
-        <Link href="/marketplace" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#151c24] border border-white/5 hover:border-white/10 transition-colors">
+        <Link href="/rfqs" className="bg-[#1A1E24] border border-white/5 rounded-xl p-3 hover:border-white/12 transition-colors">
+          <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center mb-3">
+            <FileText className="w-4 h-4 text-blue-400" />
+          </div>
+          <p className="text-xl font-bold text-[#F4F1EA]">{stats.activeRFQs}</p>
+          <p className="text-[#6B7280] text-xs mt-0.5">Active RFQs</p>
+        </Link>
+
+        <Link href="/orders" className="bg-[#1A1E24] border border-white/5 rounded-xl p-3 hover:border-white/12 transition-colors">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-3">
+            <Truck className="w-4 h-4 text-emerald-400" />
+          </div>
+          <p className="text-xl font-bold text-[#F4F1EA]">{stats.shipments}</p>
+          <p className="text-[#6B7280] text-xs mt-0.5">In Transit</p>
+        </Link>
+
+        <Link href="/orders" className="bg-[#1A1E24] border border-white/5 rounded-xl p-3 hover:border-white/12 transition-colors">
+          <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center mb-3">
+            <Package className="w-4 h-4 text-[#6B7280]" />
+          </div>
+          <p className="text-xl font-bold text-[#F4F1EA]">{stats.orders}</p>
+          <p className="text-[#6B7280] text-xs mt-0.5">Total Orders</p>
+        </Link>
+
+        <Link href="/marketplace/inbox" className="bg-[#1A1E24] border border-white/5 rounded-xl p-3 hover:border-white/12 transition-colors relative">
+          <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center mb-3">
+            <MessageSquare className="w-4 h-4 text-purple-400" />
+          </div>
+          <p className="text-xl font-bold text-[#F4F1EA]">{stats.unreadMessages}</p>
+          <p className="text-[#6B7280] text-xs mt-0.5">Messages</p>
+          {stats.unreadMessages > 0 && (
+            <span className="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full"></span>
+          )}
+        </Link>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-4 gap-2">
+        <Link href="/marketplace" className="flex flex-col items-center gap-2 p-3 bg-[#1A1E24] border border-white/5 rounded-xl hover:border-white/12 transition-colors">
           <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
             <Search className="w-5 h-5 text-blue-400" />
           </div>
-          <span className="text-[#8a8f94] text-[11px] font-medium text-center">Browse</span>
+          <span className="text-[#6B7280] text-xs">Browse</span>
         </Link>
 
-        <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#151c24] border border-white/5 hover:border-white/10 transition-colors">
+        <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-3 bg-[#1A1E24] border border-white/5 rounded-xl hover:border-white/12 transition-colors">
           <div className="w-10 h-10 rounded-lg bg-[#C49A6C]/10 flex items-center justify-center">
             <Plus className="w-5 h-5 text-[#C49A6C]" />
           </div>
-          <span className="text-[#8a8f94] text-[11px] font-medium text-center">Post RFQ</span>
+          <span className="text-[#6B7280] text-xs">Post RFQ</span>
         </Link>
 
-        <Link href="/marketplace/inbox" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#151c24] border border-white/5 hover:border-white/10 transition-colors relative">
-          <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-            <MessageSquare className="w-5 h-5 text-purple-400" />
+        <Link href="/documents" className="flex flex-col items-center gap-2 p-3 bg-[#1A1E24] border border-white/5 rounded-xl hover:border-white/12 transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-[#3E6A47]/10 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-[#3E6A47]" />
           </div>
-          <span className="text-[#8a8f94] text-[11px] font-medium text-center">Inbox</span>
-          {stats.unreadMessages > 0 && (
-            <span className="absolute top-2 right-2 w-3.5 h-3.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-              {stats.unreadMessages}
-            </span>
-          )}
+          <span className="text-[#6B7280] text-xs">Documents</span>
         </Link>
 
-        <Link href="/orders" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#151c24] border border-white/5 hover:border-white/10 transition-colors">
+        <Link href="/ai" className="flex flex-col items-center gap-2 p-3 bg-[#1A1E24] border border-white/5 rounded-xl hover:border-white/12 transition-colors">
           <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
-            <Truck className="w-5 h-5 text-[#8a8f94]" />
+            <BarChart3 className="w-5 h-5 text-[#6B7280]" />
           </div>
-          <span className="text-[#8a8f94] text-[11px] font-medium text-center">Orders</span>
+          <span className="text-[#6B7280] text-xs">AI Assist</span>
         </Link>
       </div>
 
-      {/* Recent Activity - Clean design */}
-      <div className="bg-[#151c24] border border-white/5 rounded-xl overflow-hidden">
+      {/* Recent Activity */}
+      <div className="bg-[#1A1E24] border border-white/5 rounded-xl overflow-hidden">
         <div className="p-4 border-b border-white/5 flex items-center justify-between">
-          <div>
-            <h2 className="text-[#F4F1EA] font-semibold text-sm">Trade Updates</h2>
-            <p className="text-[#8a8f94] text-xs">Recent activity on your trades</p>
-          </div>
+          <h2 className="text-[#F4F1EA] font-semibold text-sm">Recent Activity</h2>
           <Link href="/marketplace/inbox" className="text-[#C49A6C] text-xs font-medium flex items-center gap-1">
             View All <ArrowRight className="w-3 h-3" />
           </Link>
@@ -169,20 +186,20 @@ export default function DashboardPage() {
               href={activity.link}
               className="flex items-center gap-3 p-4 hover:bg-white/[0.02] transition-colors"
             >
-              <div className={`w-9 h-9 rounded-lg ${activityConfig[activity.type]?.bg} flex items-center justify-center flex-shrink-0 ${activityConfig[activity.type]?.color}`}>
+              <div className={`w-9 h-9 rounded-lg ${activityConfig[activity.type]?.bg} flex items-center justify-center ${activityConfig[activity.type]?.color}`}>
                 {activityConfig[activity.type]?.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-sm truncate ${activity.status === 'unread' ? 'text-[#F4F1EA] font-medium' : 'text-[#8a8f94]'}`}>
+                <p className={`text-sm ${activity.status === 'unread' ? 'text-[#F4F1EA] font-medium' : 'text-[#6B7280]'}`}>
                   {activity.text}
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <Clock className="w-3 h-3 text-[#8a8f94]/50" />
-                  <span className="text-[#8a8f94] text-xs">{activity.time}</span>
+                  <Clock className="w-3 h-3 text-[#6B7280]/50" />
+                  <span className="text-[#6B7280] text-xs">{activity.time}</span>
                 </div>
               </div>
               {activity.status === 'unread' && (
-                <div className="w-1.5 h-1.5 bg-[#C49A6C] rounded-full flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-[#C49A6C] rounded-full"></div>
               )}
             </Link>
           ))}
@@ -190,59 +207,45 @@ export default function DashboardPage() {
       </div>
 
       {/* Marketplace CTA */}
-      <Link href="/marketplace" className="block bg-[#151c24] border border-white/5 rounded-xl p-4 hover:border-[#C49A6C]/20 transition-colors">
+      <Link href="/marketplace" className="block bg-[#1A1E24] border border-white/5 rounded-xl p-4 hover:border-[#C49A6C]/20 transition-colors">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-[#C49A6C] to-[#D4AA82] flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-[#0a0f14]" />
+              <Briefcase className="w-5 h-5 text-[#0D0F14]" />
             </div>
             <div>
               <h3 className="text-[#F4F1EA] font-semibold text-sm">Global Marketplace</h3>
-              <p className="text-[#8a8f94] text-xs">500+ verified suppliers worldwide</p>
+              <p className="text-[#6B7280] text-xs">500+ verified suppliers</p>
             </div>
           </div>
-          <ArrowRight className="w-5 h-5 text-[#C49A6C]" />
+          <ArrowRight className="w-5 h-5 text-[#6B7280]" />
         </div>
       </Link>
 
-      {/* Trade Documents Quick Stats */}
-      <div className="bg-[#151c24] border border-white/5 rounded-xl p-4">
+      {/* Document Status */}
+      <div className="bg-[#1A1E24] border border-white/5 rounded-xl p-4">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-[#F4F1EA] font-semibold text-sm">Trade Documents</h2>
-            <p className="text-[#8a8f94] text-xs">Bill of Lading, Invoice, COO</p>
-          </div>
+          <h2 className="text-[#F4F1EA] font-semibold text-sm">Document Status</h2>
           <Link href="/documents" className="text-[#C49A6C] text-xs font-medium">Manage</Link>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 bg-white/5 rounded-lg">
-            <p className="text-xl font-bold text-[#F4F1EA]">{stats.documents}</p>
-            <p className="text-[#8a8f94] text-xs mt-0.5">Total Docs</p>
+            <CheckCircle className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#F4F1EA]">{stats.documents}</p>
+            <p className="text-[#6B7280] text-xs">Verified</p>
           </div>
           <div className="text-center p-3 bg-white/5 rounded-lg">
-            <p className="text-xl font-bold text-emerald-400">23</p>
-            <p className="text-[#8a8f94] text-xs mt-0.5">Verified</p>
+            <AlertCircle className="w-5 h-5 text-amber-400 mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#F4F1EA]">5</p>
+            <p className="text-[#6B7280] text-xs">Pending</p>
           </div>
           <div className="text-center p-3 bg-white/5 rounded-lg">
-            <p className="text-xl font-bold text-amber-400">5</p>
-            <p className="text-[#8a8f94] text-xs mt-0.5">Pending</p>
+            <Clock className="w-5 h-5 text-blue-400 mx-auto mb-2" />
+            <p className="text-lg font-bold text-[#F4F1EA]">12</p>
+            <p className="text-[#6B7280] text-xs">Processing</p>
           </div>
         </div>
       </div>
-
-      {/* AI Assistant Quick Access */}
-      <Link href="/ai" className="block bg-[#151c24] border border-white/5 rounded-xl p-4 hover:border-white/10 transition-colors">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#8a8f94]" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-[#F4F1EA] font-semibold text-sm">AI Trade Assistant</h3>
-            <p className="text-[#8a8f94] text-xs">HS codes, duties & compliance help</p>
-          </div>
-          <ArrowRight className="w-4 h-4 text-[#8a8f94]" />
-        </div>
-      </Link>
     </div>
   );
 }

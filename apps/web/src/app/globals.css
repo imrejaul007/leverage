@@ -5,33 +5,29 @@
 @tailwind utilities;
 
 :root {
-  /* Premium Dark Theme - Less Green, More Premium */
-  --bg-primary: #0a0f14;
-  --bg-secondary: #121820;
-  --bg-card: #151c24;
-  --bg-card-hover: #1a222c;
+  /* Premium Clean Theme - inspired by modern fintech */
+  --bg-primary: #0D0F14;
+  --bg-secondary: #13161B;
+  --bg-card: #1A1E24;
+  --bg-card-hover: #1E2228;
+  --bg-light: #F7F9FB;
   --accent: #C49A6C;
   --accent-light: #D4AA82;
   --accent-dark: #a37f54;
+  --primary-green: #3E6A47;
+  --primary-green-light: #4A7D55;
+  --navy: #1D3A6D;
   --neutral-light: #F4F1EA;
   --neutral-secondary: #D8CCBC;
-  --neutral-muted: #8a8f94;
+  --neutral-muted: #6B7280;
   --foreground: #F4F1EA;
   --foreground-muted: #D8CCBC;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(0, 0, 0, 0.08);
   --card-bg: rgba(255, 255, 255, 0.03);
   --text-primary: #F4F1EA;
   --text-secondary: #D8CCBC;
-  --text-muted: #8a8f94;
-  /* Premium spacing */
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
+  --text-muted: #6B7280;
 }
 
 * {
@@ -105,7 +101,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .card:hover {
   background: var(--bg-card-hover);
-  border-color: var(--border-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Light card variant */
+.card-light {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px;
 }
 
 /* Premium card variant - cleaner */
@@ -118,21 +122,20 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Button styles */
 .btn-primary {
-  background: var(--bg-secondary);
-  color: var(--neutral-light);
+  background: var(--primary-green);
+  color: white;
   height: 44px;
   padding: 0 18px;
   border-radius: 10px;
   font-weight: 600;
   transition: all 0.2s;
-  border: 1px solid var(--border);
+  border: none;
   cursor: pointer;
   font-size: 14px;
 }
 
 .btn-primary:hover {
-  background: var(--bg-card);
-  border-color: var(--border-hover);
+  background: var(--primary-green-light);
 }
 
 .btn-accent {
@@ -150,6 +153,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-accent:hover {
   background: var(--accent-light);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--neutral-light);
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Input styles */
@@ -186,7 +207,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glassmorphism - Subtle */
 .glass {
-  background: rgba(18, 24, 32, 0.8);
+  background: rgba(19, 22, 27, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -195,6 +216,21 @@ h1, h2, h3, h4, h5, h6 {
 *:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--primary-green);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
 /* ============================================
@@ -249,7 +285,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Ensure buttons are large enough for touch */
 @media (max-width: 640px) {
   .btn-primary,
-  .btn-accent {
+  .btn-accent,
+  .btn-secondary {
     height: 44px;
     padding: 0 16px;
     font-size: 14px;
@@ -293,7 +330,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stat-card {
-  @apply bg-[#151c24] border border-[rgba(255,255,255,0.06)] rounded-xl p-4;
+  @apply bg-[#1A1E24] border border-white/10 rounded-xl p-4;
+}
+
+.stat-card-light {
+  @apply bg-white border border-black/5 rounded-xl p-4;
 }
 
 /* Status badges - Subtle */
@@ -324,4 +365,39 @@ h1, h2, h3, h4, h5, h6 {
 
 .gradient-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+}
+
+/* Chart placeholder */
+.chart-container {
+  @apply bg-[#1A1E24] border border-white/10 rounded-xl p-4;
+}
+
+/* Clean stat number */
+.stat-number {
+  @apply text-2xl font-bold text-[#F4F1EA];
+}
+
+.stat-label {
+  @apply text-sm text-[#6B7280];
+}
+
+/* Compliance score circle */
+.compliance-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(var(--primary-green) var(--percent), rgba(255,255,255,0.1) 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compliance-inner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

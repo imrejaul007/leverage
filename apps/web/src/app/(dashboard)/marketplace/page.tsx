@@ -111,7 +111,7 @@ export default function MarketplacePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-lg sm:text-xl font-bold text-[#F4F1EA]">Browse Products</h1>
-          <p className="text-[#8a8f94] text-sm">{products.length} products from verified suppliers</p>
+          <p className="text-[#6B7280] text-sm">{products.length} products from verified suppliers</p>
         </div>
         <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg hover:bg-[#D4AA82] transition-colors text-sm">
           <Plus className="w-4 h-4" />
@@ -121,13 +121,13 @@ export default function MarketplacePage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-4 h-4 text-[#8a8f94]/50 absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-[#6B7280]/50 absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search products, suppliers..."
-          className="w-full h-11 pl-11 pr-4 bg-[#121820] border border-white/5 rounded-lg text-[#F4F1EA] placeholder-[#8a8f94]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
+          className="w-full h-11 pl-11 pr-4 bg-[#13161B] border border-white/5 rounded-lg text-[#F4F1EA] placeholder-[#8a8f94]/50 focus:outline-none focus:border-[#C49A6C] text-sm"
         />
       </div>
 
@@ -140,7 +140,7 @@ export default function MarketplacePage() {
             className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               selectedCategory === cat
                 ? 'bg-[#C49A6C] text-[#0a0f14]'
-                : 'bg-white/5 text-[#8a8f94] hover:bg-white/10 hover:text-[#F4F1EA]'
+                : 'bg-white/5 text-[#6B7280] hover:bg-white/10 hover:text-[#F4F1EA]'
             }`}
           >
             {cat}
@@ -150,11 +150,11 @@ export default function MarketplacePage() {
 
       {/* Sort */}
       <div className="flex items-center justify-between">
-        <span className="text-[#8a8f94] text-sm">{filteredProducts.length} products</span>
+        <span className="text-[#6B7280] text-sm">{filteredProducts.length} products</span>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="h-10 px-3 bg-[#121820] border border-white/5 rounded-lg text-[#F4F1EA] text-sm focus:outline-none focus:border-[#C49A6C]"
+          className="h-10 px-3 bg-[#13161B] border border-white/5 rounded-lg text-[#F4F1EA] text-sm focus:outline-none focus:border-[#C49A6C]"
         >
           <option value="featured">Featured</option>
           <option value="newest">Newest</option>
@@ -166,10 +166,10 @@ export default function MarketplacePage() {
 
       {/* Compare Bar */}
       {compareList.length > 0 && (
-        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-[#121820] border border-white/10 rounded-xl p-4 shadow-2xl z-50">
+        <div className="fixed bottom-28 left-4 right-4 sm:left-auto sm:right-8 sm:w-96 bg-[#13161B] border border-white/10 rounded-xl p-4 shadow-2xl z-50">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#F4F1EA] font-semibold text-sm">Compare ({compareList.length}/3)</span>
-            <button onClick={() => setCompareList([])} className="text-[#8a8f94] hover:text-white text-xs">Clear</button>
+            <button onClick={() => setCompareList([])} className="text-[#6B7280] hover:text-white text-xs">Clear</button>
           </div>
           <Link href={`/marketplace/compare?ids=${compareList.join(',')}`} className="block w-full py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg text-center text-sm">
             Compare Products
@@ -180,7 +180,7 @@ export default function MarketplacePage() {
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.map(product => (
-          <div key={product.id} className="bg-[#151c24] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all group">
+          <div key={product.id} className="bg-[#1A1E24] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all group">
             <Link href={`/marketplace/${product.id}`} className="block">
               <div className="aspect-square bg-gradient-to-br from-[#121820] to-[#0a0f14] flex items-center justify-center relative p-8">
                 <span className="text-5xl group-hover:scale-110 transition-transform">{product.category === 'Food & Agriculture' ? '🍚' : product.category === 'Textiles' ? '🧶' : product.category === 'Energy' ? '☀️' : '📦'}</span>
@@ -203,18 +203,18 @@ export default function MarketplacePage() {
                 <Link href={`/marketplace/${product.id}`}>
                   <h3 className="text-[#F4F1EA] font-medium text-sm line-clamp-1 hover:text-[#C49A6C] transition-colors">{product.name}</h3>
                 </Link>
-                <p className="text-[#8a8f94] text-xs line-clamp-2 mt-1">{product.description}</p>
+                <p className="text-[#6B7280] text-xs line-clamp-2 mt-1">{product.description}</p>
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-lg font-bold text-[#F4F1EA]">${product.price}</span>
-                  <span className="text-[#8a8f94] text-xs">/{product.currency}</span>
+                  <span className="text-[#6B7280] text-xs">/{product.currency}</span>
                 </div>
-                <span className="text-[#8a8f94] text-xs">MOQ: {product.moq}</span>
+                <span className="text-[#6B7280] text-xs">MOQ: {product.moq}</span>
               </div>
 
-              <div className="flex items-center gap-3 text-xs text-[#8a8f94]">
+              <div className="flex items-center gap-3 text-xs text-[#6B7280]">
                 <span className="flex items-center gap-1">
                   <Star className="w-3 h-3 text-[#C49A6C] fill-[#C49A6C]" />
                   {product.reviews}
@@ -233,7 +233,7 @@ export default function MarketplacePage() {
                         <span className="text-[#F4F1EA] text-xs">{product.supplier.name}</span>
                         {product.supplier.verified && <CheckCircle className="w-3 h-3 text-emerald-400" />}
                       </div>
-                      <span className="text-[#8a8f94] text-xs">{product.supplier.responseTime}</span>
+                      <span className="text-[#6B7280] text-xs">{product.supplier.responseTime}</span>
                     </div>
                   </div>
                 </div>
@@ -243,10 +243,10 @@ export default function MarketplacePage() {
                 <Link href={`/marketplace/${product.id}`} className="flex-1 py-2.5 bg-[#C49A6C] text-[#0a0f14] font-semibold rounded-lg text-center text-xs hover:bg-[#D4AA82] transition-colors">
                   View Details
                 </Link>
-                <button onClick={() => toggleFavorite(product.id)} className={`p-2 rounded-lg border transition-colors ${favorites.has(product.id) ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'border-white/5 text-[#8a8f94] hover:border-red-500/30 hover:text-red-400'}`}>
+                <button onClick={() => toggleFavorite(product.id)} className={`p-2 rounded-lg border transition-colors ${favorites.has(product.id) ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'border-white/5 text-[#6B7280] hover:border-red-500/30 hover:text-red-400'}`}>
                   <Heart className="w-4 h-4" fill={favorites.has(product.id) ? 'currentColor' : 'none'} />
                 </button>
-                <button onClick={() => toggleCompare(product.id)} className={`p-2 rounded-lg border transition-colors ${compareList.includes(product.id) ? 'bg-[#C49A6C]/10 border-[#C49A6C]/30 text-[#C49A6C]' : 'border-white/5 text-[#8a8f94] hover:border-[#C49A6C]/30 hover:text-[#C49A6C]'}`}>
+                <button onClick={() => toggleCompare(product.id)} className={`p-2 rounded-lg border transition-colors ${compareList.includes(product.id) ? 'bg-[#C49A6C]/10 border-[#C49A6C]/30 text-[#C49A6C]' : 'border-white/5 text-[#6B7280] hover:border-[#C49A6C]/30 hover:text-[#C49A6C]'}`}>
                   <GitCompare className="w-4 h-4" />
                 </button>
               </div>
