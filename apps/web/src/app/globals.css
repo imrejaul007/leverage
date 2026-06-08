@@ -5,20 +5,25 @@
 @tailwind utilities;
 
 :root {
-  /* Original Design System Colors - DO NOT CHANGE */
-  --bg-primary: #081512;
-  --bg-secondary: #0E3B36;
+  /* Premium Dark Theme - Less Green, More Premium */
+  --bg-primary: #0a0f14;
+  --bg-secondary: #121820;
+  --bg-card: #151c24;
+  --bg-card-hover: #1a222c;
   --accent: #C49A6C;
   --accent-light: #D4AA82;
+  --accent-dark: #a37f54;
   --neutral-light: #F4F1EA;
   --neutral-secondary: #D8CCBC;
+  --neutral-muted: #8a8f94;
   --foreground: #F4F1EA;
   --foreground-muted: #D8CCBC;
   --border: rgba(255, 255, 255, 0.06);
-  --card-bg: rgba(255, 255, 255, 0.02);
+  --border-hover: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.03);
   --text-primary: #F4F1EA;
   --text-secondary: #D8CCBC;
-  --text-muted: #D8CCBC;
+  --text-muted: #8a8f94;
   /* Premium spacing */
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
@@ -65,8 +70,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -74,70 +79,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(196, 154, 108, 0.3);
-  border-radius: 3px;
+  background: rgba(196, 154, 108, 0.2);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(196, 154, 108, 0.5);
+  background: rgba(196, 154, 108, 0.4);
 }
 
-/* Card styles - Premium with more breathing room */
+/* Premium Card styles - Clean, minimal */
 .card {
-  background: var(--card-bg);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
 }
 
 @media (min-width: 768px) {
   .card {
-    padding: 24px;
-    border-radius: 20px;
+    padding: 20px;
+    border-radius: 14px;
   }
 }
 
 .card:hover {
-  border-color: rgba(196, 154, 108, 0.15);
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
 }
 
 /* Premium card variant - cleaner */
 .card-clean {
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 14px;
 }
 
 /* Button styles */
 .btn-primary {
   background: var(--bg-secondary);
   color: var(--neutral-light);
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 12px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
   font-weight: 600;
   transition: all 0.2s;
-  border: none;
+  border: 1px solid var(--border);
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .btn-primary:hover {
-  background: #0f4a42;
+  background: var(--bg-card);
+  border-color: var(--border-hover);
 }
 
 .btn-accent {
   background: var(--accent);
   color: var(--bg-primary);
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 12px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
   font-weight: 600;
   transition: all 0.2s;
   border: none;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .btn-accent:hover {
@@ -146,12 +154,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Input styles */
 .input {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
   color: var(--neutral-light);
-  font-size: 16px;
+  font-size: 15px;
   transition: all 0.2s;
   width: 100%;
 }
@@ -159,10 +167,11 @@ h1, h2, h3, h4, h5, h6 {
 .input:focus {
   outline: none;
   border-color: var(--accent);
+  background: var(--bg-card);
 }
 
 .input::placeholder {
-  color: var(--neutral-secondary);
+  color: var(--neutral-muted);
 }
 
 /* Animations */
@@ -175,11 +184,11 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Glassmorphism */
+/* Glassmorphism - Subtle */
 .glass {
-  background: rgba(14, 59, 54, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(18, 24, 32, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* Focus styles */
@@ -222,7 +231,7 @@ h1, h2, h3, h4, h5, h6 {
   /* Card adjustments */
   .card {
     padding: 14px;
-    border-radius: 14px;
+    border-radius: 12px;
   }
 }
 
@@ -241,15 +250,15 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 640px) {
   .btn-primary,
   .btn-accent {
-    height: 48px;
-    padding: 0 20px;
-    font-size: 15px;
-    border-radius: 12px;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 14px;
+    border-radius: 10px;
   }
 
   .input {
-    height: 48px;
-    padding: 12px 16px;
+    height: 44px;
+    padding: 10px 14px;
   }
 }
 
@@ -280,30 +289,39 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Utility classes */
 .section-title {
-  @apply text-lg font-semibold text-[#F4F1EA] mb-4;
+  @apply text-base font-semibold text-[#F4F1EA] mb-3;
 }
 
 .stat-card {
-  @apply bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4;
+  @apply bg-[#151c24] border border-[rgba(255,255,255,0.06)] rounded-xl p-4;
 }
 
-/* Status badges */
+/* Status badges - Subtle */
 .badge {
-  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
 }
 
 .badge-success {
-  @apply bg-emerald-500/20 text-emerald-400;
+  @apply bg-emerald-500/10 text-emerald-400/80;
 }
 
 .badge-warning {
-  @apply bg-amber-500/20 text-amber-400;
+  @apply bg-amber-500/10 text-amber-400/80;
 }
 
 .badge-error {
-  @apply bg-red-500/20 text-red-400;
+  @apply bg-red-500/10 text-red-400/80;
 }
 
 .badge-info {
-  @apply bg-blue-500/20 text-blue-400;
+  @apply bg-blue-500/10 text-blue-400/80;
+}
+
+/* Premium subtle gradient backgrounds */
+.gradient-subtle {
+  background: linear-gradient(180deg, rgba(196, 154, 108, 0.03) 0%, transparent 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
 }
