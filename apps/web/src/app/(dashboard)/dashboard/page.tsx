@@ -44,7 +44,7 @@ export default function DashboardPage() {
 
   const activityConfig: Record<string, { icon: React.ReactNode; bg: string; color: string }> = {
     quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#A6824A]/10', color: 'text-[#A6824A]' },
-    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+    rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#5D1E21]/10', color: 'text-[#5D1E21]' },
     payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
     document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
     order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
@@ -104,8 +104,8 @@ export default function DashboardPage() {
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-4 gap-3">
         <Link href="/rfqs" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
-          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center mb-3">
-            <FileText className="w-5 h-5 text-[#154230]" />
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center mb-3">
+            <FileText className="w-5 h-5 text-[#5D1E21]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
           <p className="text-[#4A4A4A] text-xs mt-1">Active RFQs</p>
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               {activity.status === 'unread' && (
-                <div className="w-1.5 h-1.5 bg-[#A6824A] rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-[#5D1E21] rounded-full"></div>
               )}
             </Link>
           ))}
@@ -234,8 +234,8 @@ export default function DashboardPage() {
             <p className="text-lg font-bold text-[#101111]">{stats.documents}</p>
             <p className="text-[#4A4A4A] text-xs">Verified</p>
           </div>
-          <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
-            <AlertCircle className="w-5 h-5 text-[#A6824A] mx-auto mb-2" />
+          <div className="text-center p-3 bg-[#5D1E21]/5 rounded-lg">
+            <AlertCircle className="w-5 h-5 text-[#5D1E21] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">5</p>
             <p className="text-[#4A4A4A] text-xs">Pending</p>
           </div>
