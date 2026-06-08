@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, X, LogOut } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, X, LogOut, Plus } from 'lucide-react';
 
 const sidebarLinks = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
