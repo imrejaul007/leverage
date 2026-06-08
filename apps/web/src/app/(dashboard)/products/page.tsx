@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Package, Search, Plus, Edit, Trash2, Globe, TrendingUp, CheckCircle } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -141,19 +142,145 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 relative overflow-hidden">
+      {/* Background decorations - Products/Inventory themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe with Product Routes */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_70s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="90" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(-60 200 200)" />
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#154230" strokeWidth="0.5" />
+            <line x1="200" y1="20" x2="200" y2="380" stroke="#154230" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* Product/Catalog Grid Pattern */}
+        <svg className="absolute top-0 left-0 w-[350px] h-[300px] opacity-[0.05]" viewBox="0 0 350 300">
+          {/* Product boxes grid */}
+          <rect x="20" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="90" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="160" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="230" y="20" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="20" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <rect x="90" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <rect x="160" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <rect x="230" y="100" width="60" height="60" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <rect x="20" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="90" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="160" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="230" y="180" width="60" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+        </svg>
+
+        {/* Supply Chain Arrows */}
+        <svg className="absolute bottom-10 left-10 w-[200px] h-[100px] opacity-[0.06]" viewBox="0 0 200 100">
+          <rect x="10" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
+          <path d="M55,45 L70,45 L65,40 M70,45 L65,50" fill="none" stroke="#A6824A" strokeWidth="1" />
+          <rect x="75" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
+          <path d="M120,45 L135,45 L130,40 M135,45 L130,50" fill="none" stroke="#A6824A" strokeWidth="1" />
+          <rect x="140" y="30" width="40" height="30" fill="none" stroke="#A6824A" strokeWidth="1" rx="2" />
+        </svg>
+
+        {/* Floating Product Particles */}
+        {[...Array(18)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-sm"
+            style={{
+              left: `${4 + (i * 5)}%`,
+              top: `${12 + (i % 9) * 10}%`,
+              width: i % 3 === 0 ? '8px' : i % 3 === 1 ? '6px' : '10px',
+              height: i % 3 === 0 ? '8px' : i % 3 === 1 ? '6px' : '10px',
+              backgroundColor: i % 4 === 0 ? '#A6824A' : i % 4 === 1 ? '#154230' : i % 4 === 2 ? '#5D1E21' : '#154230',
+              animation: `pulse ${2 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+              opacity: 0.1 + (i % 4) * 0.05,
+            }}
+          />
+        ))}
+
+        {/* Connection Lines */}
+        <svg className="absolute top-1/3 right-0 w-[300px] h-[150px] opacity-[0.05]" viewBox="0 0 300 150">
+          <path d="M0,75 Q75,0 150,75 Q225,150 300,75" fill="none" stroke="#A6824A" strokeWidth="1" />
+          <circle cx="0" cy="75" r="3" fill="#A6824A" />
+          <circle cx="150" cy="75" r="4" fill="#A6824A" />
+          <circle cx="300" cy="75" r="3" fill="#A6824A" />
+        </svg>
+
+        {/* Wave Pattern */}
+        <svg className="absolute bottom-0 left-0 right-0 h-20" viewBox="0 0 1440 80" preserveAspectRatio="none">
+          <path d="M0,40 Q180,0 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#154230" opacity="0.02" />
+        </svg>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA]">Products</h1>
-          <p className="text-[#D8CCBC]/60 text-sm">{filteredProducts.length} products</p>
+        <div className="flex items-center gap-3">
+          {/* Package icon */}
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <Package className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#101111]">My Products</h1>
+            <p className="text-[#4A4A4A] text-sm">{filteredProducts.length} products in catalog</p>
+          </div>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="w-full sm:w-auto px-4 py-2.5 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold text-sm"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-lg"
         >
-          + Add Product
+          <Plus className="w-4 h-4" />
+          Add Product
         </button>
+      </div>
+
+      {/* Products Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Package className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{products.length}</p>
+            <p className="text-[#4A4A4A] text-xs">Total</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{products.filter(p => p.status === 'active').length}</p>
+            <p className="text-[#4A4A4A] text-xs">Active</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">$45.2K</p>
+            <p className="text-[#4A4A4A] text-xs">Total Value</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">8</p>
+            <p className="text-[#4A4A4A] text-xs">Categories</p>
+          </div>
+        </div>
       </div>
 
       {/* Search & Filter */}

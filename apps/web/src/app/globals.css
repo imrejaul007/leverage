@@ -400,3 +400,350 @@ h1, h2, h3, h4, h5, h6 {
 .font-display {
   font-family: 'Playfair Display', Georgia, serif;
 }
+
+/* Custom animations for premium graphics */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -24; }
+}
+
+/* Premium hero animations */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float 4s ease-in-out infinite 1s;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 60s linear infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* Stagger animations for elements */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Premium shadow effects */
+.shadow-glow-gold {
+  box-shadow: 0 0 40px rgba(166, 130, 74, 0.3);
+}
+
+.shadow-glow-emerald {
+  box-shadow: 0 0 40px rgba(21, 66, 48, 0.3);
+}
+
+.shadow-glow-burgundy {
+  box-shadow: 0 0 40px rgba(93, 30, 33, 0.3);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Trade route path animation */
+.trade-route {
+  stroke-dasharray: 8, 4;
+  animation: dash 2s linear infinite;
+}
+
+/* ============================================
+   PREMIUM PAGE ANIMATIONS
+   ============================================ */
+
+/* Globe rotation animation */
+@keyframes globe-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-globe {
+  animation: globe-rotate 60s linear infinite;
+}
+
+/* Ship floating animation */
+@keyframes ship-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(1deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(5px) rotate(-1deg); }
+}
+
+.animate-ship {
+  animation: ship-float 4s ease-in-out infinite;
+}
+
+/* Wave animation */
+@keyframes wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-wave {
+  animation: wave 8s linear infinite;
+}
+
+/* Cargo sway animation */
+@keyframes cargo-sway {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-cargo {
+  animation: cargo-sway 3s ease-in-out infinite;
+}
+
+/* Particle float animation */
+@keyframes particle-float {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-20px) translateX(10px);
+  }
+}
+
+.animate-particle {
+  animation: particle-float 6s ease-in-out infinite;
+}
+
+/* Pulse glow effect */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(166, 130, 74, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(166, 130, 74, 0.4); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Scale in animation */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+/* Slide up animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 1s ease-out infinite;
+}
+
+/* Shimmer effect for premium elements */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(166, 130, 74, 0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Gradient shift */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* Spin slow reverse */
+@keyframes spin-slow-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-spin-reverse {
+  animation: spin-slow-reverse 30s linear infinite;
+}
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Premium border animation */
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(166, 130, 74, 0.3); }
+  50% { border-color: rgba(166, 130, 74, 0.6); }
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* Connection line animation */
+@keyframes connect {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-connect {
+  stroke-dasharray: 100;
+  animation: connect 2s ease forwards;
+}
+
+/* Map marker bounce */
+@keyframes marker-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-marker {
+  animation: marker-bounce 1s ease-in-out infinite;
+}
+
+/* Counter animation for stats */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count {
+  animation: count-up 0.5s ease-out forwards;
+}
+
+/* Fade in stagger for lists */
+.fade-in-stagger > * {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.fade-in-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.fade-in-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.fade-in-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.fade-in-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Premium card hover effect */
+.premium-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.premium-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(166, 130, 74, 0.05), transparent);
+  transition: left 0.5s ease;
+}
+
+.premium-card:hover::before {
+  left: 100%;
+}
+
+.premium-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Trade route dots animation */
+@keyframes trade-dot {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+.animate-trade-dot {
+  animation: trade-dot 2s ease-in-out infinite;
+}
+
+/* Anchor swing animation */
+@keyframes anchor-swing {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.animate-anchor {
+  animation: anchor-swing 2s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* Progress fill animation */
+@keyframes progress-fill {
+  from { width: 0; }
+}
+
+.animate-progress {
+  animation: progress-fill 1s ease-out forwards;
+}

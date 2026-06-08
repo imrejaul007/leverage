@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Star, CheckCircle, Clock, MessageSquare, Video, Phone, ChevronRight, X } from 'lucide-react';
+import { Search, Star, CheckCircle, Clock, MessageSquare, Video, Phone, ChevronRight, X, Users, Globe, Award } from 'lucide-react';
 
 interface Expert {
   id: string;
@@ -40,11 +40,134 @@ export default function ConsultationsPage() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Consultations/Experts themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe with Network Lines */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_80s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            {/* Network connection lines */}
+            <line x1="50" y1="150" x2="150" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="150" y1="200" x2="250" y2="180" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="250" y1="180" x2="350" y2="220" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="100" y1="300" x2="200" y2="250" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="200" y1="250" x2="300" y2="280" stroke="#A6824A" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* People/Experts Network Pattern */}
+        <svg className="absolute top-0 left-1/4 w-[400px] h-[400px] opacity-[0.05]" viewBox="0 0 400 400">
+          {/* Network nodes with people */}
+          <circle cx="50" cy="50" r="6" fill="#A6824A" />
+          <circle cx="200" cy="100" r="8" fill="#A6824A" />
+          <circle cx="350" cy="50" r="6" fill="#A6824A" />
+          <circle cx="100" cy="200" r="6" fill="#A6824A" />
+          <circle cx="300" cy="200" r="6" fill="#A6824A" />
+          <circle cx="200" cy="300" r="8" fill="#A6824A" />
+          {/* Connection lines */}
+          <line x1="50" y1="50" x2="200" y2="100" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="200" y1="100" x2="350" y2="50" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="50" y1="50" x2="100" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="350" y1="50" x2="300" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="100" y1="200" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="300" y1="200" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="200" y1="100" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+        </svg>
+
+        {/* Video Call Pattern */}
+        <svg className="absolute bottom-10 right-10 w-[200px] h-[150px] opacity-[0.04]" viewBox="0 0 200 150">
+          <rect x="20" y="30" width="160" height="100" fill="none" stroke="#154230" strokeWidth="2" rx="8" />
+          <circle cx="60" cy="80" r="20" fill="none" stroke="#A6824A" strokeWidth="1.5" />
+          <rect x="100" y="60" width="60" height="45" fill="none" stroke="#A6824A" strokeWidth="1.5" rx="3" />
+          <circle cx="80" cy="110" r="5" fill="#154230" />
+        </svg>
+
+        {/* Award/Star Pattern */}
+        <svg className="absolute bottom-20 left-10 w-[150px] h-[150px] opacity-[0.04]" viewBox="0 0 150 150">
+          <path d="M75,10 L85,50 L125,50 L92,75 L102,115 L75,90 L48,115 L58,75 L25,50 L65,50 Z" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <circle cx="75" cy="65" r="25" fill="none" stroke="#A6824A" strokeWidth="1" />
+        </svg>
+
+        {/* Floating Expert Particles */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${3 + (i * 4.8)}%`,
+              top: `${10 + (i % 7) * 12}%`,
+              width: i % 3 === 0 ? '4px' : i % 3 === 1 ? '3px' : '5px',
+              height: i % 3 === 0 ? '4px' : i % 3 === 1 ? '3px' : '5px',
+              backgroundColor: i % 3 === 0 ? '#A6824A' : i % 3 === 1 ? '#154230' : '#5D1E21',
+              animation: `pulse ${1.5 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.15}s`,
+              opacity: 0.15 + (i % 4) * 0.05,
+            }}
+          />
+        ))}
+
+        {/* Chat/Message Pattern */}
+        <svg className="absolute top-1/2 right-10 w-[100px] h-[80px] opacity-[0.04]" viewBox="0 0 100 80">
+          <rect x="5" y="5" width="70" height="50" fill="none" stroke="#A6824A" strokeWidth="2" rx="8" />
+          <path d="M15,55 L25,70 L35,55" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <line x1="15" y1="20" x2="55" y2="20" stroke="#A6824A" strokeWidth="1" />
+          <line x1="15" y1="30" x2="50" y2="30" stroke="#A6824A" strokeWidth="1" />
+        </svg>
+
+        {/* Globe Lines */}
+        <svg className="absolute bottom-0 left-0 right-0 h-20" viewBox="0 0 1440 80" preserveAspectRatio="none">
+          <path d="M0,40 Q180,10 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#154230" opacity="0.02" />
+        </svg>
+      </div>
+
       {/* Header */}
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Expert Consultations</h1>
-        <p className="text-[#4A4A4A] text-sm">Get expert advice on trade matters</p>
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+          <Users className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Expert Network</h1>
+          <p className="text-[#4A4A4A] text-sm">{experts.length} verified trade experts</p>
+        </div>
+      </div>
+
+      {/* Expert Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Users className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{experts.length}</p>
+            <p className="text-[#4A4A4A] text-xs">Experts</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Award className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">4.8</p>
+            <p className="text-[#4A4A4A] text-xs">Avg Rating</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{experts.filter(e => e.online).length}</p>
+            <p className="text-[#4A4A4A] text-xs">Online Now</p>
+          </div>
+        </div>
       </div>
 
       {/* Search */}

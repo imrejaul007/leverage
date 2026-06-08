@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, X, Send } from 'lucide-react';
+import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, X, Send, Globe, Handshake, TrendingUp } from 'lucide-react';
 
 interface Connection {
   id: string;
@@ -65,17 +65,137 @@ export default function NetworkPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Network/Connections themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe with Network Lines */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_80s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            {/* Network connection lines */}
+            <line x1="50" y1="150" x2="150" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="150" y1="200" x2="250" y2="180" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="250" y1="180" x2="350" y2="220" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="100" y1="300" x2="200" y2="250" stroke="#A6824A" strokeWidth="0.5" />
+            <line x1="200" y1="250" x2="300" y2="280" stroke="#A6824A" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* Network/Connection Pattern */}
+        <svg className="absolute top-0 left-1/4 w-[400px] h-[400px] opacity-[0.05]" viewBox="0 0 400 400">
+          {/* Network nodes */}
+          <circle cx="50" cy="50" r="6" fill="#A6824A" />
+          <circle cx="200" cy="100" r="8" fill="#A6824A" />
+          <circle cx="350" cy="50" r="6" fill="#A6824A" />
+          <circle cx="100" cy="200" r="6" fill="#A6824A" />
+          <circle cx="300" cy="200" r="6" fill="#A6824A" />
+          <circle cx="200" cy="300" r="8" fill="#A6824A" />
+          {/* Connection lines */}
+          <line x1="50" y1="50" x2="200" y2="100" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="200" y1="100" x2="350" y2="50" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="50" y1="50" x2="100" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="350" y1="50" x2="300" y2="200" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="100" y1="200" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="300" y1="200" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+          <line x1="200" y1="100" x2="200" y2="300" stroke="#A6824A" strokeWidth="0.5" />
+        </svg>
+
+        {/* People/Users Silhouettes */}
+        <svg className="absolute bottom-10 left-10 w-[200px] h-[120px] opacity-[0.05]" viewBox="0 0 200 120">
+          <circle cx="40" cy="30" r="12" fill="#154230" />
+          <circle cx="80" cy="30" r="12" fill="#A6824A" />
+          <circle cx="120" cy="30" r="12" fill="#154230" />
+          <circle cx="160" cy="30" r="12" fill="#A6824A" />
+          <ellipse cx="40" cy="70" rx="20" ry="30" fill="#154230" />
+          <ellipse cx="80" cy="70" rx="20" ry="30" fill="#A6824A" />
+          <ellipse cx="120" cy="70" rx="20" ry="30" fill="#154230" />
+          <ellipse cx="160" cy="70" rx="20" ry="30" fill="#A6824A" />
+        </svg>
+
+        {/* Floating Connection Particles */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${3 + (i * 4.8)}%`,
+              top: `${10 + (i % 7) * 12}%`,
+              width: i % 3 === 0 ? '4px' : i % 3 === 1 ? '3px' : '5px',
+              height: i % 3 === 0 ? '4px' : i % 3 === 1 ? '3px' : '5px',
+              backgroundColor: i % 3 === 0 ? '#A6824A' : i % 3 === 1 ? '#154230' : '#5D1E21',
+              animation: `pulse ${1.5 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.15}s`,
+              opacity: 0.15 + (i % 4) * 0.05,
+            }}
+          />
+        ))}
+
+        {/* Handshake Pattern */}
+        <svg className="absolute top-1/2 right-10 w-[150px] h-[100px] opacity-[0.04]" viewBox="0 0 150 100">
+          <path d="M20,50 Q40,30 60,50 Q80,70 100,50" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <path d="M50,50 Q70,30 90,50 Q110,70 130,50" fill="none" stroke="#154230" strokeWidth="2" />
+        </svg>
+
+        {/* Globe Lines */}
+        <svg className="absolute bottom-0 left-0 right-0 h-20" viewBox="0 0 1440 80" preserveAspectRatio="none">
+          <path d="M0,40 Q180,10 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#154230" opacity="0.02" />
+        </svg>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My Network</h1>
-          <p className="text-[#4A4A4A] text-sm">{connections.filter(c => c.status === 'connected').length} connections</p>
+        <div className="flex items-center gap-3">
+          {/* Globe icon */}
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <Handshake className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Trade Network</h1>
+            <p className="text-[#4A4A4A] text-sm">{connections.filter(c => c.status === 'connected').length} verified connections</p>
+          </div>
         </div>
-        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm shadow-lg">
           <UserPlus className="w-4 h-4" />
           Invite Contacts
         </button>
+      </div>
+
+      {/* Network Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Users className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{connections.filter(c => c.status === 'connected').length}</p>
+            <p className="text-[#4A4A4A] text-xs">Connected</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">12</p>
+            <p className="text-[#4A4A4A] text-xs">Countries</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">45</p>
+            <p className="text-[#4A4A4A] text-xs">Trades</p>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}

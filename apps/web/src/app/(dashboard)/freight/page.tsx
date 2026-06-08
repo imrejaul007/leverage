@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X } from 'lucide-react';
+import { Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X, Anchor, Globe } from 'lucide-react';
 
 interface Quote {
   id: string;
@@ -69,11 +69,140 @@ export default function FreightPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Ship/Port themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe with Shipping Routes */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_60s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            {/* Shipping route lines */}
+            <path d="M80,280 Q200,100 320,220" fill="none" stroke="#A6824A" strokeWidth="0.5" strokeDasharray="4,2" />
+            <path d="M100,100 Q250,200 340,120" fill="none" stroke="#A6824A" strokeWidth="0.5" strokeDasharray="4,2" />
+          </svg>
+        </div>
+
+        {/* Port/Crane Silhouette */}
+        <svg className="absolute left-0 bottom-0 w-[300px] h-[200px] opacity-[0.05]" viewBox="0 0 300 200">
+          {/* Crane */}
+          <rect x="20" y="40" width="8" height="140" fill="#154230" />
+          <rect x="10" y="30" width="100" height="6" fill="#154230" />
+          <rect x="100" y="30" width="4" height="80" fill="#154230" />
+          <rect x="95" y="100" width="15" height="12" fill="#154230" />
+          {/* Containers */}
+          <rect x="130" y="120" width="35" height="25" fill="#A6824A" rx="2" />
+          <rect x="130" y="90" width="35" height="25" fill="#A6824A" rx="2" />
+          <rect x="130" y="60" width="35" height="25" fill="#A6824A" rx="2" />
+          <rect x="170" y="105" width="35" height="25" fill="#154230" rx="2" />
+          <rect x="170" y="75" width="35" height="25" fill="#154230" rx="2" />
+          {/* Ship in water */}
+          <path d="M220,150 L240,170 L290,170 L300,150 L290,140 L230,140 Z" fill="#A6824A" />
+          {/* Water waves */}
+          <path d="M210,175 Q230,165 250,175 T290,175" fill="none" stroke="#154230" strokeWidth="1" />
+          <path d="M220,185 Q240,175 260,185 T300,185" fill="none" stroke="#154230" strokeWidth="1" />
+        </svg>
+
+        {/* Trade Route Lines */}
+        <svg className="absolute top-20 left-0 w-[500px] h-[300px] opacity-[0.08]" viewBox="0 0 500 300">
+          <path d="M20,250 Q150,100 350,200 Q420,240 480,180" fill="none" stroke="#A6824A" strokeWidth="1.5" strokeDasharray="8,4" />
+          <path d="M50,50 Q200,180 400,100" fill="none" stroke="#154230" strokeWidth="1" strokeDasharray="4,4" />
+          {/* Port markers */}
+          <circle cx="20" cy="250" r="5" fill="#A6824A" className="animate-pulse" />
+          <circle cx="480" cy="180" r="5" fill="#A6824A" className="animate-pulse" />
+          <circle cx="50" cy="50" r="4" fill="#154230" className="animate-pulse" />
+          <circle cx="400" cy="100" r="4" fill="#154230" className="animate-pulse" />
+          {/* Animated ship marker */}
+          <g>
+            <path d="M0,0 L10,5 L0,10 L-5,5 Z" fill="#A6824A">
+              <animateMotion dur="6s" repeatCount="indefinite" path="M20,250 Q150,100 350,200 Q420,240 480,180" />
+            </path>
+          </g>
+        </svg>
+
+        {/* Floating Particles */}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${3 + (i * 6)}%`,
+              top: `${10 + (i % 7) * 12}%`,
+              width: i % 3 === 0 ? '3px' : i % 3 === 1 ? '2px' : '4px',
+              height: i % 3 === 0 ? '3px' : i % 3 === 1 ? '2px' : '4px',
+              backgroundColor: i % 4 === 0 ? '#154230' : i % 4 === 1 ? '#A6824A' : i % 4 === 2 ? '#5D1E21' : '#154230',
+              animation: `pulse ${2 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+              opacity: 0.15 + (i % 4) * 0.08,
+            }}
+          />
+        ))}
+
+        {/* Wave Pattern */}
+        <svg className="absolute bottom-0 left-0 right-0 h-24" viewBox="0 0 1440 100" preserveAspectRatio="none">
+          <path d="M0,60 Q120,30 240,60 T480,60 T720,60 T960,60 T1200,60 T1440,60 L1440,100 L0,100 Z" fill="#154230" opacity="0.03" />
+        </svg>
+      </div>
+
       {/* Header */}
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Freight Rates</h1>
-        <p className="text-[#4A4A4A] text-sm">Compare shipping rates from top carriers</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {/* Ship icon */}
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <Ship className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Freight & Logistics</h1>
+            <p className="text-[#4A4A4A] text-sm">Compare shipping rates from top carriers worldwide</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Freight Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Ship className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">50+</p>
+            <p className="text-[#4A4A4A] text-xs">Carriers</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Anchor className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">120+</p>
+            <p className="text-[#4A4A4A] text-xs">Ports</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">45</p>
+            <p className="text-[#4A4A4A] text-xs">Countries</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <DollarSign className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">$18M+</p>
+            <p className="text-[#4A4A4A] text-xs">Saved</p>
+          </div>
+        </div>
       </div>
 
       {/* Quote Form */}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Plus, Clock, MessageSquare, ArrowRight, X } from 'lucide-react';
+import { Search, Plus, Clock, MessageSquare, ArrowRight, X, FileText, Globe, Truck } from 'lucide-react';
 
 interface RFQ {
   id: string;
@@ -70,17 +70,127 @@ export default function RFQsPage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Elaborate graphics */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Animated Globe */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_80s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#5D1E21" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#5D1E21" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#5D1E21" strokeWidth="0.5" />
+            <line x1="200" y1="20" x2="200" y2="380" stroke="#5D1E21" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* Document/Trade Route Pattern */}
+        <svg className="absolute top-0 left-1/4 w-[500px] h-[400px] opacity-[0.06]" viewBox="0 0 500 400">
+          <path d="M50,350 Q200,200 450,300" fill="none" stroke="#A6824A" strokeWidth="1.5" strokeDasharray="6,3" />
+          <path d="M100,50 Q300,250 400,150" fill="none" stroke="#154230" strokeWidth="1" strokeDasharray="4,4" />
+          <rect x="30" y="100" width="40" height="50" fill="none" stroke="#A6824A" strokeWidth="0.5" rx="2" />
+          <rect x="80" y="150" width="35" height="45" fill="none" stroke="#A6824A" strokeWidth="0.5" rx="2" />
+          <rect x="130" y="80" width="45" height="55" fill="none" stroke="#A6824A" strokeWidth="0.5" rx="2" />
+          <circle cx="50" cy="350" r="5" fill="#A6824A" />
+          <circle cx="450" cy="300" r="5" fill="#A6824A" />
+        </svg>
+
+        {/* Quote/Document Icons Pattern */}
+        <svg className="absolute bottom-20 left-10 w-[150px] h-[100px] opacity-[0.05]" viewBox="0 0 150 100">
+          <rect x="10" y="20" width="50" height="60" fill="none" stroke="#5D1E21" strokeWidth="1" rx="3" />
+          <line x1="20" y1="35" x2="45" y2="35" stroke="#5D1E21" strokeWidth="1" />
+          <line x1="20" y1="45" x2="40" y2="45" stroke="#5D1E21" strokeWidth="1" />
+          <line x1="20" y1="55" x2="48" y2="55" stroke="#5D1E21" strokeWidth="1" />
+          <rect x="70" y="30" width="50" height="60" fill="none" stroke="#A6824A" strokeWidth="1" rx="3" />
+          <line x1="80" y1="45" x2="105" y2="45" stroke="#A6824A" strokeWidth="1" />
+          <line x1="80" y1="55" x2="100" y2="55" stroke="#A6824A" strokeWidth="1" />
+        </svg>
+
+        {/* Gold Particles */}
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-pulse"
+            style={{
+              left: `${8 + (i * 7)}%`,
+              top: `${20 + (i % 6) * 12}%`,
+              width: i % 2 === 0 ? '3px' : '2px',
+              height: i % 2 === 0 ? '3px' : '2px',
+              backgroundColor: i % 3 === 0 ? '#5D1E21' : i % 3 === 1 ? '#A6824A' : '#154230',
+              animationDelay: `${i * 0.3}s`,
+              opacity: 0.2 + (i % 3) * 0.1,
+            }}
+          />
+        ))}
+
+        {/* Decorative Lines */}
+        <svg className="absolute bottom-0 left-0 right-0 h-16" viewBox="0 0 1440 64" preserveAspectRatio="none">
+          <path d="M0,32 Q180,0 360,32 T720,32 T1080,32 T1440,32" fill="none" stroke="#5D1E21" strokeWidth="0.5" opacity="0.3" />
+        </svg>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My RFQs</h1>
-          <p className="text-[#4A4A4A] text-sm">{filteredRFQs.length} requests for quotes</p>
+        <div className="flex items-center gap-3">
+          {/* FileText icon */}
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <FileText className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Request for Quotes</h1>
+            <p className="text-[#4A4A4A] text-sm">{filteredRFQs.length} active requests</p>
+          </div>
         </div>
-        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm shadow-lg">
           <Plus className="w-4 h-4" />
           Create RFQ
         </Link>
+      </div>
+
+      {/* RFQ Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{rfqs.filter(r => r.status === 'OPEN').length}</p>
+            <p className="text-[#4A4A4A] text-xs">Open</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <MessageSquare className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{rfqs.filter(r => r.status === 'QUOTED').length}</p>
+            <p className="text-[#4A4A4A] text-xs">Quoted</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <Truck className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{rfqs.filter(r => r.status === 'ACCEPTED').length}</p>
+            <p className="text-[#4A4A4A] text-xs">Accepted</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">$2.4M</p>
+            <p className="text-[#4A4A4A] text-xs">Trade Value</p>
+          </div>
+        </div>
       </div>
 
       {/* Search */}

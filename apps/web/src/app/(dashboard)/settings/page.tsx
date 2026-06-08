@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Building2, Bell, Shield, Save, CheckCircle, Camera } from 'lucide-react';
+import { User, Building2, Bell, Shield, Save, CheckCircle, Camera, Settings as SettingsIcon, Key, Lock } from 'lucide-react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -43,11 +43,90 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Settings/Gear themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_90s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.05]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+          </svg>
+        </div>
+
+        {/* Gear/Settings Pattern */}
+        <svg className="absolute top-0 left-0 w-[300px] h-[300px] opacity-[0.04]" viewBox="0 0 300 300">
+          <circle cx="150" cy="150" r="60" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <circle cx="150" cy="150" r="40" fill="none" stroke="#A6824A" strokeWidth="1" />
+          <circle cx="150" cy="150" r="20" fill="#A6824A" />
+          {/* Gear teeth */}
+          <line x1="150" y1="85" x2="150" y2="60" stroke="#A6824A" strokeWidth="4" />
+          <line x1="150" y1="215" x2="150" y2="240" stroke="#A6824A" strokeWidth="4" />
+          <line x1="85" y1="150" x2="60" y2="150" stroke="#A6824A" strokeWidth="4" />
+          <line x1="215" y1="150" x2="240" y2="150" stroke="#A6824A" strokeWidth="4" />
+          <line x1="104" y1="104" x2="86" y2="86" stroke="#A6824A" strokeWidth="4" />
+          <line x1="196" y1="196" x2="214" y2="214" stroke="#A6824A" strokeWidth="4" />
+          <line x1="196" y1="104" x2="214" y2="86" stroke="#A6824A" strokeWidth="4" />
+          <line x1="104" y1="196" x2="86" y2="214" stroke="#A6824A" strokeWidth="4" />
+        </svg>
+
+        {/* User/Profile Pattern */}
+        <svg className="absolute bottom-10 right-10 w-[200px] h-[150px] opacity-[0.04]" viewBox="0 0 200 150">
+          <circle cx="100" cy="50" r="30" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <ellipse cx="100" cy="120" rx="50" ry="30" fill="none" stroke="#A6824A" strokeWidth="2" />
+        </svg>
+
+        {/* Shield Pattern */}
+        <svg className="absolute bottom-0 left-10 w-[150px] h-[180px] opacity-[0.04]" viewBox="0 0 150 180">
+          <path d="M75,10 L130,30 L130,90 Q130,150 75,175 Q20,150 20,90 L20,30 Z" fill="none" stroke="#154230" strokeWidth="1.5" />
+          <path d="M75,30 L110,45 L110,85 Q110,125 75,145 Q40,125 40,85 L40,45 Z" fill="none" stroke="#154230" strokeWidth="1" />
+        </svg>
+
+        {/* Floating Settings Particles */}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${5 + (i * 6)}%`,
+              top: `${15 + (i % 6) * 13}%`,
+              width: i % 2 === 0 ? '3px' : '4px',
+              height: i % 2 === 0 ? '3px' : '4px',
+              backgroundColor: i % 3 === 0 ? '#A6824A' : i % 3 === 1 ? '#154230' : '#5D1E21',
+              animation: `pulse ${2 + (i % 2)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+              opacity: 0.12 + (i % 4) * 0.04,
+            }}
+          />
+        ))}
+
+        {/* Lock/Security Pattern */}
+        <svg className="absolute top-1/3 right-20 w-[100px] h-[120px] opacity-[0.04]" viewBox="0 0 100 120">
+          <rect x="15" y="45" width="70" height="60" fill="none" stroke="#A6824A" strokeWidth="2" rx="5" />
+          <path d="M30,45 L30,30 Q30,10 50,10 Q70,10 70,30 L70,45" fill="none" stroke="#A6824A" strokeWidth="2" />
+          <circle cx="50" cy="75" r="8" fill="#A6824A" />
+        </svg>
+
+        {/* Wave Pattern */}
+        <svg className="absolute bottom-0 left-0 right-0 h-16" viewBox="0 0 1440 64" preserveAspectRatio="none">
+          <path d="M0,32 Q180,10 360,32 T720,32 T1080,32 T1440,32" fill="none" stroke="#154230" strokeWidth="0.5" opacity="0.2" />
+        </svg>
+      </div>
+
       {/* Header */}
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Settings</h1>
-        <p className="text-[#4A4A4A] text-sm">Manage your account settings</p>
+      <div className="flex items-center gap-3">
+        {/* Settings icon */}
+        <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+          <SettingsIcon className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Account Settings</h1>
+          <p className="text-[#4A4A4A] text-sm">Manage your profile and preferences</p>
+        </div>
       </div>
 
       {/* Tabs */}

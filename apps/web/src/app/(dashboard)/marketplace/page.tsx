@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Heart, GitCompare, Star, CheckCircle, Plus, X } from 'lucide-react';
+import { Search, Heart, GitCompare, Star, CheckCircle, Plus, X, Globe, Ship, Package } from 'lucide-react';
 
 interface Supplier {
   id: string;
@@ -109,17 +109,128 @@ export default function MarketplacePage() {
   }, [search, selectedCategory, sortBy]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Elaborate graphics like home page */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Animated Globe */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_80s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#154230" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="90" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#154230" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#154230" strokeWidth="0.5" transform="rotate(-60 200 200)" />
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#154230" strokeWidth="0.5" />
+            <line x1="200" y1="20" x2="200" y2="380" stroke="#154230" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* Trade Routes SVG */}
+        <svg className="absolute top-20 left-0 w-[400px] h-[300px] opacity-[0.08]" viewBox="0 0 400 300">
+          <path d="M20,250 Q150,100 380,180" fill="none" stroke="#A6824A" strokeWidth="1.5" strokeDasharray="8,4" />
+          <path d="M50,50 Q200,200 350,100" fill="none" stroke="#A6824A" strokeWidth="1" strokeDasharray="4,4" />
+          <circle cx="20" cy="250" r="4" fill="#A6824A" className="animate-pulse" />
+          <circle cx="380" cy="180" r="4" fill="#A6824A" className="animate-pulse" />
+          <circle cx="50" cy="50" r="3" fill="#A6824A" className="animate-pulse" />
+          <circle cx="350" cy="100" r="3" fill="#A6824A" className="animate-pulse" />
+        </svg>
+
+        {/* Cargo Ship Silhouette */}
+        <svg className="absolute -left-20 bottom-20 w-[200px] h-[120px] opacity-[0.05]" viewBox="0 0 200 120">
+          <path d="M10,80 L25,95 L175,95 L190,80 L180,65 L20,65 Z" fill="#A6824A" />
+          <rect x="40" y="50" width="25" height="15" fill="#A6824A" rx="1" />
+          <rect x="70" y="55" width="20" height="10" fill="#A6824A" rx="1" />
+          <rect x="95" y="48" width="30" height="17" fill="#A6824A" rx="1" />
+          <rect x="130" y="52" width="22" height="13" fill="#A6824A" rx="1" />
+          <rect x="160" y="25" width="25" height="40" fill="#A6824A" rx="2" />
+          <path d="M165,20 L175,5 L185,20" fill="#A6824A" />
+        </svg>
+
+        {/* Gold Particles */}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-pulse"
+            style={{
+              left: `${5 + (i * 6)}%`,
+              top: `${15 + (i % 8) * 10}%`,
+              width: i % 3 === 0 ? '3px' : '2px',
+              height: i % 3 === 0 ? '3px' : '2px',
+              backgroundColor: i % 2 === 0 ? '#A6824A' : '#154230',
+              animationDelay: `${i * 0.2}s`,
+              opacity: 0.15 + (i % 4) * 0.1,
+            }}
+          />
+        ))}
+
+        {/* Wave Pattern */}
+        <svg className="absolute bottom-0 left-0 right-0 h-24" viewBox="0 0 1440 100" preserveAspectRatio="none">
+          <path d="M0,50 Q180,0 360,50 T720,50 T1080,50 T1440,50 L1440,100 L0,100 Z" fill="#154230" opacity="0.03" />
+        </svg>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Browse Products</h1>
-          <p className="text-[#4A4A4A] text-sm">{products.length} products from verified suppliers</p>
+        <div className="flex items-center gap-3">
+          {/* Globe icon */}
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <Globe className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Global Marketplace</h1>
+            <p className="text-[#4A4A4A] text-sm">{products.length} products from verified suppliers worldwide</p>
+          </div>
         </div>
-        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+        <Link href="/rfqs/new" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm shadow-lg">
           <Plus className="w-4 h-4" />
           Post RFQ
         </Link>
+      </div>
+
+      {/* Marketplace Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <Package className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">2,847</p>
+            <p className="text-[#4A4A4A] text-xs">Products</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Ship className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">523</p>
+            <p className="text-[#4A4A4A] text-xs">Suppliers</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">45</p>
+            <p className="text-[#4A4A4A] text-xs">Countries</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">98%</p>
+            <p className="text-[#4A4A4A] text-xs">Verified</p>
+          </div>
+        </div>
       </div>
 
       {/* Search */}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X } from 'lucide-react';
+import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X, Shield, FileCheck, Globe } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -75,32 +75,139 @@ export default function DocumentsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative overflow-hidden">
+      {/* Background decorations - Documents/Certificates themed */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* Large Globe with Document Routes */}
+        <div className="absolute -right-40 -top-40 w-[600px] h-[600px] animate-[spin_75s_linear_infinite]">
+          <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.06]">
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#5D1E21" strokeWidth="1" />
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <circle cx="200" cy="200" r="90" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="100" fill="none" stroke="#5D1E21" strokeWidth="0.5" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#5D1E21" strokeWidth="0.5" transform="rotate(60 200 200)" />
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#5D1E21" strokeWidth="0.5" />
+            <line x1="200" y1="20" x2="200" y2="380" stroke="#5D1E21" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        {/* Document/Certificate Pattern */}
+        <svg className="absolute top-0 left-0 w-[400px] h-[350px] opacity-[0.05]" viewBox="0 0 400 350">
+          {/* Stacked documents */}
+          <rect x="30" y="30" width="80" height="100" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="50" y="50" width="80" height="100" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <rect x="70" y="70" width="80" height="100" fill="none" stroke="#A6824A" strokeWidth="1" rx="4" />
+          <line x1="85" y1="90" x2="135" y2="90" stroke="#A6824A" strokeWidth="1" />
+          <line x1="85" y1="105" x2="125" y2="105" stroke="#A6824A" strokeWidth="1" />
+          <line x1="85" y1="120" x2="130" y2="120" stroke="#A6824A" strokeWidth="1" />
+          {/* Seal/Badge */}
+          <circle cx="120" cy="150" r="15" fill="none" stroke="#5D1E21" strokeWidth="1" />
+          <path d="M120,138 L122,143 L127,143 L123,147 L125,152 L120,149 L115,152 L117,147 L113,143 L118,143 Z" fill="#5D1E21" />
+          {/* More documents */}
+          <rect x="200" y="80" width="80" height="100" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <rect x="220" y="100" width="80" height="100" fill="none" stroke="#154230" strokeWidth="1" rx="4" />
+          <line x1="235" y1="120" x2="285" y2="120" stroke="#154230" strokeWidth="1" />
+          <line x1="235" y1="135" x2="275" y2="135" stroke="#154230" strokeWidth="1" />
+          <line x1="235" y1="150" x2="280" y2="150" stroke="#154230" strokeWidth="1" />
+        </svg>
+
+        {/* Stamp/Seal Pattern */}
+        <svg className="absolute bottom-10 left-10 w-[200px] h-[200px] opacity-[0.04]" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#5D1E21" strokeWidth="2" />
+          <circle cx="100" cy="100" r="55" fill="none" stroke="#5D1E21" strokeWidth="1" />
+          <text x="100" y="90" textAnchor="middle" fill="#5D1E21" fontSize="10" fontFamily="serif">CERTIFIED</text>
+          <text x="100" y="110" textAnchor="middle" fill="#5D1E21" fontSize="8" fontFamily="serif">VERIFIED</text>
+        </svg>
+
+        {/* Checkmark/Approved Pattern */}
+        <svg className="absolute bottom-20 right-20 w-[150px] h-[150px] opacity-[0.04]" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="60" fill="none" stroke="#154230" strokeWidth="2" />
+          <path d="M45,75 L65,95 L105,55" fill="none" stroke="#154230" strokeWidth="3" />
+        </svg>
+
+        {/* Floating Document Particles */}
+        {[...Array(18)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-sm"
+            style={{
+              left: `${4 + (i * 5.2)}%`,
+              top: `${12 + (i % 7) * 11}%`,
+              width: i % 3 === 0 ? '6px' : i % 3 === 1 ? '8px' : '10px',
+              height: i % 3 === 0 ? '8px' : i % 3 === 1 ? '10px' : '7px',
+              backgroundColor: i % 4 === 0 ? '#5D1E21' : i % 4 === 1 ? '#A6824A' : i % 4 === 2 ? '#154230' : '#A6824A',
+              animation: `pulse ${2 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+              opacity: 0.1 + (i % 4) * 0.04,
+            }}
+          />
+        ))}
+
+        {/* Globe Lines */}
+        <svg className="absolute bottom-0 left-0 right-0 h-20" viewBox="0 0 1440 80" preserveAspectRatio="none">
+          <path d="M0,40 Q180,15 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#5D1E21" opacity="0.02" />
+        </svg>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My Documents</h1>
-          <p className="text-[#4A4A4A] text-sm">{documents.length} trade documents</p>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+            <FileCheck className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Trade Documents</h1>
+            <p className="text-[#4A4A4A] text-sm">{documents.length} documents in system</p>
+          </div>
         </div>
-        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
+        <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm shadow-lg">
           <Plus className="w-4 h-4" />
           New Document
         </button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-[#101111]">{stats.total}</p>
-          <p className="text-[#4A4A4A] text-xs">Total</p>
+      {/* Stats Bar */}
+      <div className="flex items-center gap-6 p-4 bg-white border border-black/5 rounded-xl overflow-x-auto hide-scrollbar">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{stats.total}</p>
+            <p className="text-[#4A4A4A] text-xs">Total</p>
+          </div>
         </div>
-        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-[#5D1E21]">{stats.pending}</p>
-          <p className="text-[#4A4A4A] text-xs">Pending</p>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
+            <AlertCircle className="w-5 h-5 text-[#5D1E21]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{stats.pending}</p>
+            <p className="text-[#4A4A4A] text-xs">Pending</p>
+          </div>
         </div>
-        <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-[#154230]">{stats.validated}</p>
-          <p className="text-[#4A4A4A] text-xs">Validated</p>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-[#154230]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">{stats.validated}</p>
+            <p className="text-[#4A4A4A] text-xs">Validated</p>
+          </div>
+        </div>
+        <div className="h-8 w-px bg-black/5" />
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-[#A6824A]" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-[#101111]">98%</p>
+            <p className="text-[#4A4A4A] text-xs">Compliance</p>
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { MessageSquare, Send, Search, Plus, Globe, Users, CheckCircle, Clock } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -192,36 +193,63 @@ export default function MessagesPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-180px)] flex -mx-4 -my-4">
+    <div className="h-[calc(100vh-180px)] flex -mx-4 -my-4 relative">
+      {/* Background decorations */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-[0.03]">
+        <svg className="absolute -right-20 top-0 w-80 h-80" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#154230" strokeWidth="1" />
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#154230" strokeWidth="0.5" />
+          <ellipse cx="100" cy="100" rx="80" ry="30" fill="none" stroke="#154230" strokeWidth="0.5" />
+        </svg>
+      </div>
+
       {/* Conversations List */}
-      <div className="w-full sm:w-80 flex flex-col border-r border-[rgba(255,255,255,0.05)] bg-[#081512]">
+      <div className="w-full sm:w-80 flex flex-col border-r border-black/5 bg-white">
         {/* Header */}
-        <div className="p-4 border-b border-[rgba(255,255,255,0.05)]">
+        <div className="p-4 border-b border-black/5">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-lg font-bold text-[#F4F1EA]">Messages</h1>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-[#101111]">Messages</h1>
+                <p className="text-[#4A4A4A] text-xs">{conversations.length} conversations</p>
+              </div>
+            </div>
             <button
               onClick={() => setShowNewChat(true)}
-              className="w-8 h-8 bg-[#C49A6C] text-[#081512] rounded-lg flex items-center justify-center font-bold"
+              className="w-8 h-8 bg-[#154230] text-white rounded-lg flex items-center justify-center"
             >
-              +
+              <Plus className="w-4 h-4" />
             </button>
           </div>
           <div className="relative">
+            <Search className="w-4 h-4 text-[#4A4A4A] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search..."
-              className="w-full h-10 pl-10 pr-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 text-sm focus:outline-none focus:border-[#C49A6C]"
+              placeholder="Search conversations..."
+              className="w-full h-10 pl-10 pr-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A]"
             />
-            <svg className="w-4 h-4 text-[#D8CCBC]/50 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+          </div>
+        </div>
+
+        {/* Stats bar */}
+        <div className="flex items-center gap-4 px-4 py-2 bg-[#E6E2DA]/50 border-b border-black/5">
+          <div className="flex items-center gap-1.5 text-xs text-[#4A4A4A]">
+            <div className="w-2 h-2 bg-[#154230] rounded-full" />
+            <span>{conversations.filter(c => c.unreadCount > 0).length} unread</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-[#4A4A4A]">
+            <Users className="w-3 h-3" />
+            <span>{conversations.length} contacts</span>
           </div>
         </div>
 
         {/* Conversations */}
         <div className="flex-1 overflow-y-auto">
           {conversations.length === 0 ? (
-            <div className="p-8 text-center text-[#D8CCBC]/50 text-sm">
+            <div className="p-8 text-center text-[#4A4A4A] text-sm">
               No conversations yet
             </div>
           ) : (
@@ -233,25 +261,25 @@ export default function MessagesPage() {
                 <button
                   key={conv.id}
                   onClick={() => setSelectedConv(conv)}
-                  className={`w-full flex items-start gap-3 p-4 border-b border-[rgba(255,255,255,0.03)] text-left transition-colors ${
-                    isSelected ? 'bg-[#0E3B36]/50' : 'hover:bg-[rgba(255,255,255,0.03)]'
+                  className={`w-full flex items-start gap-3 p-4 border-b border-black/5 text-left transition-colors ${
+                    isSelected ? 'bg-[#154230]/10' : 'hover:bg-[#E6E2DA]/50'
                   }`}
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold text-sm border border-[#C49A6C]/20 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                     {initials}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[#F4F1EA] text-sm font-medium truncate">{conv.participant.name}</span>
-                      <span className="text-[#D8CCBC]/40 text-xs flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
+                      <span className="text-[#101111] text-sm font-medium truncate">{conv.participant.name}</span>
+                      <span className="text-[#4A4A4A]/50 text-xs flex-shrink-0">{formatTime(conv.lastMessageAt)}</span>
                     </div>
                     {conv.participant.company && (
-                      <p className="text-[#C49A6C] text-xs truncate">{conv.participant.company}</p>
+                      <p className="text-[#A6824A] text-xs truncate">{conv.participant.company}</p>
                     )}
-                    <p className="text-[#D8CCBC]/60 text-sm truncate mt-0.5">{conv.lastMessage}</p>
+                    <p className="text-[#4A4A4A] text-sm truncate mt-0.5">{conv.lastMessage}</p>
                   </div>
                   {conv.unreadCount > 0 && (
-                    <span className="w-5 h-5 bg-[#C49A6C] rounded-full text-[#081512] text-xs font-bold flex items-center justify-center flex-shrink-0">
+                    <span className="w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
                       {conv.unreadCount}
                     </span>
                   )}
@@ -264,17 +292,17 @@ export default function MessagesPage() {
 
       {/* Chat Area */}
       {selectedConv ? (
-        <div className="hidden sm:flex flex-1 flex-col bg-[rgba(255,255,255,0.02)]">
+        <div className="hidden sm:flex flex-1 flex-col bg-[#E6E2DA]/30">
           {/* Chat Header */}
-          <div className="flex items-center gap-3 p-4 border-b border-[rgba(255,255,255,0.05)]">
-            <button onClick={() => setSelectedConv(null)} className="sm:hidden p-2 text-[#D8CCBC]">←</button>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-[#C49A6C] font-bold text-sm">
+          <div className="flex items-center gap-3 p-4 border-b border-black/5 bg-white">
+            <button onClick={() => setSelectedConv(null)} className="sm:hidden p-2 text-[#4A4A4A]">←</button>
+            <div className="w-10 h-10 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm">
               {selectedConv.participant.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <p className="text-[#F4F1EA] text-sm font-medium">{selectedConv.participant.name}</p>
+              <p className="text-[#101111] text-sm font-medium">{selectedConv.participant.name}</p>
               {selectedConv.participant.company && (
-                <p className="text-[#C49A6C] text-xs">{selectedConv.participant.company}</p>
+                <p className="text-[#A6824A] text-xs">{selectedConv.participant.company}</p>
               )}
             </div>
           </div>
@@ -285,11 +313,11 @@ export default function MessagesPage() {
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                   msg.role === 'user'
-                    ? 'bg-[#C49A6C] text-[#081512]'
-                    : 'bg-[#0E3B36] text-[#F4F1EA]'
+                    ? 'bg-[#154230] text-white'
+                    : 'bg-white border border-black/5 text-[#101111]'
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-xs mt-1 ${msg.role === 'user' ? 'text-[#081512]/60' : 'text-[#D8CCBC]/50'}`}>
+                  <p className={`text-xs mt-1 ${msg.role === 'user' ? 'text-white/60' : 'text-[#4A4A4A]/50'}`}>
                     {formatTime(msg.timestamp)}
                   </p>
                 </div>
@@ -299,7 +327,7 @@ export default function MessagesPage() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-[rgba(255,255,255,0.05)]">
+          <div className="p-4 border-t border-black/5 bg-white">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -307,50 +335,48 @@ export default function MessagesPage() {
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                 placeholder="Type a message..."
-                className="flex-1 h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] placeholder-[#D8CCBC]/40 focus:outline-none focus:border-[#C49A6C] text-sm"
+                className="flex-1 h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
               />
               <button
                 onClick={sendMessage}
                 disabled={!newMessage.trim()}
-                className="w-12 h-12 bg-[#C49A6C] text-[#081512] rounded-xl flex items-center justify-center font-bold disabled:opacity-50"
+                className="w-12 h-12 bg-[#154230] text-white rounded-xl flex items-center justify-center disabled:opacity-50"
               >
-                →
+                <Send className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="hidden sm:flex flex-1 items-center justify-center bg-[rgba(255,255,255,0.02)]">
+        <div className="hidden sm:flex flex-1 items-center justify-center bg-[#E6E2DA]/30">
           <div className="text-center p-8">
-            <div className="w-16 h-16 bg-[#0E3B36] rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-[#C49A6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+            <div className="w-16 h-16 bg-[#154230] rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="w-8 h-8 text-white" />
             </div>
-            <p className="text-[#D8CCBC]/50 text-sm">Select a conversation</p>
+            <p className="text-[#4A4A4A] text-sm">Select a conversation to start messaging</p>
           </div>
         </div>
       )}
 
       {/* New Chat Modal */}
       {showNewChat && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-[#081512] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 w-full max-w-sm">
-            <h2 className="text-xl font-bold text-[#F4F1EA] mb-4">New Conversation</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div className="bg-white border border-black/5 rounded-xl p-6 w-full max-w-sm shadow-xl">
+            <h2 className="text-lg font-bold text-[#101111] mb-4">New Conversation</h2>
             <div className="space-y-4">
               <input
                 type="text"
                 value={newChatName}
                 onChange={(e) => setNewChatName(e.target.value)}
                 placeholder="Enter name..."
-                className="w-full input"
+                className="w-full h-12 px-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A]"
                 autoFocus
               />
               <div className="flex gap-3">
-                <button onClick={() => setShowNewChat(false)} className="flex-1 py-3 bg-[rgba(255,255,255,0.05)] text-[#D8CCBC] rounded-xl font-medium">
+                <button onClick={() => setShowNewChat(false)} className="flex-1 py-3 bg-[#E6E2DA] text-[#101111] rounded-lg font-medium">
                   Cancel
                 </button>
-                <button onClick={createNewChat} disabled={!newChatName.trim()} className="flex-1 py-3 bg-[#C49A6C] text-[#081512] rounded-xl font-semibold disabled:opacity-50">
+                <button onClick={createNewChat} disabled={!newChatName.trim()} className="flex-1 py-3 bg-[#154230] text-white rounded-lg font-semibold disabled:opacity-50">
                   Start Chat
                 </button>
               </div>
