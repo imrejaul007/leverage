@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Camera, Save, Globe, Ship, Users, Shield, Home, Search, FileText, Mail, User, ChevronDown, Check, Bell, CreditCard, Lock, HelpCircle, Menu, X, Settings, LogOut, Plus, MessageSquare, Package, Truck, BarChart3 } from 'lucide-react';
+import { Camera, Save, Globe, Ship, Users, Shield, Home, Search, FileText, Mail, User, ChevronDown, Check, Bell, CreditCard, Lock, HelpCircle, Menu, X, Settings, LogOut, Plus, MessageSquare, Package, Truck, BarChart3, Search as SearchIcon } from 'lucide-react';
 
 const sidebarLinks = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -25,6 +25,8 @@ const bottomNavLinks = [
   { href: '/account', icon: User, label: 'Account' },
 ];
 
+type TabType = 'profile' | 'company' | 'notifications' | 'security';
+
 export default function SettingsPage() {
   const [profile, setProfile] = useState({
     firstName: 'John',
@@ -36,6 +38,7 @@ export default function SettingsPage() {
   });
   const [saved, setSaved] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('profile');
   const pathname = usePathname();
 
   const saveProfile = () => {
@@ -51,8 +54,15 @@ export default function SettingsPage() {
     { icon: HelpCircle, label: 'Help & Support', value: '', color: 'text-[#4A4A4A]' },
   ];
 
+  const tabs: { key: TabType; label: string }[] = [
+    { key: 'profile', label: 'Profile' },
+    { key: 'company', label: 'Company' },
+    { key: 'notifications', label: 'Notifications' },
+    { key: 'security', label: 'Security' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#E6E2DA]">
+    <div className="min-h-screen bg-[#F7F4EF]">
       {/* Desktop Sidebar - Fixed on left */}
       <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 lg:bg-[#154230] lg:z-40">
         {/* Logo */}
@@ -179,50 +189,68 @@ export default function SettingsPage() {
       {/* Main Content Area */}
       <div className="lg:ml-64">
         {/* Mobile Header */}
-        <div className="lg:hidden bg-gradient-to-br from-[#154230] via-[#1d5240] to-[#154230] px-4 pt-6 pb-10 rounded-b-[32px] relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 overflow-hidden">
-            <svg className="absolute -right-8 -top-8 w-56 h-56 opacity-10" viewBox="0 0 200 200">
-              <circle cx="100" cy="100" r="90" fill="none" stroke="white" strokeWidth="0.5" />
-              <circle cx="100" cy="100" r="70" fill="none" stroke="white" strokeWidth="0.5" />
-              <circle cx="100" cy="100" r="50" fill="none" stroke="white" strokeWidth="0.5" />
-              <ellipse cx="100" cy="100" rx="90" ry="35" fill="none" stroke="white" strokeWidth="0.5" />
-              <ellipse cx="100" cy="100" rx="90" ry="60" fill="none" stroke="white" strokeWidth="0.3" />
-            </svg>
-          </div>
-
-          {/* Logo Row */}
-          <div className="flex items-center justify-between mb-6 relative z-10">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setMobileMenuOpen(true)}
-                className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm"
-              >
-                <Menu className="w-5 h-5 text-white" />
-              </button>
-              <div className="flex items-center gap-2 ml-2">
-                <div className="w-9 h-9 bg-[#A6824A] rounded-lg flex items-center justify-center shadow-lg">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="6" cy="12" r="2" fill="currentColor" />
-                    <circle cx="18" cy="12" r="2" fill="currentColor" />
-                    <circle cx="12" cy="6" r="2" fill="currentColor" />
-                    <circle cx="12" cy="18" r="2" fill="currentColor" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-white font-bold text-sm tracking-tight leading-none">LEVERAGE</p>
-                  <p className="text-white/50 text-[9px] tracking-wider mt-0.5">CONNECTING DOTS TO PORTS</p>
-                </div>
-              </div>
-            </div>
-            <button className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Bell className="w-4 h-4 text-white" />
+        <div className="lg:hidden px-5 pt-5 pb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="w-11 h-11 bg-[#154230] rounded-xl flex items-center justify-center"
+            >
+              <Menu className="w-5 h-5 text-white" />
             </button>
+            <p className="text-[#154230] font-bold text-3xl tracking-tight">LEVERAGE</p>
           </div>
+          <div className="flex items-center gap-4">
+            <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm">
+              <SearchIcon className="w-5 h-5 text-[#4A4A4A]" />
+            </button>
+            <button className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm">
+              <Bell className="w-5 h-5 text-[#4A4A4A]" />
+            </button>
+            <Link href="/rfqs/new" className="w-11 h-11 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg">
+              <Plus className="w-6 h-6 text-white" />
+            </Link>
+          </div>
+        </div>
 
-          {/* Settings Title */}
-          <h1 className="text-white text-2xl font-bold mb-0.5 relative z-10">Settings</h1>
-          <p className="text-white/70 text-sm relative z-10">Welcome back, {profile.firstName}</p>
+        {/* Hero Section - Mobile */}
+        <div className="lg:hidden px-5 py-3 flex items-center justify-between">
+          <div>
+            <h1 className="text-[#101111] text-xl font-bold mb-1">Settings</h1>
+            <p className="text-[#777777] text-sm">Account preferences</p>
+          </div>
+          <div className="text-7xl opacity-80">🚢</div>
+        </div>
+
+        {/* Tabs - Mobile */}
+        <div className="lg:hidden px-5 py-3 flex gap-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex-1 py-3 px-2 text-xs font-medium rounded-lg border transition-all ${
+                activeTab === tab.key
+                  ? 'bg-[#154230] text-white border-[#154230]'
+                  : 'bg-white text-[#777777] border-[#E8E3DA]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Profile Banner - Mobile */}
+        <div className="lg:hidden mx-5 mt-3 rounded-2xl p-5 bg-gradient-to-r from-[#084733] via-[#0B5D40] to-[#0D6C45] text-white flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-[72px] h-[72px] rounded-full border-[3px] border-[#C9A34A] flex items-center justify-center text-3xl font-bold">
+              {profile.firstName.charAt(0)}{profile.lastName.charAt(0)}
+            </div>
+            <div>
+              <p className="text-white/80 text-sm">Welcome back,</p>
+              <p className="text-white font-bold text-2xl">{profile.firstName} {profile.lastName}</p>
+              <span className="inline-block mt-2 px-3 py-1 bg-white/12 rounded-full text-xs">Verified Account</span>
+            </div>
+          </div>
+          <div className="text-6xl">🛡️</div>
         </div>
 
         {/* Desktop Header */}
@@ -240,59 +268,141 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Content - responsive padding */}
-        <div className="px-4 lg:px-8 py-6">
-          {/* Mobile: negative margin to pull cards up into header */}
-          <div className="lg:mt-0 -mt-6">
-            {/* Profile Card */}
-            <div className="bg-white rounded-2xl p-4 shadow-xl shadow-black/5">
-              <div className="flex items-start gap-3">
-                {/* Avatar */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-[#154230] to-[#1d5240] flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                    {profile.firstName.charAt(0)}{profile.lastName.charAt(0)}
-                  </div>
-                  <button className="absolute bottom-0 right-0 w-8 h-8 bg-[#A6824A] rounded-full flex items-center justify-center border-[3px] border-white shadow-md">
-                    <Camera className="w-4 h-4 text-white" />
-                  </button>
-                  {/* Verified Badge */}
-                  <div className="absolute -top-1 -right-1 w-7 h-7 bg-[#154230] rounded-full flex items-center justify-center border-[3px] border-white shadow-md">
-                    <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                  </div>
-                </div>
+        {/* Content */}
+        <div className="px-5 lg:px-8 py-6">
+          {/* Form Card */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-[#154230] font-semibold text-base">Profile Information</h3>
+              <button className="px-4 py-2.5 border border-[#C9A34A] text-[#9b7a2a] rounded-xl text-sm font-medium flex items-center gap-2">
+                📷 Change Photo
+              </button>
+            </div>
 
-                {/* Profile Info */}
-                <div className="flex-1 min-w-0 pt-1">
-                  <h2 className="text-[#101111] font-bold text-lg leading-tight">{profile.firstName} {profile.lastName}</h2>
-                  <p className="text-[#4A4A4A] text-sm truncate">{profile.email}</p>
-                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                    <span className="px-2 py-0.5 bg-[#154230]/10 text-[#154230] text-xs font-medium rounded-full">{profile.role}</span>
-                    <span className="px-2 py-0.5 bg-[#A6824A]/10 text-[#A6824A] text-xs font-medium rounded-full">Verified</span>
-                  </div>
+            {/* First/Last Name Row */}
+            <div className="flex gap-4 mb-4">
+              <div className="flex-1">
+                <label className="block text-[#4A4A4A] text-xs font-semibold mb-2">First Name</label>
+                <div className="h-[52px] border border-[#E8E3DA] rounded-xl flex items-center px-4 text-[#333] text-sm">
+                  {profile.firstName}
                 </div>
+              </div>
+              <div className="flex-1">
+                <label className="block text-[#4A4A4A] text-xs font-semibold mb-2">Last Name</label>
+                <div className="h-[52px] border border-[#E8E3DA] rounded-xl flex items-center px-4 text-[#333] text-sm">
+                  {profile.lastName}
+                </div>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="mb-4">
+              <label className="block text-[#4A4A4A] text-xs font-semibold mb-2">Email Address</label>
+              <div className="h-[52px] border border-[#E8E3DA] rounded-xl flex items-center px-4 text-[#333] text-sm">
+                {profile.email}
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="mb-4">
+              <label className="block text-[#4A4A4A] text-xs font-semibold mb-2">Phone Number</label>
+              <div className="h-[52px] border border-[#E8E3DA] rounded-xl flex items-center px-4 text-[#333] text-sm">
+                {profile.phone}
+              </div>
+            </div>
+
+            {/* Role */}
+            <div className="mb-4">
+              <label className="block text-[#4A4A4A] text-xs font-semibold mb-2">Role</label>
+              <div className="h-[52px] border border-[#E8E3DA] rounded-xl flex items-center px-4 text-[#333] text-sm">
+                {profile.role}
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <button
+              onClick={saveProfile}
+              className="w-full mt-4 flex items-center justify-center gap-2 h-[55px] bg-gradient-to-r from-[#084733] via-[#0B5D40] to-[#0D6C45] text-white font-semibold rounded-xl text-base shadow-lg active:scale-[0.98] transition-transform"
+            >
+              💾 Save Changes
+            </button>
+          </div>
+
+          {/* Stats Bar - Mobile */}
+          <div className="lg:hidden mt-4 rounded-2xl bg-gradient-to-r from-[#7A161A] via-[#8B1D22] to-[#7A161A] p-5 text-white">
+            <div className="grid grid-cols-4 gap-2 text-center">
+              <div>
+                <h2 className="text-xl font-bold">150+</h2>
+                <p className="text-[10px] mt-1 opacity-90">Countries Connected</p>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">1M+</h2>
+                <p className="text-[10px] mt-1 opacity-90">Shipments Processed</p>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">20K+</h2>
+                <p className="text-[10px] mt-1 opacity-90">Businesses Active</p>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">99.9%</h2>
+                <p className="text-[10px] mt-1 opacity-90">Compliance Rate</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Stats */}
+          <div className="hidden lg:block mt-6 rounded-2xl bg-[#5D1E21] p-6 shadow-lg">
+            <div className="grid grid-cols-4 gap-6 text-center">
+              <div className="flex flex-col items-center">
+                <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-3">
+                  <Globe className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-white text-2xl font-bold">150+</p>
+                <p className="text-white/70 text-sm mt-1">Countries Connected</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-3">
+                  <Ship className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-white text-2xl font-bold">1M+</p>
+                <p className="text-white/70 text-sm mt-1">Shipments Processed</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-3">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-white text-2xl font-bold">20K+</p>
+                <p className="text-white/70 text-sm mt-1">Businesses Active</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-3">
+                  <Shield className="w-7 h-7 text-white" />
+                </div>
+                <p className="text-white text-2xl font-bold">99.9%</p>
+                <p className="text-white/70 text-sm mt-1">Compliance Rate</p>
               </div>
             </div>
           </div>
 
           {/* Menu List */}
-          <div className="mt-4">
+          <div className="mt-4 lg:mt-6">
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.label}
-                    className={`w-full flex items-center justify-between p-4 hover:bg-[#F7F6F2] transition-colors ${index !== menuItems.length - 1 ? 'border-b border-black/5' : ''}`}
+                    className={`w-full flex items-center justify-between p-4 hover:bg-[#F7F4EF] transition-colors ${index !== menuItems.length - 1 ? 'border-b border-black/5' : ''}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#F7F6F2] rounded-xl flex items-center justify-center">
+                      <div className="w-10 h-10 bg-[#F7F4EF] rounded-xl flex items-center justify-center">
                         <Icon className={`w-5 h-5 ${item.color}`} />
                       </div>
-                      <span className="text-[#101111] font-medium">{item.label}</span>
+                      <span className="text-[#101111] font-medium text-sm">{item.label}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {item.value && (
-                        <span className="text-[#4A4A4A] text-sm">{item.value}</span>
+                        <span className="text-[#4A4A4A] text-xs">{item.value}</span>
                       )}
                       <ChevronDown className="w-4 h-4 text-[#4A4A4A] rotate-[-90deg]" />
                     </div>
@@ -301,171 +411,37 @@ export default function SettingsPage() {
               })}
             </div>
           </div>
-
-          {/* Form Card */}
-          <div className="mt-4">
-            <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <h3 className="text-[#101111] font-semibold mb-4">Account Details</h3>
-
-              <div className="space-y-4">
-                {/* First Name */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">First Name</label>
-                  <input
-                    type="text"
-                    value={profile.firstName}
-                    onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
-                    className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium"
-                  />
-                </div>
-
-                {/* Last Name */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">Last Name</label>
-                  <input
-                    type="text"
-                    value={profile.lastName}
-                    onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
-                    className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium"
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">Email Address</label>
-                  <input
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                    className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">Phone Number</label>
-                  <input
-                    type="tel"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                    className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium"
-                  />
-                </div>
-
-                {/* Company */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">Company Name</label>
-                  <input
-                    type="text"
-                    value={profile.company}
-                    onChange={(e) => setProfile({ ...profile, company: e.target.value })}
-                    className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium"
-                  />
-                </div>
-
-                {/* Role */}
-                <div>
-                  <label className="block text-[#4A4A4A] text-xs font-medium mb-1.5">Role</label>
-                  <div className="relative">
-                    <select
-                      value={profile.role}
-                      onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-                      className="w-full h-12 px-4 bg-[#F7F6F2] border-2 border-transparent rounded-xl text-[#101111] focus:outline-none focus:border-[#A6824A] text-sm transition-all font-medium appearance-none pr-10"
-                    >
-                      <option>Administrator</option>
-                      <option>Manager</option>
-                      <option>Trader</option>
-                      <option>Viewer</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A] pointer-events-none" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Save Button */}
-              <button
-                onClick={saveProfile}
-                className="w-full mt-6 flex items-center justify-center gap-2 h-12 bg-[#154230] text-white font-semibold rounded-xl text-sm hover:bg-[#1d5240] transition-colors shadow-lg shadow-[#154230]/20 active:scale-[0.98]"
-              >
-                {saved ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    Saved Successfully
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Save Changes
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Bottom Stats Bar */}
-          <div className="mt-4 pb-24 lg:pb-8">
-            <div className="bg-[#5D1E21] rounded-2xl p-4 shadow-lg shadow-[#5D1E21]/20">
-              <div className="grid grid-cols-4 gap-3">
-                <div className="text-center">
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-1.5">
-                    <Globe className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-white text-sm font-bold leading-tight">150+</p>
-                  <p className="text-white/60 text-[10px]">Countries</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-1.5">
-                    <Ship className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-white text-sm font-bold leading-tight">1M+</p>
-                  <p className="text-white/60 text-[10px]">Shipments</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-1.5">
-                    <Users className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-white text-sm font-bold leading-tight">20K+</p>
-                  <p className="text-white/60 text-[10px]">Businesses</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-1.5">
-                    <Shield className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-white text-sm font-bold leading-tight">99.9%</p>
-                  <p className="text-white/60 text-[10px]">Compliance</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation - Hidden on desktop */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 px-2 pb-6 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-30">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          {bottomNavLinks.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}
-              >
-                {item.primary ? (
-                  <div className="w-11 h-11 bg-gradient-to-br from-[#154230] to-[#1d5240] rounded-xl flex items-center justify-center shadow-lg shadow-[#154230]/30 -mt-4">
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                ) : (
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${isActive ? 'bg-[#154230] shadow-lg shadow-[#154230]/30' : ''}`}>
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
-                  </div>
-                )}
-                <span className="text-[10px] font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+      {/* FAB - Mobile */}
+      <Link href="/rfqs/new" className="lg:hidden fixed right-6 bottom-[90px] w-[60px] h-[60px] bg-[#7A161A] rounded-full flex items-center justify-center text-white text-3xl shadow-lg z-30">
+        +
+      </Link>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] h-[82px] flex items-center justify-around z-30">
+        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">🏠</span>
+          <span className="text-xs">Home</span>
+        </Link>
+        <Link href="/marketplace" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">🔍</span>
+          <span className="text-xs">Browse</span>
+        </Link>
+        <Link href="/rfqs/new" className="flex flex-col items-center -mt-5">
+          <div className="w-[62px] h-[62px] bg-[#154230] rounded-full flex items-center justify-center text-white text-3xl shadow-lg">
+            +
+          </div>
+        </Link>
+        <Link href="/marketplace/inbox" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">💬</span>
+          <span className="text-xs">Inbox</span>
+        </Link>
+        <Link href="/account" className="flex flex-col items-center gap-1 text-[#154230] font-bold">
+          <span className="text-2xl">👤</span>
+          <span className="text-xs">Account</span>
+        </Link>
       </nav>
     </div>
   );
