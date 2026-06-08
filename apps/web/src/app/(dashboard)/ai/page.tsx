@@ -98,11 +98,10 @@ export default function AIPage() {
   return (
     <div className="min-h-screen bg-[#E6E2DA]">
       {/* Desktop Sidebar - Fixed on left for lg+ screens */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 bg-white border-r border-black/5 shadow-xl z-40">
-        {/* Logo */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         <div className="p-6 border-b border-black/5">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg shadow-[#154230]/20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="6" cy="12" r="2" fill="currentColor" />
                 <circle cx="18" cy="12" r="2" fill="currentColor" />
@@ -111,40 +110,36 @@ export default function AIPage() {
               </svg>
             </div>
             <div>
-              <p className="text-[#101111] font-bold text-lg tracking-tight leading-none">LEVERAGE</p>
-              <p className="text-[#4A4A4A] text-[10px] tracking-wider mt-0.5">CONNECTING DOTS TO PORTS</p>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
             </div>
-          </Link>
+          </div>
         </div>
-
-        {/* Navigation Links */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => {
             const Icon = link.icon;
             const isActive = link.active;
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive
-                    ? 'bg-[#154230] text-white shadow-lg shadow-[#154230]/20'
-                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                }`}
-              >
-                <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
+              <Link key={link.href} href={link.href} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
+                <Icon className="w-5 h-5" />
                 <span className="font-medium text-sm">{link.label}</span>
               </Link>
             );
           })}
         </nav>
-
-        {/* Logout Button */}
         <div className="p-4 border-t border-black/5">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#4A4A4A] hover:bg-red-50 hover:text-red-600 transition-all">
-            <LogOut className="w-5 h-5" strokeWidth={2} />
-            <span className="font-medium text-sm">Log Out</span>
-          </button>
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -162,7 +157,7 @@ export default function AIPage() {
             {/* Logo */}
             <div className="p-6 border-b border-black/5 flex items-center justify-between">
               <Link href="/dashboard" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center shadow-lg shadow-[#154230]/20">
+                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
                   <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="6" cy="12" r="2" fill="currentColor" />
                     <circle cx="18" cy="12" r="2" fill="currentColor" />
@@ -171,8 +166,8 @@ export default function AIPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-[#101111] font-bold text-lg tracking-tight leading-none">LEVERAGE</p>
-                  <p className="text-[#4A4A4A] text-[10px] tracking-wider mt-0.5">CONNECTING DOTS TO PORTS</p>
+                  <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                  <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
                 </div>
               </Link>
               <button
@@ -193,13 +188,9 @@ export default function AIPage() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                      isActive
-                        ? 'bg-[#154230] text-white shadow-lg shadow-[#154230]/20'
-                        : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                    }`}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}
                   >
-                    <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
+                    <Icon className="w-5 h-5" />
                     <span className="font-medium text-sm">{link.label}</span>
                   </Link>
                 );
@@ -208,8 +199,8 @@ export default function AIPage() {
 
             {/* Logout Button */}
             <div className="p-4 border-t border-black/5">
-              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#4A4A4A] hover:bg-red-50 hover:text-red-600 transition-all">
-                <LogOut className="w-5 h-5" strokeWidth={2} />
+              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#4A4A4A] hover:bg-red-50 hover:text-red-600 transition-colors">
+                <LogOut className="w-5 h-5" />
                 <span className="font-medium text-sm">Log Out</span>
               </button>
             </div>
@@ -219,34 +210,34 @@ export default function AIPage() {
 
       {/* Main Content - Offset for desktop sidebar */}
       <main className="lg:ml-64">
-        {/* Mobile Header with Green Gradient */}
+        {/* Mobile Header - Clean with hamburger + logo + bell */}
         <div className="lg:hidden bg-gradient-to-br from-[#154230] via-[#1d5240] to-[#154230] px-4 pt-6 pb-10 rounded-b-[32px] relative overflow-hidden">
-          {/* Hamburger Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm mb-4"
-          >
-            <Menu className="w-5 h-5 text-white" />
-          </button>
-
-          {/* Logo Row */}
+          {/* Hamburger Menu + Logo Row */}
           <div className="flex items-center justify-between mb-6 relative z-10">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-[#A6824A] rounded-lg flex items-center justify-center shadow-lg">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="6" cy="12" r="2" fill="currentColor" />
-                  <circle cx="18" cy="12" r="2" fill="currentColor" />
-                  <circle cx="12" cy="6" r="2" fill="currentColor" />
-                  <circle cx="12" cy="18" r="2" fill="currentColor" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-white font-bold text-sm tracking-tight leading-none">LEVERAGE</p>
-                <p className="text-white/50 text-[9px] tracking-wider mt-0.5">CONNECTING DOTS TO PORTS</p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm"
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 bg-[#A6824A] rounded-lg flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="6" cy="12" r="2" fill="currentColor" />
+                    <circle cx="18" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="6" r="2" fill="currentColor" />
+                    <circle cx="12" cy="18" r="2" fill="currentColor" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm tracking-tight leading-none">LEVERAGE</p>
+                  <p className="text-white/50 text-[9px] tracking-wider mt-0.5">CONNECTING DOTS TO PORTS</p>
+                </div>
               </div>
             </div>
-            <button className="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Bell className="w-4 h-4 text-white" />
+            <button className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <Bell className="w-5 h-5 text-white" />
             </button>
           </div>
 

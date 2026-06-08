@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, Send, Globe, Handshake, TrendingUp, Menu, X, Settings, LogOut, Home, User, Plus, FileText, Truck, Package, BarChart3 } from 'lucide-react';
+import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, Send, Globe, Handshake, TrendingUp, Menu, X, Settings, LogOut, Home, User, Plus, FileText, Truck, Package, BarChart3, Bell } from 'lucide-react';
 
 interface Connection {
   id: string;
@@ -89,23 +89,29 @@ export default function NetworkPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F3EF]">
-      {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pb-6 pt-4">
+      {/* Mobile Header - Clean with hamburger + logo + bell */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-black/5 px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <Handshake className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-white font-bold text-lg">Trade Network</h1>
-              <p className="text-white/70 text-xs font-medium">{connections.filter(c => c.status === 'connected').length} connections</p>
-            </div>
-          </div>
           <button
             onClick={() => setSidebarOpen(true)}
-            className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"
+            className="w-10 h-10 flex items-center justify-center hover:bg-[#E6E2DA] rounded-xl transition-colors"
           >
-            <Menu className="w-5 h-5 text-white" />
+            <Menu className="w-5 h-5 text-[#101111]" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-[#154230] rounded-lg flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <span className="text-[#101111] font-bold text-sm tracking-tight">LEVERAGE</span>
+          </div>
+          <button className="w-10 h-10 flex items-center justify-center hover:bg-[#E6E2DA] rounded-xl transition-colors relative">
+            <Bell className="w-5 h-5 text-[#101111]" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-[#5D1E21] rounded-full" />
           </button>
         </div>
       </header>
@@ -117,21 +123,29 @@ export default function NetworkPage() {
           <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-xl overflow-y-auto">
             <div className="p-4 border-b border-black/5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1d5240] rounded-xl flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">L</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="6" cy="12" r="2" fill="currentColor" />
+                      <circle cx="18" cy="12" r="2" fill="currentColor" />
+                      <circle cx="12" cy="6" r="2" fill="currentColor" />
+                      <circle cx="12" cy="18" r="2" fill="currentColor" />
+                    </svg>
                   </div>
-                  <span className="font-bold text-[#101111]">LEVERAGE</span>
+                  <div>
+                    <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                    <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center"
+                  className="w-8 h-8 flex items-center justify-center hover:bg-[#E6E2DA] rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-[#4A4A4A]" />
                 </button>
               </div>
             </div>
-            <nav className="p-3">
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               {sidebarLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = link.active || pathname === link.href;
@@ -140,7 +154,7 @@ export default function NetworkPage() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1 transition-colors ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       isActive
                         ? 'bg-[#154230] text-white'
                         : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
@@ -151,52 +165,68 @@ export default function NetworkPage() {
                   </Link>
                 );
               })}
-              <div className="mt-6 pt-6 border-t border-black/5">
-                <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors w-full">
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium text-sm">Log Out</span>
+            </nav>
+            <div className="p-4 border-t border-black/5">
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">JD</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                  <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                </div>
+                <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                  <LogOut className="w-4 h-4 text-[#4A4A4A]" />
                 </button>
               </div>
-            </nav>
+            </div>
           </aside>
         </div>
       )}
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white shadow-lg flex-col z-20">
-        <div className="p-5 border-b border-black/5">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1d5240] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
+      {/* Desktop Sidebar - White background with green active links */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
+        <div className="p-6 border-b border-black/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
             </div>
-            <span className="font-bold text-[#101111]">LEVERAGE</span>
+            <div>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+            </div>
           </div>
         </div>
-        <nav className="flex-1 p-3 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => {
             const Icon = link.icon;
-            const isActive = link.active || pathname === link.href;
+            const isActive = link.active;
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1 transition-colors ${
-                  isActive
-                    ? 'bg-[#154230] text-white'
-                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                }`}
-              >
+              <Link key={link.href} href={link.href} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
                 <Icon className="w-5 h-5" />
                 <span className="font-medium text-sm">{link.label}</span>
               </Link>
             );
           })}
         </nav>
-        <div className="p-3 border-t border-black/5">
-          <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors w-full">
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium text-sm">Log Out</span>
-          </button>
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -206,7 +236,7 @@ export default function NetworkPage() {
           {/* Header - Desktop */}
           <div className="hidden lg:flex flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#154230] to-[#1d5240] rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-[#154230] rounded-2xl flex items-center justify-center shadow-lg">
                 <Handshake className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -307,7 +337,7 @@ export default function NetworkPage() {
                   {connections.map(conn => (
                     <div key={conn.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#154230] to-[#1d5240] flex items-center justify-center text-white font-bold">
+                        <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center text-white font-bold">
                           {conn.avatar}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -334,7 +364,7 @@ export default function NetworkPage() {
                 <div className="space-y-2">
                   {connections.map(conn => (
                     <div key={conn.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#154230] to-[#1d5240] flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center text-white font-bold">
                         {conn.avatar}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -360,7 +390,7 @@ export default function NetworkPage() {
               {/* New Post */}
               <div className="bg-white rounded-2xl p-4 shadow-sm">
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A6824A] to-[#c49a5c] flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 rounded-xl bg-[#A6824A] flex items-center justify-center text-white font-bold text-sm">
                     YO
                   </div>
                   <div className="flex-1">
@@ -385,7 +415,7 @@ export default function NetworkPage() {
               {posts.map(post => (
                 <div key={post.id} className="bg-white rounded-2xl p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A6824A] to-[#c49a5c] flex items-center justify-center text-white font-bold text-sm">
+                    <div className="w-10 h-10 rounded-xl bg-[#A6824A] flex items-center justify-center text-white font-bold text-sm">
                       {post.author.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -423,7 +453,7 @@ export default function NetworkPage() {
                   href={link.href}
                   className="flex flex-col items-center -mt-4"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#154230] to-[#1d5240] rounded-full flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 bg-[#154230] rounded-full flex items-center justify-center shadow-lg">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <span className="text-[10px] font-medium text-[#154230] mt-1">{link.label}</span>

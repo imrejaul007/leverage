@@ -1,278 +1,470 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Search, FileText, Shield, CheckCircle, AlertTriangle, Copy, Download, X } from 'lucide-react';
+import { Search, Bell, Menu, Home, Package, MessageSquare, User, FileText, CheckCircle, Globe, Copy } from 'lucide-react';
 
-interface HSCode {
-  code: string;
-  description: string;
-  duty: string;
-  origin: string;
-}
-
-const hsCodes: HSCode[] = [
-  { code: '8471.30', description: 'Portable digital automatic data processing machines', duty: '0%', origin: 'USA' },
-  { code: '8471.41', description: 'Other digital automatic data processing machines', duty: '0%', origin: 'USA' },
-  { code: '8471.50', description: 'Digital processing units, other', duty: '0%', origin: 'USA' },
-  { code: '8471.70', description: 'Storage units', duty: '0%', origin: 'USA' },
-  { code: '1006.30', description: 'Semi-milled or wholly milled rice', duty: '6%', origin: 'USA' },
-  { code: '5201.00', description: 'Cotton, not carded or combed', duty: '4.5%', origin: 'USA' },
-  { code: '8542.31', description: 'Electronic integrated circuits - processors', duty: '0%', origin: 'USA' },
-  { code: '8542.39', description: 'Electronic integrated circuits - other', duty: '0%', origin: 'USA' },
-  { code: '7210.41', description: 'Flat-rolled iron or non-alloy steel, width >= 600mm', duty: '20%', origin: 'USA' },
-  { code: '3004.90', description: 'Medicaments, measured doses', duty: '0%', origin: 'USA' },
+const hsCodesData = [
+  { code: '8471.30', description: 'Portable digital automatic data processing machines', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8471.41', description: 'Other digital automatic data processing machines', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8471.50', description: 'Digital processing units, other', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8471.70', description: 'Input or output units, whether or not containing', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8471.80', description: 'Units of automatic data processing machines', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8542.31', description: 'Electronic integrated circuits - processors', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '8542.39', description: 'Electronic integrated circuits - other', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '3004.90', description: 'Medicaments, measured doses', duty: '0%', origin: 'USA', flag: '🇺🇸' },
+  { code: '1006.30', description: 'Semi-milled or wholly milled rice', duty: '6%', origin: 'USA', flag: '🇺🇸' },
+  { code: '7210.41', description: 'Flat-rolled iron or non-alloy steel', duty: '20%', origin: 'USA', flag: '🇺🇸' },
 ];
 
-const countries = [
-  { value: 'USA', label: 'United States' },
-  { value: 'EU', label: 'European Union' },
-  { value: 'UAE', label: 'United Arab Emirates' },
-  { value: 'SG', label: 'Singapore' },
-  { value: 'CN', label: 'China' },
-  { value: 'IN', label: 'India' },
-  { value: 'UK', label: 'United Kingdom' },
+const checklistData = [
+  { item: 'HS Code Classification', done: true },
+  { item: 'Duty Calculation', done: true },
+  { item: 'Country of Origin Certificate', done: true },
+  { item: 'Commercial Invoice', done: false },
+  { item: 'Packing List', done: false },
+  { item: 'Bill of Lading / Airway Bill', done: false },
+  { item: 'Insurance Certificate', done: false },
+  { item: 'Import License (if required)', done: false },
 ];
 
 export default function CompliancePage() {
   const [activeTab, setActiveTab] = useState('hs-codes');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedHsCode, setSelectedHsCode] = useState<HSCode | null>(null);
-  const [copied, setCopied] = useState(false);
 
-  const filteredCodes = hsCodes.filter(code =>
+  const filteredCodes = hsCodesData.filter(code =>
     code.code.includes(searchQuery) ||
     code.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCopy = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Compliance</h1>
-        <p className="text-[#4A4A4A] text-sm">HS codes, duties, and trade regulations</p>
-      </div>
+    <div className="min-h-screen bg-[#f8f6f3]">
+      {/* ========== HEADER ========== */}
+      <header className="bg-white sticky top-0 z-50 shadow-sm">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+          <div className="flex justify-between items-center h-16 lg:h-20">
+            {/* Logo */}
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="w-9 h-9 lg:w-11 lg:h-11 bg-[#0f7c59] rounded-lg lg:rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-sm lg:text-base">L</span>
+              </div>
+              <div>
+                <div className="text-lg lg:text-[22px] font-extrabold text-[#0f7c59] leading-tight">LEVERGE</div>
+                <div className="text-[8px] lg:text-[9px] font-medium text-[#b89b3f] leading-tight hidden xs2:block">
+                  CONNECTING THE DOTS OF TRADE
+                </div>
+              </div>
+            </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => setActiveTab('hs-codes')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-            activeTab === 'hs-codes' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
-          }`}
-        >
-          HS Codes
-        </button>
-        <button
-          onClick={() => setActiveTab('regulations')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-            activeTab === 'regulations' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
-          }`}
-        >
-          Regulations
-        </button>
-        <button
-          onClick={() => setActiveTab('checklist')}
-          className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-            activeTab === 'checklist' ? 'bg-[#154230] text-white' : 'bg-white text-[#4A4A4A] border border-black/5'
-          }`}
-        >
-          Checklist
-        </button>
-      </div>
+            {/* Right Icons */}
+            <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+              {/* Search - Hidden on mobile */}
+              <button className="p-2 hover:bg-gray-100 rounded-lg hidden min-[480px]:block">
+                <Search className="w-5 h-5 lg:w-6 lg:h-6 text-gray-600" />
+              </button>
 
-      {activeTab === 'hs-codes' && (
-        <>
-          {/* Search */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search by HS code or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 pl-11 pr-4 bg-white border border-black/5 rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm"
-            />
+              {/* Notifications */}
+              <button className="relative p-2 hover:bg-gray-100 rounded-lg">
+                <Bell className="w-5 h-5 lg:w-6 lg:h-6 text-gray-600" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#7b1113] text-white text-[9px] lg:text-[10px] flex items-center justify-center font-bold">
+                  3
+                </span>
+              </button>
+
+              {/* Plus Button */}
+              <button className="w-10 h-10 lg:w-11 lg:h-11 rounded-lg lg:rounded-xl bg-[#0b5c3f] text-white text-xl lg:text-2xl font-bold border-none cursor-pointer flex items-center justify-center">
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ========== MAIN CONTENT ========== */}
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-6 lg:py-8">
+
+        {/* ========== MOBILE LAYOUT (< 640px) ========== */}
+        <div className="lg:hidden">
+          {/* Hero Mobile */}
+          <div className="flex justify-between items-center mb-5 sm:mb-6">
+            <div>
+              <h1 className="text-[32px] xs:text-[38px] sm:text-[42px] font-extrabold text-[#1c1c1c] leading-tight">
+                Compliance
+              </h1>
+              <p className="text-base sm:text-lg text-[#6f6f6f] mt-1">Customs & regulations</p>
+            </div>
+            <span className="text-[50px] xs:text-[60px] sm:text-[70px] leading-none">📋</span>
           </div>
 
-          {/* HS Codes List */}
-          <div className="space-y-2">
-            {filteredCodes.map(code => (
-              <div
-                key={code.code}
-                onClick={() => setSelectedHsCode(code)}
-                className="bg-white border border-black/5 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all"
+          {/* Compliance Card Mobile */}
+          <div className="bg-[#70171a] rounded-2xl p-4 xs:p-5 text-white mb-5 sm:mb-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-white rounded-xl flex items-center justify-center text-2xl xs:text-[28px] sm:text-3xl flex-shrink-0">
+                  🛡
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-lg xs:text-xl sm:text-2xl font-bold">Compliance Center</div>
+                  <div className="text-xs xs:text-sm sm:text-base opacity-90 mt-1 leading-tight">
+                    HS codes, duties and trade regulations
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-4 gap-2 xs:gap-3">
+                <div className="bg-white/10 rounded-xl p-2 xs:p-3 text-center">
+                  <div className="text-base xs:text-lg sm:text-xl font-extrabold">2,847</div>
+                  <div className="text-[9px] xs:text-[10px] sm:text-xs text-white/70 mt-0.5">HS Codes</div>
+                </div>
+                <div className="bg-white/10 rounded-xl p-2 xs:p-3 text-center">
+                  <div className="text-base xs:text-lg sm:text-xl font-extrabold">98%</div>
+                  <div className="text-[9px] xs:text-[10px] sm:text-xs text-white/70 mt-0.5">Compliant</div>
+                </div>
+                <div className="bg-white/10 rounded-xl p-2 xs:p-3 text-center">
+                  <div className="text-base xs:text-lg sm:text-xl font-extrabold">195+</div>
+                  <div className="text-[9px] xs:text-[10px] sm:text-xs text-white/70 mt-0.5">Countries</div>
+                </div>
+                <div className="bg-white/10 rounded-xl p-2 xs:p-3 text-center">
+                  <div className="text-base xs:text-lg sm:text-xl font-extrabold">12</div>
+                  <div className="text-[9px] xs:text-[10px] sm:text-xs text-white/70 mt-0.5">Regulations</div>
+                </div>
+              </div>
+
+              <button className="w-full bg-[#fff7f0] text-[#1c1c1c] py-2.5 xs:py-3 rounded-xl font-semibold text-sm xs:text-base cursor-pointer border-none">
+                View Checklist →
+              </button>
+            </div>
+          </div>
+
+          {/* Search Mobile */}
+          <div className="flex gap-2 xs:gap-3 mb-4 sm:mb-5">
+            <div className="flex-1 bg-white h-11 xs:h-12 rounded-xl flex items-center px-3 xs:px-4 shadow-sm">
+              <Search className="w-4 h-4 xs:w-5 xs:h-5 text-gray-400 mr-2 xs:mr-3 flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Search by HS code or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 border-none outline-none text-sm xs:text-[15px] bg-transparent min-w-0"
+              />
+            </div>
+            <button className="w-11 h-11 xs:w-12 xs:h-12 border-none bg-white rounded-xl text-lg xs:text-xl cursor-pointer shadow-sm flex items-center justify-center">
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Tabs Mobile */}
+          <div className="flex gap-2 mb-4 sm:mb-5">
+            {['hs-codes', 'regulations', 'checklist'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 h-10 xs:h-11 rounded-xl border-none font-semibold text-xs xs:text-sm cursor-pointer transition-all ${
+                  activeTab === tab
+                    ? 'bg-[#0b5c3f] text-white shadow-md'
+                    : 'bg-white text-[#444]'
+                }`}
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[#5D1E21] font-mono font-semibold text-sm">{code.code}</span>
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        code.duty === '0%' ? 'bg-[#154230]/10 text-[#154230]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'
+                {tab === 'hs-codes' ? 'HS Codes' : tab === 'regulations' ? 'Regulations' : 'Checklist'}
+              </button>
+            ))}
+          </div>
+
+          {/* Content Mobile */}
+          {activeTab === 'hs-codes' && (
+            <div className="space-y-3">
+              {filteredCodes.map((code) => (
+                <div key={code.code} className="bg-white rounded-2xl p-3 xs:p-4 flex items-center gap-3 shadow-sm">
+                  <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-full bg-[#f5f5f5] flex items-center justify-center text-xl xs:text-2xl flex-shrink-0">
+                    {code.code === '8471.30' ? '💻' : code.code === '8471.41' ? '🗄' : code.code === '8471.50' ? '🧠' : code.code === '8471.70' ? '🖥' : code.code === '8471.80' ? '💾' : code.code === '8542.31' ? '🔌' : code.code === '8542.39' ? '📟' : code.code === '3004.90' ? '💊' : code.code === '1006.30' ? '🍚' : '🔩'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm xs:text-base font-bold text-[#7b1113]">{code.code}</span>
+                      <span className={`text-[10px] xs:text-xs px-1.5 xs:px-2 py-0.5 rounded-lg font-semibold ${
+                        code.duty === '0%' ? 'bg-[#eaf6ea] text-[#2d6b2d]' : 'bg-[#fff3e0] text-[#e65100]'
                       }`}>
                         {code.duty} duty
                       </span>
                     </div>
-                    <p className="text-[#101111] text-sm">{code.description}</p>
-                    <p className="text-[#4A4A4A] text-xs mt-1">Origin: {code.origin}</p>
+                    <p className="text-xs xs:text-sm text-[#333] mt-1 leading-tight line-clamp-2">
+                      {code.description}
+                    </p>
+                    <p className="text-[10px] xs:text-xs text-[#888] mt-1">
+                      Origin: {code.origin} {code.flag}
+                    </p>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopy(code.code);
-                    }}
-                    className="p-2 text-[#4A4A4A] hover:text-[#154230] hover:bg-[#E6E2DA] rounded-lg transition-colors"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button className="w-9 h-9 xs:w-10 xs:h-10 rounded-lg xs:rounded-xl bg-[#f6f2ef] text-base xs:text-lg border-none cursor-pointer flex-shrink-0 flex items-center justify-center">
+                    📋
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {copied && (
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#154230] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              Copied to clipboard!
+              ))}
             </div>
           )}
-        </>
-      )}
 
-      {activeTab === 'regulations' && (
-        <div className="space-y-3">
-          <div className="bg-white border border-black/5 rounded-xl p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#154230]" />
-              </div>
-              <div>
-                <h3 className="text-[#101111] font-semibold text-sm">USA Import Regulations</h3>
-                <p className="text-[#4A4A4A] text-xs">Last updated: Jan 15, 2024</p>
-              </div>
+          {activeTab === 'regulations' && (
+            <div className="bg-white rounded-2xl p-4 xs:p-5 text-center">
+              <p className="text-sm text-[#666]">Regulations content coming soon</p>
             </div>
-            <p className="text-[#101111] text-sm mb-3">All imports to the USA must comply with CBP regulations, including proper classification, valuation, and country of origin marking.</p>
-            <div className="flex gap-2">
-              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#E6E2DA] text-[#101111] rounded-lg text-xs font-medium hover:bg-[#D4CCBE] transition-colors">
-                <Download className="w-3 h-3" />
-                Download Guide
-              </button>
-            </div>
-          </div>
+          )}
 
-          <div className="bg-white border border-black/5 rounded-xl p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-[#5D1E21]" />
-              </div>
-              <div>
-                <h3 className="text-[#101111] font-semibold text-sm">EU Product Standards</h3>
-                <p className="text-[#4A4A4A] text-xs">Last updated: Jan 10, 2024</p>
+          {activeTab === 'checklist' && (
+            <div className="bg-white rounded-2xl p-3 xs:p-4 shadow-sm">
+              <h3 className="text-sm xs:text-base font-bold text-[#1c1c1c] mb-3 xs:mb-4">Pre-Shipment Checklist</h3>
+              <div className="space-y-1.5 xs:space-y-2">
+                {checklistData.map((check, i) => (
+                  <label key={i} className="flex items-center gap-2 xs:gap-3 p-2 xs:p-3 rounded-xl hover:bg-[#f6f2ef] cursor-pointer">
+                    <div className={`w-5 h-5 xs:w-6 xs:h-6 rounded border-2 flex items-center justify-center ${
+                      check.done ? 'bg-[#0b5c3f] border-[#0b5c3f]' : 'border-[#888]'
+                    }`}>
+                      {check.done && (
+                        <svg className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-xs xs:text-sm ${check.done ? 'text-[#888] line-through' : 'text-[#333]'}`}>
+                      {check.item}
+                    </span>
+                  </label>
+                ))}
               </div>
             </div>
-            <p className="text-[#101111] text-sm mb-3">Products entering the EU must meet CE marking requirements, REACH regulations, and proper documentation.</p>
-            <div className="flex gap-2">
-              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#E6E2DA] text-[#101111] rounded-lg text-xs font-medium hover:bg-[#D4CCBE] transition-colors">
-                <Download className="w-3 h-3" />
-                Download Guide
-              </button>
-            </div>
-          </div>
+          )}
 
-          <div className="bg-white border border-black/5 rounded-xl p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-[#5D1E21]" />
+          {/* FAB Mobile */}
+          <button className="fixed right-4 xs:right-5 sm:right-6 bottom-20 xs:bottom-24 w-14 h-14 xs:w-[60px] xs:h-[60px] rounded-full bg-[#7b1113] text-white text-3xl xs:text-[34px] border-none shadow-lg cursor-pointer z-40">
+            +
+          </button>
+
+          {/* Bottom Nav Mobile */}
+          <nav className="fixed bottom-0 left-0 right-0 bg-white flex justify-around items-center h-[70px] xs:h-[80px] border-t border-[#eee] z-50">
+            <button className="flex flex-col items-center gap-1 px-3 py-2">
+              <Home className="w-5 h-5 xs:w-6 xs:h-6 text-[#555]" />
+              <span className="text-[10px] xs:text-xs text-[#555]">Home</span>
+            </button>
+            <button className="flex flex-col items-center gap-1 px-3 py-2">
+              <Package className="w-5 h-5 xs:w-6 xs:h-6 text-[#555]" />
+              <span className="text-[10px] xs:text-xs text-[#555]">Browse</span>
+            </button>
+            <button className="flex flex-col items-center -mt-4">
+              <div className="w-12 h-12 xs:w-[52px] xs:h-[52px] rounded-full bg-[#0b5c3f] flex items-center justify-center text-white text-2xl xs:text-3xl shadow-lg">
+                +
               </div>
-              <div>
-                <h3 className="text-[#101111] font-semibold text-sm">Restricted Items Notice</h3>
-                <p className="text-[#4A4A4A] text-xs">Updated daily</p>
-              </div>
-            </div>
-            <p className="text-[#101111] text-sm mb-3">Certain products require special licenses for import/export. Check the restricted items list before shipping.</p>
-            <div className="flex gap-2">
-              <button className="flex items-center gap-1 px-3 py-1.5 bg-[#5D1E21]/10 text-[#5D1E21] rounded-lg text-xs font-medium hover:bg-[#5D1E21]/20 transition-colors">
-                View Restricted Items
-              </button>
-            </div>
-          </div>
+            </button>
+            <button className="flex flex-col items-center gap-1 px-3 py-2 relative">
+              <MessageSquare className="w-5 h-5 xs:w-6 xs:h-6 text-[#555]" />
+              <span className="text-[10px] xs:text-xs text-[#555]">Inbox</span>
+              <span className="absolute top-1 right-1 w-4 h-4 xs:w-5 xs:h-5 rounded-full bg-[#b89b3f] flex items-center justify-center">
+                <span className="text-white text-[9px] xs:text-[10px] font-bold">3</span>
+              </span>
+            </button>
+            <button className="flex flex-col items-center gap-1 px-3 py-2">
+              <User className="w-5 h-5 xs:w-6 xs:h-6 text-[#555]" />
+              <span className="text-[10px] xs:text-xs text-[#555]">Account</span>
+            </button>
+          </nav>
         </div>
-      )}
 
-      {activeTab === 'checklist' && (
-        <div className="space-y-3">
-          <div className="bg-white border border-black/5 rounded-xl p-4">
-            <h3 className="text-[#101111] font-semibold text-sm mb-3">Pre-Shipment Checklist</h3>
-            <div className="space-y-2">
-              {[
-                { item: 'HS Code Classification', done: true },
-                { item: 'Duty Calculation', done: true },
-                { item: 'Country of Origin Certificate', done: true },
-                { item: 'Commercial Invoice', done: false },
-                { item: 'Packing List', done: false },
-                { item: 'Bill of Lading / Airway Bill', done: false },
-                { item: 'Insurance Certificate', done: false },
-                { item: 'Import License (if required)', done: false },
-              ].map((check, i) => (
-                <label key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#E6E2DA] cursor-pointer transition-colors">
-                  <input type="checkbox" checked={check.done} className="w-5 h-5 rounded border-[#154230] text-[#154230] accent-[#154230]" />
-                  <span className={`text-sm ${check.done ? 'text-[#4A4A4A] line-through' : 'text-[#101111]'}`}>
-                    {check.item}
-                  </span>
-                </label>
+        {/* ========== DESKTOP LAYOUT (>= 1024px) ========== */}
+        <div className="hidden lg:block">
+          {/* Hero Desktop */}
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-4xl xl:text-5xl font-extrabold text-[#1c1c1c]">Compliance</h1>
+              <p className="text-lg xl:text-xl text-[#6f6f6f] mt-2">Customs & regulations</p>
+            </div>
+            <span className="text-6xl xl:text-7xl 2xl:text-8xl leading-none">📋</span>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+            {/* Compliance Card - Takes 2 columns */}
+            <div className="xl:col-span-2 bg-[#70171a] rounded-2xl p-6 xl:p-7 text-white">
+              <div className="flex items-start gap-4 xl:gap-5 mb-5 xl:mb-6">
+                <div className="w-16 h-16 xl:w-20 xl:h-20 bg-white rounded-xl xl:rounded-2xl flex items-center justify-center text-3xl xl:text-4xl flex-shrink-0">
+                  🛡
+                </div>
+                <div>
+                  <h2 className="text-xl xl:text-2xl font-bold">Compliance Center</h2>
+                  <p className="text-sm xl:text-base opacity-90 mt-1">HS codes, duties and trade regulations</p>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-4 gap-3 xl:gap-4 mb-5 xl:mb-6">
+                {[
+                  { value: '2,847', label: 'HS Codes', icon: FileText },
+                  { value: '98%', label: 'Compliant', icon: CheckCircle },
+                  { value: '195+', label: 'Countries', icon: Globe },
+                  { value: '12', label: 'Regulations', icon: FileText },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white/10 rounded-xl p-3 xl:p-4 text-center">
+                    <div className="text-xl xl:text-2xl font-extrabold">{stat.value}</div>
+                    <div className="text-[10px] xl:text-xs text-white/70 mt-1">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full bg-[#fff7f0] text-[#1c1c1c] py-3 xl:py-4 rounded-xl font-semibold text-sm xl:text-base cursor-pointer border-none">
+                View Checklist →
+              </button>
+            </div>
+
+            {/* Quick Stats Card */}
+            <div className="bg-white rounded-2xl p-5 xl:p-6 shadow-sm">
+              <h3 className="text-base xl:text-lg font-bold text-[#1c1c1c] mb-4">Quick Overview</h3>
+              <div className="space-y-3 xl:space-y-4">
+                <div className="flex items-center justify-between p-3 xl:p-4 bg-[#f8f6f3] rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 xl:w-12 xl:h-12 bg-[#0b5c3f]/10 rounded-xl flex items-center justify-center text-xl xl:text-2xl">📋</div>
+                    <div>
+                      <div className="font-semibold text-[#1c1c1c] text-sm xl:text-base">Active Shipments</div>
+                      <div className="text-xs text-[#666]">24 pending review</div>
+                    </div>
+                  </div>
+                  <span className="text-xl xl:text-2xl font-bold text-[#0b5c3f]">156</span>
+                </div>
+                <div className="flex items-center justify-between p-3 xl:p-4 bg-[#f8f6f3] rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 xl:w-12 xl:h-12 bg-[#70171a]/10 rounded-xl flex items-center justify-center text-xl xl:text-2xl">⚠️</div>
+                    <div>
+                      <div className="font-semibold text-[#1c1c1c] text-sm xl:text-base">Alerts</div>
+                      <div className="text-xs text-[#666]">Requires attention</div>
+                    </div>
+                  </div>
+                  <span className="text-xl xl:text-2xl font-bold text-[#70171a]">3</span>
+                </div>
+                <div className="flex items-center justify-between p-3 xl:p-4 bg-[#f8f6f3] rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 xl:w-12 xl:h-12 bg-[#b89b3f]/10 rounded-xl flex items-center justify-center text-xl xl:text-2xl">✅</div>
+                    <div>
+                      <div className="font-semibold text-[#1c1c1c] text-sm xl:text-base">Completed Today</div>
+                      <div className="text-xs text-[#666]">Shipments cleared</div>
+                    </div>
+                  </div>
+                  <span className="text-xl xl:text-2xl font-bold text-[#b89b3f]">42</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Search & Tabs Row */}
+          <div className="flex flex-col xl:flex-row gap-4 mb-6">
+            {/* Search Desktop */}
+            <div className="flex-1 flex gap-3">
+              <div className="flex-1 bg-white h-12 xl:h-14 rounded-xl flex items-center px-4 xl:px-5 shadow-sm">
+                <Search className="w-5 h-5 xl:w-5 text-gray-400 mr-3 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search by HS code or description..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 border-none outline-none text-sm xl:text-base bg-transparent"
+                />
+              </div>
+              <button className="h-12 xl:h-14 px-5 xl:px-6 border-none bg-white rounded-xl text-base xl:text-lg cursor-pointer shadow-sm flex items-center gap-2">
+                <Menu className="w-5 h-5" />
+                <span>Filters</span>
+              </button>
+            </div>
+
+            {/* Tabs Desktop */}
+            <div className="flex gap-2">
+              {['hs-codes', 'regulations', 'checklist'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-5 xl:px-6 h-12 xl:h-14 rounded-xl border-none font-semibold text-sm xl:text-base cursor-pointer transition-colors ${
+                    activeTab === tab
+                      ? 'bg-[#0b5c3f] text-white'
+                      : 'bg-white text-[#444]'
+                  }`}
+                >
+                  {tab === 'hs-codes' ? 'HS Codes' : tab === 'regulations' ? 'Regulations' : 'Checklist'}
+                </button>
               ))}
             </div>
           </div>
-        </div>
-      )}
 
-      {/* HS Code Detail Modal */}
-      {selectedHsCode && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setSelectedHsCode(null)}>
-          <div className="bg-white border border-black/5 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-black/5 flex items-center justify-between">
-              <div>
-                <h2 className="text-[#101111] font-semibold text-sm">HS Code Details</h2>
-                <p className="text-[#5D1E21] font-mono text-xs">{selectedHsCode.code}</p>
+          {/* Content Desktop */}
+          {activeTab === 'hs-codes' && (
+            <div className="bg-white rounded-2xl p-5 xl:p-6 shadow-sm">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                {filteredCodes.map((code) => (
+                  <div key={code.code} className="flex items-center gap-4 p-4 bg-[#f8f6f3] rounded-xl hover:bg-[#f0ede8] transition-colors">
+                    <div className="w-14 h-14 xl:w-16 xl:h-16 rounded-full bg-white flex items-center justify-center text-2xl xl:text-3xl flex-shrink-0">
+                      {code.code === '8471.30' ? '💻' : code.code === '8471.41' ? '🗄' : code.code === '8471.50' ? '🧠' : code.code === '8471.70' ? '🖥' : code.code === '8471.80' ? '💾' : code.code === '8542.31' ? '🔌' : code.code === '8542.39' ? '📟' : code.code === '3004.90' ? '💊' : code.code === '1006.30' ? '🍚' : '🔩'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3">
+                        <span className="text-base xl:text-lg font-bold text-[#7b1113]">{code.code}</span>
+                        <span className={`text-xs xl:text-sm px-2 xl:px-3 py-1 rounded-lg font-semibold ${
+                          code.duty === '0%' ? 'bg-[#eaf6ea] text-[#2d6b2d]' : 'bg-[#fff3e0] text-[#e65100]'
+                        }`}>
+                          {code.duty} duty
+                        </span>
+                      </div>
+                      <p className="text-sm xl:text-[15px] text-[#333] mt-1">{code.description}</p>
+                      <p className="text-xs xl:text-sm text-[#888] mt-1">Origin: {code.origin} {code.flag}</p>
+                    </div>
+                    <button className="w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-white text-xl xl:text-2xl border-none cursor-pointer flex items-center justify-center flex-shrink-0 hover:bg-[#e8e5e0] transition-colors">
+                      📋
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button onClick={() => setSelectedHsCode(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
-                <X className="w-4 h-4" />
-              </button>
             </div>
-            <div className="p-4 space-y-3">
-              <div className="p-3 bg-[#E6E2DA] rounded-lg">
-                <p className="text-[#4A4A4A] text-xs mb-1">Description</p>
-                <p className="text-[#101111] text-sm">{selectedHsCode.description}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 bg-[#E6E2DA] rounded-lg">
-                  <p className="text-[#4A4A4A] text-xs mb-1">Import Duty</p>
-                  <p className={`text-sm font-semibold ${selectedHsCode.duty === '0%' ? 'text-[#154230]' : 'text-[#5D1E21]'}`}>
-                    {selectedHsCode.duty}
-                  </p>
+          )}
+
+          {activeTab === 'regulations' && (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {[
+                { flag: '🇺🇸', name: 'USA Import Regulations', desc: 'All imports to the USA must comply with CBP regulations regarding proper classification, valuation, and country of origin marking.', updated: 'Jan 15, 2024' },
+                { flag: '🇪🇺', name: 'EU Product Standards', desc: 'Products entering the EU must meet CE marking requirements, REACH regulations, and proper documentation standards.', updated: 'Jan 10, 2024' },
+                { flag: '🇨🇳', name: 'China Trade Agreement', desc: 'Phase one trade agreement tariff exclusions and trade deal provisions for US-China commerce.', updated: 'Jan 8, 2024' },
+                { flag: '🇬🇧', name: 'UK Customs Requirements', desc: 'Post-Brexit customs procedures, documentation requirements, and trade compliance for UK imports.', updated: 'Jan 5, 2024' },
+              ].map((reg, i) => (
+                <div key={i} className="bg-white rounded-xl p-5 xl:p-6 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
+                  <span className="text-3xl xl:text-4xl flex-shrink-0">{reg.flag}</span>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-[#1c1c1c] text-base xl:text-lg">{reg.name}</h4>
+                    <p className="text-sm text-[#666] mt-1">{reg.desc}</p>
+                    <p className="text-xs text-[#888] mt-2">Last updated: {reg.updated}</p>
+                  </div>
                 </div>
-                <div className="p-3 bg-[#E6E2DA] rounded-lg">
-                  <p className="text-[#4A4A4A] text-xs mb-1">Origin</p>
-                  <p className="text-[#101111] text-sm font-semibold">{selectedHsCode.origin}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleCopy(selectedHsCode.code)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#154230] text-white font-semibold rounded-lg text-sm hover:bg-[#1d5240] transition-colors"
-              >
-                <Copy className="w-4 h-4" />
-                Copy HS Code
-              </button>
+              ))}
             </div>
-          </div>
+          )}
+
+          {activeTab === 'checklist' && (
+            <div className="bg-white rounded-2xl p-5 xl:p-6 shadow-sm">
+              <h3 className="text-lg xl:text-xl font-bold text-[#1c1c1c] mb-5 xl:mb-6">Pre-Shipment Checklist</h3>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 xl:gap-4">
+                {checklistData.map((check, i) => (
+                  <label key={i} className="flex items-center gap-4 p-4 bg-[#f8f6f3] rounded-xl hover:bg-[#f0ede8] cursor-pointer transition-colors">
+                    <div className={`w-7 h-7 xl:w-8 xl:h-8 rounded-lg border-2 flex items-center justify-center ${
+                      check.done ? 'bg-[#0b5c3f] border-[#0b5c3f]' : 'border-[#888]'
+                    }`}>
+                      {check.done && (
+                        <svg className="w-4 h-4 xl:w-5 xl:h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-sm xl:text-base ${check.done ? 'text-[#888] line-through' : 'text-[#333]'}`}>
+                      {check.item}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </main>
+
+      {/* Spacer for mobile bottom nav */}
+      <div className="h-[90px] lg:hidden" />
     </div>
   );
 }

@@ -28,7 +28,7 @@ const initialProducts: Product[] = [
   { id: '6', name: 'Bicycle Components Set', description: 'Complete set of high-quality bicycle components', category: 'Automotive', price: 28, currency: 'USD', stock: 250, status: 'active', sku: 'BIC-SET', minOrder: '50 sets', createdAt: '2024-01-08' },
 ];
 
-const categories = ['Food & Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Healthcare', 'Automotive', 'Chemicals', 'Other'];
+const categories = ['Food& Agriculture', 'Textiles', 'Electronics', 'Metals & Minerals', 'Healthcare', 'Automotive', 'Chemicals', 'Other'];
 const currencies = ['USD', 'EUR', 'GBP', 'AED', 'INR'];
 
 const sidebarLinks = [
@@ -166,171 +166,187 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2ED]">
-      {/* Desktop Sidebar - Fixed Left */}
-      <aside className="hidden lg:flex fixed left-0 top-0 w-64 h-screen bg-white border-r border-black/5 flex-col z-30">
+    <div className="min-h-screen bg-[#E6E2DA]">
+      {/* Desktop Sidebar - Hidden on mobile */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         {/* Logo */}
         <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
             </div>
             <div>
-              <span className="text-[#101111] font-bold text-lg tracking-wide">LEVERAGE</span>
-              <p className="text-[#4A4A4A] text-[10px]">Connecting Dots to Ports</p>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
             </div>
           </div>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => {
             const Icon = link.icon;
-            const isActive = link.active || pathname === link.href;
+            const isActive = link.active;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   isActive
                     ? 'bg-[#154230] text-white'
-                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
                 }`}
               >
                 <Icon className="w-5 h-5" />
-                {link.label}
+                <span className="font-medium text-sm">{link.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* Logout */}
+        {/* User Profile */}
         <div className="p-4 border-t border-black/5">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#5D1E21]/10 hover:text-[#5D1E21] transition-colors">
-            <LogOut className="w-5 h-5" />
-            Log Out
-          </button>
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
-          <aside className="absolute left-0 top-0 w-72 h-full bg-white flex flex-col">
-            {/* Logo */}
-            <div className="p-6 border-b border-black/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">L</span>
-                </div>
-                <div>
-                  <span className="text-[#101111] font-bold text-lg tracking-wide">LEVERAGE</span>
-                  <p className="text-[#4A4A4A] text-[10px]">Connecting Dots to Ports</p>
-                </div>
-              </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-2">
-                <X className="w-5 h-5 text-[#4A4A4A]" />
-              </button>
-            </div>
-
-            {/* Navigation Links */}
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-              {sidebarLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = link.active || pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-[#154230] text-white'
-                        : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Logout */}
-            <div className="p-4 border-t border-black/5">
-              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#5D1E21]/10 hover:text-[#5D1E21] transition-colors">
-                <LogOut className="w-5 h-5" />
-                Log Out
-              </button>
-            </div>
-          </aside>
-        </div>
-      )}
-
-      {/* Main Content - Desktop: ml-64, Mobile: full width */}
-      <main className="lg:ml-64 min-h-screen">
-        {/* Mobile Page Header - Green Gradient */}
-        <div className="lg:hidden bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pt-4 pb-6 -mx-4">
+      {/* Mobile Header & Overlay - Visible only on mobile */}
+      <div className="lg:hidden">
+        {/* Green Gradient Header */}
+        <div className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] rounded-b-[32px] px-4 pt-6 pb-8">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2">
                 <Menu className="w-6 h-6 text-white" />
               </button>
-              <div>
-                <h1 className="text-white font-bold text-lg">My Products</h1>
-                <p className="text-white/70 text-xs mt-0.5">Connecting Dots to Ports</p>
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="6" cy="12" r="2" fill="currentColor" />
+                    <circle cx="18" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="6" r="2" fill="currentColor" />
+                    <circle cx="12" cy="18" r="2" fill="currentColor" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm tracking-tight">LEVERAGE</p>
+                  <p className="text-white/50 text-[9px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                </div>
               </div>
             </div>
-            <div className="relative">
-              <Bell className="w-5 h-5 text-white" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-                3
-              </span>
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-2">
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-white font-bold text-lg">{products.length}</p>
-              <p className="text-white/60 text-[10px]">Total</p>
-            </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-white font-bold text-lg">{products.filter(p => p.status === 'active').length}</p>
-              <p className="text-white/60 text-[10px]">Active</p>
-            </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-white font-bold text-lg">8</p>
-              <p className="text-white/60 text-[10px]">Categories</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop Header */}
-        <div className="hidden lg:block bg-white border-b border-black/5 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-[#101111] font-bold text-xl">My Products</h1>
-              <p className="text-[#4A4A4A] text-sm">Manage your product catalog</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Bell className="w-5 h-5 text-[#4A4A4A]" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-                  3
+            <div className="flex items-center gap-2">
+              <button className="relative p-2 text-white">
+                <Bell className="w-5 h-5" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
+                  <span className="text-white text-[10px] font-bold">3</span>
                 </span>
-              </div>
-              <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">JD</span>
-              </div>
+              </button>
             </div>
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">My Products</h2>
+            <p className="text-white/70 text-sm">Manage your product catalog</p>
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="p-4 lg:p-6 space-y-4 pb-28 lg:pb-6">
-          {/* Search& Filter */}
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+            <aside className="relative w-72 bg-white h-full flex flex-col shadow-xl">
+              <div className="flex items-center justify-between p-6 border-b border-black/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="6" cy="12" r="2" fill="currentColor" />
+                      <circle cx="18" cy="12" r="2" fill="currentColor" />
+                      <circle cx="12" cy="6" r="2" fill="currentColor" />
+                      <circle cx="12" cy="18" r="2" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                    <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                  </div>
+                </div>
+                <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-[#E6E2DA] rounded-lg">
+                  <X className="w-5 h-5 text-[#4A4A4A]" />
+                </button>
+              </div>
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+                {sidebarLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = link.active;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                        isActive
+                          ? 'bg-[#154230] text-white'
+                          : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium text-sm">{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="p-4 border-t border-black/5">
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">JD</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                    <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        )}
+      </div>
+
+      {/* Main Content */}
+      <main className="lg:ml-64 min-h-screen pb-24 lg:pb-8">
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-8 pt-8 pb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-white font-bold text-2xl">My Products</h2>
+              <p className="text-white/70 text-sm mt-1">Manage your product catalog</p>
+            </div>
+            <button className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
+              <Bell className="w-6 h-6" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#5D1E21] rounded-full flex items-center justify-center">
+                <span className="text-white text-xs font-bold">3</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Content Area */}
+        <div className="lg:hidden px-4 -mt-6 space-y-5 pb-4">
+          {/* Search & Filter */}
           <div className="flex flex-col gap-3">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
@@ -416,59 +432,133 @@ export default function ProductsPage() {
             </div>
           )}
 
-          {/* Mobile Only: Burgundy Bottom Stats Bar */}
-          <div className="lg:hidden fixed bottom-[72px] left-0 right-0 bg-[#5D1E21] px-4 py-3">
-            <div className="flex items-center justify-around">
+          {/* Mobile Burgundy Stats Bar */}
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
-                <p className="text-white font-bold text-sm">${(products.reduce((acc, p) => acc + p.price * p.stock, 0) / 1000).toFixed(1)}K</p>
-                <p className="text-white/60 text-[10px]">Total Value</p>
+                <p className="text-white font-bold text-lg">${(products.reduce((acc, p) => acc + p.price * p.stock, 0) / 1000).toFixed(1)}K</p>
+                <p className="text-white/60 text-xs">Total Value</p>
               </div>
-              <div className="h-8 w-px bg-white/20"></div>
               <div className="text-center">
-                <p className="text-white font-bold text-sm">{products.length}</p>
-                <p className="text-white/60 text-[10px]">Products</p>
+                <p className="text-white font-bold text-lg">{products.length}</p>
+                <p className="text-white/60 text-xs">Products</p>
               </div>
-              <div className="h-8 w-px bg-white/20"></div>
               <div className="text-center">
-                <p className="text-white font-bold text-sm">{products.reduce((acc, p) => acc + p.stock, 0).toLocaleString()}</p>
-                <p className="text-white/60 text-[10px]">Total Stock</p>
+                <p className="text-white font-bold text-lg">{products.reduce((acc, p) => acc + p.stock, 0).toLocaleString()}</p>
+                <p className="text-white/60 text-xs">Total Stock</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile Bottom Navigation - Fixed at bottom */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 z-40">
-          <div className="flex items-center justify-around h-[72px]">
-            {bottomNavLinks.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`flex flex-col items-center justify-center gap-1 w-16 h-full ${
-                    item.primary ? '' : ''
-                  }`}
-                >
-                  {item.primary ? (
-                    <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center -mt-6 shadow-lg">
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                  ) : (
-                    <>
-                      <Icon className={`w-5 h-5 ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`} />
-                      <span className={`text-[10px] ${isActive ? 'text-[#154230] font-semibold' : 'text-[#4A4A4A]'}`}>
-                        {item.label}
-                      </span>
-                    </>
-                  )}
-                </Link>
-              );
-            })}
+        {/* Desktop Content Area */}
+        <div className="hidden lg:block px-8 py-8 space-y-6">
+          {/* Search & Filter */}
+          <div className="flex gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4A4A4A]" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] text-sm shadow-sm"
+              />
+            </div>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-48 h-12 px-4 bg-white border border-black/5 rounded-xl text-[#4A4A4A] text-sm focus:outline-none focus:border-[#A6824A] shadow-sm appearance-none"
+            >
+              <option value="all">All Categories</option>
+              {categories.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-[#154230] text-white rounded-xl font-semibold text-sm shadow-md hover:bg-[#1a5a3a] transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add Product
+            </button>
           </div>
-        </nav>
+
+          {/* Products Grid */}
+          {!isLoading && filteredProducts.length > 0 && (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredProducts.map(product => (
+                <div
+                  key={product.id}
+                  onClick={() => setViewingProduct(product)}
+                  className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                >
+                  <div className="aspect-square bg-[#E6E2DA] rounded-xl mb-4 flex items-center justify-center">
+                    <Package className="w-16 h-16 text-[#154230]/30" />
+                  </div>
+                  <h3 className="text-[#101111] font-semibold text-base line-clamp-2 mb-2">{product.name}</h3>
+                  <p className="text-[#4A4A4A] text-sm mb-3 truncate">{product.category}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#154230] font-bold text-xl">
+                      ${product.price.toFixed(2)}
+                    </span>
+                    <span className={`text-sm ${product.stock < 10 ? 'text-[#5D1E21]' : 'text-[#4A4A4A]'}`}>
+                      {product.stock} in stock
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && filteredProducts.length === 0 && (
+            <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+              <div className="w-20 h-20 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="w-10 h-10 text-[#154230]" />
+              </div>
+              <p className="text-[#4A4A4A] text-base mb-4">No products found</p>
+              <button onClick={() => setShowCreateModal(true)} className="text-[#154230] hover:text-[#1d5240] font-semibold text-sm">
+                Add your first product
+              </button>
+            </div>
+          )}
+        </div>
       </main>
+
+      {/* Mobile Bottom Navigation - Fixed at bottom */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/10 px-4 py-2 z-30">
+        <div className="flex items-center justify-around">
+          {bottomNavLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.href === '/dashboard';
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex flex-col items-center gap-1 py-2 px-3 ${
+                  link.primary ? '-mt-4' : ''
+                }`}
+              >
+                {link.primary ? (
+                  <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center shadow-lg">
+                    <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                ) : (
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    isActive ? 'bg-[#154230]' : 'bg-[#E6E2DA]'
+                  }`}>
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-[#4A4A4A]'}`} />
+                  </div>
+                )}
+                <span className={`text-xs font-medium ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
+                  {link.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
 
       {/* View Product Modal */}
       {viewingProduct && (

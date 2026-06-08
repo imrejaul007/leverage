@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Plus, Clock, CheckCircle, AlertCircle, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
+import { Search, Plus, Clock, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -99,150 +99,164 @@ export default function DocumentsPage() {
   return (
     <div className="min-h-screen bg-[#E6E2DA]">
       {/* Desktop Sidebar - Fixed left */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:bg-white lg:border-r lg:border-black/5 lg:z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         {/* Logo */}
         <div className="p-6 border-b border-black/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-[#101111] tracking-wide">LEVERAGE</h1>
-              <p className="text-[#4A4A4A] text-[10px] font-medium">CONNECTING DOTS TO PORTS</p>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
             </div>
           </div>
         </div>
 
         {/* Navigation Links */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {sidebarLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                link.active
-                  ? 'bg-[#154230] text-white'
-                  : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-              }`}
-            >
-              <link.icon className="w-5 h-5" />
-              <span className="font-semibold text-sm">{link.label}</span>
-            </Link>
-          ))}
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.active;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  isActive
+                    ? 'bg-[#154230] text-white'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Logout Button */}
+        {/* User Profile */}
         <div className="p-4 border-t border-black/5">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors">
-            <LogOut className="w-5 h-5" />
-            <span className="font-semibold text-sm">Logout</span>
-          </button>
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-50 bg-black/30"
-          onClick={() => setSidebarOpen(false)}
-        >
-          <div
-            className="absolute left-0 top-0 h-full w-72 bg-white shadow-xl"
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Logo */}
-            <div className="p-6 border-b border-black/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#154230] to-[#1a5c3f] rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">L</span>
+      {/* Mobile Header & Overlay */}
+      <div className="lg:hidden">
+        {/* Green Gradient Header */}
+        <div className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] rounded-b-[32px] px-4 pt-6 pb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <button onClick={() => setSidebarOpen(true)} className="p-2 text-white">
+                <Menu className="w-6 h-6" />
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="6" cy="12" r="2" fill="currentColor" />
+                    <circle cx="18" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="6" r="2" fill="currentColor" />
+                    <circle cx="12" cy="18" r="2" fill="currentColor" />
+                  </svg>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-[#101111] tracking-wide">LEVERAGE</h1>
-                  <p className="text-[#4A4A4A] text-[10px] font-medium">CONNECTING DOTS TO PORTS</p>
+                  <p className="text-white font-bold text-sm tracking-tight">LEVERAGE</p>
+                  <p className="text-white/50 text-[9px] tracking-wider">CONNECTING DOTS TO PORTS</p>
                 </div>
               </div>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-2 hover:bg-[#E6E2DA] rounded-xl transition-colors"
-              >
-                <X className="w-5 h-5 text-[#4A4A4A]" />
-              </button>
             </div>
-
-            {/* Navigation Links */}
-            <nav className="p-4 space-y-1">
-              {sidebarLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                    link.active
-                      ? 'bg-[#154230] text-white'
-                      : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                  }`}
-                >
-                  <link.icon className="w-5 h-5" />
-                  <span className="font-semibold text-sm">{link.label}</span>
-                </Link>
-              ))}
-            </nav>
-
-            {/* Logout Button */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-black/5">
-              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-[#5D1E21] hover:bg-[#5D1E21]/10 transition-colors">
-                <LogOut className="w-5 h-5" />
-                <span className="font-semibold text-sm">Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content - Offset on desktop */}
-      <div className="lg:ml-64">
-        {/* Mobile Header - Green gradient with rounded bottom */}
-        <div className="lg:hidden bg-gradient-to-br from-[#154230] to-[#1a5c3f] px-5 pt-12 pb-8 rounded-b-[32px] relative overflow-hidden">
-          {/* LEVERAGE Logo and Tagline */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-2 bg-white/10 rounded-xl backdrop-blur-sm"
-              >
-                <Menu className="w-5 h-5 text-white" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-white tracking-wide">LEVERAGE</h1>
-                <p className="text-white/70 text-xs font-medium mt-0.5">CONNECTING DOTS TO PORTS</p>
-              </div>
-            </div>
-            <button className="relative p-2 bg-white/10 rounded-xl backdrop-blur-sm">
-              <Bell className="w-5 h-5 text-white" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
+            <button className="relative p-2 text-white">
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
                 <span className="w-1.5 h-1.5 bg-white rounded-full" />
               </span>
             </button>
           </div>
-
-          {/* Title and New Document Button */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <FileCheck className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Documents</h2>
-                <p className="text-white/70 text-sm font-medium">{documents.length} total documents</p>
-              </div>
-            </div>
-            <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-[#154230] font-semibold rounded-xl shadow-lg">
-              <Plus className="w-4 h-4" />
-              New
-            </button>
+          <div>
+            <h2 className="text-white font-semibold text-lg">Documents</h2>
+            <p className="text-white/70 text-sm">{documents.length} total documents</p>
           </div>
         </div>
 
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+            <aside className="relative w-72 bg-white h-full flex flex-col shadow-xl">
+              <div className="flex items-center justify-between p-6 border-b border-black/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="6" cy="12" r="2" fill="currentColor" />
+                      <circle cx="18" cy="12" r="2" fill="currentColor" />
+                      <circle cx="12" cy="6" r="2" fill="currentColor" />
+                      <circle cx="12" cy="18" r="2" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                    <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                  </div>
+                </div>
+                <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-[#E6E2DA] rounded-lg">
+                  <X className="w-5 h-5 text-[#4A4A4A]" />
+                </button>
+              </div>
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+                {sidebarLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = link.active;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                        isActive
+                          ? 'bg-[#154230] text-white'
+                          : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium text-sm">{link.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="p-4 border-t border-black/5">
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">JD</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                    <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        )}
+      </div>
+
+      {/* Main Content - Offset on desktop */}
+      <div className="lg:ml-64">
         {/* Desktop Header */}
         <div className="hidden lg:block bg-white border-b border-black/5 px-8 py-6">
           <div className="flex items-center justify-between">
@@ -263,7 +277,7 @@ export default function DocumentsPage() {
         </div>
 
         {/* Search and Filter Section - Mobile */}
-        <div className="lg:hidden px-5 -mt-4 relative z-10">
+        <div className="lg:hidden px-4 -mt-4 relative z-10">
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="flex items-center gap-3">
               <div className="flex-1 relative">
@@ -349,7 +363,7 @@ export default function DocumentsPage() {
         </div>
 
         {/* Quick Actions - Mobile */}
-        <div className="lg:hidden px-5 mt-5">
+        <div className="lg:hidden px-4 mt-5">
           <div className="bg-white rounded-2xl shadow-lg p-4">
             <h3 className="text-sm font-semibold text-[#101111] mb-3">Quick Actions</h3>
             <div className="grid grid-cols-3 gap-3">
@@ -403,7 +417,7 @@ export default function DocumentsPage() {
         </div>
 
         {/* Documents List - Mobile */}
-        <div className="lg:hidden px-5 mt-5 pb-32">
+        <div className="lg:hidden px-4 mt-5 pb-32">
           <div className="space-y-3">
             {filteredDocs.map(doc => (
               <div
@@ -479,7 +493,7 @@ export default function DocumentsPage() {
 
         {/* Empty State - Mobile */}
         {!isLoading && filteredDocs.length === 0 && (
-          <div className="lg:hidden px-5 mt-5 pb-32">
+          <div className="lg:hidden px-4 mt-5 pb-32">
             <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
               <div className="w-16 h-16 bg-[#E6E2DA] rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <FileText className="w-8 h-8 text-[#4A4A4A]" />
@@ -511,7 +525,7 @@ export default function DocumentsPage() {
 
         {/* Loading Skeleton - Mobile */}
         {isLoading && (
-          <div className="lg:hidden px-5 mt-5 pb-32 space-y-3">
+          <div className="lg:hidden px-4 mt-5 pb-32 space-y-3">
             {[1, 2, 3].map(i => (
               <div key={i} className="bg-white rounded-2xl shadow-lg p-4 animate-pulse">
                 <div className="flex items-center gap-4">
@@ -718,7 +732,7 @@ export default function DocumentsPage() {
                 </div>
               </div>
 
-              {/* Description Card */}
+              {/* Description card */}
               {viewingDoc.description && (
                 <div className="bg-[#E6E2DA] rounded-2xl p-5">
                   <p className="text-[#4A4A4A] text-xs font-semibold mb-2">Description</p>

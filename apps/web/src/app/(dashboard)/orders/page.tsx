@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Search, Package, Clock, ArrowRight, Bell, Menu, X, Settings, LogOut, Home, User, Plus, MessageSquare, FileText, Truck, BarChart3 } from 'lucide-react';
 
 interface Order {
@@ -92,85 +91,106 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-[#F5F3EF]">
       {/* Desktop Sidebar - Fixed left */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 bg-white border-r border-black/5 z-40">
-        {/* Logo */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         <div className="p-6 border-b border-black/5">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
-          </Link>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+            </div>
+          </div>
         </div>
-
-        {/* Navigation Links */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {sidebarLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                link.active
-                  ? 'bg-[#154230] text-white'
-                  : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-              }`}
-            >
-              <link.icon className="w-5 h-5" />
-              {link.label}
-            </Link>
-          ))}
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = link.active;
+            return (
+              <Link key={link.href} href={link.href} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
         </nav>
-
-        {/* Logout */}
         <div className="p-4 border-t border-black/5">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#E6E2DA] transition-colors">
-            <LogOut className="w-5 h-5" />
-            Log Out
-          </button>
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Mobile Header */}
-      <header className="lg:hidden bg-gradient-to-b from-[#154230] to-[#1d5240] rounded-b-[32px] px-4 pb-6 pt-2">
-        <div className="flex items-center justify-between mb-4">
+      <header className="lg:hidden bg-white border-b border-black/5 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-[#101111]" />
+          </button>
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="LEVERAGE" width={96} height={32} className="object-contain brightness-0 invert" />
+            <div className="w-8 h-8 bg-[#154230] rounded-lg flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <span className="text-[#101111] font-bold text-sm tracking-tight">LEVERAGE</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/marketplace/inbox"
-              className="relative p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-white text-[#5D1E21] text-[9px] font-bold rounded-full flex items-center justify-center">
-                3
-              </span>
-            </Link>
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-        <div className="text-center">
-          <h1 className="text-white text-xl font-bold">Orders</h1>
-          <p className="text-white/70 text-xs">Connecting Dots to Ports</p>
+          <Link
+            href="/marketplace/inbox"
+            className="relative p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors"
+          >
+            <Bell className="w-5 h-5 text-[#101111]" />
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+              3
+            </span>
+          </Link>
         </div>
       </header>
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setSidebarOpen(false)}
           />
-
-          {/* Sidebar */}
           <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-xl overflow-y-auto">
-            {/* Logo & Close */}
             <div className="p-6 border-b border-black/5 flex items-center justify-between">
-              <Image src="/logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="6" cy="12" r="2" fill="currentColor" />
+                    <circle cx="18" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="6" r="2" fill="currentColor" />
+                    <circle cx="12" cy="18" r="2" fill="currentColor" />
+                  </svg>
+                </div>
+                <div>
+                  <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+                  <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+                </div>
+              </div>
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors"
@@ -178,32 +198,36 @@ export default function OrdersPage() {
                 <X className="w-5 h-5 text-[#4A4A4A]" />
               </button>
             </div>
-
-            {/* Navigation Links */}
             <nav className="p-4 space-y-1">
-              {sidebarLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                    link.active
-                      ? 'bg-[#154230] text-white'
-                      : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                  }`}
-                >
-                  <link.icon className="w-5 h-5" />
-                  {link.label}
-                </Link>
-              ))}
+              {sidebarLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.active;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium text-sm">{link.label}</span>
+                  </Link>
+                );
+              })}
             </nav>
-
-            {/* Logout */}
             <div className="p-4 border-t border-black/5">
-              <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-sm font-medium text-[#4A4A4A] hover:bg-[#E6E2DA] transition-colors">
-                <LogOut className="w-5 h-5" />
-                Log Out
-              </button>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">JD</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+                  <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+                </div>
+                <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                  <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+                </button>
+              </div>
             </div>
           </aside>
         </div>
@@ -212,6 +236,12 @@ export default function OrdersPage() {
       {/* Main Content */}
       <main className="lg:ml-64 pb-24 lg:pb-4">
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
+          {/* Page Title - Mobile */}
+          <div className="lg:hidden">
+            <h1 className="text-[#101111] text-xl font-bold">Orders</h1>
+            <p className="text-[#4A4A4A] text-xs">Connecting Dots to Ports</p>
+          </div>
+
           {/* Search - Desktop */}
           <div className="hidden lg:block relative">
             <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
