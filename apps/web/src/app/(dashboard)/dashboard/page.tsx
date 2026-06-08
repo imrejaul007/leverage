@@ -46,8 +46,8 @@ export default function DashboardPage() {
     quote: { icon: <FileText className="w-4 h-4" />, bg: 'bg-[#A6824A]/10', color: 'text-[#A6824A]' },
     rfq: { icon: <Plus className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
     payment: { icon: <DollarSign className="w-4 h-4" />, bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
-    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#5A5A5A]' },
-    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#5A5A5A]' },
+    document: { icon: <Shield className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
+    order: { icon: <Truck className="w-4 h-4" />, bg: 'bg-[#E6E2DA]', color: 'text-[#4A4A4A]' },
   };
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-black/5 rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#5A5A5A] text-xs mb-1">Compliance Score</p>
+              <p className="text-[#4A4A4A] text-xs mb-1">Compliance Score</p>
               <p className="text-2xl font-bold text-[#101111]">{stats.complianceScore}%</p>
             </div>
             <div className="w-14 h-14 rounded-full bg-[#154230]/10 flex items-center justify-center">
@@ -87,7 +87,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-black/5 rounded-xl p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#5A5A5A] text-xs mb-1">Trade Volume</p>
+              <p className="text-[#4A4A4A] text-xs mb-1">Trade Volume</p>
               <p className="text-2xl font-bold text-[#101111]">${stats.tradeVolume}M</p>
             </div>
             <div className="w-14 h-14 rounded-full bg-[#A6824A]/10 flex items-center justify-center">
@@ -108,7 +108,7 @@ export default function DashboardPage() {
             <FileText className="w-5 h-5 text-[#154230]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
-          <p className="text-[#5A5A5A] text-xs mt-1">Active RFQs</p>
+          <p className="text-[#4A4A4A] text-xs mt-1">Active RFQs</p>
         </Link>
 
         <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
@@ -116,15 +116,15 @@ export default function DashboardPage() {
             <Truck className="w-5 h-5 text-[#154230]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
-          <p className="text-[#5A5A5A] text-xs mt-1">In Transit</p>
+          <p className="text-[#4A4A4A] text-xs mt-1">In Transit</p>
         </Link>
 
         <Link href="/orders" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all">
           <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center mb-3">
-            <Package className="w-5 h-5 text-[#5A5A5A]" />
+            <Package className="w-5 h-5 text-[#4A4A4A]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
-          <p className="text-[#5A5A5A] text-xs mt-1">Total Orders</p>
+          <p className="text-[#4A4A4A] text-xs mt-1">Total Orders</p>
         </Link>
 
         <Link href="/marketplace/inbox" className="bg-white border border-black/5 rounded-xl p-4 hover:shadow-md transition-all relative">
@@ -132,7 +132,7 @@ export default function DashboardPage() {
             <MessageSquare className="w-5 h-5 text-[#5D1E21]" />
           </div>
           <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
-          <p className="text-[#5A5A5A] text-xs mt-1">Messages</p>
+          <p className="text-[#4A4A4A] text-xs mt-1">Messages</p>
           {stats.unreadMessages > 0 && (
             <span className="absolute top-3 right-3 w-4 h-4 bg-[#5D1E21] rounded-full"></span>
           )}
@@ -143,30 +143,30 @@ export default function DashboardPage() {
       <div className="grid grid-cols-4 gap-3">
         <Link href="/marketplace" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
           <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
-            <Search className="w-5 h-5 text-[#5A5A5A]" />
+            <Search className="w-5 h-5 text-[#4A4A4A]" />
           </div>
-          <span className="text-[#5A5A5A] text-xs font-medium">Browse</span>
+          <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
         </Link>
 
         <Link href="/rfqs/new" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
           <div className="w-10 h-10 rounded-lg bg-[#A6824A]/10 flex items-center justify-center">
             <Plus className="w-5 h-5 text-[#A6824A]" />
           </div>
-          <span className="text-[#5A5A5A] text-xs font-medium">Post RFQ</span>
+          <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
         </Link>
 
         <Link href="/documents" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
           <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
             <Shield className="w-5 h-5 text-[#154230]" />
           </div>
-          <span className="text-[#5A5A5A] text-xs font-medium">Documents</span>
+          <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
         </Link>
 
         <Link href="/ai" className="flex flex-col items-center gap-2 p-4 bg-white border border-black/5 rounded-xl hover:shadow-md transition-all">
           <div className="w-10 h-10 rounded-lg bg-[#E6E2DA] flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#5A5A5A]" />
+            <BarChart3 className="w-5 h-5 text-[#4A4A4A]" />
           </div>
-          <span className="text-[#5A5A5A] text-xs font-medium">AI Assist</span>
+          <span className="text-[#4A4A4A] text-xs font-medium">AI Assist</span>
         </Link>
       </div>
 
@@ -190,12 +190,12 @@ export default function DashboardPage() {
                 {activityConfig[activity.type]?.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-medium' : 'text-[#5A5A5A]'}`}>
+                <p className={`text-sm ${activity.status === 'unread' ? 'text-[#101111] font-medium' : 'text-[#4A4A4A]'}`}>
                   {activity.text}
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <Clock className="w-3 h-3 text-[#5A5A5A]/50" />
-                  <span className="text-[#5A5A5A] text-xs">{activity.time}</span>
+                  <Clock className="w-3 h-3 text-[#4A4A4A]/50" />
+                  <span className="text-[#4A4A4A] text-xs">{activity.time}</span>
                 </div>
               </div>
               {activity.status === 'unread' && (
@@ -232,17 +232,17 @@ export default function DashboardPage() {
           <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
             <CheckCircle className="w-5 h-5 text-[#154230] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">{stats.documents}</p>
-            <p className="text-[#5A5A5A] text-xs">Verified</p>
+            <p className="text-[#4A4A4A] text-xs">Verified</p>
           </div>
           <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
             <AlertCircle className="w-5 h-5 text-[#A6824A] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">5</p>
-            <p className="text-[#5A5A5A] text-xs">Pending</p>
+            <p className="text-[#4A4A4A] text-xs">Pending</p>
           </div>
           <div className="text-center p-3 bg-[#E6E2DA] rounded-lg">
-            <Clock className="w-5 h-5 text-[#5A5A5A] mx-auto mb-2" />
+            <Clock className="w-5 h-5 text-[#4A4A4A] mx-auto mb-2" />
             <p className="text-lg font-bold text-[#101111]">12</p>
-            <p className="text-[#5A5A5A] text-xs">Processing</p>
+            <p className="text-[#4A4A4A] text-xs">Processing</p>
           </div>
         </div>
       </div>

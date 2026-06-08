@@ -128,7 +128,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className={`flex items-center gap-3 px-4 py-2.5 mx-3 rounded-lg transition-all text-sm ${
                   isActive
                     ? 'bg-[#154230] text-white font-medium'
-                    : 'text-[#5A5A5A] hover:bg-[#E6E2DA] hover:text-[#101111]'
+                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA] hover:text-[#101111]'
                 }`}
               >
                 <Icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
@@ -146,9 +146,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[#101111] font-medium text-sm truncate">{user?.firstName || 'User'}</p>
-              <p className="text-[#5A5A5A] text-xs truncate">{user?.email || ''}</p>
+              <p className="text-[#4A4A4A] text-xs truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={handleLogout} className="p-2 text-[#5A5A5A] hover:text-[#5D1E21] hover:bg-white rounded-lg transition-colors" title="Logout">
+            <button onClick={handleLogout} className="p-2 text-[#4A4A4A] hover:text-[#5D1E21] hover:bg-white rounded-lg transition-colors" title="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -161,11 +161,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <header className="h-[72px] bg-white/90 backdrop-blur-xl border-b border-black/5 flex items-center justify-between px-8 sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Search className="w-5 h-5 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-5 h-5 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search products, suppliers, HS codes..."
-                className="w-96 h-11 pl-12 pr-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
+                className="w-96 h-11 pl-12 pr-4 bg-[#E6E2DA] border border-transparent rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
 
             {/* Notifications */}
-            <button className="relative p-2.5 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button className="relative p-2.5 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#5D1E21] rounded-full"></span>
             </button>

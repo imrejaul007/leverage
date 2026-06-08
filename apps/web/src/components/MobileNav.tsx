@@ -75,7 +75,7 @@ export default function MobileNav() {
                   isActive ? 'scale-105' : ''
                 }`}
               >
-                <div className={`relative ${isActive ? 'text-[#154230]' : 'text-[#5A5A5A]'}`}>
+                <div className={`relative ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
                   <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.name === 'Inbox' && (
                     <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
@@ -84,7 +84,7 @@ export default function MobileNav() {
                   )}
                 </div>
                 <span className={`text-[9px] font-medium ${
-                  isActive ? 'text-[#154230] font-semibold' : 'text-[#5A5A5A]'
+                  isActive ? 'text-[#154230] font-semibold' : 'text-[#4A4A4A]'
                 }`}>
                   {item.name}
                 </span>
@@ -116,7 +116,7 @@ export default function MobileNav() {
           <div className="absolute bottom-20 left-4 right-4 bg-white rounded-2xl border border-black/5 shadow-2xl overflow-hidden">
             <div className="p-3 border-b border-black/5">
               <h3 className="text-[#101111] font-semibold text-sm">Trade Menu</h3>
-              <p className="text-[#5A5A5A] text-xs">Quick access to all features</p>
+              <p className="text-[#4A4A4A] text-xs">Quick access to all features</p>
             </div>
             <div className="grid grid-cols-3 gap-1.5 p-2.5">
               {secondaryNavItems.map((item) => {
@@ -130,7 +130,7 @@ export default function MobileNav() {
                     className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-colors ${
                       isActive
                         ? 'bg-[#154230]/10 text-[#154230]'
-                        : 'text-[#5A5A5A] hover:bg-[#E6E2DA]'
+                        : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${

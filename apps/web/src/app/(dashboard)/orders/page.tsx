@@ -73,7 +73,7 @@ export default function OrdersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My Orders</h1>
-          <p className="text-[#5A5A5A] text-sm">{orders.length} orders • ${(stats.totalValue / 1000).toFixed(0)}K total value</p>
+          <p className="text-[#4A4A4A] text-sm">{orders.length} orders • ${(stats.totalValue / 1000).toFixed(0)}K total value</p>
         </div>
         <Link href="/marketplace" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
           <Package className="w-4 h-4" />
@@ -85,25 +85,25 @@ export default function OrdersPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#101111]">{stats.total}</p>
-          <p className="text-[#5A5A5A] text-xs">Total Orders</p>
+          <p className="text-[#4A4A4A] text-xs">Total Orders</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#A6824A]">{stats.active}</p>
-          <p className="text-[#5A5A5A] text-xs">In Progress</p>
+          <p className="text-[#4A4A4A] text-xs">In Progress</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#154230]">{stats.completed}</p>
-          <p className="text-[#5A5A5A] text-xs">Completed</p>
+          <p className="text-[#4A4A4A] text-xs">Completed</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#101111]">${(stats.totalValue / 1000).toFixed(0)}K</p>
-          <p className="text-[#5A5A5A] text-xs">Total Value</p>
+          <p className="text-[#4A4A4A] text-xs">Total Value</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-4 h-4 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Search orders..."
@@ -122,7 +122,7 @@ export default function OrdersPage() {
             className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === s
                 ? 'bg-[#154230] text-white'
-                : 'bg-white text-[#5A5A5A] hover:bg-[#E6E2DA] border border-black/5'
+                : 'bg-white text-[#4A4A4A] hover:bg-[#E6E2DA] border border-black/5'
             }`}
           >
             {s === 'all' ? 'All' : statusConfig[s]?.label || s}
@@ -151,9 +151,9 @@ export default function OrdersPage() {
       {!isLoading && filteredOrders.length === 0 && (
         <div className="text-center py-12">
           <div className="w-14 h-14 bg-[#E6E2DA] rounded-xl flex items-center justify-center mx-auto mb-4">
-            <Package className="w-7 h-7 text-[#5A5A5A]" />
+            <Package className="w-7 h-7 text-[#4A4A4A]" />
           </div>
-          <p className="text-[#5A5A5A] text-sm mb-4">No orders found</p>
+          <p className="text-[#4A4A4A] text-sm mb-4">No orders found</p>
           <Link href="/marketplace" className="text-[#A6824A] hover:underline font-medium text-sm">
             Browse products
           </Link>
@@ -178,15 +178,15 @@ export default function OrdersPage() {
                     </span>
                   </div>
                   <h3 className="text-[#101111] font-medium text-sm truncate">{order.product}</h3>
-                  <p className="text-[#5A5A5A] text-xs mt-0.5">{order.quantity} • {order.buyer}</p>
-                  <div className="flex items-center gap-2 mt-2 text-xs text-[#5A5A5A]">
+                  <p className="text-[#4A4A4A] text-xs mt-0.5">{order.quantity} • {order.buyer}</p>
+                  <div className="flex items-center gap-2 mt-2 text-xs text-[#4A4A4A]">
                     <Clock className="w-3 h-3" />
                     <span>Updated {order.updatedAt}</span>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-[#101111]">${(order.total / 1000).toFixed(0)}K</p>
-                  <p className="text-[#5A5A5A] text-xs">{order.currency}</p>
+                  <p className="text-[#4A4A4A] text-xs">{order.currency}</p>
                 </div>
               </div>
             </Link>

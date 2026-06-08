@@ -34,7 +34,7 @@ const documentTypes: Record<string, { icon: string; label: string }> = {
 };
 
 const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
-  DRAFT: { color: 'text-[#5A5A5A]', bg: 'bg-[#E6E2DA]', label: 'Draft' },
+  DRAFT: { color: 'text-[#4A4A4A]', bg: 'bg-[#E6E2DA]', label: 'Draft' },
   PENDING: { color: 'text-[#A6824A]', bg: 'bg-[#A6824A]/10', label: 'Pending' },
   VALIDATED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Validated' },
   APPROVED: { color: 'text-[#154230]', bg: 'bg-[#154230]/10', label: 'Approved' },
@@ -80,7 +80,7 @@ export default function DocumentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-lg sm:text-xl font-bold text-[#101111]">My Documents</h1>
-          <p className="text-[#5A5A5A] text-sm">{documents.length} trade documents</p>
+          <p className="text-[#4A4A4A] text-sm">{documents.length} trade documents</p>
         </div>
         <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors text-sm">
           <Plus className="w-4 h-4" />
@@ -92,21 +92,21 @@ export default function DocumentsPage() {
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#101111]">{stats.total}</p>
-          <p className="text-[#5A5A5A] text-xs">Total</p>
+          <p className="text-[#4A4A4A] text-xs">Total</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#A6824A]">{stats.pending}</p>
-          <p className="text-[#5A5A5A] text-xs">Pending</p>
+          <p className="text-[#4A4A4A] text-xs">Pending</p>
         </div>
         <div className="bg-white border border-black/5 rounded-xl p-4 text-center">
           <p className="text-2xl font-bold text-[#154230]">{stats.validated}</p>
-          <p className="text-[#5A5A5A] text-xs">Validated</p>
+          <p className="text-[#4A4A4A] text-xs">Validated</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search className="w-4 h-4 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Search documents..."
@@ -125,7 +125,7 @@ export default function DocumentsPage() {
             className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === s
                 ? 'bg-[#154230] text-white'
-                : 'bg-white text-[#5A5A5A] hover:bg-[#E6E2DA] border border-black/5'
+                : 'bg-white text-[#4A4A4A] hover:bg-[#E6E2DA] border border-black/5'
             }`}
           >
             {s === 'all' ? 'All' : statusConfig[s]?.label || s}
@@ -154,9 +154,9 @@ export default function DocumentsPage() {
       {!isLoading && filteredDocs.length === 0 && (
         <div className="text-center py-12">
           <div className="w-14 h-14 bg-[#E6E2DA] rounded-xl flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-7 h-7 text-[#5A5A5A]" />
+            <FileText className="w-7 h-7 text-[#4A4A4A]" />
           </div>
-          <p className="text-[#5A5A5A] text-sm mb-4">No documents found</p>
+          <p className="text-[#4A4A4A] text-sm mb-4">No documents found</p>
           <button className="text-[#A6824A] hover:underline font-medium text-sm">
             Create your first document
           </button>
@@ -179,11 +179,11 @@ export default function DocumentsPage() {
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[#101111] font-medium text-sm truncate">{doc.name}</h3>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[#5A5A5A] text-xs">{documentTypes[doc.type]?.label}</span>
-                    <span className="text-[#5A5A5A] text-xs">•</span>
-                    <span className="text-[#5A5A5A] text-xs">{doc.fileSize}</span>
-                    <span className="text-[#5A5A5A] text-xs">•</span>
-                    <span className="text-[#5A5A5A] text-xs flex items-center gap-1">
+                    <span className="text-[#4A4A4A] text-xs">{documentTypes[doc.type]?.label}</span>
+                    <span className="text-[#4A4A4A] text-xs">•</span>
+                    <span className="text-[#4A4A4A] text-xs">{doc.fileSize}</span>
+                    <span className="text-[#4A4A4A] text-xs">•</span>
+                    <span className="text-[#4A4A4A] text-xs flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {doc.updatedAt}
                     </span>
@@ -211,10 +211,10 @@ export default function DocumentsPage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-[#101111]">{viewingDoc.name}</h2>
-                  <p className="text-[#5A5A5A] text-xs">{documentTypes[viewingDoc.type]?.label}</p>
+                  <p className="text-[#4A4A4A] text-xs">{documentTypes[viewingDoc.type]?.label}</p>
                 </div>
               </div>
-              <button onClick={() => setViewingDoc(null)} className="p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <button onClick={() => setViewingDoc(null)} className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -222,20 +222,20 @@ export default function DocumentsPage() {
             <div className="space-y-4">
               <div className="p-4 bg-[#E6E2DA] rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#5A5A5A] text-sm">Status</span>
+                  <span className="text-[#4A4A4A] text-sm">Status</span>
                   <span className={`px-2 py-1 rounded-md text-xs font-medium ${statusConfig[viewingDoc.status].bg} ${statusConfig[viewingDoc.status].color}`}>
                     {statusConfig[viewingDoc.status].label}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#5A5A5A]">File Size</span>
+                  <span className="text-[#4A4A4A]">File Size</span>
                   <span className="text-[#101111] font-medium">{viewingDoc.fileSize}</span>
                 </div>
               </div>
 
               {viewingDoc.description && (
                 <div className="p-4 bg-[#E6E2DA] rounded-lg">
-                  <p className="text-[#5A5A5A] text-xs mb-1">Description</p>
+                  <p className="text-[#4A4A4A] text-xs mb-1">Description</p>
                   <p className="text-[#101111] text-sm">{viewingDoc.description}</p>
                 </div>
               )}

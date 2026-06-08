@@ -71,12 +71,12 @@ export default function LoginPage() {
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-[#101111] mb-2">Welcome back</h1>
-            <p className="text-[#5A5A5A]">Sign in to access your global trade dashboard</p>
+            <p className="text-[#4A4A4A]">Sign in to access your global trade dashboard</p>
           </div>
 
           {/* Demo Hint */}
           <div className="mb-6 p-4 bg-white border border-black/5 rounded-xl">
-            <p className="text-[#5A5A5A] text-sm mb-2">Demo Mode - Enter any email & password (min 6 chars)</p>
+            <p className="text-[#4A4A4A] text-sm mb-2">Demo Mode - Enter any email & password (min 6 chars)</p>
             <button
               type="button"
               onClick={fillDemo}
@@ -98,13 +98,13 @@ export default function LoginPage() {
             <div>
               <label className="block text-[#101111] text-sm mb-2">Email</label>
               <div className="relative">
-                <Mail className="w-5 h-5 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+                <Mail className="w-5 h-5 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
+                  className="w-full h-12 pl-12 pr-4 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
                   required
                 />
               </div>
@@ -113,19 +113,19 @@ export default function LoginPage() {
             <div>
               <label className="block text-[#101111] text-sm mb-2">Password</label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-[#5A5A5A] absolute left-4 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-[#4A4A4A] absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full h-12 pl-12 pr-14 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#5A5A5A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
+                  className="w-full h-12 pl-12 pr-14 bg-white border border-black/5 rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:border-[#A6824A] focus:ring-2 focus:ring-[#A6824A]/20 transition-all"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#5A5A5A] hover:text-[#A6824A] transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A4A4A] hover:text-[#A6824A] transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -139,7 +139,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="w-4 h-4 rounded border-black/10 bg-white" />
-                <span className="text-[#5A5A5A] text-sm">Remember me</span>
+                <span className="text-[#4A4A4A] text-sm">Remember me</span>
               </label>
               <Link href="/forgot-password" className="text-[#A6824A] text-sm font-medium hover:underline">
                 Forgot password?
@@ -165,12 +165,12 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-black/5"></div>
-            <span className="text-[#5A5A5A] text-sm">or</span>
+            <span className="text-[#4A4A4A] text-sm">or</span>
             <div className="flex-1 h-px bg-black/5"></div>
           </div>
 
           {/* Sign Up Link */}
-          <p className="text-center text-[#5A5A5A]">
+          <p className="text-center text-[#4A4A4A]">
             Don't have an account?{' '}
             <Link href="/signup" className="text-[#A6824A] font-semibold hover:underline">
               Sign up for free
@@ -185,7 +185,7 @@ export default function LoginPage() {
           <h2 className="text-3xl font-bold text-[#101111] mb-4">
             Global Trade, Simplified
           </h2>
-          <p className="text-[#5A5A5A] text-base mb-8">
+          <p className="text-[#4A4A4A] text-base mb-8">
             Connect with suppliers worldwide, manage orders, track shipments, and automate compliance — all in one platform.
           </p>
           <div className="grid grid-cols-3 gap-6">
@@ -194,7 +194,7 @@ export default function LoginPage() {
                 <Package className="w-7 h-7 text-[#A6824A]" />
               </div>
               <p className="text-[#101111] font-bold text-xl">500+</p>
-              <p className="text-[#5A5A5A] text-sm">Suppliers</p>
+              <p className="text-[#4A4A4A] text-sm">Suppliers</p>
             </div>
             <div className="text-center">
               <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center mx-auto mb-3">
@@ -203,7 +203,7 @@ export default function LoginPage() {
                 </svg>
               </div>
               <p className="text-[#101111] font-bold text-xl">50+</p>
-              <p className="text-[#5A5A5A] text-sm">Countries</p>
+              <p className="text-[#4A4A4A] text-sm">Countries</p>
             </div>
             <div className="text-center">
               <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center mx-auto mb-3">
@@ -212,7 +212,7 @@ export default function LoginPage() {
                 </svg>
               </div>
               <p className="text-[#101111] font-bold text-xl">$10M+</p>
-              <p className="text-[#5A5A5A] text-sm">Traded</p>
+              <p className="text-[#4A4A4A] text-sm">Traded</p>
             </div>
           </div>
         </div>

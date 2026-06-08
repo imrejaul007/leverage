@@ -73,7 +73,7 @@ export default function MobileHeader() {
           {/* Search Button */}
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className="p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
+            className="p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -81,7 +81,7 @@ export default function MobileHeader() {
           {/* Notifications */}
           <Link
             href="/marketplace/inbox"
-            className="relative p-2 text-[#5A5A5A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
+            className="relative p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
@@ -103,14 +103,14 @@ export default function MobileHeader() {
       {/* Mobile Page Title (only on sm+) */}
       <div className="sm:hidden px-4 pb-2.5">
         <h1 className="text-[#101111] font-semibold text-sm">{currentPageInfo.title}</h1>
-        <p className="text-[#5A5A5A] text-xs">{currentPageInfo.subtitle}</p>
+        <p className="text-[#4A4A4A] text-xs">{currentPageInfo.subtitle}</p>
       </div>
 
       {/* Search Overlay */}
       {showSearch && (
         <div className="absolute top-full left-0 right-0 bg-white border-b border-black/5 p-3 shadow-lg">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A5A5A]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
             <input
               type="text"
               value={searchQuery}
@@ -122,7 +122,7 @@ export default function MobileHeader() {
             <button
               type="button"
               onClick={() => setShowSearch(false)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A5A5A] hover:text-[#101111]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A4A4A] hover:text-[#101111]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -138,7 +138,7 @@ export default function MobileHeader() {
                   router.push(`/marketplace?search=${encodeURIComponent(term)}`);
                   setShowSearch(false);
                 }}
-                className="px-2.5 py-1 bg-[#E6E2DA] text-[#5A5A5A] text-xs rounded-full hover:bg-[#154230] hover:text-white transition-colors"
+                className="px-2.5 py-1 bg-[#E6E2DA] text-[#4A4A4A] text-xs rounded-full hover:bg-[#154230] hover:text-white transition-colors"
               >
                 {term}
               </button>
