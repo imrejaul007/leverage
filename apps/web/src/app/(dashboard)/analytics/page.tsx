@@ -1,7 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3 } from 'lucide-react';
+import Link from 'next/link';
+import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, X, LogOut } from 'lucide-react';
+
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: User, label: 'Network' },
+  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
+const bottomNavLinks = [
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Link, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
+];
 
 interface ChartData {
   label: string;
@@ -11,6 +32,7 @@ interface ChartData {
 export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState('30d');
   const [isLoading, setIsLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [stats, setStats] = useState({
     totalRevenue: 847500,
@@ -58,179 +80,290 @@ export default function AnalyticsPage() {
     { name: 'Power Converter 500W', sales: 580, revenue: 29000 },
   ];
 
-  const topMarkets = [
-    { country: 'United States', value: 285000, percentage: 34 },
-    { country: 'Germany', value: 156000, percentage: 18 },
-    { country: 'UAE', value: 124000, percentage: 15 },
-    { country: 'Singapore', value: 98000, percentage: 12 },
-    { country: 'UK', value: 72000, percentage: 8 },
-  ];
-
   const maxRevenue = Math.max(...revenueData.map(d => d.value));
   const maxOrders = Math.max(...ordersData.map(d => d.value));
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#101111]">Analytics</h1>
-          <p className="text-[#4A4A4A] text-sm">Track your trade performance</p>
+    <div className="min-h-screen bg-[#E6E2DA]">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
+        <div className="p-6 border-b border-black/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-1 bg-white border border-black/5 rounded-lg p-1">
-          {['7d', '30d', '90d'].map(range => (
+
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#4A4A4A] hover:bg-[#E6E2DA] transition-colors"
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside className={`lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-white z-50 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-black/5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="6" cy="12" r="2" fill="currentColor" />
+                <circle cx="18" cy="12" r="2" fill="currentColor" />
+                <circle cx="12" cy="6" r="2" fill="currentColor" />
+                <circle cx="12" cy="18" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-[#101111] font-bold text-lg tracking-tight">LEVERAGE</h1>
+              <p className="text-[#4A4A4A] text-[10px] tracking-wider">CONNECTING DOTS TO PORTS</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="w-9 h-9 bg-[#E6E2DA] rounded-full flex items-center justify-center"
+          >
+            <X className="w-5 h-5 text-[#4A4A4A]" />
+          </button>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setSidebarOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#4A4A4A] hover:bg-[#E6E2DA] transition-colors"
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Mobile Header */}
+        <div className="lg:hidden px-4 pt-4 pb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <button
-              key={range}
-              onClick={() => setDateRange(range)}
-              className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                dateRange === range ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-              }`}
+              onClick={() => setSidebarOpen(true)}
+              className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center"
             >
-              {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
+              <Menu className="w-5 h-5 text-white" />
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-[#154230]" />
-            </div>
-            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
-              <TrendingUp className="w-3 h-3" /> +12.5%
-            </span>
+            <span className="text-[#154230] font-bold text-lg">LEVERAGE</span>
           </div>
-          <p className="text-2xl font-bold text-[#101111]">${(stats.totalRevenue / 1000).toFixed(0)}K</p>
-          <p className="text-[#4A4A4A] text-xs">Total Revenue</p>
+          <button className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+            <Bell className="w-5 h-5 text-[#4A4A4A]" />
+          </button>
         </div>
 
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-[#5D1E21]" />
-            </div>
-            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
-              <TrendingUp className="w-3 h-3" /> +8.3%
-            </span>
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-8 pt-8 pb-6">
+          <h1 className="text-white font-bold text-2xl">Analytics</h1>
+          <p className="text-white/70 text-sm mt-1">Track your trade performance</p>
+        </div>
+
+        {/* Content */}
+        <div className="px-4 lg:px-8 py-4 lg:py-6 space-y-4">
+          {/* Date Range Selector */}
+          <div className="flex gap-1 bg-white border border-black/5 rounded-lg p-1 w-fit">
+            {['7d', '30d', '90d'].map(range => (
+              <button
+                key={range}
+                onClick={() => setDateRange(range)}
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                  dateRange === range ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                }`}
+              >
+                {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
+              </button>
+            ))}
           </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
-          <p className="text-[#4A4A4A] text-xs">Total Orders</p>
-        </div>
 
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-[#154230]" />
-            </div>
-            <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
-              <TrendingUp className="w-3 h-3" /> +5.1%
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-[#101111]">${stats.avgOrderValue}</p>
-          <p className="text-[#4A4A4A] text-xs">Avg Order Value</p>
-        </div>
-
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="w-10 h-10 rounded-lg bg-[#5D1E21]/10 flex items-center justify-center">
-              <Package className="w-5 h-5 text-[#5D1E21]" />
-            </div>
-            <span className="text-[#4A4A4A] text-xs">Active</span>
-          </div>
-          <p className="text-2xl font-bold text-[#101111]">{stats.activeProducts}</p>
-          <p className="text-[#4A4A4A] text-xs">Active Products</p>
-        </div>
-      </div>
-
-      {/* Revenue Chart */}
-      <div className="bg-white border border-black/5 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[#101111] font-semibold text-sm">Revenue Trend</h2>
-          <span className="text-[#154230] text-xs font-medium">${(stats.totalRevenue / 1000).toFixed(0)}K total</span>
-        </div>
-        <div className="h-48 flex items-end gap-1">
-          {revenueData.map((item, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <div
-                className="w-full bg-[#154230] rounded-t transition-all"
-                style={{ height: `${(item.value / maxRevenue) * 100}%`, minHeight: '4px' }}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-2 text-[#4A4A4A] text-xs">
-          <span>{revenueData[0]?.label}</span>
-          <span>{revenueData[revenueData.length - 1]?.label}</span>
-        </div>
-      </div>
-
-      {/* Two Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Top Products */}
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <h2 className="text-[#101111] font-semibold text-sm mb-3">Top Products</h2>
-          <div className="space-y-2">
-            {topProducts.map((product, i) => (
-              <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#E6E2DA] transition-colors">
-                <span className="w-6 h-6 rounded bg-[#E6E2DA] text-[#4A4A4A] text-xs font-bold flex items-center justify-center">
-                  {i + 1}
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
+                  <TrendingUp className="w-3 h-3" /> +12.5%
                 </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[#101111] text-sm font-medium truncate">{product.name}</p>
-                  <p className="text-[#4A4A4A] text-xs">{product.sales} sales</p>
-                </div>
-                <span className="text-[#154230] text-sm font-semibold">${(product.revenue / 1000).toFixed(0)}K</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Markets */}
-        <div className="bg-white border border-black/5 rounded-xl p-4">
-          <h2 className="text-[#101111] font-semibold text-sm mb-3">Top Markets</h2>
-          <div className="space-y-3">
-            {topMarkets.map((market, i) => (
-              <div key={i}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[#101111] text-sm">{market.country}</span>
-                  <span className="text-[#4A4A4A] text-xs">${(market.value / 1000).toFixed(0)}K ({market.percentage}%)</span>
-                </div>
-                <div className="h-2 bg-[#E6E2DA] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#154230] rounded-full transition-all"
-                    style={{ width: `${market.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Orders Chart */}
-      <div className="bg-white border border-black/5 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[#101111] font-semibold text-sm">Orders Trend</h2>
-          <span className="text-[#5D1E21] text-xs font-medium">{stats.orders} orders</span>
-        </div>
-        <div className="h-32 flex items-end gap-1">
-          {ordersData.map((item, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <div
-                className="w-full bg-[#A6824A] rounded-t transition-all"
-                style={{ height: `${(item.value / maxOrders) * 100}%`, minHeight: '4px' }}
-              />
+              <p className="text-2xl font-bold text-[#101111]">${(stats.totalRevenue / 1000).toFixed(0)}K</p>
+              <p className="text-[#4A4A4A] text-xs">Total Revenue</p>
             </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-2 text-[#4A4A4A] text-xs">
-          <span>{ordersData[0]?.label}</span>
-          <span>{ordersData[ordersData.length - 1]?.label}</span>
+
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="flex items-center gap-1 text-[#5D1E21] text-xs font-medium">
+                  <TrendingDown className="w-3 h-3" /> -3.2%
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.orders.toLocaleString()}</p>
+              <p className="text-[#4A4A4A] text-xs">Total Orders</p>
+            </div>
+
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs">Avg</span>
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">${stats.avgOrderValue}</p>
+              <p className="text-[#4A4A4A] text-xs">Avg Order Value</p>
+            </div>
+
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-10 h-10 rounded-lg bg-[#154230]/10 flex items-center justify-center">
+                  <Package className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="flex items-center gap-1 text-[#154230] text-xs font-medium">
+                  <TrendingUp className="w-3 h-3" /> +8.1%
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-[#101111]">{stats.activeProducts}</p>
+              <p className="text-[#4A4A4A] text-xs">Active Products</p>
+            </div>
+          </div>
+
+          {/* Charts Row */}
+          <div className="grid lg:grid-cols-2 gap-4">
+            {/* Revenue Chart */}
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <h3 className="font-semibold text-[#101111] mb-4">Revenue Trend</h3>
+              <div className="h-40 flex items-end gap-1">
+                {revenueData.map((d, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div
+                      className="w-full bg-[#154230]/20 rounded-t"
+                      style={{ height: `${(d.value / maxRevenue) * 100}%` }}
+                    />
+                    <span className="text-[10px] text-[#4A4A4A] rotate-[-45deg] origin-center whitespace-nowrap">
+                      {d.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Orders Chart */}
+            <div className="bg-white border border-black/5 rounded-xl p-4">
+              <h3 className="font-semibold text-[#101111] mb-4">Orders Trend</h3>
+              <div className="h-40 flex items-end gap-1">
+                {ordersData.map((d, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div
+                      className="w-full bg-[#A6824A]/30 rounded-t"
+                      style={{ height: `${(d.value / maxOrders) * 100}%` }}
+                    />
+                    <span className="text-[10px] text-[#4A4A4A] rotate-[-45deg] origin-center whitespace-nowrap">
+                      {d.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Top Products */}
+          <div className="bg-white border border-black/5 rounded-xl p-4">
+            <h3 className="font-semibold text-[#101111] mb-4">Top Products</h3>
+            <div className="space-y-3">
+              {topProducts.map((product, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-[#F7F6F2] rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <span className="w-6 h-6 rounded bg-[#154230] text-white text-xs font-bold flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-medium text-[#101111]">{product.name}</span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-[#101111]">${product.revenue.toLocaleString()}</p>
+                    <p className="text-xs text-[#4A4A4A]">{product.sales} sales</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#eee] h-[72px] flex items-center justify-around z-30">
+        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">🏠</span>
+          <span className="text-[10px] font-medium">Home</span>
+        </Link>
+        <Link href="/marketplace" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">🔍</span>
+          <span className="text-[10px] font-medium">Browse</span>
+        </Link>
+        <Link href="/rfqs/new" className="flex flex-col items-center -mt-4">
+          <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
+            +
+          </div>
+        </Link>
+        <Link href="/marketplace/inbox" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">💬</span>
+          <span className="text-[10px] font-medium">Inbox</span>
+        </Link>
+        <Link href="/account" className="flex flex-col items-center gap-1 text-[#666]">
+          <span className="text-2xl">👤</span>
+          <span className="text-[10px] font-medium">Account</span>
+        </Link>
+      </nav>
     </div>
   );
 }

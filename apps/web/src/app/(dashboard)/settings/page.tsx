@@ -62,7 +62,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* Desktop Sidebar - Fixed on left */}
       <aside className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-0 lg:bottom-0 lg:w-64 lg:bg-[#154230] lg:z-40">
         {/* Logo */}

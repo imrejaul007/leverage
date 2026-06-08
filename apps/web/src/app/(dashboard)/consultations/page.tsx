@@ -38,11 +38,11 @@ const sidebarLinks = [
 ];
 
 const bottomNavLinks = [
-  { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
-  { id: 'browse', href: '/marketplace', icon: Search, label: 'Browse' },
-  { id: 'post', href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { id: 'inbox', href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
-  { id: 'account', href: '/account', icon: User, label: 'Account' },
+  { href: '/dashboard', icon: Home, label: 'Home' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
+  { href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { href: '/account', icon: User, label: 'Account' },
 ];
 
 export default function ConsultationsPage() {
@@ -58,7 +58,7 @@ export default function ConsultationsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* ============================================ */}
       {/* DESKTOP SIDEBAR (lg and above) */}
       {/* ============================================ */}

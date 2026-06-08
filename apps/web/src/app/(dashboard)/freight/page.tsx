@@ -95,7 +95,7 @@ export default function FreightPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2ED]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* Desktop Sidebar - Fixed on left */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
         {/* Logo */}

@@ -88,7 +88,7 @@ export default function NetworkPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3EF]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* Mobile Header - Clean with hamburger + logo + bell */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-black/5 px-4 py-3">
         <div className="flex items-center justify-between">
