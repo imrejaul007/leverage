@@ -58,7 +58,7 @@ export default function ConsultationsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* ============================================ */}
       {/* DESKTOP SIDEBAR (lg and above) */}
       {/* ============================================ */}
