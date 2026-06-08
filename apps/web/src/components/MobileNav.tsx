@@ -84,7 +84,7 @@ export default function MobileNav() {
                 <div className={`relative ${isActive ? 'text-[#154230]' : 'text-[#4A4A4A]'}`}>
                   <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
                   {item.name === 'Inbox' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#A6824A] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
                       3
                     </span>
                   )}

@@ -84,7 +84,7 @@ export default function MobileHeader() {
             className="relative p-2 text-[#4A4A4A] hover:text-[#101111] hover:bg-[#E6E2DA] rounded-lg transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#A6824A] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
               3
             </span>
           </Link>
