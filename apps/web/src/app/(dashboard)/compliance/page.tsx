@@ -55,7 +55,7 @@ export default function CompliancePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f8f6f3]">
+    <div className="min-h-screen bg-[#E6E2DA]">
       {/* ========== HEADER ========== */}
       <header className="bg-white shadow-sm">
         <div className="max-w-[480px] mx-auto">
