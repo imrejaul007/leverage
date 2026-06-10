@@ -24,6 +24,9 @@ import {
   LogOut,
   Menu,
   X,
+  Calendar,
+  ShoppingBag,
+  Megaphone,
 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import Sidebar, { MobileSidebar } from '@/components/Sidebar';
@@ -212,9 +215,37 @@ export default function DashboardPage() {
                 <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
               </Link>
 
+              <Link href="/consultations" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Consult</span>
+              </Link>
+
+              <Link href="/orders" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Truck className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Orders</span>
+              </Link>
+
+              <Link href="/products" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Package className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Products</span>
+              </Link>
+
+              <Link href="/freight" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Truck className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Freight</span>
+              </Link>
+
               <Link href="/documents" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-[#154230]" />
+                  <Package className="w-5 h-5 text-[#154230]" />
                 </div>
                 <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
               </Link>
@@ -223,7 +254,35 @@ export default function DashboardPage() {
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
                   <BarChart3 className="w-5 h-5 text-[#154230]" />
                 </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">AI Assist</span>
+                <span className="text-[#4A4A4A] text-xs font-medium">AI</span>
+              </Link>
+
+              <Link href="/compliance" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Compliance</span>
+              </Link>
+
+              <Link href="/billing" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Billing</span>
+              </Link>
+
+              <Link href="/ads" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Megaphone className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Ads</span>
+              </Link>
+
+              <Link href="/analytics" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Analytics</span>
               </Link>
             </div>
           </div>
