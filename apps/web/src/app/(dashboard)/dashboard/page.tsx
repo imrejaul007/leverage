@@ -158,7 +158,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Mobile Content Area */}
-        <div className="lg:hidden px-4 -mt-6 space-y-5 pb-4">
+        <div className="lg:hidden px-4 -mt-6 space-y-5 pb-24">
           {/* Quick Stats Grid - 2x2 */}
           <div className="grid grid-cols-2 gap-3">
             <Link href="/rfqs" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
