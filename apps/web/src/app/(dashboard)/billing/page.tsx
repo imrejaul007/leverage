@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { DollarSign, CreditCard, Download, Plus, ArrowUpRight, ArrowDownRight, X, CheckCircle, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, LogOut, BarChart3, Package } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -43,6 +44,12 @@ export default function BillingPage() {
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [amount, setAmount] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   useEffect(() => {
     const initialTx: Transaction[] = [
@@ -103,6 +110,9 @@ export default function BillingPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
           </div>
         </div>
       </aside>

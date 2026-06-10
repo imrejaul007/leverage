@@ -110,6 +110,12 @@ export default function MessagesPage() {
   const [mobileView, setMobileView] = useState<'list' | 'chat'>('list');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_conversations');
@@ -267,7 +273,7 @@ export default function MessagesPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>
@@ -330,14 +336,14 @@ export default function MessagesPage() {
                 <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
               </div>
             </div>
-            <button className="relative p-2">
+            <Link href="/marketplace/inbox" className="relative p-2">
               <Bell className="w-6 h-6 text-[#4A4A4A]" />
               {unreadCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -348,14 +354,14 @@ export default function MessagesPage() {
               <h1 className="text-2xl font-bold text-white">Messages</h1>
               <p className="text-white/70 text-sm">{conversations.length} conversations</p>
             </div>
-            <button className="relative p-2">
+            <Link href="/marketplace/inbox" className="relative p-2">
               <Bell className="w-6 h-6 text-white" />
               {unreadCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#5D1E21] rounded-full text-white text-xs font-bold flex items-center justify-center">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
 

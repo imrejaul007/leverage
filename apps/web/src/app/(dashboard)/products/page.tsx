@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Package, Search, Plus, Edit, Trash2, Bell, Home, FileText, Mail, User, Menu, X, Settings, LogOut, MessageSquare, Truck, BarChart3, Briefcase } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -58,6 +58,12 @@ export default function ProductsPage() {
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const [formData, setFormData] = useState({
     name: '',
@@ -203,7 +209,7 @@ export default function ProductsPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>
@@ -281,6 +287,9 @@ export default function ProductsPage() {
                     <p className="text-[#101111] font-semibold text-sm">John Doe</p>
                     <p className="text-[#4A4A4A] text-xs">john@company.com</p>
                   </div>
+                  <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                    <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+                  </button>
                 </div>
               </div>
             </aside>

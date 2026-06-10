@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Camera, Save, Globe, Ship, Users, Shield, Home, Search, FileText, Mail, User, ChevronDown, Check, Bell, CreditCard, Lock, HelpCircle, Menu, X, Settings, LogOut, Plus, MessageSquare, Package, Truck, BarChart3, Search as SearchIcon } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
@@ -35,6 +35,12 @@ export default function SettingsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const saveProfile = () => {
     localStorage.setItem('leverage_profile', JSON.stringify(profile));
@@ -175,9 +181,9 @@ export default function SettingsPage() {
             <Link href="/rfqs/new" className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
               <Plus className="w-5 h-5 text-white" />
             </Link>
-            <button className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+            <Link href="/marketplace/inbox" className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
               <Bell className="w-5 h-5 text-[#4A4A4A]" />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -227,9 +233,9 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <h1 className="text-[#101111] text-xl font-bold">Settings</h1>
             <div className="flex items-center gap-4">
-              <button className="w-10 h-10 bg-[#F7F6F2] rounded-full flex items-center justify-center">
+              <Link href="/marketplace/inbox" className="w-10 h-10 bg-[#F7F6F2] rounded-full flex items-center justify-center">
                 <Bell className="w-5 h-5 text-[#4A4A4A]" />
-              </button>
+              </Link>
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#154230] to-[#1d5240] flex items-center justify-center text-white font-bold">
                 {profile.firstName.charAt(0)}{profile.lastName.charAt(0)}
               </div>

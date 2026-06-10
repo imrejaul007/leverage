@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Bell, Menu, Home, MessageSquare, User, Plus, X, Package, Truck, FileText, BarChart3, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Bell, Menu, Home, MessageSquare, User, Plus, X, Package, Truck, FileText, BarChart3, Settings, LogOut } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
 const sidebarLinks = [
@@ -59,6 +60,12 @@ const getItemIcon = (code: string) => {
 };
 
 export default function CompliancePage() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
   const [activeTab, setActiveTab] = useState('hs-codes');
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -101,6 +108,9 @@ export default function CompliancePage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
           </div>
         </div>
       </aside>
@@ -141,6 +151,20 @@ export default function CompliancePage() {
             );
           })}
         </nav>
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}

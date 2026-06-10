@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { BarChart3, TrendingUp, Eye, MousePointer, DollarSign, Plus, X, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, LogOut, Package } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -37,6 +38,12 @@ export default function AdsPage() {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [newCampaign, setNewCampaign] = useState({ name: '', budget: '', target: '', duration: '30' });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_campaigns');
@@ -117,6 +124,9 @@ export default function AdsPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
           </div>
         </div>
       </aside>
@@ -157,6 +167,20 @@ export default function AdsPage() {
             );
           })}
         </nav>
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}

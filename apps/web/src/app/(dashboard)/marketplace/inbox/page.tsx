@@ -24,6 +24,7 @@ import {
   Settings as SettingsIcon,
   ChevronRight,
   ArrowLeft,
+  LogOut,
 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -139,6 +140,11 @@ export default function InboxPage() {
     setShowMobileDetail(true);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
+
   const unreadCount = messages.filter(m => m.unread).length;
 
   return (
@@ -212,6 +218,20 @@ export default function InboxPage() {
             );
           })}
         </nav>
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
+            </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}

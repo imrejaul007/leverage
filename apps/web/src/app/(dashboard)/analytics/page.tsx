@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, Package, BarChart3, Home, Search, Truck, FileText, User, MessageSquare, Settings, Bell, Menu, X, LogOut, Plus } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -28,6 +29,12 @@ export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState('30d');
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const [stats, setStats] = useState({
     totalRevenue: 847500,
@@ -111,6 +118,9 @@ export default function AnalyticsPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+              <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+            </button>
           </div>
         </div>
       </aside>

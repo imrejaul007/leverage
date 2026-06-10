@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
   Home,
@@ -20,14 +20,17 @@ import {
   DollarSign,
   X,
   LogOut,
+  Plus,
 } from 'lucide-react';
 
 export const sidebarLinks = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/marketplace', icon: Search, label: 'Browse Products' },
   { href: '/rfqs', icon: FileText, label: 'RFQs' },
   { href: '/orders', icon: Truck, label: 'Orders' },
-  { href: '/products', icon: ShoppingBag, label: 'Products' },
+  { href: '/products', icon: ShoppingBag, label: 'My Products' },
+  { href: '/products/new', icon: Plus, label: 'Sell Product' },
+  { href: '/rfqs/new', icon: Plus, label: 'Post RFQ' },
   { href: '/documents', icon: Package, label: 'Documents' },
   { href: '/freight', icon: Truck, label: 'Freight' },
   { href: '/consultations', icon: Calendar, label: 'Consultations' },
@@ -82,6 +85,12 @@ interface MobileSidebarProps {
 
 export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   if (!open) return null;
 
@@ -126,7 +135,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
           </div>
-          <button className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA] rounded-xl mt-2">
+          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA] rounded-xl mt-2">
             <LogOut className="w-5 h-5" />
             <span className="font-medium text-sm">Logout</span>
           </button>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Users, Search, MessageSquare, UserPlus, Grid3X3, List, Send, Globe, Handshake, TrendingUp, Menu, X, Settings, LogOut, Home, User, Plus, FileText, Truck, Package, BarChart3, Bell } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -48,6 +48,12 @@ export default function NetworkPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   useEffect(() => {
     const initial: Connection[] = [
@@ -151,7 +157,7 @@ export default function NetworkPage() {
                   <p className="text-[#101111] font-semibold text-sm">John Doe</p>
                   <p className="text-[#4A4A4A] text-xs">john@company.com</p>
                 </div>
-                <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
                   <LogOut className="w-4 h-4 text-[#4A4A4A]" />
                 </button>
               </div>

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, Star, CheckCircle, Calendar, MessageSquare, Bell, X, Menu, Settings, LogOut } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import Sidebar, { MobileSidebar } from '@/components/Sidebar';
@@ -33,6 +34,12 @@ export default function ConsultationsPage() {
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [activeNav, setActiveNav] = useState('consult');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const filteredExperts = experts.filter(expert =>
     expert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -59,7 +66,7 @@ export default function ConsultationsPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   Search, Truck, Plane, Ship, Clock, DollarSign, MapPin, CheckCircle, X,
   Anchor, Globe, Bell, Menu, Settings, LogOut, Home, User, Plus,
@@ -61,6 +62,12 @@ export default function FreightPage() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const [bookingForm, setBookingForm] = useState({
     containerType: '20ft',
@@ -130,7 +137,7 @@ export default function FreightPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>
@@ -203,6 +210,9 @@ export default function FreightPage() {
                     <p className="text-[#101111] font-semibold text-sm">John Doe</p>
                     <p className="text-[#4A4A4A] text-xs">john@company.com</p>
                   </div>
+                  <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                    <LogOut className="w-4 h-4 text-[#4A4A4A]" />
+                  </button>
                 </div>
               </div>
             </aside>

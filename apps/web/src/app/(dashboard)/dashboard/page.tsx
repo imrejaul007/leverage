@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   TrendingUp,
   Package,
@@ -35,6 +36,12 @@ import Sidebar, { MobileSidebar } from '@/components/Sidebar';
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   const stats = {
     activeRFQs: 127,
@@ -98,7 +105,7 @@ export default function DashboardPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>
@@ -162,7 +169,7 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               <Link href="/marketplace" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
                   <Search className="w-5 h-5 text-[#154230]" />
@@ -177,11 +184,18 @@ export default function DashboardPage() {
                 <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
               </Link>
 
-              <Link href="/consultations" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-[#154230]" />
+              <Link href="/products/new" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#A6824A] flex items-center justify-center">
+                  <Plus className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Consult</span>
+                <span className="text-[#4A4A4A] text-xs font-medium">Add Product</span>
+              </Link>
+
+              <Link href="/products" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <Package className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">My Products</span>
               </Link>
 
               <Link href="/orders" className="flex flex-col items-center gap-2">
@@ -191,11 +205,11 @@ export default function DashboardPage() {
                 <span className="text-[#4A4A4A] text-xs font-medium">Orders</span>
               </Link>
 
-              <Link href="/products" className="flex flex-col items-center gap-2">
+              <Link href="/consultations" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Package className="w-5 h-5 text-[#154230]" />
+                  <Calendar className="w-5 h-5 text-[#154230]" />
                 </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Products</span>
+                <span className="text-[#4A4A4A] text-xs font-medium">Consult</span>
               </Link>
 
               <Link href="/freight" className="flex flex-col items-center gap-2">

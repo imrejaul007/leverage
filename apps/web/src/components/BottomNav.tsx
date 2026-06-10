@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Plus, MessageSquare, Calendar } from 'lucide-react';
+import { Home, Search, Plus, MessageSquare, FileText } from 'lucide-react';
 
 interface BottomNavProps {
   activeItem?: string;
@@ -10,8 +10,8 @@ interface BottomNavProps {
 const navItems = [
   { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
   { id: 'browse', href: '/marketplace', icon: Search, label: 'Browse' },
-  { id: 'post', href: '/rfqs/new', icon: Plus, label: 'Post RFQ', primary: true },
-  { id: 'consult', href: '/consultations', icon: Calendar, label: 'Consult' },
+  { id: 'sell', href: '/products/new', icon: Plus, label: 'Sell', primary: true },
+  { id: 'rfq', href: '/rfqs/new', icon: FileText, label: 'Post RFQ' },
   { id: 'inbox', href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
 ];
 

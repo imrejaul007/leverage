@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Search, Plus, Clock, FileText, Download, Eye, X, Shield, FileCheck, Home, Briefcase, Send, MessageSquare, User, Bell, ChevronDown, Filter, Upload, Folder, Menu, Settings, LogOut, Truck, Package, BarChart3 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -64,6 +65,12 @@ export default function DocumentsPage() {
   const [viewingDoc, setViewingDoc] = useState<Document | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('leverage_user');
+    router.push('/login');
+  };
 
   useEffect(() => {
     const stored = localStorage.getItem('leverage_documents');
@@ -132,7 +139,7 @@ export default function DocumentsPage() {
               <p className="text-[#101111] font-semibold text-sm">John Doe</p>
               <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
-            <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+            <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
               <LogOut className="w-4 h-4 text-[#4A4A4A]" />
             </button>
           </div>
@@ -152,12 +159,12 @@ export default function DocumentsPage() {
                 <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
               </div>
             </div>
-            <button className="relative p-2 text-white">
+            <Link href="/marketplace/inbox" className="relative p-2 text-white">
               <Bell className="w-5 h-5" />
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#5D1E21] rounded-full flex items-center justify-center">
                 <span className="w-1.5 h-1.5 bg-white rounded-full" />
               </span>
-            </button>
+            </Link>
           </div>
           <div>
             <h2 className="text-white font-semibold text-lg">Documents</h2>
