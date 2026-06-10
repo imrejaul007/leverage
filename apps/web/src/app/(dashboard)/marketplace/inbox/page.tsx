@@ -190,7 +190,11 @@ export default function InboxPage() {
         {/* Messages List */}
         <div className="px-3 mt-3">
           {messages.map((msg) => (
-            <div key={msg.id} className="bg-white rounded-[16px] p-3 flex justify-between items-center mb-2.5 relative overflow-hidden">
+            <button
+              key={msg.id}
+              onClick={() => setSelectedMessage(msg)}
+              className="w-full bg-white rounded-[16px] p-3 flex justify-between items-center mb-2.5 relative overflow-hidden cursor-pointer hover:bg-[#f5f3ef] transition-colors text-left"
+            >
               <div
                 className="absolute left-0 top-0 bottom-0 w-[3px]"
                 style={{ backgroundColor: borderColors[msg.borderColor] }}
@@ -210,9 +214,48 @@ export default function InboxPage() {
                 {msg.status && <div className="bg-[#f4ead2] px-2 py-0.5 rounded-lg text-[10px] text-[#888]">{msg.status}</div>}
                 <span className="text-[18px] text-[#777] mt-1.5">›</span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
+
+        {/* Message Detail Modal */}
+        {selectedMessage && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center" onClick={() => setSelectedMessage(null)}>
+            <div className="bg-white w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl" onClick={e => e.stopPropagation()}>
+              <div className="sticky top-0 bg-white p-4 border-b border-black/5 flex items-center justify-between rounded-t-3xl">
+                <h2 className="text-[#101111] font-semibold">Message</h2>
+                <button onClick={() => setSelectedMessage(null)} className="w-10 h-10 bg-[#f4f0ea] rounded-full flex items-center justify-center hover:bg-[#e9e3da]">
+                  ✕
+                </button>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#ddd]">
+                    <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-[#101111] font-semibold">{selectedMessage.productName}</h3>
+                    <p className="text-[#666] text-sm">{selectedMessage.supplierName}</p>
+                  </div>
+                  {selectedMessage.price && (
+                    <div className="text-lg font-bold text-[#0b5d40]">{selectedMessage.price}</div>
+                  )}
+                </div>
+                <div className="bg-[#f4f1ec] rounded-xl p-4">
+                  <p className="text-[#101111] text-sm leading-relaxed">{selectedMessage.fullMessage}</p>
+                </div>
+                <div className="flex gap-3">
+                  <button className="flex-1 bg-[#7b1113] text-white py-3 rounded-xl font-semibold hover:bg-[#6a0f11]">
+                    Reply
+                  </button>
+                  <button className="flex-1 bg-[#f4f1ec] text-[#101111] py-3 rounded-xl font-semibold hover:bg-[#e9e3da]">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Floating Action Button */}
         <button className="fixed bottom-[90px] right-4 w-[50px] h-[50px] rounded-full bg-[#7b1113] text-white border-none text-[24px] shadow-[0_6px_12px_rgba(0,0,0,.2)] flex items-center justify-center">
@@ -293,7 +336,11 @@ export default function InboxPage() {
         {/* Messages List - 2 Columns on Tablet */}
         <div className="px-5 mt-4 grid grid-cols-2 gap-3">
           {messages.map((msg) => (
-            <div key={msg.id} className="bg-white rounded-[18px] p-3.5 relative overflow-hidden">
+            <button
+              key={msg.id}
+              onClick={() => setSelectedMessage(msg)}
+              className="bg-white rounded-[18px] p-3.5 relative overflow-hidden cursor-pointer hover:bg-[#f5f3ef] transition-colors text-left"
+            >
               <div
                 className="absolute left-0 top-0 bottom-0 w-1 rounded-[20px]"
                 style={{ backgroundColor: borderColors[msg.borderColor] }}
@@ -314,7 +361,7 @@ export default function InboxPage() {
                   {msg.status}
                 </div>
               )}
-            </div>
+            </button>
           ))}
         </div>
 
