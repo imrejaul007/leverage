@@ -315,7 +315,31 @@ export default function DashboardPage() {
             </div>
           </Link>
 
-          {/* Stats Section - at bottom */}
+          {/* Mobile Burgundy Stats Bar */}
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/70 text-xs font-medium">Compliance</p>
+                  <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/70 text-xs font-medium">Trade Volume</p>
+                  <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Section - at bottom, after burgundy bar */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Your Stats</h3>
             <div className="grid grid-cols-4 gap-3">
@@ -341,30 +365,6 @@ export default function DashboardPage() {
                   <span className="absolute top-0 right-2 w-4 h-4 bg-[#A6824A] rounded-full"></span>
                 )}
               </Link>
-            </div>
-          </div>
-
-          {/* Mobile Burgundy Stats Bar */}
-          <div className="bg-[#5D1E21] rounded-2xl p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-white/70 text-xs font-medium">Compliance</p>
-                  <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-white/70 text-xs font-medium">Trade Volume</p>
-                  <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

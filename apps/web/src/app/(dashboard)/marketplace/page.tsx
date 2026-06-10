@@ -319,11 +319,11 @@ export default function MarketplacePage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <button className="text-[20px] p-1.5">🔍</button>
-                  <div className="text-[20px] relative">
+                  <Link href="/marketplace/inbox" className="text-[20px] relative">
                     🔔
                     <span className="absolute -top-1 -right-1 w-[15px] h-[15px] rounded-full bg-[#7b1113] text-white text-[9px] flex items-center justify-center font-bold">3</span>
-                  </div>
-                  <button className="w-[44px] h-[44px] rounded-xl bg-[#0b6b4d] text-white text-[24px] flex items-center justify-center border-none font-light">+</button>
+                  </Link>
+                  <Link href="/rfqs/new" className="w-[44px] h-[44px] rounded-xl bg-[#0b6b4d] text-white text-[24px] flex items-center justify-center border-none font-light">+</Link>
                 </div>
               </div>
             </div>
@@ -347,7 +347,7 @@ export default function MarketplacePage() {
                     <div className="text-[12px] mt-0.5 opacity-90">{products.length} products from verified suppliers worldwide</div>
                   </div>
                 </div>
-                <button className="bg-[#8b1c21] border-none text-white px-4 py-2.5 rounded-xl font-semibold text-[13px]">+ Post RFQ</button>
+                <Link href="/rfqs/new" className="bg-[#8b1c21] border-none text-white px-4 py-2.5 rounded-xl font-semibold text-[13px] inline-block">+ Post RFQ</Link>
               </div>
 
               <div className="mt-4 bg-white/10 rounded-2xl p-4">
@@ -380,7 +380,7 @@ export default function MarketplacePage() {
                   className="border-none outline-none w-full text-[14px] ml-2.5 bg-transparent text-[#333]"
                 />
               </div>
-              <button className="w-[48px] h-[48px] bg-white border-none rounded-xl flex items-center justify-center text-[18px] shadow-sm">⚙️</button>
+              <Link href="/settings" className="w-[48px] h-[48px] bg-white border-none rounded-xl flex items-center justify-center text-[18px] shadow-sm">⚙️</Link>
             </div>
 
             {/* CATEGORIES */}
@@ -460,7 +460,7 @@ export default function MarketplacePage() {
                 <h4 className="text-[18px] font-bold">Trade with Confidence</h4>
                 <p className="text-[11px] mt-0.5 opacity-90">All suppliers are verified and quality assured</p>
               </div>
-              <button className="bg-white border-none px-4 py-2 rounded-xl font-semibold text-[#7b1113] text-[12px]">Learn More</button>
+              <Link href="/settings" className="bg-white border-none px-4 py-2 rounded-xl font-semibold text-[#7b1113] text-[12px]">Learn More</Link>
             </div>
 
             {/* SPACER */}
@@ -494,11 +494,11 @@ export default function MarketplacePage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <button className="text-[22px] p-2">🔍</button>
-                  <div className="text-[22px] relative">
+                  <Link href="/marketplace/inbox" className="text-[22px] relative">
                     🔔
                     <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#7b1113] text-white text-[10px] flex items-center justify-center font-bold">3</span>
-                  </div>
-                  <button className="w-[48px] h-[48px] rounded-xl bg-[#0b6b4d] text-white text-[26px] flex items-center justify-center border-none font-light">+</button>
+                  </Link>
+                  <Link href="/rfqs/new" className="w-[48px] h-[48px] rounded-xl bg-[#0b6b4d] text-white text-[26px] flex items-center justify-center border-none font-light">+</Link>
                 </div>
               </div>
             </div>
@@ -555,7 +555,7 @@ export default function MarketplacePage() {
                   className="border-none outline-none w-full text-[15px] ml-3 bg-transparent text-[#333]"
                 />
               </div>
-              <button className="w-[52px] h-[52px] bg-white border-none rounded-xl flex items-center justify-center text-[20px] shadow-sm">⚙️</button>
+              <Link href="/settings" className="w-[52px] h-[52px] bg-white border-none rounded-xl flex items-center justify-center text-[20px] shadow-sm">⚙️</Link>
             </div>
 
             {/* CATEGORIES */}
@@ -635,7 +635,7 @@ export default function MarketplacePage() {
                 <h4 className="text-[20px] font-bold">Trade with Confidence</h4>
                 <p className="text-[12px] mt-1 opacity-90">All suppliers are verified and quality assured</p>
               </div>
-              <button className="bg-white border-none px-5 py-2.5 rounded-xl font-semibold text-[#7b1113] text-[13px]">Learn More</button>
+              <Link href="/settings" className="bg-white border-none px-5 py-2.5 rounded-xl font-semibold text-[#7b1113] text-[13px]">Learn More</Link>
             </div>
 
             {/* SPACER */}
@@ -658,16 +658,16 @@ export default function MarketplacePage() {
                   <p className="text-white/70 text-sm mt-1">Browse suppliers & products</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <button className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
+                  <Link href="/marketplace/inbox" className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
                     <Bell className="w-6 h-6" />
                     <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#7b1113] text-white text-xs flex items-center justify-center font-bold">3</span>
-                  </button>
-                  <button className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
+                  </Link>
+                  <Link href="/orders" className="relative p-3 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-colors">
                     <ShoppingCart className="w-6 h-6" />
                     {cart.size > 0 && (
                       <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#d4a33d] text-white text-xs flex items-center justify-center font-bold">{cart.size}</span>
                     )}
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -682,7 +682,7 @@ export default function MarketplacePage() {
                     <div className="text-[14px] mt-0.5 opacity-90">{products.length} products from verified suppliers worldwide</div>
                   </div>
                 </div>
-                <button className="bg-[#8b1c21] border-none text-white px-6 py-3.5 rounded-xl font-semibold text-[15px]">+ Post RFQ</button>
+                <Link href="/rfqs/new" className="bg-[#8b1c21] border-none text-white px-6 py-3.5 rounded-xl font-semibold text-[15px]">+ Post RFQ</Link>
               </div>
 
               <div className="mt-6 bg-white/10 rounded-2xl p-6 grid grid-cols-4 gap-4 text-center">
@@ -717,7 +717,7 @@ export default function MarketplacePage() {
                   className="border-none outline-none w-full text-[15px] ml-3 bg-transparent text-[#333]"
                 />
               </div>
-              <button className="w-[56px] h-[56px] bg-white border-none rounded-xl flex items-center justify-center text-[20px] shadow-sm">⚙️</button>
+              <Link href="/settings" className="w-[56px] h-[56px] bg-white border-none rounded-xl flex items-center justify-center text-[20px] shadow-sm">⚙️</Link>
             </div>
 
             {/* CATEGORIES */}
@@ -808,7 +808,7 @@ export default function MarketplacePage() {
                 <h4 className="text-[22px] font-bold">Trade with Confidence</h4>
                 <p className="text-[12px] mt-1 opacity-90">All suppliers are verified and quality assured</p>
               </div>
-              <button className="bg-white border-none px-5 py-2.5 rounded-xl font-semibold text-[#7b1113] text-[13px]">Learn More</button>
+              <Link href="/settings" className="bg-white border-none px-5 py-2.5 rounded-xl font-semibold text-[#7b1113] text-[13px]">Learn More</Link>
             </div>
           </div>
         )}

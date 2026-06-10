@@ -190,7 +190,7 @@ export default function OrdersPage() {
                   <p className="text-[#101111] font-semibold text-sm">John Doe</p>
                   <p className="text-[#4A4A4A] text-xs">john@company.com</p>
                 </div>
-                <button className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
+                <button onClick={handleLogout} className="p-2 hover:bg-[#E6E2DA] rounded-lg transition-colors">
                   <LogOut className="w-4 h-4 text-[#4A4A4A]" />
                 </button>
               </div>
