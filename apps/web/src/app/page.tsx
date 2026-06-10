@@ -360,12 +360,12 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/rfqs' },
-              { icon: Shield, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/documents' },
-              { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/freight' },
-              { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/ai' },
-              { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/consultations' },
-              { icon: BarChart3, title: 'Trade Analytics', description: 'Track performance, monitor trends, and make data-driven decisions for your trade business.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/analytics' },
+              { icon: Shield, title: 'Compliance & Trade Compliance', description: 'AI-powered HS code classification, duty calculations, and compliance checks. Ensure your shipments meet all regulatory requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/compliance' },
+              { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/rfqs' },
+              { icon: Package, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/documents' },
+              { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/freight' },
+              { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/ai' },
+              { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/consultations' },
             ].map((feature, i) => {
               const Icon = feature.icon;
               return (
