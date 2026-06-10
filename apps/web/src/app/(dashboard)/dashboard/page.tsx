@@ -200,7 +200,7 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 lg:grid-cols-6 gap-3">
               <Link href="/marketplace" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
                   <Search className="w-5 h-5 text-[#154230]" />
@@ -250,18 +250,18 @@ export default function DashboardPage() {
                 <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
               </Link>
 
-              <Link href="/ai" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">AI</span>
-              </Link>
-
               <Link href="/compliance" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-[#154230]" />
                 </div>
                 <span className="text-[#4A4A4A] text-xs font-medium">Compliance</span>
+              </Link>
+
+              <Link href="/ai" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">AI</span>
               </Link>
 
               <Link href="/billing" className="flex flex-col items-center gap-2">
@@ -283,6 +283,20 @@ export default function DashboardPage() {
                   <TrendingUp className="w-5 h-5 text-[#154230]" />
                 </div>
                 <span className="text-[#4A4A4A] text-xs font-medium">Analytics</span>
+              </Link>
+
+              <Link href="/network" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <User className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Network</span>
+              </Link>
+
+              <Link href="/messages" className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5 text-[#154230]" />
+                </div>
+                <span className="text-[#4A4A4A] text-xs font-medium">Messages</span>
               </Link>
             </div>
           </div>
@@ -405,11 +419,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions & Stats Row */}
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="text-[#101111] font-bold text-lg mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 xl:grid-cols-3 gap-4">
                 <Link href="/marketplace" className="flex flex-col items-center gap-3">
                   <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
                     <Search className="w-6 h-6 text-[#154230]" />
@@ -424,24 +438,59 @@ export default function DashboardPage() {
                   <span className="text-[#4A4A4A] text-sm font-medium">Post RFQ</span>
                 </Link>
 
-                <Link href="/documents" className="flex flex-col items-center gap-3">
+                <Link href="/compliance" className="flex flex-col items-center gap-3">
                   <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
                     <Shield className="w-6 h-6 text-[#154230]" />
                   </div>
-                  <span className="text-[#4A4A4A] text-sm font-medium">Documents</span>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Compliance</span>
                 </Link>
 
                 <Link href="/ai" className="flex flex-col items-center gap-3">
                   <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
                     <BarChart3 className="w-6 h-6 text-[#154230]" />
                   </div>
-                  <span className="text-[#4A4A4A] text-sm font-medium">AI Assist</span>
+                  <span className="text-[#4A4A4A] text-sm font-medium">AI</span>
+                </Link>
+
+                <Link href="/orders" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <Truck className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Orders</span>
+                </Link>
+
+                <Link href="/documents" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <Package className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Documents</span>
+                </Link>
+
+                <Link href="/freight" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <Truck className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Freight</span>
+                </Link>
+
+                <Link href="/network" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <User className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Network</span>
+                </Link>
+
+                <Link href="/messages" className="flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center hover:bg-[#154230]/20 transition-colors">
+                    <MessageSquare className="w-6 h-6 text-[#154230]" />
+                  </div>
+                  <span className="text-[#4A4A4A] text-sm font-medium">Messages</span>
                 </Link>
               </div>
             </div>
 
             {/* Stats Cards */}
-            <div className="col-span-2 bg-[#5D1E21] rounded-2xl p-6">
+            <div className="xl:col-span-2 bg-[#5D1E21] rounded-2xl p-6">
               <div className="grid grid-cols-2 gap-6 h-full">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center">
