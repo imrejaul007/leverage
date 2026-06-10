@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Star, CheckCircle, Calendar, MessageSquare, Bell, Home, FileText, User, X, Menu, Settings, LogOut, Plus, Truck, Package, BarChart3 } from 'lucide-react';
+import { Search, Star, CheckCircle, Calendar, MessageSquare, Bell, X, Menu, Settings, LogOut } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
+import Sidebar, { MobileSidebar } from '@/components/Sidebar';
 
 interface Expert {
   id: string;
@@ -24,19 +25,6 @@ interface Expert {
 const experts: Expert[] = [
   { id: '1', name: 'Rakesh Sharma', title: 'Shipping Consultant', initials: 'RS', rating: 4.9, reviews: 128, price: 3000, duration: '15–30 mins', online: true, verified: true, specialties: ['Freight Forwarding', 'Customs', 'Trade Compliance'], bio: '15+ years experience in international shipping and logistics.' },
   { id: '2', name: 'Anita Iyer', title: 'Trade Finance Expert', initials: 'AI', rating: 4.8, reviews: 96, price: 2500, duration: '15–30 mins', online: true, verified: true, specialties: ['Trade Finance', 'Letter of Credit', 'Banking & Payments'], bio: 'Expert in trade finance solutions with 12+ years experience.' },
-];
-
-const sidebarLinks = [
-  { href: '/dashboard', icon: Home, label: 'Dashboard' },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs', icon: FileText, label: 'RFQs' },
-  { href: '/orders', icon: Truck, label: 'Orders' },
-  { href: '/documents', icon: Package, label: 'Documents' },
-  { href: '/consultations', icon: Calendar, label: 'Consultations', active: true },
-  { href: '/network', icon: User, label: 'Network' },
-  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
-  { href: '/messages', icon: MessageSquare, label: 'Messages' },
-  { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
 
@@ -61,18 +49,7 @@ export default function ConsultationsPage() {
         <div className="p-6 border-b border-black/5">
           <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
         </div>
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {sidebarLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = link.active;
-            return (
-              <Link key={link.href} href={link.href} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
-                <Icon className="w-5 h-5" />
-                <span className="font-medium text-sm">{link.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <Sidebar />
         <div className="p-4 border-t border-black/5">
           <div className="flex items-center gap-3 px-4 py-3">
             <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
@@ -92,46 +69,7 @@ export default function ConsultationsPage() {
       {/* ============================================ */}
       {/* MOBILE SIDEBAR OVERLAY */}
       {/* ============================================ */}
-      {mobileSidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileSidebarOpen(false)} />
-          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white z-50 flex flex-col">
-            <div className="p-6 border-b border-black/5 flex items-center justify-between">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
-              <button onClick={() => setMobileSidebarOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#E6E2DA]">
-                <X className="w-5 h-5 text-[#4A4A4A]" />
-              </button>
-            </div>
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-              {sidebarLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = link.active;
-                return (
-                  <Link key={link.href} href={link.href} onClick={() => setMobileSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'}`}>
-                    <Icon className="w-5 h-5" />
-                    <span className="font-medium text-sm">{link.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-            <div className="p-4 border-t border-black/5">
-              <div className="flex items-center gap-3 px-4 py-3">
-                <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">JD</span>
-                </div>
-                <div className="flex-1">
-                  <p className="text-[#101111] font-semibold text-sm">John Doe</p>
-                  <p className="text-[#4A4A4A] text-xs">john@company.com</p>
-                </div>
-              </div>
-              <button className="flex items-center gap-3 px-4 py-3 w-full text-[#4A4A4A] hover:bg-[#E6E2DA] rounded-xl mt-2">
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium text-sm">Logout</span>
-              </button>
-            </div>
-          </aside>
-        </div>
-      )}
+      <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
 
       {/* ============================================ */}
       {/* MOBILE & TABLET HEADER (below lg) */}

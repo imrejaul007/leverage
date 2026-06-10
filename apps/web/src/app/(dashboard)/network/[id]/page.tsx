@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import BottomNav from '@/components/BottomNav';
 
 export default function CompanyProfilePage() {
   return (
@@ -172,6 +173,9 @@ export default function CompanyProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="network" />
     </div>
   );
 }

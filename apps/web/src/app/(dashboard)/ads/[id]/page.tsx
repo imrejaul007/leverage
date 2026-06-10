@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import BottomNav from '@/components/BottomNav';
 
 export default function CampaignDetailPage() {
   return (
@@ -154,6 +155,9 @@ export default function CampaignDetailPage() {
           </dl>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="ads" />
     </div>
   );
 }

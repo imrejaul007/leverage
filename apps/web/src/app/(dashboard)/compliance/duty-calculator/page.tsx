@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import BottomNav from '@/components/BottomNav';
 
 export default function DutyCalculatorPage() {
   const [formData, setFormData] = useState({
@@ -161,6 +162,9 @@ export default function DutyCalculatorPage() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="compliance" />
     </div>
   );
 }

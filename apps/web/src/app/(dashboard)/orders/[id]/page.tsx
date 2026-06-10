@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import BottomNav from '@/components/BottomNav';
 
 interface Order {
   id: string;
@@ -205,6 +206,9 @@ export default function OrderDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="orders" />
     </div>
   );
 }

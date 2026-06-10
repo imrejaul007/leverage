@@ -26,18 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
-
-const sidebarLinks = [
-  { href: '/dashboard', icon: Home, label: 'Dashboard', active: true },
-  { href: '/marketplace', icon: Search, label: 'Browse' },
-  { href: '/rfqs', icon: FileText, label: 'RFQs' },
-  { href: '/orders', icon: Truck, label: 'Orders' },
-  { href: '/documents', icon: Package, label: 'Documents' },
-  { href: '/network', icon: User, label: 'Network' },
-  { href: '/ai', icon: BarChart3, label: 'AI Assistant' },
-  { href: '/messages', icon: MessageSquare, label: 'Messages' },
-  { href: '/settings', icon: Settings, label: 'Settings' },
-];
+import Sidebar, { MobileSidebar } from '@/components/Sidebar';
 
 
 export default function DashboardPage() {
@@ -94,26 +83,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {sidebarLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = link.active;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                  isActive
-                    ? 'bg-[#154230] text-white'
-                    : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium text-sm">{link.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <Sidebar onClose={() => setSidebarOpen(false)} />
 
         {/* User Profile */}
         <div className="p-4 border-t border-black/5">
@@ -161,51 +131,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div className="fixed inset-0 z-50 flex">
-            <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-            <aside className="relative w-72 bg-white h-full flex flex-col shadow-xl">
-              <div className="flex items-center justify-between p-6 border-b border-black/5">
-                <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
-                <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-[#E6E2DA] rounded-lg">
-                  <X className="w-5 h-5 text-[#4A4A4A]" />
-                </button>
-              </div>
-              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                {sidebarLinks.map((link) => {
-                  const Icon = link.icon;
-                  const isActive = link.active;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                        isActive
-                          ? 'bg-[#154230] text-white'
-                          : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="font-medium text-sm">{link.label}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
-              <div className="p-4 border-t border-black/5">
-                <div className="flex items-center gap-3 px-4 py-3">
-                  <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">JD</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-[#101111] font-semibold text-sm">John Doe</p>
-                    <p className="text-[#4A4A4A] text-xs">john@company.com</p>
-                  </div>
-                </div>
-              </div>
-            </aside>
-          </div>
-        )}
+        <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
 
       {/* Main Content */}

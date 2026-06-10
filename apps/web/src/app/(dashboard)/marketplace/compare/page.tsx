@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import BottomNav from '@/components/BottomNav';
 
 interface Supplier {
   id: string;
@@ -238,6 +239,9 @@ export default function ComparePage() {
           </Link>
         ))}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="marketplace" />
     </div>
   );
 }

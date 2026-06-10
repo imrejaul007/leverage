@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import BottomNav from '@/components/BottomNav';
 
 interface Product {
   id: string;
@@ -228,6 +229,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="products" />
     </div>
   );
 }

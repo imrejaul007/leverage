@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import BottomNav from '@/components/BottomNav';
 
 interface HSCode {
   code: string;
@@ -228,6 +229,9 @@ export default function HSCodesPage() {
           )}
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="compliance" />
     </div>
   );
 }

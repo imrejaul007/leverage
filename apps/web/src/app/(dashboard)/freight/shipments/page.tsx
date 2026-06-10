@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import BottomNav from '@/components/BottomNav';
 
 interface Shipment {
   id: string;
@@ -162,6 +163,9 @@ export default function ShipmentsPage() {
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="freight" />
     </div>
   );
 }

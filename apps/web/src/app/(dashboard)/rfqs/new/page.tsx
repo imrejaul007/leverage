@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import BottomNav from '@/components/BottomNav';
 
 const steps = [
   { id: 1, name: 'Product Category', description: 'Select product category and type' },
@@ -385,6 +386,9 @@ export default function NewRfqPage() {
           )}
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="rfqs" />
     </div>
   );
 }

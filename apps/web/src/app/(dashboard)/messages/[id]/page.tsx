@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import BottomNav from '@/components/BottomNav';
 
 interface Message {
   id: string;
@@ -170,6 +171,9 @@ export default function MessageDetailPage() {
         </div>
         <p className="text-[#D8CCBC]/30 text-xs mt-2 text-center">Press Enter to send, Shift+Enter for new line</p>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="inbox" />
     </div>
   );
 }

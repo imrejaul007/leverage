@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import BottomNav from '@/components/BottomNav';
 
 export default function NewProductPage() {
   const [formData, setFormData] = useState({
@@ -151,6 +152,9 @@ export default function NewProductPage() {
           </button>
         </div>
       </form>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="products" />
     </div>
   );
 }

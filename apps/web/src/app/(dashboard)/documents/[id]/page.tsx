@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import BottomNav from '@/components/BottomNav';
 
 interface Document {
   id: string;
@@ -170,6 +171,9 @@ export default function DocumentDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="documents" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import BottomNav from '@/components/BottomNav';
 
 interface Message {
   id: string;
@@ -217,6 +218,9 @@ export default function InboxPage() {
         <button className="fixed bottom-[90px] right-4 w-[50px] h-[50px] rounded-full bg-[#7b1113] text-white border-none text-[24px] shadow-[0_6px_12px_rgba(0,0,0,.2)] flex items-center justify-center">
           +
         </button>
+
+        {/* Bottom Navigation */}
+        <BottomNav activeItem="inbox" />
       </div>
 
       {/* ==================== TABLET (640px - 1023px) ==================== */}
@@ -318,6 +322,9 @@ export default function InboxPage() {
         <button className="fixed bottom-[90px] right-6 w-[56px] h-[56px] rounded-full bg-[#7b1113] text-white border-none text-[28px] shadow-[0_8px_16px_rgba(0,0,0,.2)] flex items-center justify-center">
           +
         </button>
+
+        {/* Bottom Navigation */}
+        <BottomNav activeItem="inbox" />
       </div>
 
       {/* ==================== DESKTOP (≥ 1024px) ==================== */}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import BottomNav from '@/components/BottomNav';
 
 interface Supplier {
   id: string;
@@ -631,6 +632,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNav activeItem="marketplace" />
     </div>
   );
 }
