@@ -33,7 +33,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
             </Link>
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/marketplace" className="text-[#4A4A4A] hover:text-[#101111] transition-colors text-sm font-medium">
@@ -360,12 +360,12 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20' },
-              { icon: Shield, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20' },
-              { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20' },
-              { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20' },
-              { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20' },
-              { icon: BarChart3, title: 'Trade Analytics', description: 'Track performance, monitor trends, and make data-driven decisions for your trade business.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20' },
+              { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/rfqs' },
+              { icon: Shield, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/documents' },
+              { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/freight' },
+              { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/ai' },
+              { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/consultations' },
+              { icon: BarChart3, title: 'Trade Analytics', description: 'Track performance, monitor trends, and make data-driven decisions for your trade business.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/analytics' },
             ].map((feature, i) => {
               const Icon = feature.icon;
               return (
@@ -386,7 +386,7 @@ export default function HomePage() {
                   <p className="text-sm text-[#4A4A4A] leading-relaxed mb-4">{feature.description}</p>
 
                   {/* Learn more link */}
-                  <Link href="#" className={`inline-flex items-center gap-1 text-sm font-medium ${feature.bgColor.replace('bg-', 'text-')} group-hover:gap-2 transition-all`}>
+                  <Link href={feature.href || '/marketplace'} className={`inline-flex items-center gap-1 text-sm font-medium ${feature.bgColor.replace('bg-', 'text-')} group-hover:gap-2 transition-all`}>
                     Learn more <ArrowRight className="w-4 h-4" />
                   </Link>
 
@@ -528,7 +528,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div className="col-span-2 md:col-span-1">
               <div className="mb-4">
-                <Image src="/logo-white.png" alt="LEVERAGE" width={140} height={46} className="object-contain brightness-0 invert" />
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain" />
               </div>
               <p className="text-white/70 text-sm mb-4">
                 The operating system for global trade.
