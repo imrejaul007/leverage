@@ -159,44 +159,6 @@ export default function DashboardPage() {
 
         {/* Mobile Content Area */}
         <div className="lg:hidden px-4 -mt-6 space-y-5 pb-24">
-          {/* Quick Stats Grid - 2x2 */}
-          <div className="grid grid-cols-2 gap-3">
-            <Link href="/rfqs" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-[#101111]">{stats.activeRFQs}</p>
-              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Active RFQs</p>
-            </Link>
-
-            <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 rounded-xl bg-[#154230] flex items-center justify-center mb-3">
-                <Truck className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-[#101111]">{stats.shipments}</p>
-              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">In Transit</p>
-            </Link>
-
-            <Link href="/orders" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
-                <Package className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-[#101111]">{stats.orders}</p>
-              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Total Orders</p>
-            </Link>
-
-            <Link href="/marketplace/inbox" className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative">
-              <div className="w-10 h-10 rounded-xl bg-[#5D1E21] flex items-center justify-center mb-3">
-                <MessageSquare className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-[#101111]">{stats.unreadMessages}</p>
-              <p className="text-[#4A4A4A] text-sm font-semibold mt-1">Messages</p>
-              {stats.unreadMessages > 0 && (
-                <span className="absolute top-4 right-4 w-4 h-4 bg-[#A6824A] rounded-full"></span>
-              )}
-            </Link>
-          </div>
-
           {/* Quick Actions */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
@@ -352,6 +314,35 @@ export default function DashboardPage() {
               <ArrowRight className="w-5 h-5 text-[#A6824A]" />
             </div>
           </Link>
+
+          {/* Stats Section - at bottom */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <h3 className="text-[#101111] font-bold text-base mb-4">Your Stats</h3>
+            <div className="grid grid-cols-4 gap-3">
+              <Link href="/rfqs" className="text-center">
+                <p className="text-2xl font-bold text-[#154230]">{stats.activeRFQs}</p>
+                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Active RFQs</p>
+              </Link>
+
+              <Link href="/orders" className="text-center">
+                <p className="text-2xl font-bold text-[#154230]">{stats.shipments}</p>
+                <p className="text-[#4A4A4A] text-xs font-medium mt-1">In Transit</p>
+              </Link>
+
+              <Link href="/orders" className="text-center">
+                <p className="text-2xl font-bold text-[#5D1E21]">{stats.orders}</p>
+                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Total Orders</p>
+              </Link>
+
+              <Link href="/marketplace/inbox" className="text-center relative">
+                <p className="text-2xl font-bold text-[#5D1E21]">{stats.unreadMessages}</p>
+                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Messages</p>
+                {stats.unreadMessages > 0 && (
+                  <span className="absolute top-0 right-2 w-4 h-4 bg-[#A6824A] rounded-full"></span>
+                )}
+              </Link>
+            </div>
+          </div>
 
           {/* Mobile Burgundy Stats Bar */}
           <div className="bg-[#5D1E21] rounded-2xl p-4">

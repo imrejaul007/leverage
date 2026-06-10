@@ -1,12 +1,45 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import {
+  Search,
+  Plus,
+  MessageSquare,
+  Bell,
+  Menu,
+  X,
+  Home,
+  Package,
+  Truck,
+  FileText,
+  Send,
+  Phone,
+  Video,
+  Info,
+  Paperclip,
+  Smile,
+  Settings as SettingsIcon,
+  ChevronRight,
+  ArrowLeft,
+} from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
+
+const sidebarLinks = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/marketplace', icon: Search, label: 'Browse' },
+  { href: '/rfqs', icon: FileText, label: 'RFQs' },
+  { href: '/orders', icon: Truck, label: 'Orders' },
+  { href: '/documents', icon: Package, label: 'Documents' },
+  { href: '/network', icon: MessageSquare, label: 'Network' },
+];
 
 interface Message {
   id: string;
   type: 'quote' | 'bid' | 'requirement' | 'response';
-  borderColor: 'gold' | 'green' | 'red';
+  borderColor: string;
   productName: string;
   productImage: string;
   supplierName: string;
@@ -15,25 +48,27 @@ interface Message {
   price?: string;
   status?: string;
   fullMessage?: string;
+  unread?: boolean;
 }
 
 const messages: Message[] = [
   {
     id: '1',
     type: 'quote',
-    borderColor: 'gold',
+    borderColor: '#A6824A',
     productName: 'Quote Request – Basmati Rice 1121',
-    productImage: 'https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=300',
+    productImage: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300',
     supplierName: 'Global Trade Exports',
     date: 'Jan 20, 2024',
     preview: 'We can offer premium quality...',
     price: '$820',
     fullMessage: 'We can offer $820/MT for 100MT with CIF Dubai terms. Quality guaranteed as per international standards.',
+    unread: true,
   },
   {
     id: '2',
     type: 'bid',
-    borderColor: 'green',
+    borderColor: '#154230',
     productName: 'Bid Submitted – Solar Panels',
     productImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=300',
     supplierName: 'Shanghai Import Co.',
@@ -41,11 +76,12 @@ const messages: Message[] = [
     preview: 'Your bid is awaiting review.',
     price: '$160',
     fullMessage: 'Your bid of $160/unit is awaiting supplier response. We will notify you once reviewed.',
+    unread: true,
   },
   {
     id: '3',
     type: 'requirement',
-    borderColor: 'red',
+    borderColor: '#5D1E21',
     productName: 'Requirements Sent – Cotton Yarn',
     productImage: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300',
     supplierName: 'Global Trade Exports',
@@ -57,7 +93,7 @@ const messages: Message[] = [
   {
     id: '4',
     type: 'response',
-    borderColor: 'gold',
+    borderColor: '#A6824A',
     productName: 'Quote Received – Olive Oil',
     productImage: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300',
     supplierName: 'Turkey Merchants',
@@ -69,7 +105,7 @@ const messages: Message[] = [
   {
     id: '5',
     type: 'quote',
-    borderColor: 'gold',
+    borderColor: '#A6824A',
     productName: 'Quote – Black Tea CTC',
     productImage: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300',
     supplierName: 'India Tea Co.',
@@ -80,35 +116,13 @@ const messages: Message[] = [
   },
 ];
 
-const mainChat = {
-  id: 'main',
-  type: 'requirement' as const,
-  borderColor: 'red' as const,
-  productName: 'Requirements Sent – Cotton Yarn',
-  productImage: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300',
-  supplierName: 'Global Trade Exports',
-  date: 'Jan 18, 2024',
-  status: 'Viewed',
-  fullMessage: 'Supplier viewed your requirements. Awaiting response.',
-};
-
-const borderColors = {
-  gold: '#d4a33d',
-  green: '#0f7a58',
-  red: '#7b1113',
-};
-
-const typeLabels = {
-  quote: 'Quote',
-  bid: 'Bid',
-  requirement: 'Requirement',
-  response: 'Response',
-};
-
 export default function InboxPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [replyText, setReplyText] = useState('');
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
+  const router = useRouter();
 
   const handleSendReply = () => {
     if (replyText.trim()) {
@@ -116,285 +130,125 @@ export default function InboxPage() {
     }
   };
 
-  const unreadCount = 2;
+  const handleViewDetails = (msg: Message) => {
+    router.push(`/marketplace/${msg.id}`);
+  };
+
+  const handleReply = (msg: Message) => {
+    setSelectedMessage(msg);
+    setShowMobileDetail(true);
+  };
+
+  const unreadCount = messages.filter(m => m.unread).length;
 
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
-      {/* ==================== MOBILE (< 640px) ==================== */}
-      <div className="sm:hidden min-h-screen bg-[#f7f5f1] pb-28">
-        {/* Hero Section */}
-        <div className="px-4 py-3 flex justify-between items-center">
-          <div>
-            <h4 className="text-xs font-semibold text-[#333]">Marketplace</h4>
-            <p className="text-xs text-[#777] mt-0.5">Browse suppliers & products</p>
-            <h1 className="text-[36px] font-extrabold mt-2 text-[#18352b] leading-none">Inbox</h1>
-            <p className="text-sm mt-1.5 text-[#7b1113] font-semibold">● {unreadCount} unread messages</p>
-          </div>
-          <div className="text-[60px] leading-none">📩</div>
+    <div className="min-h-screen bg-[#E6E2DA]">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 flex-col z-40">
+        <div className="p-6 border-b border-black/5">
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
         </div>
 
-        {/* Search */}
-        <div className="px-4 py-2 flex gap-2">
-          <div className="flex-1 h-11 bg-white rounded-[12px] flex items-center px-3 shadow-[0_1px_3px_rgba(0,0,0,.05)]">
-            <span className="text-sm">🔍</span>
-            <input
-              type="text"
-              placeholder="Search messages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border-none outline-none bg-transparent text-sm ml-2"
-            />
-          </div>
-          <button className="w-11 h-11 border-none rounded-[12px] bg-white text-lg flex items-center justify-center shadow-sm">⚙️</button>
-        </div>
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  link.href === '/marketplace' ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
-        {/* Main Chat Card */}
-        <div className="mx-4 mt-2 bg-white rounded-[18px] p-3.5 border-l-[4px] border-[#7b1113]">
-          <div className="flex gap-2.5 items-center">
-            <div className="w-[52px] h-[52px] rounded-[8px] overflow-hidden bg-[#ddd]">
-              <img src={mainChat.productImage} alt={mainChat.productName} className="w-full h-full object-cover" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-[#101111] truncate">{mainChat.productName}</div>
-              <div className="text-xs text-[#666] mt-0.5">{mainChat.supplierName}</div>
-            </div>
-            <div className="bg-[#7b1113] text-white px-2 py-1 text-[10px] rounded-lg font-semibold flex-shrink-0">
-              {mainChat.status}
-            </div>
-          </div>
-
-          <div className="mt-3 bg-[#f4f1ec] p-3 rounded-[8px]">
-            <strong className="block mb-0.5 text-xs text-[#101111]">{mainChat.supplierName}</strong>
-            <span className="text-xs text-[#101111]">Supplier viewed your requirements.</span>
-            <br />
-            <span className="text-xs text-[#101111]">Awaiting response.</span>
-          </div>
-
-          <div className="mt-2.5 flex gap-2">
-            <input
-              type="text"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Type your reply..."
-              className="flex-1 h-10 border border-[#ddd] rounded-[8px] px-2.5 text-sm outline-none focus:border-[#0f7a58]"
-            />
-            <button
-              onClick={handleSendReply}
-              className="w-10 h-10 border-none rounded-[8px] bg-[#7b1113] text-white text-base flex items-center justify-center"
-            >
-              ➤
-            </button>
-          </div>
-        </div>
-
-        {/* Messages List */}
-        <div className="px-3 mt-3">
-          {messages.map((msg) => (
-            <button
-              key={msg.id}
-              onClick={() => setSelectedMessage(msg)}
-              className="w-full bg-white rounded-[16px] p-3 flex justify-between items-center mb-2.5 relative overflow-hidden cursor-pointer hover:bg-[#f5f3ef] transition-colors text-left"
-            >
-              <div
-                className="absolute left-0 top-0 bottom-0 w-[3px]"
-                style={{ backgroundColor: borderColors[msg.borderColor] }}
-              />
-              <div className="flex gap-2.5 pl-2">
-                <div className="w-[50px] h-[50px] rounded-[8px] overflow-hidden bg-[#ddd]">
-                  <img src={msg.productImage} alt={msg.productName} className="w-full h-full object-cover" />
-                </div>
-                <div className="max-w-[160px]">
-                  <div className="text-[10px] text-[#888]">{msg.date}</div>
-                  <h3 className="text-xs font-bold mt-0.5 text-[#101111] line-clamp-1">{msg.productName}</h3>
-                  <p className="text-[11px] text-[#666] mt-0.5 line-clamp-1">{msg.preview}</p>
-                </div>
-              </div>
-              <div className="flex flex-col items-end flex-shrink-0 ml-2">
-                {msg.price && <div className="text-sm font-extrabold text-[#0b5d40]">{msg.price}</div>}
-                {msg.status && <div className="bg-[#f4ead2] px-2 py-0.5 rounded-lg text-[10px] text-[#888]">{msg.status}</div>}
-                <span className="text-[18px] text-[#777] mt-1.5">›</span>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Message Detail Modal */}
-        {selectedMessage && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center" onClick={() => setSelectedMessage(null)}>
-            <div className="bg-white w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl" onClick={e => e.stopPropagation()}>
-              <div className="sticky top-0 bg-white p-4 border-b border-black/5 flex items-center justify-between rounded-t-3xl">
-                <h2 className="text-[#101111] font-semibold">Message</h2>
-                <button onClick={() => setSelectedMessage(null)} className="w-10 h-10 bg-[#f4f0ea] rounded-full flex items-center justify-center hover:bg-[#e9e3da]">
-                  ✕
-                </button>
-              </div>
-              <div className="p-5 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#ddd]">
-                    <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-[#101111] font-semibold">{selectedMessage.productName}</h3>
-                    <p className="text-[#666] text-sm">{selectedMessage.supplierName}</p>
-                  </div>
-                  {selectedMessage.price && (
-                    <div className="text-lg font-bold text-[#0b5d40]">{selectedMessage.price}</div>
-                  )}
-                </div>
-                <div className="bg-[#f4f1ec] rounded-xl p-4">
-                  <p className="text-[#101111] text-sm leading-relaxed">{selectedMessage.fullMessage}</p>
-                </div>
-                <div className="flex gap-3">
-                  <button className="flex-1 bg-[#7b1113] text-white py-3 rounded-xl font-semibold hover:bg-[#6a0f11]">
-                    Reply
-                  </button>
-                  <button className="flex-1 bg-[#f4f1ec] text-[#101111] py-3 rounded-xl font-semibold hover:bg-[#e9e3da]">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Floating Action Button */}
-        <button className="fixed bottom-[90px] right-4 w-[50px] h-[50px] rounded-full bg-[#7b1113] text-white border-none text-[24px] shadow-[0_6px_12px_rgba(0,0,0,.2)] flex items-center justify-center">
-          +
-        </button>
-
-        {/* Bottom Navigation */}
-        <BottomNav activeItem="inbox" />
-      </div>
-
-      {/* ==================== TABLET (640px - 1023px) ==================== */}
-      <div className="hidden sm:block lg:hidden min-h-screen bg-[#f7f5f1] pb-28">
-        {/* Hero Section */}
-        <div className="px-6 py-4 flex justify-between items-center">
-          <div>
-            <h4 className="text-sm font-semibold text-[#333]">Marketplace</h4>
-            <p className="text-sm text-[#777] mt-0.5">Browse suppliers & products</p>
-            <h1 className="text-[48px] font-extrabold mt-4 text-[#18352b] leading-none">Inbox</h1>
-            <p className="text-lg mt-2 text-[#7b1113] font-semibold">● {unreadCount} unread messages</p>
-          </div>
-          <div className="text-[90px] leading-none">📩</div>
-        </div>
-
-        {/* Search */}
-        <div className="px-6 py-3 flex gap-3">
-          <div className="flex-1 h-12 bg-white rounded-[14px] flex items-center px-4 shadow-[0_1px_3px_rgba(0,0,0,.05)]">
-            <span className="text-base">🔍</span>
-            <input
-              type="text"
-              placeholder="Search messages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border-none outline-none bg-transparent text-sm ml-2.5"
-            />
-          </div>
-          <button className="w-12 h-12 border-none rounded-[14px] bg-white text-xl flex items-center justify-center shadow-sm">⚙️</button>
-        </div>
-
-        {/* Main Chat Card */}
-        <div className="mx-5 mt-3 bg-white rounded-[20px] p-4 border-l-[5px] border-[#7b1113]">
-          <div className="flex gap-3 items-center">
-            <div className="w-[62px] h-[62px] rounded-[10px] overflow-hidden bg-[#ddd]">
-              <img src={mainChat.productImage} alt={mainChat.productName} className="w-full h-full object-cover" />
+        <div className="p-4 border-t border-black/5">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-10 h-10 bg-[#A6824A] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">JD</span>
             </div>
             <div className="flex-1">
-              <div className="text-base font-bold text-[#101111]">{mainChat.productName}</div>
-              <div className="text-sm text-[#666] mt-0.5">{mainChat.supplierName}</div>
-            </div>
-            <div className="bg-[#7b1113] text-white px-2.5 py-1.5 text-xs rounded-lg font-semibold">
-              {mainChat.status}
+              <p className="text-[#101111] font-semibold text-sm">John Doe</p>
+              <p className="text-[#4A4A4A] text-xs">john@company.com</p>
             </div>
           </div>
+        </div>
+      </aside>
 
-          <div className="mt-4 bg-[#f4f1ec] p-3.5 rounded-[10px]">
-            <strong className="block mb-1 text-[#101111]">{mainChat.supplierName}</strong>
-            <span className="text-sm text-[#101111]">Supplier viewed your requirements.</span>
-            <br />
-            <span className="text-sm text-[#101111]">Awaiting response.</span>
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside className={`lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-white z-50 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-black/5 flex items-center justify-between">
+          <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+          <button onClick={() => setSidebarOpen(false)} className="w-9 h-9 bg-[#E6E2DA] rounded-full flex items-center justify-center">
+            <X className="w-5 h-5 text-[#4A4A4A]" />
+          </button>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {sidebarLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  link.href === '/marketplace' ? 'bg-[#154230] text-white' : 'text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium text-sm">{link.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Mobile Header */}
+        <div className="lg:hidden px-4 pt-4 pb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button onClick={() => setSidebarOpen(true)} className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <Menu className="w-5 h-5 text-white" />
+            </button>
+            <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
           </div>
-
-          <div className="mt-3 flex gap-2.5">
-            <input
-              type="text"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Type your reply..."
-              className="flex-1 h-11 border border-[#ddd] rounded-[10px] px-3 text-sm outline-none focus:border-[#0f7a58]"
-            />
-            <button
-              onClick={handleSendReply}
-              className="w-12 h-11 border-none rounded-[10px] bg-[#7b1113] text-white text-lg flex items-center justify-center"
-            >
-              ➤
+          <div className="flex items-center gap-2">
+            <Link href="/rfqs/new" className="w-10 h-10 bg-[#154230] rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold">+</span>
+            </Link>
+            <button className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+              <Bell className="w-5 h-5 text-[#4A4A4A]" />
             </button>
           </div>
         </div>
 
-        {/* Messages List - 2 Columns on Tablet */}
-        <div className="px-5 mt-4 grid grid-cols-2 gap-3">
-          {messages.map((msg) => (
-            <button
-              key={msg.id}
-              onClick={() => setSelectedMessage(msg)}
-              className="bg-white rounded-[18px] p-3.5 relative overflow-hidden cursor-pointer hover:bg-[#f5f3ef] transition-colors text-left"
-            >
-              <div
-                className="absolute left-0 top-0 bottom-0 w-1 rounded-[20px]"
-                style={{ backgroundColor: borderColors[msg.borderColor] }}
-              />
-              <div className="flex gap-3 pl-2">
-                <div className="w-[50px] h-[50px] rounded-[8px] overflow-hidden bg-[#ddd]">
-                  <img src={msg.productImage} alt={msg.productName} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[10px] text-[#888]">{msg.date}</div>
-                  <h3 className="text-xs font-bold mt-0.5 text-[#101111] line-clamp-1">{msg.productName}</h3>
-                  {msg.price && <div className="text-sm font-extrabold text-[#0b5d40] mt-1">{msg.price}</div>}
-                </div>
-              </div>
-              <p className="text-[11px] text-[#666] mt-2 pl-2 line-clamp-2">{msg.preview}</p>
-              {msg.status && (
-                <div className="mt-2 ml-2 bg-[#f4ead2] px-2 py-0.5 rounded-lg text-[10px] text-[#888] inline-block">
-                  {msg.status}
-                </div>
-              )}
-            </button>
-          ))}
+        {/* Desktop Header */}
+        <div className="hidden lg:block bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-8 pt-8 pb-6">
+          <h1 className="text-white font-bold text-2xl">Inbox</h1>
+          <p className="text-white/70 text-sm mt-1">Messages & conversations</p>
         </div>
 
-        {/* Floating Action Button */}
-        <button className="fixed bottom-[90px] right-6 w-[56px] h-[56px] rounded-full bg-[#7b1113] text-white border-none text-[28px] shadow-[0_8px_16px_rgba(0,0,0,.2)] flex items-center justify-center">
-          +
-        </button>
-
-        {/* Bottom Navigation */}
-        <BottomNav activeItem="inbox" />
-      </div>
-
-      {/* ==================== DESKTOP (≥ 1024px) ==================== */}
-      <div className="hidden lg:flex h-screen">
-        {/* Left Sidebar - Message List */}
-        <div className="w-[380px] bg-white border-r border-[#eee] flex flex-col flex-shrink-0">
-          {/* Header */}
-          <div className="p-5 border-b border-[#eee]">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h1 className="text-2xl font-extrabold text-[#18352b]">Inbox</h1>
-                <p className="text-sm text-[#7b1113] font-semibold mt-1">● {unreadCount} unread messages</p>
-              </div>
-              <button className="w-10 h-10 rounded-full bg-[#7b1113] text-white border-none text-2xl flex items-center justify-center shadow-md hover:bg-[#6a0f11] transition-colors">
-                +
-              </button>
-            </div>
-
+        {/* Content */}
+        <div className="flex h-[calc(100vh-72px)] lg:h-[calc(100vh-100px)]">
+          {/* Messages List */}
+          <div className={`${showMobileDetail ? 'hidden lg:block' : 'w-full lg:w-[400px]'} bg-white border-r border-black/5 flex flex-col`}>
             {/* Search */}
-            <div className="mt-4">
+            <div className="p-4 border-b border-black/5">
               <div className="flex gap-2">
-                <div className="flex-1 h-11 bg-[#f7f5f1] rounded-[12px] flex items-center px-3">
-                  <span className="text-sm">🔍</span>
+                <div className="flex-1 h-11 bg-[#E6E2DA] rounded-xl flex items-center px-3">
+                  <Search className="w-4 h-4 text-[#888]" />
                   <input
                     type="text"
                     placeholder="Search messages..."
@@ -403,192 +257,210 @@ export default function InboxPage() {
                     className="w-full border-none outline-none bg-transparent text-sm ml-2"
                   />
                 </div>
-                <button className="w-11 h-11 border border-[#eee] rounded-[12px] bg-white text-lg flex items-center justify-center hover:bg-[#f7f5f1] transition-colors">⚙️</button>
+                <button className="w-11 h-11 bg-[#E6E2DA] rounded-xl flex items-center justify-center">
+                  <SettingsIcon className="w-4 h-4 text-[#4A4A4A]" />
+                </button>
               </div>
+            </div>
+
+            {/* Messages List */}
+            <div className="flex-1 overflow-y-auto">
+              {messages.map((msg) => (
+                <button
+                  key={msg.id}
+                  onClick={() => {
+                    setSelectedMessage(msg);
+                    setShowMobileDetail(true);
+                  }}
+                  className={`w-full p-4 border-b border-black/5 text-left hover:bg-[#E6E2DA]/50 transition-colors ${
+                    selectedMessage?.id === msg.id ? 'bg-[#154230]/10' : ''
+                  }`}
+                >
+                  <div className="flex gap-3">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#E6E2DA] flex-shrink-0">
+                      <img src={msg.productImage} alt={msg.productName} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-1.5 h-6 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: msg.borderColor }}
+                            />
+                            <h3 className={`text-sm font-semibold truncate ${msg.unread ? 'text-[#101111]' : 'text-[#4A4A4A]'}`}>
+                              {msg.productName}
+                            </h3>
+                          </div>
+                          <p className="text-xs text-[#4A4A4A] mt-0.5 ml-3.5 truncate">{msg.supplierName}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0 ml-2">
+                          <p className="text-[10px] text-[#888]">{msg.date}</p>
+                          {msg.price && <p className="text-sm font-bold text-[#154230] mt-1">{msg.price}</p>}
+                        </div>
+                      </div>
+                      <p className="text-xs text-[#4A4A4A] mt-1 ml-3.5 truncate">{msg.preview}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Message List */}
-          <div className="flex-1 overflow-y-auto">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                onClick={() => setSelectedMessage(msg)}
-                className={`p-4 border-b border-[#f0f0f0] cursor-pointer hover:bg-[#f7f5f1] transition-colors ${
-                  selectedMessage?.id === msg.id ? 'bg-[#f7f5f1] border-l-4 border-l-[#0f7a58]' : ''
-                }`}
-              >
-                <div className="flex gap-3">
-                  <div className="w-[56px] h-[56px] rounded-[10px] overflow-hidden bg-[#ddd] flex-shrink-0">
-                    <img src={msg.productImage} alt={msg.productName} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-1 h-6 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: borderColors[msg.borderColor] }}
-                          />
-                          <h3 className="text-sm font-bold text-[#101111] truncate">{msg.productName}</h3>
-                        </div>
-                        <p className="text-xs text-[#666] mt-1 ml-3">{msg.supplierName}</p>
+          {/* Chat Area */}
+          <div className={`flex-1 flex flex-col ${!showMobileDetail ? 'hidden lg:flex' : ''}`}>
+            {selectedMessage ? (
+              <>
+                {/* Chat Header */}
+                <div className="p-4 lg:p-6 border-b border-black/5 bg-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 lg:gap-4">
+                      <button
+                        onClick={() => setShowMobileDetail(false)}
+                        className="lg:hidden w-10 h-10 bg-[#E6E2DA] rounded-xl flex items-center justify-center"
+                      >
+                        <ArrowLeft className="w-5 h-5 text-[#4A4A4A]" />
+                      </button>
+                      <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-lg overflow-hidden bg-[#E6E2DA]">
+                        <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
                       </div>
-                      <div className="text-right flex-shrink-0 ml-2">
-                        <p className="text-[11px] text-[#888]">{msg.date}</p>
-                        {msg.price && <p className="text-sm font-extrabold text-[#0b5d40] mt-1">{msg.price}</p>}
+                      <div>
+                        <h2 className="text-base lg:text-lg font-bold text-[#101111]">{selectedMessage.productName}</h2>
+                        <p className="text-sm text-[#4A4A4A]">{selectedMessage.supplierName}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span
+                            className="px-2 py-0.5 rounded text-xs font-semibold text-white"
+                            style={{ backgroundColor: selectedMessage.borderColor }}
+                          >
+                            {selectedMessage.status || selectedMessage.type}
+                          </span>
+                          <span className="text-xs text-[#888]">{selectedMessage.date}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between mt-1.5 ml-3">
-                      <p className="text-xs text-[#666] line-clamp-1">{msg.preview}</p>
-                      {msg.status && (
-                        <span className="ml-2 px-2 py-0.5 bg-[#f4ead2] rounded-lg text-[10px] text-[#888] flex-shrink-0">
-                          {msg.status}
-                        </span>
+                    <div className="hidden lg:flex items-center gap-2">
+                      <button className="w-10 h-10 rounded-full bg-[#E6E2DA] flex items-center justify-center hover:bg-[#ddd] transition-colors">
+                        <Phone className="w-4 h-4 text-[#4A4A4A]" />
+                      </button>
+                      <button className="w-10 h-10 rounded-full bg-[#E6E2DA] flex items-center justify-center hover:bg-[#ddd] transition-colors">
+                        <Video className="w-4 h-4 text-[#4A4A4A]" />
+                      </button>
+                      <button className="w-10 h-10 rounded-full bg-[#E6E2DA] flex items-center justify-center hover:bg-[#ddd] transition-colors">
+                        <Info className="w-4 h-4 text-[#4A4A4A]" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-[#f8f6f3]">
+                  {/* Received Message */}
+                  <div className="flex gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      {selectedMessage.supplierName.charAt(0)}
+                    </div>
+                    <div className="flex-1 max-w-[560px]">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-semibold text-[#101111]">{selectedMessage.supplierName}</span>
+                        <span className="text-xs text-[#888]">{selectedMessage.date}</span>
+                      </div>
+                      <div className="bg-white rounded-2xl rounded-tl-sm p-4 shadow-sm">
+                        <p className="text-sm text-[#101111] leading-relaxed">{selectedMessage.fullMessage}</p>
+                      </div>
+                      {selectedMessage.price && (
+                        <div className="mt-3 bg-white rounded-xl p-4 shadow-sm">
+                          <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-lg overflow-hidden bg-[#E6E2DA]">
+                              <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-[#101111]">{selectedMessage.productName}</p>
+                              <p className="text-lg font-bold text-[#154230] mt-0.5">{selectedMessage.price}</p>
+                              <p className="text-xs text-[#666] mt-0.5">Min. Order: 100 MT</p>
+                            </div>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
+
+                  {/* Sent Message */}
+                  <div className="flex gap-3 justify-end">
+                    <div className="flex-1 max-w-[560px] flex flex-col items-end">
+                      <div className="bg-[#154230] text-white rounded-2xl rounded-tr-sm p-4 shadow-sm">
+                        <p className="text-sm leading-relaxed">I am interested in your product. Please send me more details about the pricing and delivery timeline.</p>
+                      </div>
+                      <span className="text-xs text-[#888] mt-2">10:32 AM · Delivered</span>
+                    </div>
+                  </div>
+
+                  {/* Another Received Message */}
+                  <div className="flex gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#154230] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      {selectedMessage.supplierName.charAt(0)}
+                    </div>
+                    <div className="flex-1 max-w-[560px]">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-semibold text-[#101111]">{selectedMessage.supplierName}</span>
+                        <span className="text-xs text-[#888]">10:35 AM</span>
+                      </div>
+                      <div className="bg-white rounded-2xl rounded-tl-sm p-4 shadow-sm">
+                        <p className="text-sm text-[#101111] leading-relaxed">Thank you for your interest! Here are the details:</p>
+                        <ul className="text-sm text-[#101111] mt-3 space-y-1.5">
+                          <li>• Price: {selectedMessage.price} for bulk orders</li>
+                          <li>• Delivery: 15-20 days by sea</li>
+                          <li>• Payment: LC at sight</li>
+                          <li>• Sample: Available on request</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reply Input */}
+                <div className="p-4 lg:p-5 bg-white border-t border-black/5">
+                  <div className="flex gap-3 items-center">
+                    <button className="hidden lg:block w-11 h-11 rounded-full bg-[#E6E2DA] text-base flex items-center justify-center hover:bg-[#ddd] transition-colors">
+                      <Paperclip className="w-4 h-4 text-[#4A4A4A]" />
+                    </button>
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Type your reply..."
+                        className="w-full h-12 bg-[#E6E2DA] rounded-full px-5 text-sm outline-none focus:ring-2 focus:ring-[#154230]/30"
+                      />
+                    </div>
+                    <button className="hidden lg:block w-11 h-11 rounded-full bg-[#E6E2DA] text-base flex items-center justify-center hover:bg-[#ddd] transition-colors">
+                      <Smile className="w-4 h-4 text-[#4A4A4A]" />
+                    </button>
+                    <button
+                      onClick={handleSendReply}
+                      className="w-12 h-12 rounded-full bg-[#154230] text-white flex items-center justify-center shadow-md hover:bg-[#1a5a3a] transition-colors"
+                    >
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center bg-[#f8f6f3]">
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white flex items-center justify-center shadow-md">
+                    <MessageSquare className="w-10 h-10 text-[#154230]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#101111] mb-2">Select a message</h3>
+                  <p className="text-sm text-[#666]">Choose a conversation from the list</p>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
-
-        {/* Right Side - Chat Area */}
-        <div className="flex-1 flex flex-col bg-[#f7f5f1]">
-          {selectedMessage ? (
-            <>
-              {/* Chat Header */}
-              <div className="bg-white p-5 border-b border-[#eee]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-[56px] h-[56px] rounded-[10px] overflow-hidden bg-[#ddd] flex-shrink-0">
-                      <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <h2 className="text-base font-bold text-[#101111]">{selectedMessage.productName}</h2>
-                      <p className="text-sm text-[#666] mt-0.5">{selectedMessage.supplierName}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span
-                          className="px-2.5 py-1 rounded-lg text-xs font-semibold text-white"
-                          style={{ backgroundColor: borderColors[selectedMessage.borderColor] }}
-                        >
-                          {selectedMessage.status || typeLabels[selectedMessage.type]}
-                        </span>
-                        <span className="text-xs text-[#888]">{selectedMessage.date}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="w-10 h-10 rounded-full bg-[#f7f5f1] text-lg flex items-center justify-center hover:bg-[#eee] transition-colors">📞</button>
-                    <button className="w-10 h-10 rounded-full bg-[#f7f5f1] text-lg flex items-center justify-center hover:bg-[#eee] transition-colors">📹</button>
-                    <button className="w-10 h-10 rounded-full bg-[#f7f5f1] text-lg flex items-center justify-center hover:bg-[#eee] transition-colors">ℹ️</button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-5">
-                {/* Received Message */}
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#0f7a58] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {selectedMessage.supplierName.charAt(0)}
-                  </div>
-                  <div className="flex-1 max-w-[560px]">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-semibold text-[#101111]">{selectedMessage.supplierName}</span>
-                      <span className="text-xs text-[#888]">{selectedMessage.date}</span>
-                    </div>
-                    <div className="bg-white rounded-2xl rounded-tl-sm p-4 shadow-sm">
-                      <p className="text-sm text-[#101111] leading-relaxed">{selectedMessage.fullMessage}</p>
-                    </div>
-                    {selectedMessage.price && (
-                      <div className="mt-3 bg-white rounded-xl p-4 shadow-sm">
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-lg overflow-hidden bg-[#ddd]">
-                            <img src={selectedMessage.productImage} alt={selectedMessage.productName} className="w-full h-full object-cover" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold text-[#101111]">{selectedMessage.productName}</p>
-                            <p className="text-base font-extrabold text-[#0b5d40] mt-0.5">{selectedMessage.price}</p>
-                            <p className="text-xs text-[#666] mt-0.5">Min. Order: 100 MT</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Sent Message */}
-                <div className="flex gap-4 justify-end">
-                  <div className="flex-1 max-w-[560px] flex flex-col items-end">
-                    <div className="bg-[#0f7a58] text-white rounded-2xl rounded-tr-sm p-4 shadow-sm">
-                      <p className="text-sm leading-relaxed">I am interested in your product. Please send me more details about the pricing and delivery timeline.</p>
-                    </div>
-                    <span className="text-xs text-[#888] mt-2">10:32 AM · Delivered</span>
-                  </div>
-                </div>
-
-                {/* Another Received Message */}
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#0f7a58] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {selectedMessage.supplierName.charAt(0)}
-                  </div>
-                  <div className="flex-1 max-w-[560px]">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-semibold text-[#101111]">{selectedMessage.supplierName}</span>
-                      <span className="text-xs text-[#888]">10:35 AM</span>
-                    </div>
-                    <div className="bg-white rounded-2xl rounded-tl-sm p-4 shadow-sm">
-                      <p className="text-sm text-[#101111] leading-relaxed">Thank you for your interest! Here are the details:</p>
-                      <ul className="text-sm text-[#101111] mt-3 space-y-1.5">
-                        <li>• Price: {selectedMessage.price} for bulk orders</li>
-                        <li>• Delivery: 15-20 days by sea</li>
-                        <li>• Payment: LC at sight</li>
-                        <li>• Sample: Available on request</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Reply Input */}
-              <div className="p-5 bg-white border-t border-[#eee]">
-                <div className="flex gap-3 items-center">
-                  <button className="w-11 h-11 rounded-full bg-[#f7f5f1] text-base flex items-center justify-center hover:bg-[#eee] transition-colors">📎</button>
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Type your reply..."
-                      className="w-full h-12 bg-[#f7f5f1] rounded-full px-5 text-sm outline-none focus:ring-2 focus:ring-[#0f7a58]/30"
-                    />
-                  </div>
-                  <button className="w-11 h-11 rounded-full bg-[#f7f5f1] text-base flex items-center justify-center hover:bg-[#eee] transition-colors">😊</button>
-                  <button
-                    onClick={handleSendReply}
-                    className="w-12 h-12 rounded-full bg-[#7b1113] text-white border-none text-lg flex items-center justify-center shadow-md hover:bg-[#6a0f11] transition-colors"
-                  >
-                    ➤
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : (
-            /* Empty State */
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-white flex items-center justify-center shadow-md">
-                  <span className="text-5xl">💬</span>
-                </div>
-                <h3 className="text-xl font-bold text-[#101111] mb-2">Select a message</h3>
-                <p className="text-sm text-[#666]">Choose a conversation from the list to start chatting</p>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav activeItem="inbox" />
     </div>
   );
 }
