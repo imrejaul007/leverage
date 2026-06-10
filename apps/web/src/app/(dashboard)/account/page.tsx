@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Home, Search, FileText, Truck, Package, User, MessageSquare, Settings, Bell, Menu, X, LogOut, BarChart3, CreditCard, Shield, HelpCircle, ChevronRight, Camera } from 'lucide-react';
+import { Home, Search, FileText, Truck, Package, User, MessageSquare, Settings, Bell, Menu, X, LogOut, BarChart3, CreditCard, Shield, HelpCircle, ChevronRight, Camera, Plus } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 const sidebarLinks = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -202,29 +203,7 @@ export default function AccountPage() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 h-[72px] flex items-center justify-around z-30">
-        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-[#666]">
-          <Home className="w-6 h-6" />
-          <span className="text-[10px] font-medium">Home</span>
-        </Link>
-        <Link href="/marketplace" className="flex flex-col items-center gap-1 text-[#666]">
-          <Search className="w-6 h-6" />
-          <span className="text-[10px] font-medium">Browse</span>
-        </Link>
-        <Link href="/rfqs/new" className="flex flex-col items-center -mt-4">
-          <div className="w-12 h-12 bg-[#154230] rounded-full flex items-center justify-center text-white shadow-lg">
-            <span className="text-xl font-bold">+</span>
-          </div>
-        </Link>
-        <Link href="/marketplace/inbox" className="flex flex-col items-center gap-1 text-[#666]">
-          <MessageSquare className="w-6 h-6" />
-          <span className="text-[10px] font-medium">Inbox</span>
-        </Link>
-        <Link href="/account" className="flex flex-col items-center gap-1 text-[#154230]">
-          <User className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Account</span>
-        </Link>
-      </nav>
+      <BottomNav activeItem="account" />
     </div>
   );
 }
