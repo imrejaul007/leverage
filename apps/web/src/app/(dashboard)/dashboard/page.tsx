@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import {
   TrendingUp,
   Package,
@@ -167,99 +168,61 @@ export default function DashboardPage() {
         {/* Mobile Content Area */}
         <div className="lg:hidden px-4 -mt-6 space-y-5 pb-24">
           {/* Quick Actions */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-2xl p-4 shadow-sm"
+          >
             <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-4 gap-3">
-              <Link href="/marketplace" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Search className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Browse</span>
-              </Link>
-
-              <Link href="/rfqs/new" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
-                  <Plus className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Post RFQ</span>
-              </Link>
-
-              <Link href="/products/new" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#A6824A] flex items-center justify-center">
-                  <Plus className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Add Product</span>
-              </Link>
-
-              <Link href="/products" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Package className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">My Products</span>
-              </Link>
-
-              <Link href="/orders" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Truck className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Orders</span>
-              </Link>
-
-              <Link href="/consultations" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Consult</span>
-              </Link>
-
-              <Link href="/freight" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Truck className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Freight</span>
-              </Link>
-
-              <Link href="/documents" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Package className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Documents</span>
-              </Link>
-
-              <Link href="/compliance" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Compliance</span>
-              </Link>
-
-              <Link href="/ai" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">AI</span>
-              </Link>
-
-              <Link href="/billing" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Billing</span>
-              </Link>
-
-              <Link href="/ads" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <Megaphone className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Ads</span>
-              </Link>
-
-              <Link href="/analytics" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Analytics</span>
-              </Link>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { transition: { staggerChildren: 0.05 } }
+              }}
+              className="grid grid-cols-4 gap-3"
+            >
+              {[
+                { href: '/marketplace', icon: Search, label: 'Browse', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', bg: 'bg-[#154230]', color: 'text-white' },
+                { href: '/products/new', icon: Plus, label: 'Add Product', bg: 'bg-[#A6824A]', color: 'text-white' },
+                { href: '/products', icon: Package, label: 'My Products', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/orders', icon: Truck, label: 'Orders', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/consultations', icon: Calendar, label: 'Consult', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/freight', icon: Truck, label: 'Freight', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/documents', icon: Package, label: 'Documents', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/compliance', icon: Shield, label: 'Compliance', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/ai', icon: BarChart3, label: 'AI', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/billing', icon: DollarSign, label: 'Billing', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/ads', icon: Megaphone, label: 'Ads', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/analytics', icon: TrendingUp, label: 'Analytics', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/network', icon: User, label: 'Network', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/messages', icon: MessageSquare, label: 'Messages', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.8 },
+                      visible: { opacity: 1, scale: 1 }
+                    }}
+                    whileHover={{ scale: 1.1, y: -3 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Link href={item.href} className="flex flex-col items-center gap-2">
+                      <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center`}>
+                        <Icon className={`w-5 h-5 ${item.color}`} />
+                      </div>
+                      <span className="text-[#4A4A4A] text-xs font-medium">{item.label}</span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </motion.div>
 
               <Link href="/network" className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
@@ -330,9 +293,21 @@ export default function DashboardPage() {
           </Link>
 
           {/* Mobile Burgundy Stats Bar */}
-          <div className="bg-[#5D1E21] rounded-2xl p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-3">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-[#5D1E21] rounded-2xl p-4"
+          >
+            <motion.div
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="grid grid-cols-2 gap-4"
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-3"
+              >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
@@ -340,8 +315,11 @@ export default function DashboardPage() {
                   <p className="text-white/70 text-xs font-medium">Compliance</p>
                   <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-3"
+              >
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
@@ -349,9 +327,9 @@ export default function DashboardPage() {
                   <p className="text-white/70 text-xs font-medium">Trade Volume</p>
                   <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
                 </div>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
           {/* Stats Section - at bottom, after burgundy bar */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">

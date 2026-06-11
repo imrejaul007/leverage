@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Package, FileText, Truck, Bot, Users, BarChart3, ArrowRight, Check, Globe, Shield, Zap, Anchor, Ship } from 'lucide-react';
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Package, FileText, Truck, Bot, Users, BarChart3, ArrowRight, Check, Globe, Shield, Zap, Anchor, Ship, ChevronDown } from 'lucide-react';
 
 const features = [
   { icon: Check, title: '500+ Suppliers', subtitle: 'Verified global partners' },
@@ -13,17 +14,95 @@ const features = [
 ];
 
 const stats = [
-  { value: '150+', label: 'Countries', icon: Globe },
-  { value: '20K+', label: 'Businesses', icon: Users },
-  { value: '1M+', label: 'Shipments', icon: Package },
-  { value: '99.9%', label: 'Compliance', icon: Shield },
+  { value: 150, suffix: '+', label: 'Countries', icon: Globe },
+  { value: 20, suffix: 'K+', label: 'Businesses', icon: Users },
+  { value: 1, suffix: 'M+', label: 'Shipments', icon: Package },
+  { value: 99.9, suffix: '%', label: 'Compliance', icon: Shield },
 ];
+
+const featureCards = [
+  { icon: Shield, title: 'Compliance & Trade Compliance', description: 'AI-powered HS code classification, duty calculations, and compliance checks. Ensure your shipments meet all regulatory requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/compliance' },
+  { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/rfqs' },
+  { icon: Package, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/documents' },
+  { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/freight' },
+  { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/ai' },
+  { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/consultations' },
+];
+
+const howItWorksSteps = [
+  { step: '01', title: 'Create Account', description: 'Sign up in minutes with our streamlined onboarding process', color: '#154230', icon: Globe },
+  { step: '02', title: 'Add Products', description: 'Import your catalog or browse our marketplace for suppliers', color: '#A6824A', icon: Package },
+  { step: '03', title: 'Connect & Trade', description: 'Find partners, negotiate deals, and manage transactions', color: '#5D1E21', icon: Users },
+  { step: '04', title: 'Ship & Track', description: 'Integrated logistics with real-time tracking and compliance', color: '#154230', icon: Truck },
+];
+
+// Animated counter component
+function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const duration = 2000;
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(target * eased);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isInView, target]);
+
+  return <span ref={ref}>{count % 1 === 0 ? count.toFixed(0) : count.toFixed(1)}{suffix}</span>;
+}
+
+// Stagger container for children
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const fadeInScale = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
 
 export default function HomePage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowScrollHint(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -167,58 +246,122 @@ export default function HomePage() {
           </div>
         </div>
 
-<div className={`container mx-auto max-w-6xl relative transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+<motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="container mx-auto max-w-6xl relative"
+        >
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Left Content */}
-            <div className="flex-1 text-center lg:text-left z-10">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="flex-1 text-center lg:text-left z-10"
+            >
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#5D1E21] rounded-full mb-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#5D1E21] rounded-full mb-6"
+              >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                 </span>
                 <span className="text-white text-sm font-medium">Connecting Dots to Ports</span>
-              </div>
+              </motion.div>
 
               {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#154230] mb-6 leading-tight tracking-tight font-['Plus_Jakarta_Sans']">
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#154230] mb-6 leading-tight tracking-tight font-['Plus_Jakarta_Sans']"
+              >
                 Trade Smarter.
                 <br />
                 <span className="text-[#5D1E21]">Globally.</span>
-              </h1>
+              </motion.h1>
 
               {/* Subheadline */}
-              <p className="text-base sm:text-lg text-[#4A4A4A] mb-8 max-w-xl mx-auto lg:mx-0">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="text-base sm:text-lg text-[#4A4A4A] mb-8 max-w-xl mx-auto lg:mx-0"
+              >
                 Streamline your import/export operations with AI-powered compliance,
                 smart documents, and integrated logistics — all in one platform.
-              </p>
+              </motion.p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
-                <Link href="/signup" className="px-8 py-4 bg-[#154230] hover:bg-[#1d5240] text-white font-bold rounded-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
-                  Start Free Trial
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link href="/marketplace" className="px-8 py-4 bg-white border-2 border-[#154230] text-[#154230] hover:bg-[#154230] hover:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
-                  <Globe className="w-5 h-5" />
-                  Explore Marketplace
-                </Link>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
+              >
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/signup" className="px-8 py-4 bg-[#154230] hover:bg-[#1d5240] text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg">
+                    Start Free Trial
+                    <motion.span
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.span>
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/marketplace" className="px-8 py-4 bg-white border-2 border-[#154230] text-[#154230] hover:bg-[#154230] hover:text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2">
+                    <Globe className="w-5 h-5" />
+                    Explore Marketplace
+                  </Link>
+                </motion.div>
+              </motion.div>
 
               {/* Feature Pills */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                {features.map((feature) => (
-                  <div key={feature.title} className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.7 } }
+                }}
+                className="flex flex-wrap justify-center lg:justify-start gap-3"
+              >
+                {features.map((feature, i) => (
+                  <motion.div
+                    key={feature.title}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md cursor-pointer"
+                  >
                     <Check className="w-4 h-4 text-[#154230]" />
                     <span className="text-[#101111] text-sm font-medium">{feature.title}</span>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Right Graphics - Large Hero Illustration */}
-            <div className="flex-1 relative hidden lg:block">
-              <div className="relative w-full max-w-lg mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="flex-1 relative hidden lg:block"
+            >
+              <motion.div
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative w-full max-w-lg mx-auto"
+              >
                 {/* Main Globe */}
                 <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl">
                   {/* Globe base */}
@@ -272,19 +415,53 @@ export default function HomePage() {
                 </svg>
 
                 {/* Floating Elements around globe */}
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-[#A6824A] rounded-xl flex items-center justify-center shadow-lg animate-bounce" style={{ animationDuration: '2s' }}>
+                <motion.div
+                  animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute -top-4 -right-4 w-16 h-16 bg-[#A6824A] rounded-xl flex items-center justify-center shadow-lg"
+                >
                   <Ship className="w-8 h-8 text-white" />
-                </div>
-                <div className="absolute -bottom-4 -left-4 w-14 h-14 bg-[#5D1E21] rounded-xl flex items-center justify-center shadow-lg animate-bounce" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}>
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, -8, 0], rotate: [0, -5, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                  className="absolute -bottom-4 -left-4 w-14 h-14 bg-[#5D1E21] rounded-xl flex items-center justify-center shadow-lg"
+                >
                   <Anchor className="w-7 h-7 text-white" />
-                </div>
-                <div className="absolute top-1/2 -right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                </motion.div>
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute top-1/2 -right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg"
+                >
                   <Globe className="w-6 h-6 text-[#154230]" />
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
+
+          {/* Scroll hint */}
+          <AnimatePresence>
+            {showScrollHint && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="absolute bottom-8 left-1/2 -translate-x-1/2"
+              >
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="flex flex-col items-center gap-2 cursor-pointer"
+                  onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                >
+                  <span className="text-[#4A4A4A] text-xs font-medium">Scroll to explore</span>
+                  <ChevronDown className="w-5 h-5 text-[#A6824A]" />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </section>
 
       {/* Stats Section */}
@@ -304,26 +481,50 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { transition: { staggerChildren: 0.15 } }
+            }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          >
             {stats.map((stat, i) => {
               const Icon = stat.icon;
               return (
-                <div key={i} className="text-center relative">
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  className="text-center relative group"
+                >
                   {i % 2 === 0 ? (
-                    <div className="w-14 h-14 rounded-full bg-[#A6824A]/20 border border-[#A6824A]/30 flex items-center justify-center mx-auto mb-3">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="w-14 h-14 rounded-full bg-[#A6824A]/20 border border-[#A6824A]/30 flex items-center justify-center mx-auto mb-3"
+                    >
                       <Icon className="w-7 h-7 text-[#A6824A]" />
-                    </div>
+                    </motion.div>
                   ) : (
-                    <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-3">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: -5 }}
+                      className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-3"
+                    >
                       <Icon className="w-7 h-7 text-white" />
-                    </div>
+                    </motion.div>
                   )}
-                  <p className="text-3xl sm:text-4xl font-bold text-white mb-1">{stat.value}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-white mb-1">
+                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                  </p>
                   <p className="text-white/70 text-sm">{stat.label}</p>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -346,7 +547,13 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
             <span className="inline-block px-4 py-1.5 bg-[#154230]/10 text-[#154230] text-xs font-semibold rounded-full mb-4">
               POWERFUL FEATURES
             </span>
@@ -356,46 +563,81 @@ export default function HomePage() {
             <p className="text-base text-[#4A4A4A] max-w-2xl mx-auto">
               From RFQ to delivery, manage your entire trade lifecycle with our comprehensive platform.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Shield, title: 'Compliance & Trade Compliance', description: 'AI-powered HS code classification, duty calculations, and compliance checks. Ensure your shipments meet all regulatory requirements.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/compliance' },
-              { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease. Track responses and close deals faster.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/rfqs' },
-              { icon: Package, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more. AI-powered compliance checks included.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/documents' },
-              { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders. Track shipments in real-time.', bgColor: 'bg-[#154230]', borderColor: 'border-[#154230]/20', href: '/freight' },
-              { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes, duty calculations, and compliance requirements.', bgColor: 'bg-[#A6824A]', borderColor: 'border-[#A6824A]/20', href: '/ai' },
-              { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts for consultations on compliance, logistics, and more.', bgColor: 'bg-[#5D1E21]', borderColor: 'border-[#5D1E21]/20', href: '/consultations' },
-            ].map((feature, i) => {
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { transition: { staggerChildren: 0.12 } }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {featureCards.map((feature, i) => {
               const Icon = feature.icon;
               return (
-                <div
+                <motion.div
                   key={i}
-                  className="group relative p-6 bg-white border-2 rounded-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                  variants={{
+                    hidden: { opacity: 0, y: 40 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                  }}
+                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                  className="group relative p-6 bg-white border-2 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
                 >
+                  {/* Animated gradient overlay */}
+                  <motion.div
+                    className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${feature.bgColor}`}
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.8 }}
+                  />
+
                   {/* Top accent bar */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 ${feature.bgColor}`} />
+                  <motion.div
+                    className={`absolute top-0 left-0 right-0 h-1 ${feature.bgColor}`}
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ transformOrigin: 'left' }}
+                  />
 
                   {/* Icon container */}
-                  <div className={`w-14 h-14 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300 shadow-lg`}>
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className={`w-14 h-14 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4 shadow-lg`}
+                  >
                     <Icon className="w-7 h-7 text-white" />
-                  </div>
+                  </motion.div>
 
                   {/* Content */}
                   <h3 className="text-lg font-semibold text-[#101111] mb-2 tracking-tight">{feature.title}</h3>
                   <p className="text-sm text-[#4A4A4A] leading-relaxed mb-4">{feature.description}</p>
 
                   {/* Learn more link */}
-                  <Link href={feature.href || '/marketplace'} className={`inline-flex items-center gap-1 text-sm font-medium ${feature.bgColor.replace('bg-', 'text-')} group-hover:gap-2 transition-all`}>
-                    Learn more <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="inline-flex items-center gap-1 text-sm font-medium"
+                  >
+                    <Link href={feature.href} className={`${feature.bgColor.replace('bg-', 'text-')}`}>
+                      Learn more
+                    </Link>
+                    <motion.span
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.span>
+                  </motion.div>
 
                   {/* Decorative corner element */}
                   <div className={`absolute bottom-0 right-0 w-20 h-20 ${feature.bgColor} opacity-5 rounded-tl-full`} />
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -407,7 +649,13 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
             <span className="inline-block px-4 py-1.5 bg-[#5D1E21]/10 text-[#5D1E21] text-xs font-semibold rounded-full mb-4">
               SIMPLE PROCESS
             </span>
@@ -417,34 +665,56 @@ export default function HomePage() {
             <p className="text-base text-[#4A4A4A] max-w-2xl mx-auto">
               Get started with global trade in four simple steps
             </p>
-          </div>
+          </motion.div>
 
           {/* Steps */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-            {/* Connection lines */}
-            <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
+            {/* Connection lines - animated */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21] origin-left"
+            />
 
-            {[
-              { step: '01', title: 'Create Account', description: 'Sign up in minutes with our streamlined onboarding process', color: '#154230', icon: Globe },
-              { step: '02', title: 'Add Products', description: 'Import your catalog or browse our marketplace for suppliers', color: '#A6824A', icon: Package },
-              { step: '03', title: 'Connect & Trade', description: 'Find partners, negotiate deals, and manage transactions', color: '#5D1E21', icon: Users },
-              { step: '04', title: 'Ship & Track', description: 'Integrated logistics with real-time tracking and compliance', color: '#154230', icon: Truck },
-            ].map((item, i) => {
+            {howItWorksSteps.map((item, i) => {
               const Icon = item.icon;
               return (
-                <div key={i} className="relative text-center group">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: i * 0.15 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="relative text-center group cursor-pointer"
+                >
                   {/* Step number badge */}
-                  <div className={`w-32 h-32 mx-auto rounded-full bg-[${item.color}]/5 border-2 border-[${item.color}]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    <div className={`w-20 h-20 rounded-full ${item.color === '#154230' ? 'bg-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]' : 'bg-[#5D1E21]'} flex items-center justify-center shadow-lg`}>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className={`w-32 h-32 mx-auto rounded-full bg-[${item.color}]/5 border-2 border-[${item.color}]/20 flex items-center justify-center mb-6 transition-transform duration-300`}
+                  >
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.8 }}
+                      className={`w-20 h-20 rounded-full ${item.color === '#154230' ? 'bg-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]' : 'bg-[#5D1E21]'} flex items-center justify-center shadow-lg`}
+                    >
                       <Icon className="w-9 h-9 text-white" />
-                    </div>
-                  </div>
-                  <span className={`inline-block px-3 py-1 ${item.color === '#154230' ? 'bg-[#154230]/10 text-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]/10 text-[#A6824A]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'} text-xs font-bold rounded-full mb-3`}>
+                    </motion.div>
+                  </motion.div>
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: i * 0.15 + 0.2 }}
+                    className={`inline-block px-3 py-1 ${item.color === '#154230' ? 'bg-[#154230]/10 text-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]/10 text-[#A6824A]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'} text-xs font-bold rounded-full mb-3`}
+                  >
                     {item.step}
-                  </span>
+                  </motion.span>
                   <h3 className="text-lg font-semibold text-[#101111] mb-2">{item.title}</h3>
                   <p className="text-sm text-[#4A4A4A] max-w-[200px] mx-auto">{item.description}</p>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -473,16 +743,37 @@ export default function HomePage() {
           </svg>
         </div>
 
-        <div className="container mx-auto max-w-4xl relative z-10">
-          <div className="bg-white rounded-2xl p-10 sm:p-14 border border-black/5 shadow-xl relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.7 }}
+          className="container mx-auto max-w-4xl relative z-10"
+        >
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            className="bg-white rounded-2xl p-10 sm:p-14 border border-black/5 shadow-xl relative overflow-hidden"
+          >
             {/* Corner decorations */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#154230]/5 rounded-bl-full" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#A6824A]/5 rounded-tr-full" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+              className="absolute top-0 right-0 w-32 h-32 bg-[#154230]/5 rounded-bl-full"
+            />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+              className="absolute bottom-0 left-0 w-24 h-24 bg-[#A6824A]/5 rounded-tr-full"
+            />
 
             {/* Globe icon */}
-            <div className="w-16 h-16 bg-[#154230] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="w-16 h-16 bg-[#154230] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+            >
               <Globe className="w-8 h-8 text-white" />
-            </div>
+            </motion.div>
 
             <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4 tracking-tight">
               Ready to Transform Your Trade Business?
@@ -490,18 +781,41 @@ export default function HomePage() {
             <p className="text-base text-[#4A4A4A] mb-8 max-w-xl mx-auto">
               Join thousands of traders who have already streamlined their global trade operations with Leverage.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/signup" className="px-8 py-4 bg-[#154230] hover:bg-[#1d5240] text-white font-bold rounded-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg">
-                Get Started Free
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/contact" className="px-8 py-4 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg">
-                <Ship className="w-5 h-5" />
-                Talk to Sales
-              </Link>
-            </div>
-          </div>
-        </div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } }
+              }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href="/signup" className="px-8 py-4 bg-[#154230] hover:bg-[#1d5240] text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg inline-block">
+                  Get Started Free
+                  <motion.span
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.span>
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href="/contact" className="px-8 py-4 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-semibold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg inline-block">
+                  <motion.span
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    <Ship className="w-5 h-5" />
+                  </motion.span>
+                  Talk to Sales
+                </Link>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Footer */}
