@@ -565,25 +565,16 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { transition: { staggerChildren: 0.12 } }
-            }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featureCards.map((feature, i) => {
               const Icon = feature.icon;
               return (
                 <motion.div
                   key={i}
-                  variants={{
-                    hidden: { opacity: 0, y: 40 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
-                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                   whileHover={{ y: -8, transition: { duration: 0.3 } }}
                   className="group relative p-6 bg-white border-2 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
                 >
@@ -637,7 +628,7 @@ export default function HomePage() {
                 </motion.div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
 
