@@ -224,22 +224,6 @@ export default function DashboardPage() {
             </motion.div>
           </motion.div>
 
-              <Link href="/network" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <User className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Network</span>
-              </Link>
-
-              <Link href="/messages" className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 rounded-xl bg-[#154230]/10 flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-[#154230]" />
-                </div>
-                <span className="text-[#4A4A4A] text-xs font-medium">Messages</span>
-              </Link>
-            </div>
-          </div>
-
           {/* Recent Activity */}
           <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
             <div className="p-4 border-b border-black/5 flex items-center justify-between">
