@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import Preloader from '@/components/Preloader';
+import { GlobalEffectsProvider } from '@/components/GlobalEffects';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,8 +32,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Preloader />
-          {children}
+          <GlobalEffectsProvider>
+            <Preloader />
+            {children}
+          </GlobalEffectsProvider>
         </Providers>
       </body>
     </html>
