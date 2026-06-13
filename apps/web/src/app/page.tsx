@@ -138,7 +138,7 @@ export default function HomePage() {
               transition={{ delay: 0.4 }}
             >
               <Link
-                href="/documents"
+                href="/operations"
                 className="group block bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#A6824A] relative overflow-hidden"
                 onMouseEnter={() => setHoveredCard('operations')}
                 onMouseLeave={() => setHoveredCard(null)}
