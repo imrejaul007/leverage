@@ -1,548 +1,297 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Package, FileText, Truck, Bot, Users, BarChart3, ArrowRight, Check, Globe, Shield, Zap, Anchor, Ship, ChevronDown, Menu, X } from 'lucide-react';
-
-const features = [
-  { icon: Check, title: '500+ Suppliers', subtitle: 'Verified global partners' },
-  { icon: Shield, title: 'HS Code Classification', subtitle: 'AI-powered accuracy' },
-  { icon: Bot, title: 'AI Compliance', subtitle: 'Smart document checks' },
-  { icon: Truck, title: 'Real-time Tracking', subtitle: 'Shipment monitoring' },
-];
-
-const stats = [
-  { value: 150, suffix: '+', label: 'Countries', icon: Globe },
-  { value: 20, suffix: 'K+', label: 'Businesses', icon: Users },
-  { value: 1, suffix: 'M+', label: 'Shipments', icon: Package },
-  { value: 99.9, suffix: '%', label: 'Compliance', icon: Shield },
-];
-
-const featureCards = [
-  { icon: Shield, title: 'Compliance & Trade Compliance', description: 'AI-powered HS code classification, duty calculations, and compliance checks.', bgColor: 'bg-[#154230]', href: '/compliance' },
-  { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease.', bgColor: 'bg-[#A6824A]', href: '/rfqs' },
-  { icon: Package, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more.', bgColor: 'bg-[#5D1E21]', href: '/documents' },
-  { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders.', bgColor: 'bg-[#154230]', href: '/freight' },
-  { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes and compliance.', bgColor: 'bg-[#A6824A]', href: '/ai' },
-  { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts.', bgColor: 'bg-[#5D1E21]', href: '/consultations' },
-];
-
-const howItWorksSteps = [
-  { step: '01', title: 'Create Account', description: 'Sign up in minutes', color: '#154230', icon: Globe },
-  { step: '02', title: 'Add Products', description: 'Import your catalog', color: '#A6824A', icon: Package },
-  { step: '03', title: 'Connect & Trade', description: 'Find partners', color: '#5D1E21', icon: Users },
-  { step: '04', title: 'Ship & Track', description: 'Integrated logistics', color: '#154230', icon: Truck },
-];
-
-// Smooth parallax hook
-function useParallax(value: any, distance: number) {
-  const transform = useTransform(value, [0, 1], [-distance, distance]);
-  return transform;
-}
+import { motion } from 'framer-motion';
+import {
+  LayoutGrid,
+  Briefcase,
+  ChevronRight,
+  ArrowRight,
+  Search,
+  Shield,
+  Truck,
+  FileText,
+  Users,
+  TrendingUp,
+  Package,
+  Globe,
+  CheckCircle,
+} from 'lucide-react';
 
 export default function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll();
-
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress((window.scrollY / scrollHeight) * 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#E6E2DA]">
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-black/10">
-        <motion.div
-          className="h-full bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
-
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/5">
         <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
             </Link>
-
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/marketplace" className="nav-link">Marketplace</Link>
-              <Link href="/freight" className="nav-link">Freight</Link>
-              <Link href="/compliance" className="nav-link">Compliance</Link>
-              <Link href="/about" className="nav-link">About</Link>
-            </nav>
-
             <div className="flex items-center gap-4">
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
-              <button
-                className="lg:hidden p-2 hover:bg-black/5 rounded-lg transition-colors"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <motion.div
-          className={`lg:hidden absolute top-full left-0 right-0 bg-white border-b border-black/5 overflow-hidden ${isMenuOpen ? 'block' : 'hidden'}`}
-          initial={false}
-          animate={{ height: isMenuOpen ? 'auto' : 0, opacity: isMenuOpen ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="p-4 flex flex-col gap-2">
-            <Link href="/marketplace" className="p-3 hover:bg-black/5 rounded-lg">Marketplace</Link>
-            <Link href="/freight" className="p-3 hover:bg-black/5 rounded-lg">Freight</Link>
-            <Link href="/compliance" className="p-3 hover:bg-black/5 rounded-lg">Compliance</Link>
-            <Link href="/about" className="p-3 hover:bg-black/5 rounded-lg">About</Link>
-          </div>
-        </motion.div>
       </header>
 
-      {/* Hero Section - Smooth Sliding */}
-      <section ref={heroRef} className="pt-28 pb-16 px-4 sm:px-8 relative overflow-hidden min-h-[90vh] flex items-center">
-        {/* Simple Background - No heavy animations */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Hero Section - Section Selection */}
+      <section className="pt-32 pb-20 px-4 sm:px-8">
+        <div className="container mx-auto max-w-6xl">
+          {/* Badge */}
           <motion.div
-            className="absolute -right-32 top-10 w-[700px] h-[700px] opacity-10"
-            style={{ y }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-8"
           >
-            <svg viewBox="0 0 400 400" className="w-full h-full">
-              <circle cx="200" cy="200" r="150" fill="none" stroke="#A6824A" strokeWidth="1" />
-              <circle cx="200" cy="200" r="100" fill="none" stroke="#A6824A" strokeWidth="0.5" />
-              <ellipse cx="200" cy="200" rx="150" ry="50" fill="none" stroke="#A6824A" strokeWidth="0.5" />
-            </svg>
+            <span className="inline-block px-4 py-1.5 bg-[#154230]/10 text-[#154230] text-xs font-semibold rounded-full">
+              Choose Your Experience
+            </span>
           </motion.div>
 
-          {/* Floating Elements with smooth movement */}
-          <motion.div
-            className="absolute top-1/4 right-20 w-16 h-16 bg-[#A6824A]/10 rounded-full blur-xl"
-            animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute bottom-1/3 left-20 w-24 h-24 bg-[#154230]/10 rounded-full blur-xl"
-            animate={{ y: [0, 15, 0], x: [0, -15, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          />
-          <motion.div
-            className="absolute top-1/2 right-1/4 w-12 h-12 bg-[#5D1E21]/10 rounded-full blur-lg"
-            animate={{ y: [0, -25, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          />
-        </div>
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#101111] text-center mb-6 leading-tight"
+          >
+            What brings you to <span className="text-[#154230]">LEVERAGE</span>?
+          </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="container mx-auto max-w-6xl relative"
-        >
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            {/* Left Content - Sliding in */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-[#4A4A4A] text-center max-w-2xl mx-auto mb-16"
+          >
+            Select a section below to get started with your trading or operations journey
+          </motion.p>
+
+          {/* Section Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Marketplace Card */}
             <motion.div
-              initial={{ opacity: 0, x: -60 }}
+              initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex-1 text-center lg:text-left z-10"
+              transition={{ delay: 0.3 }}
             >
-              {/* Badge - Sliding */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#5D1E21] rounded-full mb-6"
+              <Link
+                href="/marketplace"
+                className="group block bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#154230] relative overflow-hidden"
+                onMouseEnter={() => setHoveredCard('marketplace')}
+                onMouseLeave={() => setHoveredCard(null)}
               >
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-white opacity-75 animate-ping"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-                <span className="text-white text-sm font-medium">Connecting Dots to Ports</span>
-              </motion.div>
+                {/* Background Pattern */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#154230]/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
 
-              {/* Headline - Smooth reveal */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#154230] mb-6 leading-tight tracking-tight"
-              >
-                Trade Smarter.
-                <br />
-                <span className="text-[#5D1E21]">Globally.</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="text-base sm:text-lg text-[#4A4A4A] mb-8 max-w-xl mx-auto lg:mx-0"
-              >
-                Streamline your import/export operations with AI-powered compliance,
-                smart documents, and integrated logistics — all in one platform.
-              </motion.p>
-
-              {/* CTA Buttons - Smooth slide */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
-              >
-                <Link href="/signup" className="btn-primary-group">
-                  Start Free Trial
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-                <Link href="/marketplace" className="btn-secondary-group">
-                  <Globe className="w-5 h-5" />
-                  Explore Marketplace
-                </Link>
-              </motion.div>
-
-              {/* Feature Pills - Staggered slide */}
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.7 } }
-                }}
-                className="flex flex-wrap justify-center lg:justify-start gap-3"
-              >
-                {features.map((feature) => (
-                  <motion.div
-                    key={feature.title}
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0 }
-                    }}
-                    className="pill-item"
-                  >
-                    <Check className="w-4 h-4 text-[#154230]" />
-                    <span className="text-[#101111] text-sm font-medium">{feature.title}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* Right - Floating Globe with smooth movement */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="flex-1 relative hidden lg:block"
-            >
-              <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-full max-w-lg mx-auto"
-              >
-                {/* Main Globe */}
-                <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl">
-                  <defs>
-                    <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#154230" />
-                      <stop offset="100%" stopColor="#1d5240" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="200" cy="200" r="150" fill="url(#oceanGrad)" />
-                  <ellipse cx="150" cy="160" rx="50" ry="35" fill="#A6824A" opacity="0.8" />
-                  <ellipse cx="240" cy="180" rx="40" ry="55" fill="#A6824A" opacity="0.8" />
-                  <ellipse cx="170" cy="260" rx="35" ry="25" fill="#A6824A" opacity="0.8" />
-                  <ellipse cx="200" cy="200" rx="150" ry="45" fill="none" stroke="#A6824A" strokeWidth="2" />
-                  <ellipse cx="200" cy="200" rx="150" ry="45" fill="none" stroke="#A6824A" strokeWidth="2" transform="rotate(60 200 200)" />
-                  <ellipse cx="200" cy="200" rx="150" ry="45" fill="none" stroke="#A6824A" strokeWidth="2" transform="rotate(-60 200 200)" />
-                </svg>
-
-                {/* Floating Elements */}
-                <motion.div
-                  animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute -top-4 -right-4 w-16 h-16 bg-[#A6824A] rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <Ship className="w-8 h-8 text-white" />
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, -8, 0], rotate: [0, -5, 0] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                  className="absolute -bottom-4 -left-4 w-14 h-14 bg-[#5D1E21] rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <Anchor className="w-7 h-7 text-white" />
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Scroll Hint */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="flex flex-col items-center gap-1 cursor-pointer"
-              onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-            >
-              <span className="text-[#4A4A4A] text-xs font-medium">Scroll to explore</span>
-              <ChevronDown className="w-5 h-5 text-[#A6824A]" />
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Stats Section - Smooth Slide In */}
-      <section className="py-16 px-4 sm:px-8 bg-[#154230] relative overflow-hidden">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="text-center"
-                >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 ${i % 2 === 0 ? 'bg-[#A6824A]/20' : 'bg-white/10'}`}>
-                    <Icon className={`w-7 h-7 ${i % 2 === 0 ? 'text-[#A6824A]' : 'text-white'}`} />
-                  </div>
-                  <p className="text-3xl sm:text-4xl font-bold text-white mb-1">{stat.value}{stat.suffix}</p>
-                  <p className="text-white/70 text-sm">{stat.label}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section - Smooth Cards */}
-      <section className="py-24 px-4 sm:px-8 bg-[#E6E2DA] relative overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="inline-block px-4 py-1.5 bg-[#154230]/10 text-[#154230] text-xs font-semibold rounded-full mb-4">
-              POWERFUL FEATURES
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#101111] mb-4 tracking-tight">
-              Everything You Need for Global Trade
-            </h2>
-            <p className="text-base text-[#4A4A4A] max-w-2xl mx-auto">
-              From RFQ to delivery, manage your entire trade lifecycle with our comprehensive platform.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featureCards.map((feature, i) => {
-              const Icon = feature.icon;
-              return (
-                <Link
-                  key={i}
-                  href={feature.href}
-                  className="feature-card group block"
-                >
-                  {/* Top accent bar */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 ${feature.bgColor}`} />
-
-                  {/* Icon container */}
-                  <div className={`w-14 h-14 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-7 h-7 text-white" />
+                {/* Icon */}
+                <div className="relative z-10">
+                  <div className="w-20 h-20 rounded-2xl bg-[#154230] flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <LayoutGrid className="w-10 h-10 text-white" />
                   </div>
 
-                  {/* Content */}
-                  <h3 className="text-lg font-semibold text-[#101111] mb-2 tracking-tight">{feature.title}</h3>
-                  <p className="text-sm text-[#4A4A4A] leading-relaxed mb-4">{feature.description}</p>
+                  <h2 className="text-3xl font-bold text-[#101111] mb-3">Marketplace</h2>
+                  <p className="text-[#4A4A4A] mb-6">
+                    Browse products, connect with suppliers, manage RFQs, and track orders. Your complete B2B trading platform.
+                  </p>
 
-                  {/* Learn more link */}
-                  <div className="inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all duration-300">
-                    <span className={`${feature.bgColor.replace('bg-', 'text-')}`}>Learn more</span>
-                    <ArrowRight className={`w-4 h-4 ${feature.bgColor.replace('bg-', 'text-')} group-hover:translate-x-1 transition-transform duration-300`} />
-                  </div>
-
-                  {/* Decorative corner */}
-                  <div className={`absolute bottom-0 right-0 w-20 h-20 ${feature.bgColor} opacity-5 rounded-tl-full`} />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works - Smooth Slide */}
-      <section className="py-24 px-4 sm:px-8 bg-white relative overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="inline-block px-4 py-1.5 bg-[#5D1E21]/10 text-[#5D1E21] text-xs font-semibold rounded-full mb-4">
-              SIMPLE PROCESS
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#101111] mb-4 tracking-tight">
-              How It Works
-            </h2>
-            <p className="text-base text-[#4A4A4A] max-w-2xl mx-auto">
-              Get started with global trade in four simple steps
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-            {/* Connection Line */}
-            <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
-
-            {howItWorksSteps.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.5, delay: i * 0.15 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="relative text-center group cursor-pointer"
-                >
-                  <div className={`w-32 h-32 mx-auto rounded-full bg-[${item.color}]/5 border-2 border-[${item.color}]/20 flex items-center justify-center mb-6 transition-all duration-300 group-hover:border-opacity-100`}>
-                    <div className={`w-20 h-20 rounded-full ${item.color === '#154230' ? 'bg-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]' : 'bg-[#5D1E21]'} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="w-9 h-9 text-white" />
+                  {/* Features */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <Search className="w-4 h-4 text-[#154230]" />
+                      <span>Browse Products</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <FileText className="w-4 h-4 text-[#154230]" />
+                      <span>RFQ Management</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <Truck className="w-4 h-4 text-[#154230]" />
+                      <span>Order Tracking</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <Users className="w-4 h-4 text-[#154230]" />
+                      <span>Supplier Network</span>
                     </div>
                   </div>
-                  <span className={`inline-block px-3 py-1 ${item.color === '#154230' ? 'bg-[#154230]/10 text-[#154230]' : item.color === '#A6824A' ? 'bg-[#A6824A]/10 text-[#A6824A]' : 'bg-[#5D1E21]/10 text-[#5D1E21]'} text-xs font-bold rounded-full mb-3`}>
-                    {item.step}
-                  </span>
-                  <h3 className="text-lg font-semibold text-[#101111] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#4A4A4A] max-w-[200px] mx-auto">{item.description}</p>
-                </motion.div>
-              );
-            })}
+
+                  {/* CTA */}
+                  <div className="flex items-center gap-2 text-[#154230] font-semibold group-hover:gap-3 transition-all">
+                    <span>Enter Marketplace</span>
+                    <ChevronRight className="w-5 h-5" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Operations Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Link
+                href="/documents"
+                className="group block bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-[#A6824A] relative overflow-hidden"
+                onMouseEnter={() => setHoveredCard('operations')}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                {/* Background Pattern */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#A6824A]/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+
+                {/* Icon */}
+                <div className="relative z-10">
+                  <div className="w-20 h-20 rounded-2xl bg-[#A6824A] flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <Briefcase className="w-10 h-10 text-white" />
+                  </div>
+
+                  <h2 className="text-3xl font-bold text-[#101111] mb-3">Operations</h2>
+                  <p className="text-[#4A4A4A] mb-6">
+                    Manage trade documents, ensure compliance, handle freight, and analyze your business performance.
+                  </p>
+
+                  {/* Features */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <FileText className="w-4 h-4 text-[#A6824A]" />
+                      <span>Trade Documents</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <Shield className="w-4 h-4 text-[#A6824A]" />
+                      <span>Compliance</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <Truck className="w-4 h-4 text-[#A6824A]" />
+                      <span>Freight & Logistics</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#4A4A4A]">
+                      <TrendingUp className="w-4 h-4 text-[#A6824A]" />
+                      <span>Analytics</span>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="flex items-center gap-2 text-[#A6824A] font-semibold group-hover:gap-3 transition-all">
+                    <span>Enter Operations</span>
+                    <ChevronRight className="w-5 h-5" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Smooth Slide */}
-      <section className="py-24 px-4 sm:px-8 bg-[#E6E2DA] relative overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="container mx-auto max-w-4xl"
-        >
-          <div className="bg-white rounded-2xl p-10 sm:p-14 border border-black/5 shadow-xl relative overflow-hidden">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-              className="absolute top-0 right-0 w-32 h-32 bg-[#154230]/5 rounded-bl-full"
-            />
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-              className="absolute bottom-0 left-0 w-24 h-24 bg-[#A6824A]/5 rounded-tr-full"
-            />
-
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="w-16 h-16 bg-[#154230] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
-            >
-              <Globe className="w-8 h-8 text-white" />
-            </motion.div>
-
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4 tracking-tight text-center">
-              Ready to Transform Your Trade Business?
-            </h2>
-            <p className="text-base text-[#4A4A4A] mb-8 max-w-xl mx-auto text-center">
-              Join thousands of traders who have already streamlined their global trade operations with Leverage.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/signup" className="btn-primary-group mx-auto sm:mx-0">
-                Get Started Free
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/contact" className="btn-burgundy-group mx-auto sm:mx-0">
-                <Ship className="w-5 h-5" />
-                Talk to Sales
-              </Link>
+      {/* Stats Section */}
+      <section className="py-16 px-4 sm:px-8 bg-[#154230]">
+        <div className="container mx-auto max-w-5xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-white mb-1">150+</p>
+              <p className="text-white/70 text-sm">Countries</p>
+            </div>
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-white mb-1">20K+</p>
+              <p className="text-white/70 text-sm">Businesses</p>
+            </div>
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-white mb-1">1M+</p>
+              <p className="text-white/70 text-sm">Shipments</p>
+            </div>
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-white mb-1">99.9%</p>
+              <p className="text-white/70 text-sm">Compliance</p>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </section>
+
+      {/* Features Overview */}
+      <section className="py-20 px-4 sm:px-8">
+        <div className="container mx-auto max-w-5xl">
+          <h2 className="text-3xl font-bold text-[#101111] text-center mb-4">Built for Global Trade</h2>
+          <p className="text-[#4A4A4A] text-center max-w-2xl mx-auto mb-12">
+            Everything you need to run your import/export business efficiently
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Shield,
+                title: 'Compliance First',
+                description: 'AI-powered HS code classification and duty calculations to ensure your shipments are always compliant.',
+                color: '#154230',
+              },
+              {
+                icon: Globe,
+                title: 'Global Network',
+                description: 'Connect with verified suppliers and buyers from 150+ countries.',
+                color: '#A6824A',
+              },
+              {
+                icon: Package,
+                title: 'End-to-End',
+                description: 'From RFQ to delivery, manage your entire trade lifecycle in one platform.',
+                color: '#5D1E21',
+              },
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-6 shadow-sm"
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ backgroundColor: feature.color }}
+                >
+                  <feature.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[#101111] mb-2">{feature.title}</h3>
+                <p className="text-sm text-[#4A4A4A]">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 sm:px-8 bg-[#E6E2DA]">
+        <div className="container mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-[#101111] mb-4">Ready to get started?</h2>
+          <p className="text-[#4A4A4A] mb-8">
+            Join thousands of businesses already trading globally with LEVERAGE
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/signup" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#154230] hover:bg-[#1d5240] text-white font-bold rounded-lg transition-all">
+              Create Free Account
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-16 px-4 sm:px-8 bg-[#154230]">
+      <footer className="py-12 px-4 sm:px-8 bg-[#154230]">
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-white/70 text-sm mb-4">
-                The operating system for global trade.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Product</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-                <li><Link href="/ai" className="hover:text-white transition-colors">AI Assistant</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Company</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Legal</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-                <li><Link href="/security" className="hover:text-white transition-colors">Security</Link></li>
-              </ul>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain brightness-0 invert" />
+            <div className="flex items-center gap-2 text-white/70 text-sm">
+              <Globe className="w-4 h-4" />
+              <span>Trusted by 20K+ businesses worldwide</span>
             </div>
           </div>
-
-          <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-white/50 text-sm">
-              © 2026 Leverage. All rights reserved.
-            </p>
-            <div className="flex items-center gap-2 text-white/50">
-              <Ship className="w-4 h-4" />
-              <span className="text-xs">Powered by Global Trade</span>
-            </div>
+          <div className="mt-8 pt-8 border-t border-white/10 text-center text-white/50 text-sm">
+            © 2026 Leverage. All rights reserved.
           </div>
         </div>
       </footer>
