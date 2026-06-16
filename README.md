@@ -1,254 +1,88 @@
-# LEVERAGE - Global Trade Operating System
+# LEVERAGE - Trade OS
 
-A comprehensive B2B marketplace and trade management platform for importers, exporters, manufacturers, and freight forwarders.
+> An AI-powered operating system for import/export businesses.
 
----
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              CLIENTS                                         │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
-│  │   Web App       │  │   Mobile App    │  │   Admin Panel   │              │
-│  │   (Next.js)     │  │   (React Native)│  │   (Next.js)     │              │
-│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘              │
-└───────────┼────────────────────┼────────────────────┼───────────────────────┘
-            │                    │                    │
-            ▼                    ▼                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           EDGE LAYER                                         │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
-│  │   Vercel CDN    │  │   CloudFlare    │  │   Load Balancer │              │
-│  │   (Static)      │  │   (Security)    │  │   (AWS ALB)     │              │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘              │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           API GATEWAY                                        │
-│  ┌─────────────────────────────────────────────────────────────────────┐     │
-│  │                      NestJS Backend                                 │     │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │     │
-│  │  │   Auth       │  │   Marketplace│  │   Orders     │  │  AI     │ │     │
-│  │  │   Module     │  │   Module     │  │   Module     │  │  Agent  │ │     │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘  └─────────┘ │     │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │     │
-│  │  │   Freight    │  │   Compliance │  │   Documents  │  │ Messaging│ │     │
-│  │  │   Module     │  │   Module     │  │   Module     │  │  Module │ │     │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘  └─────────┘ │     │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │     │
-│  │  │   Analytics  │  │   Billing    │  │   Network    │              │     │
-│  │  │   Module     │  │   Module     │  │   Module     │              │     │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘              │     │
-│  └─────────────────────────────────────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-            ┌───────────────────────┼───────────────────────┐
-            ▼                       ▼                       ▼
-┌───────────────────┐    ┌───────────────────┐    ┌───────────────────┐
-│   DATABASE        │    │   CACHE           │    │   SEARCH          │
-│   ┌─────────────┐  │    │   ┌─────────────┐ │    │   ┌─────────────┐ │
-│   │ PostgreSQL  │  │    │   │   Redis     │ │    │   │ Meilisearch │ │
-│   │ (Neon)      │  │    │   │ (Upstash)   │ │    │   │             │ │
-│   └─────────────┘  │    │   └─────────────┘ │    │   └─────────────┘ │
-└───────────────────┘    └───────────────────┘    └───────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           AI SERVICES                                        │
-│  ┌─────────────────────────────────────────────────────────────────────┐     │
-│  │                      FastAPI AI Service                              │     │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │     │
-│  │  │   RAG        │  │   Chatbot    │  │   Fraud      │                │     │
-│  │  │   Pipeline   │  │   Engine     │  │   Detection  │                │     │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘                │     │
-│  │  ┌──────────────┐  ┌──────────────┐                                  │     │
-│  │  │   Semantic   │  │   Trade      │                                  │     │
-│  │  │   Search     │  │   Insights   │                                  │     │
-│  │  └──────────────┘  └──────────────┘                                  │     │
-│  └─────────────────────────────────────────────────────────────────────┘     │
-│                                    │                                         │
-│                                    ▼                                         │
-│                         ┌───────────────────┐                               │
-│                         │   OpenAI GPT-4    │                               │
-│                         └───────────────────┘                               │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+**Status:** In Development
+**AI Partner:** HOJAI AI
 
 ---
 
-## Tech Stack
+## 🌐 What is LEVERAGE?
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS |
-| **Backend** | NestJS, TypeORM, PostgreSQL |
-| **AI Services** | FastAPI, LangChain, OpenAI GPT-4 |
-| **Database** | PostgreSQL (Neon), Redis (Upstash) |
-| **Search** | Meilisearch |
-| **Payments** | Stripe, Razorpay |
-| **Infrastructure** | Docker, Kubernetes (EKS), Vercel, AWS |
+LEVERAGE is a modular Trade OS that helps import/export businesses manage their entire operation through dedicated subdomains:
 
----
-
-## Features
-
-### Core Modules
-
-| Module | Description | Status |
-|--------|-------------|--------|
-| **Auth & User** | JWT authentication, MFA, KYC verification | ✅ |
-| **Marketplace** | Product listings, categories, search, filters | ✅ |
-| **RFQ Engine** | Request for quotes, supplier responses, comparisons | ✅ |
-| **Orders & Payments** | Order lifecycle, escrow, Stripe/Razorpay integration | ✅ |
-| **Documents** | Trade document generation, PDF templates, e-signature | ✅ |
-| **Compliance** | HS codes, duty calculation, sanctions screening | ✅ |
-| **Freight & Logistics** | Carrier integrations, shipment tracking, insurance | ✅ |
-| **AI Assistant** | Chatbot, RAG pipeline, semantic search, trade insights | ✅ |
-| **Networking** | Company profiles, posts, comments, messaging | ✅ |
-| **Analytics** | Dashboard metrics, event tracking, reports | ✅ |
-| **Ads & Promotions** | Campaign management, credit system, targeting | ✅ |
-| **Billing & Subscriptions** | Plans, subscriptions, invoices, usage tracking | ✅ |
-
-### User Roles
-
-- **Buyer** - Importers, distributors, retailers
-- **Seller** - Manufacturers, exporters, suppliers
-- **Freight Forwarder** - Logistics providers, carriers
-- **Admin** - Platform administrators
-
-### Key Capabilities
-
-- [ ] Multi-currency transactions (USD, EUR, INR, CNY, etc.)
-- [ ] Real-time chat and messaging
-- [ ] Document verification and e-signature
-- [ ] Risk assessment and fraud detection
-- [ ] Automated compliance checking
-- [ ] Shipment tracking and notifications
-- [ ] AI-powered product recommendations
-- [ ] Quote comparison and supplier ranking
+| Subdomain | Purpose |
+|-----------|---------|
+| leverage.com | Main business dashboard |
+| marketplace.leverage.com | Buy & sell products |
+| docs.leverage.com | Document generator (planned) |
+| freight.leverage.com | Logistics & shipping (planned) |
+| compliance.leverage.com | HS codes & duties (planned) |
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- Docker & Docker Compose
-- PostgreSQL 15+
-- Redis 7+
-- npm or yarn
-
-### Installation
+## 🚀 Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/imrejaul007/leverage.git
-cd leverage-by-lerar
-
 # Install dependencies
 npm install
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your values
-
-# Start infrastructure services
-docker-compose up -d
-
-# Generate Prisma client (Backend API)
-cd apps/api && npx prisma generate
-
-# Run database migrations
-cd apps/api && npx prisma migrate dev
-
-# Start development servers
-npm run dev
-```
-
-### Environment Variables
-
-See `.env.example` for all required environment variables:
-
-```bash
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/leverage
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Authentication
-JWT_SECRET=your-jwt-secret
-JWT_EXPIRES_IN=7d
-
-# External Services
-OPENAI_API_KEY=sk-...
-STRIPE_SECRET_KEY=sk_...
-RAZORPAY_KEY=rzp_...
-
-# Search
-MEILISEARCH_HOST=http://localhost:7700
-MEILISEARCH_KEY=your-master-key
-```
-
----
-
-## Development
-
-```bash
-# Run all apps in development mode
+# Run all apps
 npm run dev
 
-# Run specific app
-npm run dev --filter=web
-npm run dev --filter=api
+# Run web only
+cd apps/web && npm run dev
 
-# Build all apps for production
-npm run build
-
-# Run tests
-npm run test
-
-# Lint and format
-npm run lint
-npm run format
-
-# Database operations
-cd apps/api
-npx prisma studio          # Open Prisma Studio
-npx prisma migrate:dev    # Run migrations
-npx prisma generate       # Generate client
+# Run marketplace only
+cd apps/marketplace && npm run dev
 ```
 
 ---
 
-## API Documentation
+## 📁 Project Structure
 
-When running locally:
-
-| Service | URL | Docs |
-|---------|-----|------|
-| **Web App** | http://localhost:3000 | - |
-| **API** | http://localhost:3001 | http://localhost:3001/api/docs |
-| **AI Service** | http://localhost:8000 | http://localhost:8000/docs |
-| **Prisma Studio** | http://localhost:5555 | - |
-
----
-
-## Project Structure
-
-See `ARCHITECTURE.md` for detailed folder structure.
+```
+leverage-by-lerar/
+├── apps/
+│   ├── web/           # Main website (leverage.com)
+│   ├── marketplace/    # Marketplace (marketplace.leverage.com)
+│   └── api/            # NestJS Backend API
+├── docs/               # Documentation
+└── README.md
+```
 
 ---
 
-## Deployment
+## 📚 Documentation
 
-See `DEPLOY.md` for detailed deployment instructions.
+| Doc | Description |
+|-----|-------------|
+| [LEVERAGE-ROADMAP.md](./LEVERAGE-ROADMAP.md) | Complete roadmap & architecture |
+| [HOJAI-INTEGRATION.md](./HOJAI-INTEGRATION.md) | HOJAI AI integration guide |
 
 ---
 
-## License
+## 🎯 Current Focus
 
-Proprietary - All rights reserved © 2024 Leverage by Lerar
+1. **Complete Marketplace** - Cart, checkout, supplier profiles
+2. **Build Subdomains** - docs, freight, compliance
+3. **Connect to Backend** - Link frontend to API
+4. **AI Integration** - HOJAI AI (later)
+
+---
+
+## 👥 Team
+
+- **CEO:** Rejaul Karim
+- **AI Partner:** HOJAI AI
+
+---
+
+## 📞 Contact
+
+- Website: leverage.com
+- Status: In Development
+
+---
+
+*Built with ❤️ for global trade*
