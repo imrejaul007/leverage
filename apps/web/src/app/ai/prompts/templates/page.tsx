@@ -5,24 +5,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  Building,
-  Bell,
-  Menu,
-  X,
-  ArrowRight,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  Link as LinkIcon,
-  Unlink,
+  Bot,
+  FileText,
+  MessageSquare,
   Shield,
   Globe,
-  Bot,
-  Megaphone,
-  Truck,
-  FileText,
-  Receipt,
+  ChevronRight,
+  Menu,
+  X,
+  Bell,
+  ArrowRight,
+  FileTextIcon,
   Users,
+  Star,
+  Copy,
+  Search,
+  Filter,
+  Truck,
+  Receipt,
+  Megaphone,
 } from 'lucide-react';
 
 const platformLinks = [
@@ -49,14 +50,28 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const connectedBanks = [
-  { id: 1, name: 'Chase Business', account: '****4521', status: 'connected', lastSync: '2 hours ago' },
-  { id: 2, name: 'Bank of America', account: '****8832', status: 'connected', lastSync: '1 day ago' },
-  { id: 3, name: 'Wells Fargo', account: '****1145', status: 'pending' },
+const templates = [
+  { name: 'HS Code Classifier', desc: 'Automatically classify products with HS codes', category: 'Compliance', rating: 4.9, uses: 1234 },
+  { name: 'Duty Calculator', desc: 'Calculate import duties for any country pair', category: 'Finance', rating: 4.8, uses: 987 },
+  { name: 'Invoice Review', desc: 'Check invoices for errors and compliance', category: 'Documents', rating: 4.7, uses: 756 },
+  { name: 'Supplier Finder', desc: 'Find and vet suppliers from specific regions', category: 'Sourcing', rating: 4.6, uses: 543 },
+  { name: 'Contract Checker', desc: 'Review trade contracts for key terms', category: 'Legal', rating: 4.5, uses: 432 },
+  { name: 'Market Analyzer', desc: 'Analyze market trends and pricing', category: 'Market', rating: 4.8, uses: 654 },
 ];
 
-export default function BankSyncPage() {
+const categories = ['All', 'Compliance', 'Finance', 'Documents', 'Sourcing', 'Legal', 'Market'];
+
+export default function PromptsTemplatesPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredTemplates = templates.filter(t => {
+    const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
+    const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          t.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-[#f7f5f1]">
@@ -66,7 +81,7 @@ export default function BankSyncPage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Billing</span>
+              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Prompt Templates</span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8">
@@ -75,7 +90,7 @@ export default function BankSyncPage() {
               <Link href="/documents" className="nav-link font-medium">Documents</Link>
               <Link href="/freight" className="nav-link font-medium">Freight</Link>
               <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
-              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/ai" className="nav-link font-medium text-[#154230]">AI</Link>
               <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
@@ -100,7 +115,7 @@ export default function BankSyncPage() {
                 <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
                 <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
                 <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
-                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">AI</Link>
                 <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
@@ -109,140 +124,93 @@ export default function BankSyncPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#5D1E21] to-[#7a2830] px-4 sm:px-8 pt-8 pb-20">
+      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 pt-8 pb-16">
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Building className="w-10 h-10" />
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <FileTextIcon className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Bank Sync
+                Prompt Templates
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Automatically reconcile payments with your connected bank accounts.
+              Start with proven templates. Customize them for your specific needs and save time.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-12 pb-16">
-        <div className="container mx-auto max-w-7xl">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">3</p>
-              <p className="text-sm text-[#4A4A4A]">Connected Banks</p>
+      <main className="px-4 sm:px-8 -mt-8 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          {/* Search and Filter */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A4A]" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search templates..."
+                  className="w-full pl-10 pr-4 py-2 bg-[#f7f5f1] rounded-lg text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230]/20"
+                />
+              </div>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">156</p>
-              <p className="text-sm text-[#4A4A4A]">Transactions Synced</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">98%</p>
-              <p className="text-sm text-[#4A4A4A]">Auto-Reconciled</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">2h</p>
-              <p className="text-sm text-[#4A4A4A]">Last Sync</p>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    selectedCategory === cat
+                      ? 'bg-[#154230] text-white'
+                      : 'bg-[#f7f5f1] text-[#4A4A4A] hover:bg-[#E6E2DA]'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <LinkIcon className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Connect Bank</h3>
-                <p className="text-sm text-white/70">Link a new bank account</p>
-              </div>
-            </button>
-            <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <RefreshCw className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Sync Now</h3>
-                <p className="text-sm text-white/70">Manually trigger a sync</p>
-              </div>
-            </button>
-          </div>
-
-          {/* Connected Banks List */}
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-black/5">
-              <h2 className="text-xl font-bold text-[#101111]">Connected Bank Accounts</h2>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                {connectedBanks.map((bank) => (
-                  <div key={bank.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                        <Building className="w-6 h-6 text-[#154230]" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-[#101111]">{bank.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{bank.account}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {bank.lastSync && (
-                        <div className="text-right">
-                          <div className="text-sm text-[#4A4A4A]">Last sync: {bank.lastSync}</div>
-                        </div>
-                      )}
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${bank.status === 'connected' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                        {bank.status === 'connected' ? 'Connected' : 'Pending'}
-                      </span>
-                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                        <RefreshCw className="w-4 h-4 text-[#4A4A4A]" />
-                      </button>
-                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                        <Unlink className="w-4 h-4 text-red-500" />
-                      </button>
-                    </div>
+          {/* Templates Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {filteredTemplates.map((template, index) => (
+              <div key={template.name} className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-xs font-medium text-[#4A4A4A] px-2 py-1 bg-[#f7f5f1] rounded">{template.category}</span>
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-[#A6824A] fill-[#A6824A]" />
+                    <span className="text-sm font-medium text-[#101111]">{template.rating}</span>
                   </div>
-                ))}
+                </div>
+                <h3 className="font-bold text-[#101111] mb-1">{template.name}</h3>
+                <p className="text-sm text-[#4A4A4A] mb-4">{template.desc}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-[#4A4A4A]">{template.uses.toLocaleString()} uses</span>
+                  <div className="flex gap-2">
+                    <button className="px-4 py-2 bg-[#154230] hover:bg-[#1d5240] text-white text-sm font-medium rounded-lg transition-colors">
+                      Use Template
+                    </button>
+                    <button className="p-2 bg-[#f7f5f1] hover:bg-[#E6E2DA] text-[#4A4A4A] rounded-lg transition-colors">
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
-              <RefreshCw className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Real-Time Sync</h3>
-              <p className="text-sm text-white/70">Transactions sync automatically every few hours</p>
+          {filteredTemplates.length === 0 && (
+            <div className="bg-white rounded-2xl p-12 shadow-sm text-center">
+              <Search className="w-12 h-12 text-[#4A4A4A] mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-[#101111] mb-2">No Templates Found</h3>
+              <p className="text-[#4A4A4A]">Try adjusting your search or filters.</p>
             </div>
-            <div className="bg-[#154230] rounded-xl p-6 text-center">
-              <CheckCircle className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Auto-Reconciliation</h3>
-              <p className="text-sm text-white/70">Payments are matched to invoices automatically</p>
-            </div>
-            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
-              <Shield className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Bank-Level Security</h3>
-              <p className="text-sm text-white/70">256-bit encryption keeps your data safe</p>
-            </div>
-          </div>
+          )}
         </div>
       </main>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Connect Your Bank Account</h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Automatically reconcile payments and save hours on manual bookkeeping.
-          </p>
-          <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Connect Bank <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
 
       {/* Footer - 50% Green / 50% Maroon */}
       <footer className="bg-[#154230]">

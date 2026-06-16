@@ -5,24 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  PiggyBank,
+  CreditCard,
   Bell,
   Menu,
   X,
   ArrowRight,
-  Plus,
-  Receipt,
-  CreditCard,
-  TrendingUp,
-  TrendingDown,
-  Filter,
-  Download,
-  FileText,
   Globe,
+  DollarSign,
+  TrendingUp,
+  Settings,
+  FileText,
   Bot,
   Megaphone,
   Truck,
   Shield,
+  Receipt,
   Users,
 } from 'lucide-react';
 
@@ -50,21 +47,22 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const recentExpenses = [
-  { id: 1, description: 'Shipping - Container #4521', category: 'Freight', amount: '$2,500', date: 'Jan 15, 2024', status: 'approved' },
-  { id: 2, description: 'Customs Clearance', category: 'Compliance', amount: '$850', date: 'Jan 14, 2024', status: 'approved' },
-  { id: 3, description: 'Office Supplies', category: 'Operations', amount: '$320', date: 'Jan 13, 2024', status: 'pending' },
-  { id: 4, description: 'Marketing Materials', category: 'Marketing', amount: '$1,200', date: 'Jan 12, 2024', status: 'approved' },
+const currencies = [
+  { code: 'USD', name: 'US Dollar', symbol: '$', rate: 1.00 },
+  { code: 'EUR', name: 'Euro', symbol: '€', rate: 0.92 },
+  { code: 'GBP', name: 'British Pound', symbol: '£', rate: 0.79 },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', rate: 7.24 },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥', rate: 149.50 },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', rate: 1.53 },
 ];
 
-const expenseCategories = [
-  { name: 'Freight', count: 45, amount: '$45,200' },
-  { name: 'Compliance', count: 23, amount: '$12,500' },
-  { name: 'Operations', count: 67, amount: '$8,900' },
-  { name: 'Marketing', count: 18, amount: '$15,000' },
+const recentMultiCurrency = [
+  { id: 'INV-2024-001', client: 'ABC Imports Ltd', amount: '€12,500', currency: 'EUR', date: 'Jan 15, 2024' },
+  { id: 'INV-2024-002', client: 'Global Trade Co', amount: '£8,200', currency: 'GBP', date: 'Jan 14, 2024' },
+  { id: 'INV-2024-003', client: 'Pacific Rim Ltd', amount: '¥2,400,000', currency: 'JPY', date: 'Jan 17, 2024' },
 ];
 
-export default function ExpensesPage() {
+export default function MultiCurrencyPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -122,13 +120,13 @@ export default function ExpensesPage() {
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <PiggyBank className="w-10 h-10" />
+              <CreditCard className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Expenses
+                Multi-Currency
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Track and manage all your business expenses in one place.
+              Invoice clients in their preferred currency with real-time exchange rates.
             </p>
           </motion.div>
         </div>
@@ -140,110 +138,91 @@ export default function ExpensesPage() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$81,600</p>
-              <p className="text-sm text-[#4A4A4A]">Total Expenses</p>
+              <p className="text-2xl font-bold text-[#154230]">50+</p>
+              <p className="text-sm text-[#4A4A4A]">Currencies</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#5D1E21]">153</p>
-              <p className="text-sm text-[#4A4A4A]">This Month</p>
+              <p className="text-2xl font-bold text-[#154230]">$245K</p>
+              <p className="text-sm text-[#4A4A4A]">Multi-Currency Revenue</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$1,250</p>
-              <p className="text-sm text-[#4A4A4A]">Pending Approval</p>
+              <p className="text-2xl font-bold text-[#154230]">Real-time</p>
+              <p className="text-sm text-[#4A4A4A]">Exchange Rates</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">94%</p>
-              <p className="text-sm text-[#4A4A4A]">Tracked</p>
+              <p className="text-2xl font-bold text-[#154230]">0.5%</p>
+              <p className="text-sm text-[#4A4A4A]">FX Fee</p>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Plus className="w-7 h-7 text-white" />
+          {/* Currency Rates */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#101111]">Popular Currencies</h2>
+              <button className="flex items-center gap-2 px-4 py-2 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
+                <Settings className="w-4 h-4" />
+                Manage Currencies
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {currencies.map((currency) => (
+                  <div key={currency.code} className="p-4 bg-[#f7f5f1] rounded-xl text-center">
+                    <div className="text-2xl font-bold text-[#154230]">{currency.symbol}</div>
+                    <div className="font-medium text-[#101111]">{currency.code}</div>
+                    <div className="text-sm text-[#4A4A4A]">{currency.rate}</div>
+                  </div>
+                ))}
               </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Add Expense</h3>
-                <p className="text-sm text-white/70">Record a new expense</p>
-              </div>
-            </button>
-            <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Scan Receipt</h3>
-                <p className="text-sm text-white/70">Upload and auto-extract</p>
-              </div>
-            </button>
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Download className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Export Report</h3>
-                <p className="text-sm text-white/70">Download expense report</p>
-              </div>
-            </button>
+            </div>
           </div>
 
-          {/* Categories and Recent Expenses */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5">
-                <h2 className="text-lg font-bold text-[#101111]">By Category</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {expenseCategories.map((cat) => (
-                    <div key={cat.name} className="flex items-center justify-between">
+          {/* Recent Multi-Currency Invoices */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Recent Multi-Currency Invoices</h2>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
+                {recentMultiCurrency.map((invoice) => (
+                  <div key={invoice.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                        <CreditCard className="w-6 h-6 text-[#154230]" />
+                      </div>
                       <div>
-                        <div className="font-medium text-[#101111]">{cat.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{cat.count} expenses</div>
+                        <div className="font-semibold text-[#101111]">{invoice.id}</div>
+                        <div className="text-sm text-[#4A4A4A]">{invoice.client} - {invoice.date}</div>
                       </div>
-                      <div className="font-bold text-[#154230]">{cat.amount}</div>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-[#101111]">{invoice.amount}</span>
+                      <span className="px-3 py-1 bg-[#154230]/10 text-[#154230] rounded-full text-xs font-medium">
+                        {invoice.currency}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Expenses */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#101111]">Recent Expenses</h2>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
-                    <Filter className="w-4 h-4" />
-                    Filter
-                  </button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="space-y-3">
-                  {recentExpenses.map((expense) => (
-                    <div key={expense.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#154230]" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[#101111]">{expense.description}</div>
-                          <div className="text-sm text-[#4A4A4A]">{expense.category} - {expense.date}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#5D1E21]">{expense.amount}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expense.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {expense.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <Globe className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">50+ Currencies</h3>
+              <p className="text-sm text-white/70">Invoice in any major currency worldwide</p>
+            </div>
+            <div className="bg-[#154230] rounded-xl p-6 text-center">
+              <TrendingUp className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Real-Time Rates</h3>
+              <p className="text-sm text-white/70">Exchange rates update every few minutes</p>
+            </div>
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <DollarSign className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Automatic Conversion</h3>
+              <p className="text-sm text-white/70">Convert to your base currency automatically</p>
             </div>
           </div>
         </div>
@@ -252,12 +231,12 @@ export default function ExpensesPage() {
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Track Every Expense</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Go Global with Multi-Currency</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Never miss a deductible expense. Export reports for tax time.
+            Invoice clients worldwide in their preferred currency with transparent exchange rates.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Start Tracking <ArrowRight className="w-4 h-4" />
+            Start Invoicing <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

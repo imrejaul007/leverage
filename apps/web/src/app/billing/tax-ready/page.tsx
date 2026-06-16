@@ -5,19 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  PiggyBank,
+  FileText,
   Bell,
   Menu,
   X,
   ArrowRight,
-  Plus,
-  Receipt,
-  CreditCard,
-  TrendingUp,
-  TrendingDown,
-  Filter,
   Download,
-  FileText,
+  CheckCircle,
+  Calculator,
+  FileSpreadsheet,
+  Receipt,
   Globe,
   Bot,
   Megaphone,
@@ -50,21 +47,20 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const recentExpenses = [
-  { id: 1, description: 'Shipping - Container #4521', category: 'Freight', amount: '$2,500', date: 'Jan 15, 2024', status: 'approved' },
-  { id: 2, description: 'Customs Clearance', category: 'Compliance', amount: '$850', date: 'Jan 14, 2024', status: 'approved' },
-  { id: 3, description: 'Office Supplies', category: 'Operations', amount: '$320', date: 'Jan 13, 2024', status: 'pending' },
-  { id: 4, description: 'Marketing Materials', category: 'Marketing', amount: '$1,200', date: 'Jan 12, 2024', status: 'approved' },
+const taxReports = [
+  { id: 1, name: 'Q4 2023 Tax Summary', type: 'VAT Report', generated: 'Jan 10, 2024', status: 'ready' },
+  { id: 2, name: '2023 Annual Summary', type: 'Income Report', generated: 'Jan 5, 2024', status: 'ready' },
+  { id: 3, name: 'December GST Report', type: 'GST Report', generated: 'Jan 2, 2024', status: 'ready' },
 ];
 
-const expenseCategories = [
-  { name: 'Freight', count: 45, amount: '$45,200' },
-  { name: 'Compliance', count: 23, amount: '$12,500' },
-  { name: 'Operations', count: 67, amount: '$8,900' },
-  { name: 'Marketing', count: 18, amount: '$15,000' },
+const taxFeatures = [
+  { id: 1, name: 'VAT/GST Calculation', description: 'Automatic tax calculation for multiple regions' },
+  { id: 2, name: 'Tax Reports', description: 'Generate compliant tax reports for filing' },
+  { id: 3, name: 'Multi-Jurisdiction', description: 'Support for VAT, GST, and sales tax' },
+  { id: 4, name: 'Tax Deductible Tracking', description: 'Track expenses for tax deductions' },
 ];
 
-export default function ExpensesPage() {
+export default function TaxReadyPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -122,13 +118,13 @@ export default function ExpensesPage() {
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <PiggyBank className="w-10 h-10" />
+              <FileText className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Expenses
+                Tax Ready
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Track and manage all your business expenses in one place.
+              Simplified tax reporting for VAT, GST, and international trade.
             </p>
           </motion.div>
         </div>
@@ -140,20 +136,20 @@ export default function ExpensesPage() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$81,600</p>
-              <p className="text-sm text-[#4A4A4A]">Total Expenses</p>
+              <p className="text-2xl font-bold text-[#154230]">$245K</p>
+              <p className="text-sm text-[#4A4A4A]">Total Revenue</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#5D1E21]">153</p>
-              <p className="text-sm text-[#4A4A4A]">This Month</p>
+              <p className="text-2xl font-bold text-[#154230]">$24.5K</p>
+              <p className="text-sm text-[#4A4A4A]">Tax Collected</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$1,250</p>
-              <p className="text-sm text-[#4A4A4A]">Pending Approval</p>
+              <p className="text-2xl font-bold text-[#154230]">12</p>
+              <p className="text-sm text-[#4A4A4A]">Tax Jurisdictions</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">94%</p>
-              <p className="text-sm text-[#4A4A4A]">Tracked</p>
+              <p className="text-2xl font-bold text-[#154230]">100%</p>
+              <p className="text-sm text-[#4A4A4A]">Compliant</p>
             </div>
           </div>
 
@@ -161,20 +157,20 @@ export default function ExpensesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
               <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Plus className="w-7 h-7 text-white" />
+                <FileText className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-white">Add Expense</h3>
-                <p className="text-sm text-white/70">Record a new expense</p>
+                <h3 className="font-bold text-white">Generate Tax Report</h3>
+                <p className="text-sm text-white/70">Create compliant tax documents</p>
               </div>
             </button>
             <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
               <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-white" />
+                <Calculator className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-white">Scan Receipt</h3>
-                <p className="text-sm text-white/70">Upload and auto-extract</p>
+                <h3 className="font-bold text-white">Tax Calculator</h3>
+                <p className="text-sm text-white/70">Calculate taxes for transactions</p>
               </div>
             </button>
             <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
@@ -182,68 +178,78 @@ export default function ExpensesPage() {
                 <Download className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-white">Export Report</h3>
-                <p className="text-sm text-white/70">Download expense report</p>
+                <h3 className="font-bold text-white">Export Data</h3>
+                <p className="text-sm text-white/70">Download for your accountant</p>
               </div>
             </button>
           </div>
 
-          {/* Categories and Recent Expenses */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5">
-                <h2 className="text-lg font-bold text-[#101111]">By Category</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {expenseCategories.map((cat) => (
-                    <div key={cat.name} className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-[#101111]">{cat.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{cat.count} expenses</div>
-                      </div>
-                      <div className="font-bold text-[#154230]">{cat.amount}</div>
-                    </div>
-                  ))}
-                </div>
+          {/* Tax Features */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Tax Features</h2>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {taxFeatures.map((feature) => (
+                  <div key={feature.id} className="p-4 bg-[#f7f5f1] rounded-xl">
+                    <div className="font-medium text-[#101111] mb-1">{feature.name}</div>
+                    <div className="text-sm text-[#4A4A4A]">{feature.description}</div>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Expenses */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#101111]">Recent Expenses</h2>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
-                    <Filter className="w-4 h-4" />
-                    Filter
-                  </button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="space-y-3">
-                  {recentExpenses.map((expense) => (
-                    <div key={expense.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#154230]" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[#101111]">{expense.description}</div>
-                          <div className="text-sm text-[#4A4A4A]">{expense.category} - {expense.date}</div>
-                        </div>
+          {/* Recent Tax Reports */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Tax Reports</h2>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
+                {taxReports.map((report) => (
+                  <div key={report.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                        <FileText className="w-6 h-6 text-[#154230]" />
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#5D1E21]">{expense.amount}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expense.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {expense.status}
-                        </span>
+                      <div>
+                        <div className="font-semibold text-[#101111]">{report.name}</div>
+                        <div className="text-sm text-[#4A4A4A]">{report.type} - Generated: {report.generated}</div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex items-center gap-3">
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" />
+                        {report.status}
+                      </span>
+                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                        <Download className="w-4 h-4 text-[#154230]" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <Calculator className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Automatic Calculation</h3>
+              <p className="text-sm text-white/70">Taxes calculated at invoice time</p>
+            </div>
+            <div className="bg-[#154230] rounded-xl p-6 text-center">
+              <FileSpreadsheet className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Export Reports</h3>
+              <p className="text-sm text-white/70">Download for your accountant</p>
+            </div>
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <CheckCircle className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Compliant Filing</h3>
+              <p className="text-sm text-white/70">Reports ready for tax authorities</p>
             </div>
           </div>
         </div>
@@ -252,12 +258,12 @@ export default function ExpensesPage() {
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Track Every Expense</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Tax Time Made Easy</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Never miss a deductible expense. Export reports for tax time.
+            Generate compliant tax reports and simplify your tax filing process.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Start Tracking <ArrowRight className="w-4 h-4" />
+            Get Tax Ready <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

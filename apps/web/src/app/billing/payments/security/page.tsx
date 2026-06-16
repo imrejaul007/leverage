@@ -5,24 +5,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  PiggyBank,
+  Shield,
   Bell,
   Menu,
   X,
   ArrowRight,
-  Plus,
-  Receipt,
+  Lock,
+  Eye,
   CreditCard,
-  TrendingUp,
-  TrendingDown,
-  Filter,
-  Download,
+  CheckCircle,
   FileText,
   Globe,
   Bot,
   Megaphone,
   Truck,
-  Shield,
+  ShieldCheck,
+  Receipt,
   Users,
 } from 'lucide-react';
 
@@ -50,21 +48,14 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const recentExpenses = [
-  { id: 1, description: 'Shipping - Container #4521', category: 'Freight', amount: '$2,500', date: 'Jan 15, 2024', status: 'approved' },
-  { id: 2, description: 'Customs Clearance', category: 'Compliance', amount: '$850', date: 'Jan 14, 2024', status: 'approved' },
-  { id: 3, description: 'Office Supplies', category: 'Operations', amount: '$320', date: 'Jan 13, 2024', status: 'pending' },
-  { id: 4, description: 'Marketing Materials', category: 'Marketing', amount: '$1,200', date: 'Jan 12, 2024', status: 'approved' },
+const securityFeatures = [
+  { id: 1, name: 'Two-Factor Authentication', description: 'Add an extra layer of security to your account', enabled: true },
+  { id: 2, name: 'Login Notifications', description: 'Get alerted when someone logs into your account', enabled: true },
+  { id: 3, name: 'API Key Protection', description: 'Require authentication for API access', enabled: false },
+  { id: 4, name: 'IP Whitelist', description: 'Restrict access to specific IP addresses', enabled: false },
 ];
 
-const expenseCategories = [
-  { name: 'Freight', count: 45, amount: '$45,200' },
-  { name: 'Compliance', count: 23, amount: '$12,500' },
-  { name: 'Operations', count: 67, amount: '$8,900' },
-  { name: 'Marketing', count: 18, amount: '$15,000' },
-];
-
-export default function ExpensesPage() {
+export default function SecurityPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -122,13 +113,13 @@ export default function ExpensesPage() {
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <PiggyBank className="w-10 h-10" />
+              <Shield className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Expenses
+                Payment Security
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Track and manage all your business expenses in one place.
+              Keep your payments and financial data secure with enterprise-grade security.
             </p>
           </motion.div>
         </div>
@@ -137,113 +128,100 @@ export default function ExpensesPage() {
       {/* Main Content */}
       <main className="px-4 sm:px-8 -mt-12 pb-16">
         <div className="container mx-auto max-w-7xl">
-          {/* Stats Cards */}
+          {/* Security Status */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$81,600</p>
-              <p className="text-sm text-[#4A4A4A]">Total Expenses</p>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <ShieldCheck className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-[#154230]">PCI</p>
+              <p className="text-sm text-[#4A4A4A]">Compliant</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#5D1E21]">153</p>
-              <p className="text-sm text-[#4A4A4A]">This Month</p>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <Lock className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-[#154230]">256-bit</p>
+              <p className="text-sm text-[#4A4A4A]">Encryption</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$1,250</p>
-              <p className="text-sm text-[#4A4A4A]">Pending Approval</p>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <Eye className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-[#154230]">24/7</p>
+              <p className="text-sm text-[#4A4A4A]">Monitoring</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">94%</p>
-              <p className="text-sm text-[#4A4A4A]">Tracked</p>
+            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
+              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-[#154230]">99.9%</p>
+              <p className="text-sm text-[#4A4A4A]">Uptime</p>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Plus className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Add Expense</h3>
-                <p className="text-sm text-white/70">Record a new expense</p>
-              </div>
-            </button>
-            <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Scan Receipt</h3>
-                <p className="text-sm text-white/70">Upload and auto-extract</p>
-              </div>
-            </button>
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Download className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Export Report</h3>
-                <p className="text-sm text-white/70">Download expense report</p>
-              </div>
-            </button>
-          </div>
-
-          {/* Categories and Recent Expenses */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5">
-                <h2 className="text-lg font-bold text-[#101111]">By Category</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {expenseCategories.map((cat) => (
-                    <div key={cat.name} className="flex items-center justify-between">
+          {/* Security Features */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Security Settings</h2>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {securityFeatures.map((feature) => (
+                  <div key={feature.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <Lock className="w-5 h-5 text-[#154230]" />
+                      </div>
                       <div>
-                        <div className="font-medium text-[#101111]">{cat.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{cat.count} expenses</div>
+                        <div className="font-medium text-[#101111]">{feature.name}</div>
+                        <div className="text-sm text-[#4A4A4A]">{feature.description}</div>
                       </div>
-                      <div className="font-bold text-[#154230]">{cat.amount}</div>
                     </div>
-                  ))}
-                </div>
+                    <div className={`w-12 h-6 rounded-full relative ${feature.enabled ? 'bg-[#154230]' : 'bg-gray-300'}`}>
+                      <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${feature.enabled ? 'right-1' : 'left-1'}`} />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Expenses */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#101111]">Recent Expenses</h2>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
-                    <Filter className="w-4 h-4" />
-                    Filter
-                  </button>
-                </div>
+          {/* Compliance */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <h2 className="text-xl font-bold text-[#101111] mb-4">Compliance & Certifications</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="p-4 bg-[#f7f5f1] rounded-xl text-center">
+                <ShieldCheck className="w-8 h-8 text-[#154230] mx-auto mb-2" />
+                <div className="font-medium text-[#101111]">PCI DSS</div>
+                <div className="text-sm text-[#4A4A4A]">Level 1</div>
               </div>
-              <div className="p-6">
-                <div className="space-y-3">
-                  {recentExpenses.map((expense) => (
-                    <div key={expense.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#154230]" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[#101111]">{expense.description}</div>
-                          <div className="text-sm text-[#4A4A4A]">{expense.category} - {expense.date}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#5D1E21]">{expense.amount}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expense.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {expense.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="p-4 bg-[#f7f5f1] rounded-xl text-center">
+                <Shield className="w-8 h-8 text-[#154230] mx-auto mb-2" />
+                <div className="font-medium text-[#101111]">SOC 2</div>
+                <div className="text-sm text-[#4A4A4A]">Type II</div>
               </div>
+              <div className="p-4 bg-[#f7f5f1] rounded-xl text-center">
+                <Lock className="w-8 h-8 text-[#154230] mx-auto mb-2" />
+                <div className="font-medium text-[#101111]">GDPR</div>
+                <div className="text-sm text-[#4A4A4A]">Compliant</div>
+              </div>
+              <div className="p-4 bg-[#f7f5f1] rounded-xl text-center">
+                <CreditCard className="w-8 h-8 text-[#154230] mx-auto mb-2" />
+                <div className="font-medium text-[#101111]">ISO 27001</div>
+                <div className="text-sm text-[#4A4A4A]">Certified</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <Lock className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Data Encryption</h3>
+              <p className="text-sm text-white/70">All data is encrypted at rest and in transit</p>
+            </div>
+            <div className="bg-[#154230] rounded-xl p-6 text-center">
+              <Shield className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Fraud Protection</h3>
+              <p className="text-sm text-white/70">Advanced algorithms detect and prevent fraud</p>
+            </div>
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <Eye className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">24/7 Monitoring</h3>
+              <p className="text-sm text-white/70">Continuous security monitoring and alerts</p>
             </div>
           </div>
         </div>
@@ -252,12 +230,12 @@ export default function ExpensesPage() {
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Track Every Expense</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Your Payments Are Safe</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Never miss a deductible expense. Export reports for tax time.
+            Enterprise-grade security to protect your financial data.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Start Tracking <ArrowRight className="w-4 h-4" />
+            Get Started <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

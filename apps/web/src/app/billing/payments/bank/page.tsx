@@ -5,24 +5,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  PiggyBank,
+  Building2,
   Bell,
   Menu,
   X,
   ArrowRight,
+  Link as LinkIcon,
+  Unlink,
   Plus,
-  Receipt,
-  CreditCard,
-  TrendingUp,
-  TrendingDown,
-  Filter,
-  Download,
+  CheckCircle,
   FileText,
   Globe,
   Bot,
   Megaphone,
   Truck,
   Shield,
+  Receipt,
   Users,
 } from 'lucide-react';
 
@@ -50,21 +48,12 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const recentExpenses = [
-  { id: 1, description: 'Shipping - Container #4521', category: 'Freight', amount: '$2,500', date: 'Jan 15, 2024', status: 'approved' },
-  { id: 2, description: 'Customs Clearance', category: 'Compliance', amount: '$850', date: 'Jan 14, 2024', status: 'approved' },
-  { id: 3, description: 'Office Supplies', category: 'Operations', amount: '$320', date: 'Jan 13, 2024', status: 'pending' },
-  { id: 4, description: 'Marketing Materials', category: 'Marketing', amount: '$1,200', date: 'Jan 12, 2024', status: 'approved' },
+const connectedAccounts = [
+  { id: 1, name: 'Chase Business Checking', bank: 'Chase', account: '****4521', status: 'connected', lastSync: '2 hours ago' },
+  { id: 2, name: 'Bank of America Savings', bank: 'Bank of America', account: '****8832', status: 'connected', lastSync: '1 day ago' },
 ];
 
-const expenseCategories = [
-  { name: 'Freight', count: 45, amount: '$45,200' },
-  { name: 'Compliance', count: 23, amount: '$12,500' },
-  { name: 'Operations', count: 67, amount: '$8,900' },
-  { name: 'Marketing', count: 18, amount: '$15,000' },
-];
-
-export default function ExpensesPage() {
+export default function BankPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -122,13 +111,13 @@ export default function ExpensesPage() {
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <PiggyBank className="w-10 h-10" />
+              <Building2 className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Expenses
+                Bank Payments
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Track and manage all your business expenses in one place.
+              Connect your bank accounts for seamless payment processing and reconciliation.
             </p>
           </motion.div>
         </div>
@@ -140,110 +129,94 @@ export default function ExpensesPage() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$81,600</p>
-              <p className="text-sm text-[#4A4A4A]">Total Expenses</p>
+              <p className="text-2xl font-bold text-[#154230]">2</p>
+              <p className="text-sm text-[#4A4A4A]">Connected Accounts</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#5D1E21]">153</p>
-              <p className="text-sm text-[#4A4A4A]">This Month</p>
+              <p className="text-2xl font-bold text-[#154230]">$156K</p>
+              <p className="text-sm text-[#4A4A4A]">Processed This Month</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$1,250</p>
-              <p className="text-sm text-[#4A4A4A]">Pending Approval</p>
+              <p className="text-2xl font-bold text-[#154230]">48</p>
+              <p className="text-sm text-[#4A4A4A]">Transactions Synced</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">94%</p>
-              <p className="text-sm text-[#4A4A4A]">Tracked</p>
+              <p className="text-2xl font-bold text-[#154230]">0.5%</p>
+              <p className="text-sm text-[#4A4A4A]">Bank Transfer Fee</p>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
               <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
                 <Plus className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-white">Add Expense</h3>
-                <p className="text-sm text-white/70">Record a new expense</p>
+                <h3 className="font-bold text-white">Connect Bank</h3>
+                <p className="text-sm text-white/70">Link a new bank account</p>
               </div>
             </button>
             <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
               <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-white" />
+                <Building2 className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-white">Scan Receipt</h3>
-                <p className="text-sm text-white/70">Upload and auto-extract</p>
-              </div>
-            </button>
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Download className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Export Report</h3>
-                <p className="text-sm text-white/70">Download expense report</p>
+                <h3 className="font-bold text-white">Manage Accounts</h3>
+                <p className="text-sm text-white/70">View and edit connected banks</p>
               </div>
             </button>
           </div>
 
-          {/* Categories and Recent Expenses */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5">
-                <h2 className="text-lg font-bold text-[#101111]">By Category</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {expenseCategories.map((cat) => (
-                    <div key={cat.name} className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-[#101111]">{cat.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{cat.count} expenses</div>
+          {/* Connected Accounts */}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Connected Bank Accounts</h2>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {connectedAccounts.map((account) => (
+                  <div key={account.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-[#154230]" />
                       </div>
-                      <div className="font-bold text-[#154230]">{cat.amount}</div>
+                      <div>
+                        <div className="font-semibold text-[#101111]">{account.name}</div>
+                        <div className="text-sm text-[#4A4A4A]">{account.bank} - {account.account}</div>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <div className="text-sm text-[#4A4A4A]">Last sync: {account.lastSync}</div>
+                      </div>
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                        <Unlink className="w-4 h-4 text-red-500" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Expenses */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#101111]">Recent Expenses</h2>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
-                    <Filter className="w-4 h-4" />
-                    Filter
-                  </button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="space-y-3">
-                  {recentExpenses.map((expense) => (
-                    <div key={expense.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#154230]" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[#101111]">{expense.description}</div>
-                          <div className="text-sm text-[#4A4A4A]">{expense.category} - {expense.date}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#5D1E21]">{expense.amount}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expense.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {expense.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <LinkIcon className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Secure Connection</h3>
+              <p className="text-sm text-white/70">Bank-level encryption for all connections</p>
+            </div>
+            <div className="bg-[#154230] rounded-xl p-6 text-center">
+              <CheckCircle className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Auto Reconciliation</h3>
+              <p className="text-sm text-white/70">Payments automatically matched to invoices</p>
+            </div>
+            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
+              <Building2 className="w-10 h-10 text-white mx-auto mb-3" />
+              <h3 className="font-bold text-white mb-2">Multiple Banks</h3>
+              <p className="text-sm text-white/70">Connect unlimited bank accounts</p>
             </div>
           </div>
         </div>
@@ -252,12 +225,12 @@ export default function ExpensesPage() {
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Track Every Expense</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Connect Your Bank Today</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Never miss a deductible expense. Export reports for tax time.
+            Link your bank accounts for automatic payment reconciliation and easier accounting.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Start Tracking <ArrowRight className="w-4 h-4" />
+            Connect Bank <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

@@ -5,24 +5,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  Building,
-  Bell,
-  Menu,
-  X,
-  ArrowRight,
-  RefreshCw,
-  CheckCircle,
-  AlertCircle,
-  Link as LinkIcon,
-  Unlink,
+  Bot,
+  Share2,
+  MessageSquare,
   Shield,
   Globe,
-  Bot,
-  Megaphone,
-  Truck,
+  ChevronRight,
+  Menu,
+  X,
+  Bell,
+  ArrowRight,
   FileText,
-  Receipt,
   Users,
+  Copy,
+  Link as LinkIcon,
+  Mail,
+  UserPlus,
+  Check,
+  Truck,
+  Receipt,
+  Megaphone,
 } from 'lucide-react';
 
 const platformLinks = [
@@ -49,14 +51,27 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const connectedBanks = [
-  { id: 1, name: 'Chase Business', account: '****4521', status: 'connected', lastSync: '2 hours ago' },
-  { id: 2, name: 'Bank of America', account: '****8832', status: 'connected', lastSync: '1 day ago' },
-  { id: 3, name: 'Wells Fargo', account: '****1145', status: 'pending' },
+const sharedPrompts = [
+  { title: 'HS Code Classifier', sharedWith: 'Team Alpha', date: '2 days ago', views: 45 },
+  { title: 'Duty Calculator', sharedWith: 'Finance Team', date: '1 week ago', views: 23 },
+  { title: 'Invoice Template', sharedWith: 'Public', date: '2 weeks ago', views: 156 },
 ];
 
-export default function BankSyncPage() {
+const shareMethods = [
+  { name: 'Copy Link', desc: 'Share via direct link', icon: Copy },
+  { name: 'Email', desc: 'Send via email', icon: Mail },
+  { name: 'Team', desc: 'Share with team members', icon: UserPlus },
+  { name: 'Public', desc: 'Make publicly available', icon: Globe },
+];
+
+export default function PromptsSharePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-[#f7f5f1]">
@@ -66,7 +81,7 @@ export default function BankSyncPage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Billing</span>
+              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Share Prompts</span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8">
@@ -75,7 +90,7 @@ export default function BankSyncPage() {
               <Link href="/documents" className="nav-link font-medium">Documents</Link>
               <Link href="/freight" className="nav-link font-medium">Freight</Link>
               <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
-              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/ai" className="nav-link font-medium text-[#154230]">AI</Link>
               <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
@@ -100,7 +115,7 @@ export default function BankSyncPage() {
                 <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
                 <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
                 <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
-                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">AI</Link>
                 <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
@@ -109,140 +124,101 @@ export default function BankSyncPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#5D1E21] to-[#7a2830] px-4 sm:px-8 pt-8 pb-20">
+      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 pt-8 pb-16">
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Building className="w-10 h-10" />
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Share2 className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Bank Sync
+                Share Prompts
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Automatically reconcile payments with your connected bank accounts.
+              Share your prompts with team members, or make them publicly available for the community.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-12 pb-16">
-        <div className="container mx-auto max-w-7xl">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">3</p>
-              <p className="text-sm text-[#4A4A4A]">Connected Banks</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">156</p>
-              <p className="text-sm text-[#4A4A4A]">Transactions Synced</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">98%</p>
-              <p className="text-sm text-[#4A4A4A]">Auto-Reconciled</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">2h</p>
-              <p className="text-sm text-[#4A4A4A]">Last Sync</p>
+      <main className="px-4 sm:px-8 -mt-8 pb-16">
+        <div className="container mx-auto max-w-4xl">
+          {/* Share Methods */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+            <h2 className="text-xl font-bold text-[#101111] mb-6">Share Options</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {shareMethods.map((method, index) => {
+                const Icon = method.icon;
+                return (
+                  <button
+                    key={method.name}
+                    className={`p-4 rounded-xl text-center transition-all hover:scale-[1.02] ${index % 2 === 0 ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}
+                  >
+                    <Icon className="w-6 h-6 text-white mx-auto mb-2" />
+                    <h3 className="font-semibold text-white">{method.name}</h3>
+                    <p className="text-xs text-white/70">{method.desc}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <LinkIcon className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Connect Bank</h3>
-                <p className="text-sm text-white/70">Link a new bank account</p>
-              </div>
-            </button>
-            <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <RefreshCw className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Sync Now</h3>
-                <p className="text-sm text-white/70">Manually trigger a sync</p>
-              </div>
-            </button>
+          {/* Link Sharing */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+            <h2 className="text-xl font-bold text-[#101111] mb-4 flex items-center gap-2">
+              <LinkIcon className="w-6 h-6 text-[#154230]" />
+              Copy Share Link
+            </h2>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value="https://leverage.ai/prompts/share/abc123"
+                readOnly
+                className="flex-1 px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] focus:outline-none"
+              />
+              <button
+                onClick={handleCopy}
+                className={`px-6 py-3 font-medium rounded-xl transition-colors flex items-center gap-2 ${
+                  copied
+                    ? 'bg-green-500 text-white'
+                    : 'bg-[#154230] hover:bg-[#1d5240] text-white'
+                }`}
+              >
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
           </div>
 
-          {/* Connected Banks List */}
+          {/* Shared Prompts */}
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 border-b border-black/5">
-              <h2 className="text-xl font-bold text-[#101111]">Connected Bank Accounts</h2>
+              <h2 className="text-xl font-bold text-[#101111]">Shared Prompts</h2>
             </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                {connectedBanks.map((bank) => (
-                  <div key={bank.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                        <Building className="w-6 h-6 text-[#154230]" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-[#101111]">{bank.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{bank.account}</div>
-                      </div>
+            <div className="divide-y divide-black/5">
+              {sharedPrompts.map((prompt, index) => (
+                <div key={prompt.title} className="p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${index % 2 === 0 ? 'bg-[#154230]/10' : 'bg-[#A6824A]/10'}`}>
+                      <Share2 className={`w-5 h-5 ${index % 2 === 0 ? 'text-[#154230]' : 'text-[#A6824A]'}`} />
                     </div>
-                    <div className="flex items-center gap-4">
-                      {bank.lastSync && (
-                        <div className="text-right">
-                          <div className="text-sm text-[#4A4A4A]">Last sync: {bank.lastSync}</div>
-                        </div>
-                      )}
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${bank.status === 'connected' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                        {bank.status === 'connected' ? 'Connected' : 'Pending'}
-                      </span>
-                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                        <RefreshCw className="w-4 h-4 text-[#4A4A4A]" />
-                      </button>
-                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
-                        <Unlink className="w-4 h-4 text-red-500" />
-                      </button>
+                    <div>
+                      <h3 className="font-semibold text-[#101111]">{prompt.title}</h3>
+                      <p className="text-sm text-[#4A4A4A]">Shared with {prompt.sharedWith} • {prompt.date}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
-              <RefreshCw className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Real-Time Sync</h3>
-              <p className="text-sm text-white/70">Transactions sync automatically every few hours</p>
-            </div>
-            <div className="bg-[#154230] rounded-xl p-6 text-center">
-              <CheckCircle className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Auto-Reconciliation</h3>
-              <p className="text-sm text-white/70">Payments are matched to invoices automatically</p>
-            </div>
-            <div className="bg-[#5D1E21] rounded-xl p-6 text-center">
-              <Shield className="w-10 h-10 text-white mx-auto mb-3" />
-              <h3 className="font-bold text-white mb-2">Bank-Level Security</h3>
-              <p className="text-sm text-white/70">256-bit encryption keeps your data safe</p>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-[#4A4A4A]">{prompt.views} views</span>
+                    <button className="p-2 hover:bg-[#f7f5f1] rounded-lg transition-colors">
+                      <Copy className="w-4 h-4 text-[#4A4A4A]" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </main>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Connect Your Bank Account</h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Automatically reconcile payments and save hours on manual bookkeeping.
-          </p>
-          <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Connect Bank <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
 
       {/* Footer - 50% Green / 50% Maroon */}
       <footer className="bg-[#154230]">

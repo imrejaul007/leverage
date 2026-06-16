@@ -5,24 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
-  PiggyBank,
+  Plus,
   Bell,
   Menu,
   X,
   ArrowRight,
-  Plus,
-  Receipt,
-  CreditCard,
-  TrendingUp,
-  TrendingDown,
-  Filter,
-  Download,
+  Save,
+  Send,
   FileText,
   Globe,
   Bot,
   Megaphone,
   Truck,
   Shield,
+  Receipt,
+  Trash2,
   Users,
 } from 'lucide-react';
 
@@ -50,22 +47,22 @@ const legalLinks = [
   { name: 'Security', href: '/security' },
 ];
 
-const recentExpenses = [
-  { id: 1, description: 'Shipping - Container #4521', category: 'Freight', amount: '$2,500', date: 'Jan 15, 2024', status: 'approved' },
-  { id: 2, description: 'Customs Clearance', category: 'Compliance', amount: '$850', date: 'Jan 14, 2024', status: 'approved' },
-  { id: 3, description: 'Office Supplies', category: 'Operations', amount: '$320', date: 'Jan 13, 2024', status: 'pending' },
-  { id: 4, description: 'Marketing Materials', category: 'Marketing', amount: '$1,200', date: 'Jan 12, 2024', status: 'approved' },
+const lineItems = [
+  { id: 1, description: 'Consulting Services - Q1 2024', quantity: 1, rate: 5000 },
+  { id: 2, description: 'Logistics Coordination', quantity: 10, rate: 250 },
 ];
 
-const expenseCategories = [
-  { name: 'Freight', count: 45, amount: '$45,200' },
-  { name: 'Compliance', count: 23, amount: '$12,500' },
-  { name: 'Operations', count: 67, amount: '$8,900' },
-  { name: 'Marketing', count: 18, amount: '$15,000' },
-];
-
-export default function ExpensesPage() {
+export default function NewInvoicePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({
+    invoiceNumber: 'INV-2024-005',
+    clientName: '',
+    clientEmail: '',
+    clientAddress: '',
+    issueDate: '2024-01-18',
+    dueDate: '2024-02-18',
+    notes: '',
+  });
 
   return (
     <div className="min-h-screen bg-[#f7f5f1]">
@@ -118,149 +115,162 @@ export default function ExpensesPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 pt-8 pb-20">
+      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 pt-8 pb-16">
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <PiggyBank className="w-10 h-10" />
+              <Plus className="w-10 h-10" />
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                Expenses
+                New Invoice
               </h1>
             </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Track and manage all your business expenses in one place.
+              Create professional invoices in minutes.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-12 pb-16">
-        <div className="container mx-auto max-w-7xl">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$81,600</p>
-              <p className="text-sm text-[#4A4A4A]">Total Expenses</p>
+      <main className="px-4 sm:px-8 -mt-8 pb-16">
+        <div className="container mx-auto max-w-5xl">
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            {/* Invoice Form */}
+            <div className="p-6 border-b border-black/5">
+              <h2 className="text-xl font-bold text-[#101111]">Invoice Details</h2>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#5D1E21]">153</p>
-              <p className="text-sm text-[#4A4A4A]">This Month</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">$1,250</p>
-              <p className="text-sm text-[#4A4A4A]">Pending Approval</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <p className="text-2xl font-bold text-[#154230]">94%</p>
-              <p className="text-sm text-[#4A4A4A]">Tracked</p>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Plus className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Add Expense</h3>
-                <p className="text-sm text-white/70">Record a new expense</p>
-              </div>
-            </button>
-            <button className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Scan Receipt</h3>
-                <p className="text-sm text-white/70">Upload and auto-extract</p>
-              </div>
-            </button>
-            <button className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
-                <Download className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-white">Export Report</h3>
-                <p className="text-sm text-white/70">Download expense report</p>
-              </div>
-            </button>
-          </div>
-
-          {/* Categories and Recent Expenses */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5">
-                <h2 className="text-lg font-bold text-[#101111]">By Category</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {expenseCategories.map((cat) => (
-                    <div key={cat.name} className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-[#101111]">{cat.name}</div>
-                        <div className="text-sm text-[#4A4A4A]">{cat.count} expenses</div>
-                      </div>
-                      <div className="font-bold text-[#154230]">{cat.amount}</div>
-                    </div>
-                  ))}
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Invoice Number</label>
+                  <input
+                    type="text"
+                    value={invoiceData.invoiceNumber}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, invoiceNumber: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Issue Date</label>
+                  <input
+                    type="date"
+                    value={invoiceData.issueDate}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, issueDate: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Client Name</label>
+                  <input
+                    type="text"
+                    placeholder="Enter client name"
+                    value={invoiceData.clientName}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, clientName: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Due Date</label>
+                  <input
+                    type="date"
+                    value={invoiceData.dueDate}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, dueDate: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Client Email</label>
+                  <input
+                    type="email"
+                    placeholder="Enter client email"
+                    value={invoiceData.clientEmail}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, clientEmail: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-[#101111] mb-2">Client Address</label>
+                  <textarea
+                    placeholder="Enter client address"
+                    value={invoiceData.clientAddress}
+                    onChange={(e) => setInvoiceData({ ...invoiceData, clientAddress: e.target.value })}
+                    rows={2}
+                    className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230] resize-none"
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Recent Expenses */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black/5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#101111]">Recent Expenses</h2>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
-                    <Filter className="w-4 h-4" />
-                    Filter
+              {/* Line Items */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-[#101111]">Line Items</h3>
+                  <button className="flex items-center gap-2 px-3 py-1.5 bg-[#154230] text-white text-sm font-medium rounded-lg hover:bg-[#1d5240] transition-colors">
+                    <Plus className="w-4 h-4" />
+                    Add Item
                   </button>
                 </div>
-              </div>
-              <div className="p-6">
                 <div className="space-y-3">
-                  {recentExpenses.map((expense) => (
-                    <div key={expense.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Receipt className="w-5 h-5 text-[#154230]" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[#101111]">{expense.description}</div>
-                          <div className="text-sm text-[#4A4A4A]">{expense.category} - {expense.date}</div>
-                        </div>
+                  {lineItems.map((item) => (
+                    <div key={item.id} className="flex items-center gap-4 p-4 bg-[#f7f5f1] rounded-xl">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          defaultValue={item.description}
+                          className="w-full px-3 py-2 bg-white rounded-lg text-[#101111] focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                        />
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#5D1E21]">{expense.amount}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expense.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                          {expense.status}
-                        </span>
+                      <div className="w-20">
+                        <input
+                          type="number"
+                          defaultValue={item.quantity}
+                          className="w-full px-3 py-2 bg-white rounded-lg text-[#101111] text-center focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                        />
                       </div>
+                      <div className="w-32">
+                        <input
+                          type="number"
+                          defaultValue={item.rate}
+                          className="w-full px-3 py-2 bg-white rounded-lg text-[#101111] text-center focus:outline-none focus:ring-2 focus:ring-[#154230]"
+                        />
+                      </div>
+                      <div className="w-32 text-right font-bold text-[#101111]">
+                        ${(item.quantity * item.rate).toLocaleString()}
+                      </div>
+                      <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </button>
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Notes */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-[#101111] mb-2">Notes</label>
+                <textarea
+                  placeholder="Add any notes or payment terms..."
+                  value={invoiceData.notes}
+                  onChange={(e) => setInvoiceData({ ...invoiceData, notes: e.target.value })}
+                  rows={3}
+                  className="w-full px-4 py-3 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none focus:ring-2 focus:ring-[#154230] resize-none"
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors">
+                  <Save className="w-5 h-5" />
+                  Save as Draft
+                </button>
+                <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#A6824A] text-white font-semibold rounded-xl hover:bg-[#8a6a3a] transition-colors">
+                  <Send className="w-5 h-5" />
+                  Create & Send
+                </button>
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Track Every Expense</h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Never miss a deductible expense. Export reports for tax time.
-          </p>
-          <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
-            Start Tracking <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
 
       {/* Footer - 50% Green / 50% Maroon */}
       <footer className="bg-[#154230]">

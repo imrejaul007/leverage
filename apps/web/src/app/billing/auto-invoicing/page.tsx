@@ -22,6 +22,7 @@ import {
   Megaphone,
   Truck,
   Shield,
+  Users,
 } from 'lucide-react';
 
 const platformLinks = [
