@@ -1,78 +1,152 @@
 @import 'tailwindcss';
 
-/* LEVERAGE Color System */
+/* ============================================
+   LEVERAGE Design System - Design Tokens
+   ============================================ */
+
 :root {
+  /* Primary Colors */
   --color-emerald: #154230;
+  --color-emerald-light: #1a5a3a;
+  --color-emerald-dark: #0d2e20;
+
+  /* Accent Colors */
   --color-gold: #A6824A;
+  --color-gold-light: #c9a066;
+
+  /* Secondary Colors */
   --color-burgundy: #5D1E21;
+  --color-burgundy-light: #7a2629;
+
+  /* Neutrals */
   --color-cream: #E6E2DA;
+  --color-cream-light: #f7f5f1;
   --color-dark: #101111;
   --color-gray: #4A4A4A;
+  --color-gray-light: #6b6b6b;
+
+  /* Background */
+  --color-bg-primary: #f7f5f1;
+  --color-bg-secondary: #E6E2DA;
+  --color-card-bg: #ffffff;
+
+  /* Borders */
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+
+  /* Text Colors */
+  --color-text-primary: #101111;
+  --color-text-secondary: #4A4A4A;
+  --color-text-muted: #6b6b6b;
+  --color-text-inverse: #ffffff;
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
 }
 
-/* Base styles */
+/* ============================================
+   Base Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--color-cream);
-  color: var(--color-dark);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Navigation Link */
+/* ============================================
+   Navigation Links
+   ============================================ */
+
 .nav-link {
-  color: var(--color-gray);
-  transition: all 0.3s ease;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-base);
   position: relative;
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -4px;
   left: 0;
   width: 0;
   height: 2px;
   background-color: var(--color-emerald);
-  transition: all 0.3s ease;
+  transition: width var(--transition-base);
+}
+
+.nav-link:hover {
+  color: var(--color-emerald);
 }
 
 .nav-link:hover::after {
   width: 100%;
 }
 
-/* Primary Button */
+/* ============================================
+   Button Styles
+   ============================================ */
+
 .btn-primary-group {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 16px 32px;
+  padding: 12px 24px;
   background-color: var(--color-emerald);
   color: white;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary-group:hover {
-  background-color: #1d5240;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  background-color: var(--color-emerald-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-/* Secondary Button */
 .btn-secondary-group {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 16px 32px;
+  padding: 12px 24px;
   background-color: white;
   border: 2px solid var(--color-emerald);
   color: var(--color-emerald);
   font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
 }
 
 .btn-secondary-group:hover {
@@ -80,61 +154,65 @@ body {
   color: white;
 }
 
-/* Burgundy Button */
 .btn-burgundy-group {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 16px 32px;
+  padding: 12px 24px;
   background-color: var(--color-burgundy);
   color: white;
   font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-burgundy-group:hover {
-  background-color: #7a2629;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-burgundy-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-/* Feature Card */
-.feature-card {
-  position: relative;
-  padding: 24px;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  overflow: hidden;
+/* ============================================
+   Card Styles
+   ============================================ */
+
+.card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-interactive {
   cursor: pointer;
 }
 
-.feature-card:hover {
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(-4px);
-}
-
-/* Pill Item */
-.pill-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: white;
-  border-radius: 9999px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.pill-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.card-interactive:hover {
   transform: translateY(-2px);
 }
+
+.card-light {
+  background-color: var(--color-bg-secondary);
+}
+
+.card-clean {
+  border: 1px solid transparent;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
 
 /* Scrollbar hide */
 .scrollbar-hide::-webkit-scrollbar {
@@ -166,4 +244,115 @@ body {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease forwards;
+}
+
+/* Focus visible styles */
+*:focus-visible {
+  outline: 2px solid var(--color-emerald);
+  outline-offset: 2px;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* ============================================
+   Form Styles
+   ============================================ */
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   Selection Styles
+   ============================================ */
+
+::selection {
+  background-color: var(--color-emerald);
+  color: white;
+}
+
+/* ============================================
+   Scrollbar Styles (Webkit)
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-light);
 }

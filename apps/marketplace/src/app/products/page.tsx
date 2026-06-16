@@ -1,21 +1,22 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Plus, ArrowRight, Shield, Globe, Truck, Users } from 'lucide-react';
+import { Package, Grid3X3, List, SlidersHorizontal } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeroSection } from '@/components/layout/Hero';
 import { ProductCard, Product } from '@/components/shared/ProductCard';
 import { CategoryFilter, Category } from '@/components/shared/CategoryFilter';
+import { FilterDropdown } from '@/components/shared/FilterDropdown';
 import { Pagination } from '@/components/shared/Pagination';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/useToast';
-import { Package } from 'lucide-react';
 
 // Product data
 const products: Product[] = [
@@ -144,7 +145,7 @@ const products: Product[] = [
 ];
 
 const categories: Category[] = [
-  { name: 'All', slug: 'all', emoji: '🛒' },
+  { name: 'All', slug: 'all' },
   { name: 'Food & Agriculture', slug: 'Food & Agriculture', emoji: '🌾' },
   { name: 'Textiles', slug: 'Textiles', emoji: '🧵' },
   { name: 'Electronics', slug: 'Electronics', emoji: '💻' },
@@ -154,19 +155,26 @@ const categories: Category[] = [
   { name: 'Machinery', slug: 'Machinery', emoji: '🔧' },
 ];
 
-const features = [
-  { icon: Shield, title: 'Verified Suppliers', description: 'All suppliers are vetted and verified' },
-  { icon: Globe, title: '150+ Countries', description: 'Global reach for your business' },
-  { icon: Truck, title: 'Integrated Logistics', description: 'End-to-end shipping solutions' },
-  { icon: Users, title: '20K+ Buyers', description: 'Growing community of traders' },
+const sortOptions = [
+  { value: 'featured', label: 'Featured' },
+  { value: 'price-low', label: 'Price: Low to High' },
+  { value: 'price-high', label: 'Price: High to Low' },
+  { value: 'rating', label: 'Highest Rated' },
+  { value: 'sales', label: 'Best Sales' },
 ];
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 12;
 
-export default function MarketplacePage() {
-  const [search, setSearch] = useState('');
+export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+
+  const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('featured');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState(1);
+  const [priceRange, setPriceRange] = useState<string>('');
 
   const { cartItems, addToCart, isInCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -175,19 +183,47 @@ export default function MarketplacePage() {
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      const matchesSearch = search === '' ||
-        product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.supplier.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [search, selectedCategory]);
+    let result = [...products];
+
+    // Filter by search
+    if (search) {
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          p.supplier.toLowerCase().includes(search.toLowerCase()) ||
+          p.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      result = result.filter((p) => p.category === selectedCategory);
+    }
+
+    // Sort
+    switch (sortBy) {
+      case 'price-low':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'sales':
+        result.sort((a, b) => b.salesCount - a.salesCount);
+        break;
+      default:
+        result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    }
+
+    return result;
+  }, [search, selectedCategory, sortBy]);
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, end);
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPage]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -210,34 +246,32 @@ export default function MarketplacePage() {
 
   const handleToggleFavorite = (product: Product) => {
     toggleFavorite(product.id);
-    if (isFavorite(product.id)) {
-      showToast(`Removed from favorites`, 'info');
-    } else {
-      showToast(`${product.name} added to favorites`, 'success');
-    }
+    showToast(
+      isFavorite(product.id) ? 'Removed from favorites' : 'Added to favorites',
+      'success'
+    );
   };
 
   return (
     <div className="min-h-screen bg-[#f7f5f1]">
-      <Header cartCount={cartCount} notificationCount={3} activeRoute="/" />
+      <Header cartCount={cartCount} notificationCount={3} activeRoute="/products" />
 
-      {/* Hero Section */}
+      {/* Hero */}
       <HeroSection
-        title="Global B2B Marketplace"
-        subtitle="Connect with verified suppliers and buyers from 150+ countries"
-        icon={<Globe className="w-10 h-10" />}
-        searchPlaceholder="Search products, suppliers, categories..."
+        title="Browse Products"
+        subtitle="Discover verified products from trusted suppliers worldwide"
+        icon={<Package className="w-10 h-10" />}
+        searchPlaceholder="Search products..."
         stats={[
-          { label: 'Products', value: '2,847' },
+          { label: 'Products', value: products.length.toString() },
+          { label: 'Categories', value: categories.length - 1 + '' },
           { label: 'Suppliers', value: '523' },
-          { label: 'Countries', value: '150+' },
-          { label: 'Verified', value: '98%' },
+          { label: 'Countries', value: '45' },
         ]}
-        primaryCTA={{ label: 'Post RFQ', href: '/rfqs/new' }}
       />
 
       {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-20 pb-16">
+      <main className="px-4 sm:px-8 -mt-12 pb-16">
         <div className="container mx-auto max-w-7xl">
           {/* Categories */}
           <CategoryFilter
@@ -250,44 +284,61 @@ export default function MarketplacePage() {
             variant="pill"
           />
 
-          {/* Post RFQ Banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-[#A6824A] to-[#8a6a3a] rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4"
-          >
-            <div className="text-white text-center sm:text-left">
-              <h3 className="text-xl font-bold mb-1">Can&apos;t find what you need?</h3>
-              <p className="text-white/80">Post a Request for Quote and let suppliers come to you</p>
+          {/* Filters Bar */}
+          <div className="bg-white rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <FilterDropdown
+                label="Sort By"
+                options={sortOptions}
+                value={sortBy}
+                onChange={(v) => setSortBy(v as string)}
+              />
             </div>
-            <Link href="/rfqs/new">
-              <Button variant="secondary" size="lg" rightIcon={<Plus className="w-5 h-5" />}>
-                Post RFQ
-              </Button>
-            </Link>
-          </motion.div>
 
-          {/* Products Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-[#101111]">
-                {selectedCategory === 'all' ? 'Featured Products' : selectedCategory}
-              </h2>
-              <p className="text-sm text-[#4A4A4A]">{filteredProducts.length} products found</p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-[#4A4A4A]">
+                {filteredProducts.length} products
+              </span>
+              <div className="flex items-center gap-1 border-l border-black/10 pl-3">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'grid'
+                      ? 'bg-[#154230] text-white'
+                      : 'hover:bg-black/5'
+                  }`}
+                >
+                  <Grid3X3 className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'list'
+                      ? 'bg-[#154230] text-white'
+                      : 'hover:bg-black/5'
+                  }`}
+                >
+                  <List className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-            <Link href="/products" className="text-[#154230] font-medium hover:underline flex items-center gap-1">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
 
-          {/* Products Grid */}
+          {/* Products Grid/List */}
           {paginatedProducts.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              <div
+                className={
+                  viewMode === 'grid'
+                    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6'
+                    : 'flex flex-col gap-4'
+                }
+              >
                 {paginatedProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     product={product}
+                    variant={viewMode === 'list' ? 'list' : 'default'}
                     onAddToCart={handleAddToCart}
                     onToggleFavorite={handleToggleFavorite}
                     isFavorite={isFavorite(product.id)}
@@ -311,76 +362,21 @@ export default function MarketplacePage() {
             <EmptyState
               icon={<Package className="w-16 h-16" />}
               title="No products found"
-              description="Try adjusting your search or category filter to find what you're looking for."
+              description="Try adjusting your search or filters to find what you're looking for."
               action={
-                <Button onClick={() => { setSelectedCategory('all'); setSearch(''); }}>
-                  Clear Filters
-                </Button>
+                <div className="flex gap-3">
+                  <Button onClick={() => { setSelectedCategory('all'); setSearch(''); }}>
+                    Clear Filters
+                  </Button>
+                  <Link href="/rfqs/new">
+                    <Button variant="outline">Post an RFQ</Button>
+                  </Link>
+                </div>
               }
             />
           )}
         </div>
       </main>
-
-      {/* Features Section */}
-      <section className="py-16 px-4 sm:px-8 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4">
-              Why Choose LEVERAGE Marketplace?
-            </h2>
-            <p className="text-[#4A4A4A] max-w-2xl mx-auto">
-              The trusted platform for global B2B trade
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="text-center p-6 bg-[#f7f5f1] rounded-2xl hover:shadow-lg transition-shadow"
-                >
-                  <div className="w-14 h-14 bg-[#154230] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <Icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-[#101111] mb-2">{feature.title}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{feature.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-[#E6E2DA]">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4">
-            Ready to start trading?
-          </h2>
-          <p className="text-[#4A4A4A] mb-8 max-w-xl mx-auto">
-            Join thousands of businesses already trading globally on LEVERAGE Marketplace
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup">
-              <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                Create Free Account
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg">
-                Contact Sales
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <Footer />
     </div>

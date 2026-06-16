@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { ToastProvider } from '@/hooks/useToast';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -26,8 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        {children}
+      <body className="antialiased bg-[#f7f5f1]">
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );
