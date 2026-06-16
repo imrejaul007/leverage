@@ -3,16 +3,17 @@
 import { forwardRef, SelectHTMLAttributes } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
   label?: string;
   error?: string;
   hint?: string;
   options: { value: string; label: string }[];
   placeholder?: string;
+  onChange?: (value: string) => void;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className = '', label, error, hint, options, placeholder, id, ...props }, ref) => {
+  ({ className = '', label, error, hint, options, placeholder, id, value, onChange, ...props }, ref) => {
     const selectId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
     return (
@@ -26,6 +27,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             ref={ref}
             id={selectId}
+            value={value}
+            onChange={(e) => onChange?.(e.target.value)}
             className={`
               w-full h-12 px-4 pr-10 bg-white border rounded-xl text-[#101111]
               focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all duration-200

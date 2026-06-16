@@ -178,7 +178,7 @@ export default function NewRFQPage() {
                 label="Category"
                 options={categories}
                 value={formData.category}
-                onChange={(e) => updateField('category', e.target.value)}
+                onChange={(v) => updateField('category', v)}
               />
               <Textarea
                 label="Product Description"
@@ -205,7 +205,7 @@ export default function NewRFQPage() {
                   label="Unit"
                   options={units}
                   value={formData.unit}
-                  onChange={(e) => updateField('unit', e.target.value)}
+                  onChange={(v) => updateField('unit', v)}
                 />
               </div>
               <Input
@@ -225,7 +225,7 @@ export default function NewRFQPage() {
                 label="Delivery Country"
                 options={countries}
                 value={formData.deliveryCountry}
-                onChange={(e) => updateField('deliveryCountry', e.target.value)}
+                onChange={(v) => updateField('deliveryCountry', v)}
               />
               <Input
                 label="Delivery Deadline"
