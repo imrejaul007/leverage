@@ -1,11 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Plus, MessageSquare, FileText } from 'lucide-react';
+import { Home, Search, Plus, MessageSquare, FileText, Package, Truck, Settings, User, BarChart3, Shield, Briefcase } from 'lucide-react';
 
 interface BottomNavProps {
   activeItem?: string;
 }
+
+// Map page-specific IDs to nav items
+const idMapping: Record<string, string> = {
+  'home': 'home',
+  'orders': 'home',
+  'order': 'home',
+  'products': 'home',
+  'product': 'home',
+  'compliance': 'home',
+  'ai': 'home',
+  'settings': 'home',
+  'account': 'home',
+  'analytics': 'home',
+  'browse': 'browse',
+  'marketplace': 'browse',
+  'sell': 'sell',
+  'products/new': 'sell',
+  'rfq': 'rfq',
+  'rfqs': 'rfq',
+  'rfqs/new': 'rfq',
+  'inbox': 'inbox',
+  'messages': 'inbox',
+  'marketplace/inbox': 'inbox',
+};
 
 const navItems = [
   { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
@@ -16,11 +40,14 @@ const navItems = [
 ];
 
 export default function BottomNav({ activeItem = 'home' }: BottomNavProps) {
+  // Map the activeItem to a valid nav ID
+  const mappedId = idMapping[activeItem?.toLowerCase()] || 'home';
+
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-black/5 h-[72px] flex items-center justify-around z-30">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = activeItem === item.id;
+        const isActive = mappedId === item.id;
 
         if (item.primary) {
           return (
