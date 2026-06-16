@@ -168,9 +168,17 @@ export default function DashboardPage() {
         {/* Mobile Content Area */}
         <div className="lg:hidden px-4 -mt-6 space-y-5 pb-24">
           {/* Quick Actions */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-4 gap-3">
+          <div className="bg-white rounded-2xl p-4 shadow-sm relative overflow-hidden">
+            {/* Top accent border */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
+            {/* Trade elements background */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <div className="absolute -top-4 -right-4 w-24 h-24 border border-[#154230] rounded-full" />
+              <div className="absolute bottom-2 -left-6 w-16 h-16 border border-[#A6824A] rounded-full" />
+              <div className="absolute top-8 right-8 w-8 h-8 border border-[#5D1E21] rounded-full" />
+            </div>
+            <h3 className="text-[#101111] font-bold text-base mb-4 relative z-10">Quick Actions</h3>
+            <div className="grid grid-cols-4 gap-3 relative z-10">
               {[
                 { href: '/marketplace', icon: Search, label: 'Browse', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', bg: 'bg-[#154230]', color: 'text-white' },
@@ -202,15 +210,22 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-black/5 flex items-center justify-between">
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm relative">
+            {/* Top accent border */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
+            {/* Trade elements background */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <div className="absolute -top-2 -right-2 w-20 h-20 border border-[#154230] rounded-full" />
+              <div className="absolute bottom-4 -left-4 w-12 h-12 border border-[#A6824A] rounded-full" />
+            </div>
+            <div className="p-4 border-b border-black/5 flex items-center justify-between relative z-10">
               <h3 className="text-[#101111] font-bold text-base">Recent Activity</h3>
               <Link href="/marketplace/inbox" className="text-[#154230] text-sm font-semibold flex items-center gap-1">
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            <div className="divide-y divide-black/5">
+            <div className="divide-y divide-black/5 relative z-10">
               {recentActivity.map((activity) => (
                 <Link
                   key={activity.id}
@@ -238,8 +253,14 @@ export default function DashboardPage() {
           </div>
 
           {/* Global Marketplace CTA */}
-          <Link href="/marketplace" className="block bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
+          <Link href="/marketplace" className="block bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+            {/* Top accent border */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
+            {/* Trade elements background */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 border border-[#154230] rounded-full" />
+            </div>
+            <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-[#154230] flex items-center justify-center">
                   <Briefcase className="w-6 h-6 text-white" />
@@ -278,9 +299,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Stats Section - at bottom */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <h3 className="text-[#101111] font-bold text-base mb-4">Your Stats</h3>
-            <div className="grid grid-cols-4 gap-2">
+          <div className="bg-white rounded-2xl p-4 shadow-sm relative overflow-hidden">
+            {/* Top accent border */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#154230] via-[#A6824A] to-[#5D1E21]" />
+            {/* Trade elements background */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <div className="absolute -top-6 -left-6 w-20 h-20 border border-[#A6824A] rounded-full" />
+              <div className="absolute bottom-2 right-4 w-10 h-10 border border-[#5D1E21] rounded-full" />
+            </div>
+            <h3 className="text-[#101111] font-bold text-base mb-4 relative z-10">Your Stats</h3>
+            <div className="grid grid-cols-4 gap-2 relative z-10">
               <Link href="/rfqs" className="text-center">
                 <p className="text-xl sm:text-2xl font-bold text-[#154230]">{stats.activeRFQs}</p>
                 <p className="text-[#4A4A4A] text-[10px] sm:text-xs font-medium mt-1">Active RFQs</p>
