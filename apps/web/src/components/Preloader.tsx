@@ -16,10 +16,29 @@ interface PreloaderProps {
 
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Auto-advance after 1.5 seconds if user doesn't tap
+    // Check if preloader was already shown in this session
+    const alreadyShown = sessionStorage.getItem('preloader_shown');
+
+    if (!alreadyShown) {
+      // Show preloader on first visit
+      setIsVisible(true);
+
+      // Mark as shown after first image (to ensure it displays)
+      const markTimer = setTimeout(() => {
+        sessionStorage.setItem('preloader_shown', 'true');
+      }, 500);
+
+      return () => clearTimeout(markTimer);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    // Auto-advance after 2 seconds (longer to let user see the brand images)
     const autoTimer = setTimeout(() => {
       setCurrentIndex((prev) => {
         if (prev < preloaderImages.length - 1) {
@@ -30,10 +49,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           return prev;
         }
       });
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(autoTimer);
-  }, [currentIndex, onComplete]);
+  }, [currentIndex, isVisible, onComplete]);
 
   const handleTap = () => {
     if (currentIndex < preloaderImages.length - 1) {
@@ -44,6 +63,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     }
   };
 
+  // Don't render if not visible (already dismissed or already shown this session)
   if (!isVisible) return null;
 
   return (
