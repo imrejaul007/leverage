@@ -23,7 +23,37 @@ import {
   Building,
   Bell,
   ArrowRight,
+  FileText,
+  Bot,
+  Receipt,
+  Megaphone,
+  Users,
+  Truck,
 } from 'lucide-react';
+
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
+];
 
 const complianceTools = [
   { icon: Search, name: 'HS Code Search', desc: 'Find correct classifications', color: '#154230' },
@@ -65,9 +95,12 @@ export default function ComplianceLandingPage() {
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/compliance" className="nav-link font-medium text-[#154230]">HS Codes</Link>
-              <Link href="/compliance/duty-calculator" className="nav-link font-medium">Duty Calculator</Link>
-              <Link href="/compliance/resources" className="nav-link font-medium">Resources</Link>
+              <Link href="/marketplace" className="nav-link font-medium">Marketplace</Link>
+              <Link href="/documents" className="nav-link font-medium">Documents</Link>
+              <Link href="/freight" className="nav-link font-medium">Freight</Link>
+              <Link href="/compliance" className="nav-link font-medium text-[#154230]">Compliance</Link>
+              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -87,9 +120,12 @@ export default function ComplianceLandingPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">HS Codes</Link>
-                <Link href="/compliance/duty-calculator" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Duty Calculator</Link>
-                <Link href="/compliance/resources" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Resources</Link>
+                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
+                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
+                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">Compliance</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
           )}
@@ -158,18 +194,19 @@ export default function ComplianceLandingPage() {
       {/* Main Content */}
       <main className="px-4 sm:px-8 -mt-12 pb-16">
         <div className="container mx-auto max-w-7xl">
-          {/* Compliance Tools */}
+          {/* Compliance Tools - Alternating Solid Colors */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {complianceTools.map((tool) => {
+            {complianceTools.map((tool, index) => {
               const Icon = tool.icon;
+              const isGreen = index % 2 === 0;
               return (
-                <div key={tool.name} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: tool.color + '15' }}>
-                    <Icon className="w-7 h-7" style={{ color: tool.color }} />
+                <Link key={tool.name} href={`/compliance/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className={`rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}>
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 bg-white/20">
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="font-bold text-[#101111] mb-1">{tool.name}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{tool.desc}</p>
-                </div>
+                  <h3 className="font-bold text-white mb-1">{tool.name}</h3>
+                  <p className="text-sm text-white/70">{tool.desc}</p>
+                </Link>
               );
             })}
           </div>
@@ -197,9 +234,9 @@ export default function ComplianceLandingPage() {
                   <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-[#101111] mb-2">Compliance Tools</h3>
                   <p className="text-[#4A4A4A] mb-4">Search HS codes, calculate duties, and verify compliance requirements.</p>
-                  <button className="px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                  <Link href="/compliance/check" className="inline-block px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                     Start Compliance Check
-                  </button>
+                  </Link>
                 </div>
               )}
 
@@ -207,14 +244,14 @@ export default function ComplianceLandingPage() {
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-[#101111]">Recent Compliance Checks</h2>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                    <Link href="/compliance/check/new" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                       <FileCheck className="w-4 h-4" />
                       New Check
-                    </button>
+                    </Link>
                   </div>
                   <div className="space-y-4">
                     {recentChecks.map((check) => (
-                      <div key={check.id} className="p-6 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
+                      <Link key={check.id} href={`/compliance/checks/${check.id}`} className="block p-6 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
                         <div className="flex items-start justify-between mb-4">
                           <div>
                             <div className="text-sm text-[#4A4A4A]">Check ID</div>
@@ -243,9 +280,9 @@ export default function ComplianceLandingPage() {
                             <Globe className="w-4 h-4" />
                             View full report
                           </span>
-                          <button className="text-[#154230] font-medium hover:underline">View Details</button>
+                          <span className="text-[#154230] font-medium hover:underline">View Details →</span>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -253,65 +290,65 @@ export default function ComplianceLandingPage() {
 
               {activeTab === 'resources' && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-6 border border-black/5 rounded-xl hover:border-[#154230]/30 transition-colors">
-                    <BookOpen className="w-8 h-8 text-[#154230] mb-4" />
-                    <h3 className="font-bold text-[#101111] mb-2">HS Code Guide</h3>
-                    <p className="text-sm text-[#4A4A4A] mb-4">Comprehensive guide to Harmonized System codes and classification.</p>
-                    <button className="text-[#154230] font-medium hover:underline flex items-center gap-1">
+                  <Link href="/compliance/hs-code-guide" className="p-6 bg-[#154230] rounded-xl hover:bg-[#1d5240] transition-colors">
+                    <BookOpen className="w-8 h-8 text-white mb-4" />
+                    <h3 className="font-bold text-white mb-2">HS Code Guide</h3>
+                    <p className="text-sm text-white/70 mb-4">Comprehensive guide to Harmonized System codes and classification.</p>
+                    <span className="text-white font-medium flex items-center gap-1">
                       Read More <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div className="p-6 border border-black/5 rounded-xl hover:border-[#154230]/30 transition-colors">
-                    <Percent className="w-8 h-8 text-[#A6824A] mb-4" />
-                    <h3 className="font-bold text-[#101111] mb-2">Duty Rates Database</h3>
-                    <p className="text-sm text-[#4A4A4A] mb-4">Latest duty rates for 180+ countries and trade agreements.</p>
-                    <button className="text-[#154230] font-medium hover:underline flex items-center gap-1">
+                    </span>
+                  </Link>
+                  <Link href="/compliance/duty-rates" className="p-6 bg-[#5D1E21] rounded-xl hover:bg-[#7b1c1f] transition-colors">
+                    <Percent className="w-8 h-8 text-white mb-4" />
+                    <h3 className="font-bold text-white mb-2">Duty Rates Database</h3>
+                    <p className="text-sm text-white/70 mb-4">Latest duty rates for 180+ countries and trade agreements.</p>
+                    <span className="text-white font-medium flex items-center gap-1">
                       Read More <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div className="p-6 border border-black/5 rounded-xl hover:border-[#154230]/30 transition-colors">
-                    <Lock className="w-8 h-8 text-[#5D1E21] mb-4" />
-                    <h3 className="font-bold text-[#101111] mb-2">Import Regulations</h3>
-                    <p className="text-sm text-[#4A4A4A] mb-4">Stay updated on changing import regulations and restrictions.</p>
-                    <button className="text-[#154230] font-medium hover:underline flex items-center gap-1">
+                    </span>
+                  </Link>
+                  <Link href="/compliance/regulations" className="p-6 bg-[#154230] rounded-xl hover:bg-[#1d5240] transition-colors">
+                    <Lock className="w-8 h-8 text-white mb-4" />
+                    <h3 className="font-bold text-white mb-2">Import Regulations</h3>
+                    <p className="text-sm text-white/70 mb-4">Stay updated on changing import regulations and restrictions.</p>
+                    <span className="text-white font-medium flex items-center gap-1">
                       Read More <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
+                    </span>
+                  </Link>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Features */}
+          {/* Features - Alternating Solid Colors */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="w-6 h-6 text-[#154230]" />
+            <Link href="/compliance/updates" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Real-Time Updates</h3>
-              <p className="text-sm text-[#4A4A4A]">Latest regulatory changes</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Building className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Real-Time Updates</h3>
+              <p className="text-sm text-white/70">Latest regulatory changes</p>
+            </Link>
+            <Link href="/compliance/support" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Building className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Expert Support</h3>
-              <p className="text-sm text-[#4A4A4A]">Dedicated compliance team</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <CheckCircle className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Expert Support</h3>
+              <p className="text-sm text-white/70">Dedicated compliance team</p>
+            </Link>
+            <Link href="/compliance/fta" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <CheckCircle className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">FTA Benefits</h3>
-              <p className="text-sm text-[#4A4A4A]">Maximize trade savings</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Shield className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">FTA Benefits</h3>
+              <p className="text-sm text-white/70">Maximize trade savings</p>
+            </Link>
+            <Link href="/compliance/risk" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Shield className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Risk Mitigation</h3>
-              <p className="text-sm text-[#4A4A4A]">Avoid penalties</p>
-            </div>
+              <h3 className="font-bold text-white mb-1">Risk Mitigation</h3>
+              <p className="text-sm text-white/70">Avoid penalties</p>
+            </Link>
           </div>
         </div>
       </main>
@@ -329,41 +366,68 @@ export default function ComplianceLandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

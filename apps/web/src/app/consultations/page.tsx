@@ -24,7 +24,36 @@ import {
   Target,
   TrendingUp,
   DollarSign,
+  FileText,
+  Bot,
+  Receipt,
+  Megaphone,
+  Truck,
 } from 'lucide-react';
+
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
+];
 
 const consultationTypes = [
   {
@@ -355,41 +384,68 @@ export default function ConsultationsPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

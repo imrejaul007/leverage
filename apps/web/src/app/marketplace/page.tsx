@@ -10,7 +10,6 @@ import {
   Users,
   Star,
   ShoppingCart,
-  Filter,
   Grid3X3,
   List,
   Plus,
@@ -24,6 +23,12 @@ import {
   TrendingUp,
   CheckCircle,
   ChevronRight,
+  FileText,
+  Bot,
+  BarChart3,
+  Receipt,
+  Megaphone,
+  Calendar,
 } from 'lucide-react';
 
 const featuredProducts = [
@@ -93,6 +98,30 @@ const benefits = [
   { icon: TrendingUp, title: 'Market Insights', desc: 'Real-time pricing and trend data' },
 ];
 
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
+];
+
 export default function MarketplaceLandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,21 +135,22 @@ export default function MarketplaceLandingPage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Marketplace</span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/marketplace" className="nav-link font-medium text-[#154230]">Browse</Link>
+              <Link href="/marketplace" className="nav-link font-medium text-[#154230]">Marketplace</Link>
               <Link href="/rfqs" className="nav-link font-medium">RFQs</Link>
-              <Link href="/orders" className="nav-link font-medium">Orders</Link>
-              <Link href="/network" className="nav-link font-medium">Network</Link>
+              <Link href="/documents" className="nav-link font-medium">Documents</Link>
+              <Link href="/freight" className="nav-link font-medium">Freight</Link>
+              <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
+              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
             <div className="flex items-center gap-3">
               <button className="p-2 hover:bg-black/5 rounded-xl transition-colors relative">
                 <Bell className="w-5 h-5 text-[#4A4A4A]" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5D1E21] rounded-full text-white text-[10px] flex items-center justify-center font-bold">3</span>
               </button>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
@@ -135,10 +165,13 @@ export default function MarketplaceLandingPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Browse</Link>
+                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">Marketplace</Link>
                 <Link href="/rfqs" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">RFQs</Link>
-                <Link href="/orders" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Orders</Link>
-                <Link href="/network" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Network</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
+                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
+                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
           )}
@@ -174,7 +207,7 @@ export default function MarketplaceLandingPage() {
                     className="w-full h-14 pl-12 pr-4 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none"
                   />
                 </div>
-                <button className="h-14 px-6 bg-[#A6824A] hover:bg-[#8a6a3a] rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-colors">
+                <button className="h-14 px-6 bg-[#5D1E21] hover:bg-[#7b1c1f] rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-colors">
                   <Search className="w-5 h-5" />
                   <span>Search</span>
                 </button>
@@ -210,11 +243,11 @@ export default function MarketplaceLandingPage() {
           {/* Categories */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6">
             {categories.map((cat) => (
-              <button key={cat.name} className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
+              <Link key={cat.name} href={`/marketplace?category=${encodeURIComponent(cat.name)}`} className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center">
                 <span className="text-3xl mb-2">{cat.icon}</span>
                 <span className="font-medium text-sm text-[#101111]">{cat.name}</span>
                 <span className="text-xs text-[#4A4A4A]">{cat.count} items</span>
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -246,7 +279,7 @@ export default function MarketplaceLandingPage() {
             <div className="p-6">
               <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}>
                 {featuredProducts.map((product) => (
-                  <div key={product.id} className={`bg-[#f7f5f1] rounded-xl overflow-hidden hover:bg-[#E6E2DA] transition-colors ${viewMode === 'list' ? 'flex' : ''}`}>
+                  <Link key={product.id} href={`/marketplace/${product.id}`} className={`bg-[#f7f5f1] rounded-xl overflow-hidden hover:bg-[#E6E2DA] transition-colors ${viewMode === 'list' ? 'flex' : ''}`}>
                     <div className={`relative ${viewMode === 'list' ? 'w-48 h-32 flex-shrink-0' : 'h-40'}`}>
                       <Image
                         src={product.image}
@@ -269,18 +302,18 @@ export default function MarketplaceLandingPage() {
                       </div>
                       <div className={viewMode === 'list' ? 'text-right ml-4' : ''}>
                         <div className="text-xl font-bold text-[#101111]">${product.price}<span className="text-sm font-normal text-[#4A4A4A]">/{product.currency}</span></div>
-                        <button className="mt-2 w-full sm:w-auto px-4 py-2 bg-[#154230] text-white text-sm font-medium rounded-lg hover:bg-[#1d5240] transition-colors flex items-center justify-center gap-2">
+                        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="mt-2 w-full sm:w-auto px-4 py-2 bg-[#154230] text-white text-sm font-medium rounded-lg hover:bg-[#1d5240] transition-colors flex items-center justify-center gap-2">
                           <ShoppingCart className="w-4 h-4" />
                           Add
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
               <div className="mt-6 text-center">
-                <Link href="/rfqs/new" className="inline-flex items-center gap-2 px-6 py-3 bg-[#A6824A] text-white font-semibold rounded-lg hover:bg-[#8a6a3a] transition-colors">
+                <Link href="/rfqs/new" className="inline-flex items-center gap-2 px-6 py-3 bg-[#5D1E21] text-white font-semibold rounded-lg hover:bg-[#7b1c1f] transition-colors">
                   <Plus className="w-5 h-5" />
                   Post a Request for Quote
                 </Link>
@@ -288,18 +321,18 @@ export default function MarketplaceLandingPage() {
             </div>
           </div>
 
-          {/* Benefits */}
+          {/* Benefits - Solid Green Blocks */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {benefits.map((benefit) => {
               const Icon = benefit.icon;
               return (
-                <div key={benefit.title} className="bg-white rounded-xl p-6 shadow-sm text-center">
-                  <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Icon className="w-6 h-6 text-[#154230]" />
+                <Link key={benefit.title} href={`/marketplace/${benefit.title.toLowerCase().replace(/\s+/g, '-')}`} className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:bg-[#1d5240] transition-colors">
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-[#101111] mb-1">{benefit.title}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{benefit.desc}</p>
-                </div>
+                  <h3 className="font-bold text-white mb-1">{benefit.title}</h3>
+                  <p className="text-sm text-white/70">{benefit.desc}</p>
+                </Link>
               );
             })}
           </div>
@@ -307,7 +340,7 @@ export default function MarketplaceLandingPage() {
       </main>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
+      <section className="bg-gradient-to-r from-[#154230] to-[#5D1E21] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to Start Trading?</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
@@ -324,41 +357,71 @@ export default function MarketplaceLandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        {/* Top section - Green */}
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+
+        {/* Bottom section - Maroon */}
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

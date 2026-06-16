@@ -168,22 +168,9 @@ export default function DashboardPage() {
         {/* Mobile Content Area */}
         <div className="lg:hidden px-4 -mt-6 space-y-5 pb-24">
           {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl p-4 shadow-sm"
-          >
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Quick Actions</h3>
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { transition: { staggerChildren: 0.05 } }
-              }}
-              className="grid grid-cols-4 gap-3"
-            >
+            <div className="grid grid-cols-4 gap-3">
               {[
                 { href: '/marketplace', icon: Search, label: 'Browse', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/rfqs/new', icon: Plus, label: 'Post RFQ', bg: 'bg-[#154230]', color: 'text-white' },
@@ -192,7 +179,7 @@ export default function DashboardPage() {
                 { href: '/orders', icon: Truck, label: 'Orders', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/consultations', icon: Calendar, label: 'Consult', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/freight', icon: Truck, label: 'Freight', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
-                { href: '/documents', icon: Package, label: 'Documents', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
+                { href: '/documents', icon: FileText, label: 'Documents', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/compliance', icon: Shield, label: 'Compliance', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/ai', icon: BarChart3, label: 'AI', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
                 { href: '/billing', icon: DollarSign, label: 'Billing', bg: 'bg-[#154230]/10', color: 'text-[#154230]' },
@@ -203,26 +190,16 @@ export default function DashboardPage() {
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <motion.div
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, scale: 0.8 },
-                      visible: { opacity: 1, scale: 1 }
-                    }}
-                    whileHover={{ scale: 1.1, y: -3 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link href={item.href} className="flex flex-col items-center gap-2">
-                      <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center`}>
-                        <Icon className={`w-5 h-5 ${item.color}`} />
-                      </div>
-                      <span className="text-[#4A4A4A] text-xs font-medium">{item.label}</span>
-                    </Link>
-                  </motion.div>
+                  <Link key={i} href={item.href} className="flex flex-col items-center gap-2 active:scale-95 transition-transform">
+                    <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center`}>
+                      <Icon className={`w-5 h-5 ${item.color}`} />
+                    </div>
+                    <span className="text-[#4A4A4A] text-xs font-medium text-center leading-tight">{item.label}</span>
+                  </Link>
                 );
               })}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Recent Activity */}
           <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
@@ -277,21 +254,9 @@ export default function DashboardPage() {
           </Link>
 
           {/* Mobile Burgundy Stats Bar */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-[#5D1E21] rounded-2xl p-4"
-          >
-            <motion.div
-              animate={{ scale: [1, 1.02, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="grid grid-cols-2 gap-4"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-3"
-              >
+          <div className="bg-[#5D1E21] rounded-2xl p-4">
+            <div className="grid grid-cols-2 gap-4">
+              <Link href="/compliance" className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
@@ -299,11 +264,8 @@ export default function DashboardPage() {
                   <p className="text-white/70 text-xs font-medium">Compliance</p>
                   <p className="text-white font-bold text-lg">{stats.complianceScore}%</p>
                 </div>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-3"
-              >
+              </Link>
+              <Link href="/analytics" className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
@@ -311,32 +273,32 @@ export default function DashboardPage() {
                   <p className="text-white/70 text-xs font-medium">Trade Volume</p>
                   <p className="text-white font-bold text-lg">${stats.tradeVolume}M</p>
                 </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </Link>
+            </div>
+          </div>
 
-          {/* Stats Section - at bottom, after burgundy bar */}
+          {/* Stats Section - at bottom */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <h3 className="text-[#101111] font-bold text-base mb-4">Your Stats</h3>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               <Link href="/rfqs" className="text-center">
-                <p className="text-2xl font-bold text-[#154230]">{stats.activeRFQs}</p>
-                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Active RFQs</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#154230]">{stats.activeRFQs}</p>
+                <p className="text-[#4A4A4A] text-[10px] sm:text-xs font-medium mt-1">Active RFQs</p>
               </Link>
 
               <Link href="/orders" className="text-center">
-                <p className="text-2xl font-bold text-[#154230]">{stats.shipments}</p>
-                <p className="text-[#4A4A4A] text-xs font-medium mt-1">In Transit</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#154230]">{stats.shipments}</p>
+                <p className="text-[#4A4A4A] text-[10px] sm:text-xs font-medium mt-1">In Transit</p>
               </Link>
 
               <Link href="/orders" className="text-center">
-                <p className="text-2xl font-bold text-[#5D1E21]">{stats.orders}</p>
-                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Total Orders</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#5D1E21]">{stats.orders}</p>
+                <p className="text-[#4A4A4A] text-[10px] sm:text-xs font-medium mt-1">Total Orders</p>
               </Link>
 
               <Link href="/marketplace/inbox" className="text-center relative">
-                <p className="text-2xl font-bold text-[#5D1E21]">{stats.unreadMessages}</p>
-                <p className="text-[#4A4A4A] text-xs font-medium mt-1">Messages</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#5D1E21]">{stats.unreadMessages}</p>
+                <p className="text-[#4A4A4A] text-[10px] sm:text-xs font-medium mt-1">Messages</p>
                 {stats.unreadMessages > 0 && (
                   <span className="absolute top-0 right-2 w-4 h-4 bg-[#A6824A] rounded-full"></span>
                 )}

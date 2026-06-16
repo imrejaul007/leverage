@@ -27,12 +27,10 @@ import {
   Send,
   Download,
   Eye,
-  Edit3,
-  Trash2,
-  Package,
   Zap,
-  File,
-  Bookmark,
+  Bot,
+  Receipt,
+  Megaphone,
 } from 'lucide-react';
 
 const documentTypes = [
@@ -40,8 +38,8 @@ const documentTypes = [
   { icon: Truck, name: 'Bill of Lading', color: '#A6824A', desc: 'Proof of shipment receipt', fields: 8 },
   { icon: Globe, name: 'Certificate of Origin', color: '#5D1E21', desc: 'Verify product origin', fields: 6 },
   { icon: CreditCard, name: 'Letter of Credit', color: '#154230', desc: 'Bank payment guarantee', fields: 7 },
-  { icon: Package, name: 'Packing List', color: '#A6824A', desc: 'Detailed cargo inventory', fields: 7 },
-  { icon: ScrollText, name: 'Customs Invoice', color: '#5D1E21', desc: 'For customs clearance', fields: 8 },
+  { icon: ScrollText, name: 'Packing List', color: '#A6824A', desc: 'Detailed cargo inventory', fields: 7 },
+  { icon: FileCheck, name: 'Customs Invoice', color: '#5D1E21', desc: 'For customs clearance', fields: 8 },
 ];
 
 const recentDocuments = [
@@ -56,6 +54,30 @@ const features = [
   { icon: Shield, title: 'Legally Compliant', desc: 'Meets international standards' },
   { icon: Globe, title: 'Export-Ready', desc: 'Accepted worldwide' },
   { icon: Download, title: 'PDF & Print', desc: 'Professional formatting' },
+];
+
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
 ];
 
 export default function DocumentsLandingPage() {
@@ -82,14 +104,16 @@ export default function DocumentsLandingPage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Documents</span>
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
+              <Link href="/marketplace" className="nav-link font-medium">Marketplace</Link>
               <Link href="/documents" className="nav-link font-medium text-[#154230]">Documents</Link>
-              <Link href="/documents/templates" className="nav-link font-medium">Templates</Link>
-              <Link href="/documents/my-documents" className="nav-link font-medium">My Documents</Link>
+              <Link href="/freight" className="nav-link font-medium">Freight</Link>
+              <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
+              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -109,9 +133,12 @@ export default function DocumentsLandingPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
-                <Link href="/documents/templates" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Templates</Link>
-                <Link href="/documents/my-documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">My Documents</Link>
+                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">Documents</Link>
+                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
+                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
           )}
@@ -147,7 +174,7 @@ export default function DocumentsLandingPage() {
                     className="w-full h-14 pl-12 pr-4 bg-[#f7f5f1] rounded-xl text-[#101111] placeholder-[#4A4A4A] focus:outline-none"
                   />
                 </div>
-                <button className="h-14 px-6 bg-[#A6824A] hover:bg-[#8a6a3a] rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-colors">
+                <button className="h-14 px-6 bg-[#5D1E21] hover:bg-[#7b1c1f] rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-colors">
                   <Search className="w-5 h-5" />
                   <span>Search</span>
                 </button>
@@ -160,10 +187,10 @@ export default function DocumentsLandingPage() {
             {documentTypes.slice(0, 6).map((doc) => {
               const Icon = doc.icon;
               return (
-                <button key={doc.name} className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors">
+                <Link key={doc.name} href={`/documents?type=${encodeURIComponent(doc.name)}`} className="flex flex-col items-center gap-2 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors">
                   <Icon className="w-6 h-6" />
                   <span className="text-xs font-medium text-center">{doc.name.split(' ')[0]}</span>
-                </button>
+                </Link>
               );
             })}
           </motion.div>
@@ -193,9 +220,9 @@ export default function DocumentsLandingPage() {
                   {documentTypes.map((doc) => {
                     const Icon = doc.icon;
                     return (
-                      <button
+                      <Link
                         key={doc.name}
-                        onClick={() => setSelectedType(doc.name)}
+                        href={`/documents/create?type=${encodeURIComponent(doc.name)}`}
                         className={`p-6 rounded-xl border-2 text-left transition-all ${selectedType === doc.name ? 'border-[#154230] bg-[#154230]/5' : 'border-black/5 hover:border-[#154230]/30 hover:bg-[#154230]/5'}`}
                       >
                         <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: doc.color + '15' }}>
@@ -204,7 +231,7 @@ export default function DocumentsLandingPage() {
                         <h3 className="font-bold text-[#101111] mb-1">{doc.name}</h3>
                         <p className="text-sm text-[#4A4A4A] mb-3">{doc.desc}</p>
                         <span className="text-xs text-[#4A4A4A]">{doc.fields} fields</span>
-                      </button>
+                      </Link>
                     );
                   })}
                 </div>
@@ -215,14 +242,14 @@ export default function DocumentsLandingPage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-[#101111]">Recent Documents</h2>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                  <Link href="/documents/create" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                     <Plus className="w-4 h-4" />
                     New Document
-                  </button>
+                  </Link>
                 </div>
                 <div className="space-y-3">
                   {recentDocuments.map((doc) => (
-                    <div key={doc.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
+                    <Link key={doc.id} href={`/documents/${doc.id}`} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
                           <FileText className="w-6 h-6 text-[#154230]" />
@@ -234,32 +261,33 @@ export default function DocumentsLandingPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(doc.status)}`}>{doc.status}</span>
-                        <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-2 hover:bg-white rounded-lg transition-colors">
                           <Eye className="w-4 h-4 text-[#4A4A4A]" />
                         </button>
-                        <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-2 hover:bg-white rounded-lg transition-colors">
                           <Download className="w-4 h-4 text-[#4A4A4A]" />
                         </button>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Features */}
+          {/* Features - Alternating Solid Colors */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {features.map((feature) => {
+            {features.map((feature, index) => {
               const Icon = feature.icon;
+              const isGreen = index % 2 === 0;
               return (
-                <div key={feature.title} className="bg-white rounded-xl p-6 shadow-sm text-center">
-                  <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Icon className="w-6 h-6 text-[#154230]" />
+                <Link key={feature.title} href={`/documents/${feature.title.toLowerCase().replace(/\s+/g, '-')}`} className={`rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}>
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-[#101111] mb-1">{feature.title}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{feature.desc}</p>
-                </div>
+                  <h3 className="font-bold text-white mb-1">{feature.title}</h3>
+                  <p className="text-sm text-white/70">{feature.desc}</p>
+                </Link>
               );
             })}
           </div>
@@ -267,7 +295,7 @@ export default function DocumentsLandingPage() {
       </main>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
+      <section className="bg-gradient-to-r from-[#154230] to-[#5D1E21] px-4 sm:px-8 py-16">
         <div className="container mx-auto max-w-4xl text-center text-white">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to Create Your Documents?</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
@@ -279,41 +307,68 @@ export default function DocumentsLandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

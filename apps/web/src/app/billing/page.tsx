@@ -29,7 +29,36 @@ import {
   Users,
   Bell,
   ArrowRight,
+  Globe,
+  Bot,
+  Megaphone,
+  Truck,
+  Shield,
 } from 'lucide-react';
+
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
+];
 
 const billingStats = [
   { label: 'Total Revenue', value: '$124,500', change: '+12.5%', up: true, icon: DollarSign },
@@ -85,9 +114,12 @@ export default function BillingLandingPage() {
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/billing" className="nav-link font-medium text-[#154230]">Overview</Link>
-              <Link href="/billing/invoices" className="nav-link font-medium">Invoices</Link>
-              <Link href="/billing/payments" className="nav-link font-medium">Payments</Link>
+              <Link href="/marketplace" className="nav-link font-medium">Marketplace</Link>
+              <Link href="/documents" className="nav-link font-medium">Documents</Link>
+              <Link href="/freight" className="nav-link font-medium">Freight</Link>
+              <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
+              <Link href="/ai" className="nav-link font-medium">AI</Link>
+              <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -107,9 +139,12 @@ export default function BillingLandingPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/billing" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Overview</Link>
-                <Link href="/billing/invoices" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Invoices</Link>
-                <Link href="/billing/payments" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Payments</Link>
+                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
+                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
+                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI</Link>
+                <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
           )}
@@ -175,35 +210,35 @@ export default function BillingLandingPage() {
       {/* Main Content */}
       <main className="px-4 sm:px-8 -mt-12 pb-16">
         <div className="container mx-auto max-w-7xl">
-          {/* Quick Actions */}
+          {/* Quick Actions - Alternating Solid Colors */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <button className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-              <div className="w-14 h-14 bg-[#154230]/10 rounded-xl flex items-center justify-center">
-                <Plus className="w-7 h-7 text-[#154230]" />
+            <Link href="/billing/invoices/new" className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                <Plus className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-[#101111]">New Invoice</h3>
-                <p className="text-sm text-[#4A4A4A]">Create a new invoice</p>
+                <h3 className="font-bold text-white">New Invoice</h3>
+                <p className="text-sm text-white/70">Create a new invoice</p>
               </div>
-            </button>
-            <button className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-              <div className="w-14 h-14 bg-[#A6824A]/10 rounded-xl flex items-center justify-center">
-                <Receipt className="w-7 h-7 text-[#A6824A]" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-[#101111]">Recurring</h3>
-                <p className="text-sm text-[#4A4A4A]">Set up recurring bills</p>
-              </div>
-            </button>
-            <button className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-              <div className="w-14 h-14 bg-[#5D1E21]/10 rounded-xl flex items-center justify-center">
-                <PiggyBank className="w-7 h-7 text-[#5D1E21]" />
+            </Link>
+            <Link href="/billing/recurring" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                <Receipt className="w-7 h-7 text-white" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-[#101111]">Expenses</h3>
-                <p className="text-sm text-[#4A4A4A]">Track business expenses</p>
+                <h3 className="font-bold text-white">Recurring</h3>
+                <p className="text-sm text-white/70">Set up recurring bills</p>
               </div>
-            </button>
+            </Link>
+            <Link href="/billing/expenses" className="bg-[#154230] rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                <PiggyBank className="w-7 h-7 text-white" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-bold text-white">Expenses</h3>
+                <p className="text-sm text-white/70">Track business expenses</p>
+              </div>
+            </Link>
           </div>
 
           {/* Tabs */}
@@ -237,19 +272,19 @@ export default function BillingLandingPage() {
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-[#101111]">Recent Invoices</h2>
                     <div className="flex items-center gap-2">
-                      <button className="flex items-center gap-2 px-4 py-2 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
+                      <Link href="/billing/invoices?filter=true" className="flex items-center gap-2 px-4 py-2 border border-black/10 rounded-lg text-sm font-medium hover:bg-black/5 transition-colors">
                         <Filter className="w-4 h-4" />
                         Filter
-                      </button>
-                      <button className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                      </Link>
+                      <Link href="/billing/invoices/new" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                         <Plus className="w-4 h-4" />
                         New Invoice
-                      </button>
+                      </Link>
                     </div>
                   </div>
                   <div className="space-y-3">
                     {recentInvoices.map((invoice) => (
-                      <div key={invoice.id} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
+                      <Link key={invoice.id} href={`/billing/invoices/${invoice.id}`} className="flex items-center justify-between p-4 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
                             <FileText className="w-6 h-6 text-[#154230]" />
@@ -264,14 +299,14 @@ export default function BillingLandingPage() {
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(invoice.status)}`}>
                             {getStatusLabel(invoice.status)}
                           </span>
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-2 hover:bg-white rounded-lg transition-colors">
                             <Eye className="w-4 h-4 text-[#4A4A4A]" />
                           </button>
-                          <button className="p-2 hover:bg-white rounded-lg transition-colors">
+                          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-2 hover:bg-white rounded-lg transition-colors">
                             <Download className="w-4 h-4 text-[#4A4A4A]" />
                           </button>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -282,44 +317,44 @@ export default function BillingLandingPage() {
                   <CreditCard className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-[#101111] mb-2">Payment History</h3>
                   <p className="text-[#4A4A4A] mb-4">View all your payment transactions.</p>
-                  <button className="px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                  <Link href="/billing/payments" className="inline-block px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                     View All Payments
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Features */}
+          {/* Features - Alternating Solid Colors */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Receipt className="w-6 h-6 text-[#154230]" />
+            <Link href="/billing/auto-invoicing" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Receipt className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Auto-Invoicing</h3>
-              <p className="text-sm text-[#4A4A4A]">Generate invoices automatically</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <CreditCard className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Auto-Invoicing</h3>
+              <p className="text-sm text-white/70">Generate invoices automatically</p>
+            </Link>
+            <Link href="/billing/multi-currency" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <CreditCard className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Multi-Currency</h3>
-              <p className="text-sm text-[#4A4A4A]">Support for 50+ currencies</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Building className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Multi-Currency</h3>
+              <p className="text-sm text-white/70">Support for 50+ currencies</p>
+            </Link>
+            <Link href="/billing/bank-sync" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Building className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Bank Sync</h3>
-              <p className="text-sm text-[#4A4A4A]">Automatic reconciliation</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <FileText className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Bank Sync</h3>
+              <p className="text-sm text-white/70">Automatic reconciliation</p>
+            </Link>
+            <Link href="/billing/tax-ready" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FileText className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Tax Ready</h3>
-              <p className="text-sm text-[#4A4A4A]">VAT & GST compliant</p>
-            </div>
+              <h3 className="font-bold text-white mb-1">Tax Ready</h3>
+              <p className="text-sm text-white/70">VAT & GST compliant</p>
+            </Link>
           </div>
         </div>
       </main>
@@ -337,41 +372,68 @@ export default function BillingLandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

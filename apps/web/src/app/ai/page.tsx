@@ -29,7 +29,34 @@ import {
   Scale,
   Bell,
   ArrowRight,
+  Receipt,
+  Megaphone,
+  Truck,
 } from 'lucide-react';
+
+const platformLinks = [
+  { name: 'Marketplace', href: '/marketplace', icon: Globe },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Compliance', href: '/compliance', icon: Shield },
+  { name: 'AI Assistant', href: '/ai', icon: Bot },
+  { name: 'Billing', href: '/billing', icon: Receipt },
+  { name: 'Ads', href: '/ads', icon: Megaphone },
+  { name: 'Consultations', href: '/consultations', icon: Users },
+];
+
+const companyLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Careers', href: '/careers' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Security', href: '/security' },
+];
 
 const aiFeatures = [
   { icon: FileText, name: 'Document Analysis', desc: 'Review and optimize trade documents', color: '#154230' },
@@ -76,9 +103,12 @@ export default function AILandingPage() {
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/ai" className="nav-link font-medium text-[#154230]">Chat</Link>
-              <Link href="/ai/agents" className="nav-link font-medium">AI Agents</Link>
-              <Link href="/ai/analytics" className="nav-link font-medium">Insights</Link>
+              <Link href="/marketplace" className="nav-link font-medium">Marketplace</Link>
+              <Link href="/documents" className="nav-link font-medium">Documents</Link>
+              <Link href="/freight" className="nav-link font-medium">Freight</Link>
+              <Link href="/compliance" className="nav-link font-medium">Compliance</Link>
+              <Link href="/ai" className="nav-link font-medium text-[#154230]">AI</Link>
+              <Link href="/consultations" className="nav-link font-medium">Consultations</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -98,9 +128,12 @@ export default function AILandingPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Chat</Link>
-                <Link href="/ai/agents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">AI Agents</Link>
-                <Link href="/ai/analytics" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Insights</Link>
+                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
+                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
+                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/ai" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#154230]">AI</Link>
+                <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
               </nav>
             </motion.div>
           )}
@@ -147,18 +180,19 @@ export default function AILandingPage() {
       {/* Main Content */}
       <main className="px-4 sm:px-8 -mt-12 pb-16">
         <div className="container mx-auto max-w-7xl">
-          {/* AI Features */}
+          {/* AI Features - Alternating Solid Colors */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {aiFeatures.map((feature) => {
+            {aiFeatures.map((feature, index) => {
               const Icon = feature.icon;
+              const isGreen = index % 2 === 0;
               return (
-                <div key={feature.name} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: feature.color + '15' }}>
-                    <Icon className="w-7 h-7" style={{ color: feature.color }} />
+                <Link key={feature.name} href={`/ai/${feature.name.toLowerCase().replace(/\s+/g, '-')}`} className={`rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}>
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 bg-white/20">
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="font-bold text-[#101111] mb-1">{feature.name}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{feature.desc}</p>
-                </div>
+                  <h3 className="font-bold text-white mb-1">{feature.name}</h3>
+                  <p className="text-sm text-white/70">{feature.desc}</p>
+                </Link>
               );
             })}
           </div>
@@ -226,22 +260,24 @@ export default function AILandingPage() {
 
               {activeTab === 'agents' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {aiAgents.map((agent) => {
+                  {aiAgents.map((agent, index) => {
                     const Icon = agent.icon;
+                    const isGreen = index % 2 === 0;
                     return (
-                      <button
+                      <Link
                         key={agent.name}
-                        className="p-6 bg-[#f7f5f1] hover:bg-[#E6E2DA] rounded-xl transition-colors flex items-start gap-4 text-left"
+                        href={`/ai/agents/${agent.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        className={`p-6 rounded-xl transition-colors flex items-start gap-4 text-left hover:opacity-90 ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}
                       >
-                        <div className="w-14 h-14 bg-[#154230]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-7 h-7 text-[#154230]" />
+                        <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-7 h-7 text-white" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-[#101111] mb-1">{agent.name}</h3>
-                          <p className="text-sm text-[#4A4A4A]">{agent.desc}</p>
+                          <h3 className="font-bold text-white mb-1">{agent.name}</h3>
+                          <p className="text-sm text-white/70">{agent.desc}</p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-[#4A4A4A] flex-shrink-0 mt-4" />
-                      </button>
+                        <ChevronRight className="w-5 h-5 text-white/70 flex-shrink-0 mt-4" />
+                      </Link>
                     );
                   })}
                 </div>
@@ -258,9 +294,10 @@ export default function AILandingPage() {
                   </div>
                   <div className="space-y-3">
                     {recentChats.map((chat) => (
-                      <button
+                      <Link
                         key={chat.id}
-                        className="w-full p-4 bg-[#f7f5f1] hover:bg-[#E6E2DA] rounded-xl transition-colors flex items-center justify-between text-left"
+                        href={`/ai/chat/${chat.id}`}
+                        className="w-full p-4 bg-[#f7f5f1] hover:bg-[#E6E2DA] rounded-xl transition-colors flex items-center justify-between"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
@@ -272,7 +309,7 @@ export default function AILandingPage() {
                           </div>
                         </div>
                         <ChevronRight className="w-5 h-5 text-[#4A4A4A]" />
-                      </button>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -280,36 +317,36 @@ export default function AILandingPage() {
             </div>
           </div>
 
-          {/* Capabilities */}
+          {/* Capabilities - Alternating Solid Colors */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Sparkles className="w-6 h-6 text-[#154230]" />
+            <Link href="/ai/natural-language" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Natural Language</h3>
-              <p className="text-sm text-[#4A4A4A]">Chat naturally</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Globe className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Natural Language</h3>
+              <p className="text-sm text-white/70">Chat naturally</p>
+            </Link>
+            <Link href="/ai/multilingual" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Globe className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Multilingual</h3>
-              <p className="text-sm text-[#4A4A4A]">50+ languages</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Zap className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Multilingual</h3>
+              <p className="text-sm text-white/70">50+ languages</p>
+            </Link>
+            <Link href="/ai/instant-results" className="bg-[#5D1E21] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Instant Results</h3>
-              <p className="text-sm text-[#4A4A4A]">Under 3 seconds</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-              <div className="w-12 h-12 bg-[#154230]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Scale className="w-6 h-6 text-[#154230]" />
+              <h3 className="font-bold text-white mb-1">Instant Results</h3>
+              <p className="text-sm text-white/70">Under 3 seconds</p>
+            </Link>
+            <Link href="/ai/expertise" className="bg-[#154230] rounded-xl p-6 shadow-sm text-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Scale className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-bold text-[#101111] mb-1">Trade Expertise</h3>
-              <p className="text-sm text-[#4A4A4A]">Specialized knowledge</p>
-            </div>
+              <h3 className="font-bold text-white mb-1">Trade Expertise</h3>
+              <p className="text-sm text-white/70">Specialized knowledge</p>
+            </Link>
           </div>
         </div>
       </main>
@@ -327,41 +364,68 @@ export default function AILandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain mb-4 brightness-0 invert" />
-              <p className="text-sm text-gray-400">The Trade OS for import/export businesses.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
-                <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
-                <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-              </ul>
+      {/* Footer - 50% Green / 50% Maroon */}
+      <footer className="bg-[#154230]">
+        <div className="bg-[#154230] px-4 sm:px-8 py-12">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+              <div className="col-span-2 md:col-span-1">
+                <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={46} className="object-contain mb-4 brightness-0 invert" />
+                <p className="text-white/70 text-sm mb-4">
+                  The operating system for global trade.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Platform</h4>
+                <ul className="space-y-2 text-sm">
+                  {platformLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+                <ul className="space-y-2 text-sm">
+                  {companyLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                  {legalLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-            <p>&copy; 2024 LEVERAGE. All rights reserved.</p>
+        </div>
+        <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-white/70 text-sm">
+                © 2024 LEVERAGE. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>
+                <Link href="/terms" className="text-white/70 hover:text-white text-sm transition-colors">Terms</Link>
+                <Link href="/security" className="text-white/70 hover:text-white text-sm transition-colors">Security</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
