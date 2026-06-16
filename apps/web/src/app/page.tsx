@@ -21,12 +21,12 @@ const stats = [
 ];
 
 const featureCards = [
-  { icon: Shield, title: 'Compliance & Trade Compliance', description: 'AI-powered HS code classification, duty calculations, and compliance checks.', bgColor: 'bg-[#154230]', href: '/compliance' },
-  { icon: FileText, title: 'RFQ Management', description: 'Create, send, and manage Request for Quotes with ease.', bgColor: 'bg-[#A6824A]', href: '/rfqs' },
-  { icon: Package, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, and more.', bgColor: 'bg-[#5D1E21]', href: '/documents' },
-  { icon: Truck, title: 'Freight Integration', description: 'Compare shipping rates from top freight forwarders.', bgColor: 'bg-[#154230]', href: '/freight' },
-  { icon: Bot, title: 'AI Assistant', description: 'Get instant help with HS codes and compliance.', bgColor: 'bg-[#A6824A]', href: '/ai' },
-  { icon: Users, title: 'Expert Network', description: 'Connect with verified trade experts.', bgColor: 'bg-[#5D1E21]', href: '/consultations' },
+  { icon: Package, title: 'Marketplace', description: 'Browse, buy, and sell products with verified trade partners.', bgColor: 'bg-[#154230]', href: '/marketplace' },
+  { icon: FileText, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, L/C, and trade documents.', bgColor: 'bg-[#A6824A]', href: '/docs' },
+  { icon: Truck, title: 'Freight & Logistics', description: 'Track shipments, compare rates, and manage logistics.', bgColor: 'bg-[#5D1E21]', href: '/freight' },
+  { icon: Shield, title: 'Compliance', description: 'HS code lookup, duty calculator, and compliance checks.', bgColor: 'bg-[#154230]', href: '/compliance' },
+  { icon: Bot, title: 'AI Assistant', description: 'HOJAI-powered intelligence for trade insights and analysis.', bgColor: 'bg-[#A6824A]', href: '/ai' },
+  { icon: BarChart3, title: 'Billing & Invoicing', description: 'Create invoices, track payments, and manage cash flow.', bgColor: 'bg-[#5D1E21]', href: '/billing' },
 ];
 
 const howItWorksSteps = [
@@ -81,9 +81,12 @@ export default function HomePage() {
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/marketplace" className="nav-link">Marketplace</Link>
+              <Link href="/docs" className="nav-link">Documents</Link>
               <Link href="/freight" className="nav-link">Freight</Link>
               <Link href="/compliance" className="nav-link">Compliance</Link>
-              <Link href="/about" className="nav-link">About</Link>
+              <Link href="/ai" className="nav-link">AI</Link>
+              <Link href="/billing" className="nav-link">Billing</Link>
+              <Link href="/ads" className="nav-link">Ads</Link>
             </nav>
 
             <div className="flex items-center gap-4">
@@ -109,9 +112,12 @@ export default function HomePage() {
         >
           <div className="p-4 flex flex-col gap-2">
             <Link href="/marketplace" className="p-3 hover:bg-black/5 rounded-lg">Marketplace</Link>
+            <Link href="/docs" className="p-3 hover:bg-black/5 rounded-lg">Documents</Link>
             <Link href="/freight" className="p-3 hover:bg-black/5 rounded-lg">Freight</Link>
             <Link href="/compliance" className="p-3 hover:bg-black/5 rounded-lg">Compliance</Link>
-            <Link href="/about" className="p-3 hover:bg-black/5 rounded-lg">About</Link>
+            <Link href="/ai" className="p-3 hover:bg-black/5 rounded-lg">AI</Link>
+            <Link href="/billing" className="p-3 hover:bg-black/5 rounded-lg">Billing</Link>
+            <Link href="/ads" className="p-3 hover:bg-black/5 rounded-lg">Ads</Link>
           </div>
         </motion.div>
       </header>
@@ -508,12 +514,15 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Product</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm">Platform</h4>
               <ul className="space-y-2 text-sm text-white/70">
                 <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
+                <li><Link href="/docs" className="hover:text-white transition-colors">Documents</Link></li>
                 <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
                 <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
-                <li><Link href="/ai" className="hover:text-white transition-colors">AI Assistant</Link></li>
+                <li><Link href="/ai" className="hover:text-white transition-colors">AI</Link></li>
+                <li><Link href="/billing" className="hover:text-white transition-colors">Billing</Link></li>
+                <li><Link href="/ads" className="hover:text-white transition-colors">Ads</Link></li>
               </ul>
             </div>
             <div>
