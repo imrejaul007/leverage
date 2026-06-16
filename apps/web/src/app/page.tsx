@@ -22,7 +22,7 @@ const stats = [
 
 const featureCards = [
   { icon: Package, title: 'Marketplace', description: 'Browse, buy, and sell products with verified trade partners.', bgColor: 'bg-[#154230]', href: '/marketplace' },
-  { icon: FileText, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, L/C, and trade documents.', bgColor: 'bg-[#A6824A]', href: '/docs' },
+  { icon: FileText, title: 'Smart Documents', description: 'Auto-generate invoices, BL, COO, L/C, and trade documents.', bgColor: 'bg-[#A6824A]', href: '/documents' },
   { icon: Truck, title: 'Freight & Logistics', description: 'Track shipments, compare rates, and manage logistics.', bgColor: 'bg-[#5D1E21]', href: '/freight' },
   { icon: Shield, title: 'Compliance', description: 'HS code lookup, duty calculator, and compliance checks.', bgColor: 'bg-[#154230]', href: '/compliance' },
   { icon: Bot, title: 'AI Assistant', description: 'HOJAI-powered intelligence for trade insights and analysis.', bgColor: 'bg-[#A6824A]', href: '/ai' },
@@ -81,7 +81,7 @@ export default function HomePage() {
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/marketplace" className="nav-link">Marketplace</Link>
-              <Link href="/docs" className="nav-link">Documents</Link>
+              <Link href="/documents" className="nav-link">Documents</Link>
               <Link href="/freight" className="nav-link">Freight</Link>
               <Link href="/compliance" className="nav-link">Compliance</Link>
               <Link href="/ai" className="nav-link">AI</Link>
@@ -112,7 +112,7 @@ export default function HomePage() {
         >
           <div className="p-4 flex flex-col gap-2">
             <Link href="/marketplace" className="p-3 hover:bg-black/5 rounded-lg">Marketplace</Link>
-            <Link href="/docs" className="p-3 hover:bg-black/5 rounded-lg">Documents</Link>
+            <Link href="/documents" className="p-3 hover:bg-black/5 rounded-lg">Documents</Link>
             <Link href="/freight" className="p-3 hover:bg-black/5 rounded-lg">Freight</Link>
             <Link href="/compliance" className="p-3 hover:bg-black/5 rounded-lg">Compliance</Link>
             <Link href="/ai" className="p-3 hover:bg-black/5 rounded-lg">AI</Link>
@@ -517,7 +517,7 @@ export default function HomePage() {
               <h4 className="text-white font-semibold mb-4 text-sm">Platform</h4>
               <ul className="space-y-2 text-sm text-white/70">
                 <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/docs" className="hover:text-white transition-colors">Documents</Link></li>
+                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
                 <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
                 <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
                 <li><Link href="/ai" className="hover:text-white transition-colors">AI</Link></li>

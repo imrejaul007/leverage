@@ -58,7 +58,7 @@ const features = [
   { icon: Download, title: 'PDF & Print', desc: 'Professional formatting' },
 ];
 
-export default function DocsPage() {
+export default function DocumentsLandingPage() {
   const [activeTab, setActiveTab] = useState<'create' | 'my-docs'>('create');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,12 +87,15 @@ export default function DocsPage() {
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/docs" className="nav-link font-medium">Documents</Link>
-              <Link href="/docs/templates" className="nav-link font-medium">Templates</Link>
-              <Link href="/docs/my-documents" className="nav-link font-medium">My Documents</Link>
+              <Link href="/documents" className="nav-link font-medium text-[#154230]">Documents</Link>
+              <Link href="/documents/templates" className="nav-link font-medium">Templates</Link>
+              <Link href="/documents/my-documents" className="nav-link font-medium">My Documents</Link>
             </nav>
 
             <div className="flex items-center gap-3">
+              <button className="p-2 hover:bg-black/5 rounded-xl transition-colors relative">
+                <Bell className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
@@ -106,9 +109,9 @@ export default function DocsPage() {
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden mt-4 pt-4 border-t border-black/5">
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/docs" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
-                <Link href="/docs/templates" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Templates</Link>
-                <Link href="/docs/my-documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">My Documents</Link>
+                <Link href="/documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
+                <Link href="/documents/templates" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Templates</Link>
+                <Link href="/documents/my-documents" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">My Documents</Link>
               </nav>
             </motion.div>
           )}
@@ -119,9 +122,12 @@ export default function DocsPage() {
       <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 pt-8 pb-24">
         <div className="container mx-auto max-w-6xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center text-white mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              Trade Document Generator
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <FileText className="w-10 h-10" />
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+                Trade Document Generator
+              </h1>
+            </div>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
               Create professional trade documents in minutes. AI-powered, legally compliant, export-ready.
             </p>
@@ -260,6 +266,19 @@ export default function DocsPage() {
         </div>
       </main>
 
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
+        <div className="container mx-auto max-w-4xl text-center text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to Create Your Documents?</h2>
+          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            Start generating professional trade documents in minutes. No design skills needed.
+          </p>
+          <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
+            Get Started Free <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
         <div className="container mx-auto max-w-6xl">
@@ -272,7 +291,7 @@ export default function DocsPage() {
               <h4 className="font-bold mb-4">Platform</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/docs" className="hover:text-white transition-colors">Documents</Link></li>
+                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
                 <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
                 <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
               </ul>

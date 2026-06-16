@@ -27,6 +27,8 @@ import {
   Users,
   Briefcase,
   Scale,
+  Bell,
+  ArrowRight,
 } from 'lucide-react';
 
 const aiFeatures = [
@@ -56,7 +58,7 @@ const recentChats = [
   { id: 3, title: 'Commercial Invoice Review', time: '3 days ago' },
 ];
 
-export default function AIPage() {
+export default function AILandingPage() {
   const [activeTab, setActiveTab] = useState<'chat' | 'agents' | 'history'>('chat');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -74,12 +76,15 @@ export default function AIPage() {
 
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
-              <Link href="/ai" className="nav-link font-medium">Chat</Link>
+              <Link href="/ai" className="nav-link font-medium text-[#154230]">Chat</Link>
               <Link href="/ai/agents" className="nav-link font-medium">AI Agents</Link>
               <Link href="/ai/analytics" className="nav-link font-medium">Insights</Link>
             </nav>
 
             <div className="flex items-center gap-3">
+              <button className="p-2 hover:bg-black/5 rounded-xl transition-colors relative">
+                <Bell className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
@@ -309,6 +314,19 @@ export default function AIPage() {
         </div>
       </main>
 
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] px-4 sm:px-8 py-16">
+        <div className="container mx-auto max-w-4xl text-center text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Get Instant Trade Intelligence</h2>
+          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            Ask questions, get analysis, and make better trade decisions with AI-powered insights.
+          </p>
+          <Link href="/signup" className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
+            Try AI Assistant Free <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-[#101111] text-white px-4 sm:px-8 py-12">
         <div className="container mx-auto max-w-6xl">
@@ -321,7 +339,7 @@ export default function AIPage() {
               <h4 className="font-bold mb-4">Platform</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-                <li><Link href="/docs" className="hover:text-white transition-colors">Documents</Link></li>
+                <li><Link href="/documents" className="hover:text-white transition-colors">Documents</Link></li>
                 <li><Link href="/freight" className="hover:text-white transition-colors">Freight</Link></li>
                 <li><Link href="/compliance" className="hover:text-white transition-colors">Compliance</Link></li>
               </ul>
