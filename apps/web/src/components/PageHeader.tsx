@@ -8,6 +8,7 @@ interface PageHeaderProps {
   subtitle?: string;
   backHref?: string;
   showNotifications?: boolean;
+  showBack?: boolean;
   notificationCount?: number;
   actions?: React.ReactNode;
 }
@@ -17,6 +18,7 @@ export default function PageHeader({
   subtitle,
   backHref,
   showNotifications = true,
+  showBack = true,
   notificationCount = 0,
   actions,
 }: PageHeaderProps) {
@@ -24,7 +26,7 @@ export default function PageHeader({
     <div className="bg-gradient-to-br from-[#154230] to-[#1a5a3a] rounded-b-[32px] px-4 pt-6 pb-8">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
-          {backHref && (
+          {backHref && showBack && (
             <Link
               href={backHref}
               className="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
