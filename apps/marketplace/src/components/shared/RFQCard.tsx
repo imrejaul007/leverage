@@ -29,7 +29,7 @@ interface RFQCardProps {
   onQuote?: (rfq: RFQ) => void;
 }
 
-const statusColors: Record<RFQ['status'], 'success' | 'warning' | 'error' | 'default'> = {
+const statusColors: Record<RFQ['status'], 'success' | 'warning' | 'error' | 'default' | 'accent'> = {
   OPEN: 'success',
   IN_REVIEW: 'warning',
   CLOSED: 'default',

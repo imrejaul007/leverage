@@ -30,12 +30,12 @@ const suppliers: Record<string, {
   verified: boolean;
   rating: number;
   reviews: number;
-  products: number;
+  productCount: number;
   responseTime: string;
   categories: string[];
   established: string;
   website?: string;
-  products: Product[];
+  productList: Product[];
 }> = {
   'sup-001': {
     id: 'sup-001',
@@ -46,12 +46,12 @@ const suppliers: Record<string, {
     verified: true,
     rating: 4.8,
     reviews: 128,
-    products: 245,
+    productCount: 245,
     responseTime: '< 2 hours',
     categories: ['Food & Agriculture', 'Spices'],
     established: '2009',
     website: 'https://globaltradeexports.com',
-    products: [
+    productList: [
       {
         id: '1',
         name: 'Premium Basmati Rice 1121',
@@ -175,7 +175,7 @@ export default function SupplierProfilePage() {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-black/5">
             <div className="text-center">
-              <p className="text-2xl font-bold text-[#154230]">{supplier.products}</p>
+              <p className="text-2xl font-bold text-[#154230]">{supplier.productCount}</p>
               <p className="text-sm text-[#4A4A4A]">Products</p>
             </div>
             <div className="text-center">
@@ -193,11 +193,11 @@ export default function SupplierProfilePage() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-[#101111]">Products</h2>
-            <span className="text-sm text-[#4A4A4A]">{supplier.products.length} products</span>
+            <span className="text-sm text-[#4A4A4A]">{supplier.productList.length} products</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {supplier.products.map((product) => (
+            {supplier.productList.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
