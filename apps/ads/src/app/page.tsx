@@ -136,27 +136,22 @@ export default function AdsPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-black/5">
         <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-[#154230]/10 text-[#154230] text-sm font-semibold rounded-lg">
-                <Megaphone className="w-4 h-4" />
-                Ads
-              </span>
+              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Ads</span>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Home</Link>
-              <Link href="/marketplace" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Marketplace</Link>
-              <Link href="/docs" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Documents</Link>
-              <Link href="/freight" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Freight</Link>
-              <Link href="/compliance" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Compliance</Link>
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-8">
+              <Link href="/" className="nav-link font-medium">Home</Link>
+              <Link href="/ads" className="nav-link font-medium">Campaigns</Link>
+              <Link href="/ads/create" className="nav-link font-medium">Create Ad</Link>
+              <Link href="/ads/analytics" className="nav-link font-medium">Analytics</Link>
             </nav>
 
+            {/* Actions */}
             <div className="flex items-center gap-3">
-              <Link href="/ads/campaigns/new" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#154230]/10 text-[#154230] text-sm font-semibold rounded-lg hover:bg-[#154230]/20 transition-colors">
-                <Plus className="w-4 h-4" />
-                Create Ad
-              </Link>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
@@ -178,10 +173,9 @@ export default function AdsPage() {
             >
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
-                <Link href="/docs" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
-                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
-                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/ads" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Campaigns</Link>
+                <Link href="/ads/create" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Create Ad</Link>
+                <Link href="/ads/analytics" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Analytics</Link>
               </nav>
             </motion.div>
           )}

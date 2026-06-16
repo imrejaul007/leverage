@@ -153,27 +153,22 @@ export default function BillingPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-black/5">
         <div className="container mx-auto px-4 sm:px-8 py-4">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={144} height={48} className="object-contain" />
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-[#154230]/10 text-[#154230] text-sm font-semibold rounded-lg">
-                <DollarSign className="w-4 h-4" />
-                Billing
-              </span>
+              <span className="hidden sm:inline text-sm text-[#4A4A4A] font-medium">Billing</span>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Home</Link>
-              <Link href="/marketplace" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Marketplace</Link>
-              <Link href="/docs" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Documents</Link>
-              <Link href="/freight" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Freight</Link>
-              <Link href="/compliance" className="text-sm font-medium text-[#4A4A4A] hover:text-[#101111] transition-colors">Compliance</Link>
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-8">
+              <Link href="/" className="nav-link font-medium">Home</Link>
+              <Link href="/billing" className="nav-link font-medium">Overview</Link>
+              <Link href="/billing/invoices" className="nav-link font-medium">Invoices</Link>
+              <Link href="/billing/payments" className="nav-link font-medium">Payments</Link>
             </nav>
 
+            {/* Actions */}
             <div className="flex items-center gap-3">
-              <Link href="/billing/invoices/new" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#154230]/10 text-[#154230] text-sm font-semibold rounded-lg hover:bg-[#154230]/20 transition-colors">
-                <Plus className="w-4 h-4" />
-                New Invoice
-              </Link>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
@@ -195,10 +190,9 @@ export default function BillingPage() {
             >
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/marketplace" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Marketplace</Link>
-                <Link href="/docs" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Documents</Link>
-                <Link href="/freight" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Freight</Link>
-                <Link href="/compliance" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Compliance</Link>
+                <Link href="/billing" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Overview</Link>
+                <Link href="/billing/invoices" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Invoices</Link>
+                <Link href="/billing/payments" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Payments</Link>
               </nav>
             </motion.div>
           )}

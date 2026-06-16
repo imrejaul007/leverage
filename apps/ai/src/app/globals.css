@@ -91,6 +91,32 @@ body {
 .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
 .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
 
+/* Navigation Link */
+.nav-link {
+  color: #4A4A4A;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #154230;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #154230;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 20px rgba(21, 66, 48, 0.3);
