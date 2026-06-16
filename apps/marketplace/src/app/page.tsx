@@ -259,10 +259,10 @@ export default function MarketplacePage() {
               className="lg:hidden mt-4 pt-4 border-t border-black/5"
             >
               <nav className="flex flex-col gap-2">
-                <Link href="/" className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
-                <Link href="/products" className="p-3 hover:bg-black/5 rounded-lg font-medium">Products</Link>
-                <Link href="/suppliers" className="p-3 hover:bg-black/5 rounded-lg font-medium">Suppliers</Link>
-                <Link href="/rfqs" className="p-3 hover:bg-black/5 rounded-lg font-medium">RFQs</Link>
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
+                <Link href="/products" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Products</Link>
+                <Link href="/suppliers" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Suppliers</Link>
+                <Link href="/rfqs" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">RFQs</Link>
               </nav>
             </motion.div>
           )}
