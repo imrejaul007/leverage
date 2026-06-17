@@ -4,12 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Check, Package, Globe, Shield } from 'lucide-react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { useAuth } from '@/contexts/AuthContext';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Check, Package, Globe, Shield, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,22 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      localStorage.setItem('accessToken', data.tokens.accessToken);
-      localStorage.setItem('refreshToken', data.tokens.refreshToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
+      await login(email, password);
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.');
@@ -62,18 +47,6 @@ export default function LoginPage() {
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-[#101111] mb-2">Welcome back</h1>
             <p className="text-[#4A4A4A]">Sign in to access your global trade dashboard</p>
-          </div>
-
-          {/* Demo Hint */}
-          <div className="mb-6 p-4 bg-[#154230]/5 border border-[#154230]/20 rounded-xl">
-            <p className="text-[#4A4A4A] text-sm mb-2">Try with demo credentials:</p>
-            <button
-              type="button"
-              onClick={() => { setEmail('demo@leverage.one'); setPassword('demo123'); }}
-              className="text-[#154230] text-sm font-medium hover:underline flex items-center gap-1"
-            >
-              <Check className="w-4 h-4" /> Use demo account
-            </button>
           </div>
 
           {/* Error */}
@@ -117,11 +90,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A4A4A] hover:text-[#A6824A] transition-colors"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -142,12 +111,9 @@ export default function LoginPage() {
               className="w-full h-12 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                <Loader2 className="animate-spin w-5 h-5" />
               ) : (
-                <>
-                  Sign In
-                  <ArrowRight className="w-5 h-5" />
-                </>
+                <>Sign In <ArrowRight className="w-5 h-5" /></>
               )}
             </button>
           </form>
@@ -169,10 +135,10 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Side - Branding */}
-      <div className="hidden lg:flex flex-1 bg-white items-center justify-center p-12">
-        <div className="text-center max-w-md">
-          <h2 className="text-3xl font-bold text-[#101111] mb-4">
+      {/* Right Side - Features */}
+      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#081512] via-[#0a1f18] to-[#081512] items-center justify-center p-12">
+        <div className="max-w-md">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Global Trade, Simplified
           </h2>
           <p className="text-[#4A4A4A] text-base mb-8">
@@ -188,21 +154,17 @@ export default function LoginPage() {
             </div>
             <div className="text-center">
               <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-7 h-7 text-[#154230]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <Globe className="w-7 h-7 text-[#154230]" />
               </div>
               <p className="text-[#101111] font-bold text-xl">50+</p>
               <p className="text-[#4A4A4A] text-sm">Countries</p>
             </div>
             <div className="text-center">
-              <div className="w-14 h-14 rounded-xl bg-[#154230]/10 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-7 h-7 text-[#154230]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="w-14 h-14 rounded-xl bg-[#5D1E21]/10 flex items-center justify-center mx-auto mb-3">
+                <Shield className="w-7 h-7 text-[#5D1E21]" />
               </div>
-              <p className="text-[#101111] font-bold text-xl">$10M+</p>
-              <p className="text-[#4A4A4A] text-sm">Traded</p>
+              <p className="text-[#101111] font-bold text-xl">100%</p>
+              <p className="text-[#4A4A4A] text-sm">Compliant</p>
             </div>
           </div>
         </div>
