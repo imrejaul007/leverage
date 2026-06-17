@@ -152,7 +152,7 @@ export default function ConsultationsPage() {
             <nav className="hidden lg:flex items-center gap-8">
               <Link href="/" className="nav-link font-medium">Home</Link>
               <Link href="/consultations" className="nav-link font-medium text-[#154230]">Consultations</Link>
-              <Link href="/consultations/book" className="nav-link font-medium">Book Session</Link>
+              <Link href="/consultations/schedule" className="nav-link font-medium">Book Session</Link>
               <Link href="/consultations/experts" className="nav-link font-medium">Our Experts</Link>
             </nav>
 
@@ -174,7 +174,7 @@ export default function ConsultationsPage() {
               <nav className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Home</Link>
                 <Link href="/consultations" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Consultations</Link>
-                <Link href="/consultations/book" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Book Session</Link>
+                <Link href="/consultations/schedule" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Book Session</Link>
                 <Link href="/consultations/experts" onClick={() => setMobileMenuOpen(false)} className="p-3 hover:bg-black/5 rounded-lg font-medium">Our Experts</Link>
               </nav>
             </motion.div>
@@ -295,7 +295,7 @@ export default function ConsultationsPage() {
                     ))}
                   </div>
                   <Link
-                    href="/consultations/book"
+                    href="/consultations/schedule"
                     className="mt-4 w-full block text-center px-4 py-2 bg-[#154230] text-white font-medium rounded-lg hover:bg-[#1d5240] transition-colors"
                   >
                     Book Consultation
@@ -374,7 +374,7 @@ export default function ConsultationsPage() {
             Book a consultation today and get personalized trade advice from industry experts.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/consultations/book" className="px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
+            <Link href="/consultations/schedule" className="px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
               Book a Consultation
             </Link>
             <Link href="/signup" className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">

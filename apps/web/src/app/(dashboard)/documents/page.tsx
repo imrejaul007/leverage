@@ -222,7 +222,7 @@ export default function DocumentsLandingPage() {
                     return (
                       <Link
                         key={doc.name}
-                        href={`/documents/create?type=${encodeURIComponent(doc.name)}`}
+                        href={`/documents/generate?type=${encodeURIComponent(doc.name)}`}
                         className={`p-6 rounded-xl border-2 text-left transition-all ${selectedType === doc.name ? 'border-[#154230] bg-[#154230]/5' : 'border-black/5 hover:border-[#154230]/30 hover:bg-[#154230]/5'}`}
                       >
                         <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: doc.color + '15' }}>
@@ -242,7 +242,7 @@ export default function DocumentsLandingPage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-[#101111]">Recent Documents</h2>
-                  <Link href="/documents/create" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                  <Link href="/documents/generate" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                     <Plus className="w-4 h-4" />
                     New Document
                   </Link>

@@ -253,7 +253,7 @@ export default function FreightLandingPage() {
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-[#101111]">Active Shipments</h2>
-                    <Link href="/freight/shipments/new" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                    <Link href="/freight/shipments" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                       <Plus className="w-4 h-4" />
                       New Shipment
                     </Link>
@@ -294,7 +294,7 @@ export default function FreightLandingPage() {
                   <DollarSign className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-[#101111] mb-2">Get a Freight Quote</h3>
                   <p className="text-[#4A4A4A] mb-4">Compare rates from top carriers worldwide.</p>
-                  <Link href="/freight/quote" className="inline-block px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                  <Link href="/freight/shipments" className="inline-block px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                     Request Quote
                   </Link>
                 </div>
