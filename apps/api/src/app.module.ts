@@ -6,7 +6,7 @@ import { BullModule } from '@nestjs/bull';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 import { PrismaModule } from './prisma/prisma.module';
-import { RedisModule } from './shared/redis.module';
+import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { CompaniesModule } from './modules/companies/companies.module';
@@ -53,7 +53,7 @@ import { SearchModule } from './modules/search/search.module';
     }]),
 
     PrismaModule,
-    RedisModule,
+    SharedModule,
 
     BullModule.forRoot({
       redis: process.env.REDIS_URL || 'redis://localhost:6379',

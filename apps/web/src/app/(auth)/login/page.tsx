@@ -4,15 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store';
-import { loginSuccess } from '@/store/slices/authSlice';
-import { mockUser } from '@/lib/mock-data';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Check, Package } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Check, Package, Globe, Shield } from 'lucide-react';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function LoginPage() {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,35 +22,28 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (password.length >= 6) {
-        const accessToken = `mock-token-${Date.now()}`;
-        const refreshToken = `mock-refresh-${Date.now()}`;
+      const data = await response.json();
 
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-
-        dispatch(loginSuccess({
-          user: mockUser,
-          tokens: { accessToken, refreshToken }
-        }));
-
-        router.push('/dashboard');
-      } else {
-        setError('Password must be at least 6 characters');
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
       }
-    } catch (err) {
-      setError('Login failed. Please try again.');
+
+      localStorage.setItem('accessToken', data.tokens.accessToken);
+      localStorage.setItem('refreshToken', data.tokens.refreshToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const fillDemo = () => {
-    setEmail('alex.morgan@leverage.com');
-    setPassword('demo123');
   };
 
   return (
@@ -75,14 +65,14 @@ export default function LoginPage() {
           </div>
 
           {/* Demo Hint */}
-          <div className="mb-6 p-4 bg-white border border-black/5 rounded-xl">
-            <p className="text-[#4A4A4A] text-sm mb-2">Demo Mode - Enter any email & password (min 6 chars)</p>
+          <div className="mb-6 p-4 bg-[#154230]/5 border border-[#154230]/20 rounded-xl">
+            <p className="text-[#4A4A4A] text-sm mb-2">Try with demo credentials:</p>
             <button
               type="button"
-              onClick={fillDemo}
-              className="text-[#A6824A] text-sm font-medium hover:underline flex items-center gap-1"
+              onClick={() => { setEmail('demo@leverage.one'); setPassword('demo123'); }}
+              className="text-[#154230] text-sm font-medium hover:underline flex items-center gap-1"
             >
-              <Check className="w-4 h-4" /> Fill demo credentials
+              <Check className="w-4 h-4" /> Use demo account
             </button>
           </div>
 
