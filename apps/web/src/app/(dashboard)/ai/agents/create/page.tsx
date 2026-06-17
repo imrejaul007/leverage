@@ -284,7 +284,7 @@ export default function AgentsCreatePage() {
           <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <p className="text-white/70 text-sm">
-                © 2024 LEVERAGE. All rights reserved.
+                © 2026 LEVERAGE. All rights reserved.
               </p>
               <div className="flex items-center gap-6">
                 <Link href="/privacy" className="text-white/70 hover:text-white text-sm transition-colors">Privacy</Link>

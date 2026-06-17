@@ -200,7 +200,7 @@ export default function PromptAnalyticsPage() {
         </div>
         <div className="bg-[#5D1E21] px-4 sm:px-8 py-6">
           <div className="container mx-auto max-w-6xl">
-            <p className="text-white/70 text-sm text-center">© 2024 LEVERAGE. All rights reserved.</p>
+            <p className="text-white/70 text-sm text-center">© 2026 LEVERAGE. All rights reserved.</p>
           </div>
         </div>
       </footer>

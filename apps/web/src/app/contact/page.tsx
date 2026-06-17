@@ -132,7 +132,7 @@ export default function ContactPage() {
       <footer className="border-t border-[rgba(255,255,255,0.05)] py-8 px-8">
         <div className="container mx-auto text-center">
           <p className="text-[#D8CCBC]/40 text-sm">
-            © 2024 Leverge. All rights reserved.
+            © 2026 Leverge. All rights reserved.
           </p>
         </div>
       </footer>
