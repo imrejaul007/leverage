@@ -56,10 +56,10 @@ const legalLinks = [
 ];
 
 const complianceTools = [
-  { icon: Search, name: 'HS Code Search', desc: 'Find correct classifications', color: '#154230' },
-  { icon: Calculator, name: 'Duty Calculator', desc: 'Estimate import costs', color: '#A6824A' },
-  { icon: ClipboardCheck, name: 'Compliance Check', desc: 'Verify requirements', color: '#5D1E21' },
-  { icon: FileCheck, name: 'Document Review', desc: 'Validate trade docs', color: '#154230' },
+  { icon: Search, name: 'HS Code Search', desc: 'Find correct classifications', color: '#154230', href: '/compliance/hs-code-search' },
+  { icon: Calculator, name: 'Duty Calculator', desc: 'Estimate import costs', color: '#A6824A', href: '/compliance/duty-rates' },
+  { icon: ClipboardCheck, name: 'Compliance Check', desc: 'Verify requirements', color: '#5D1E21', href: '/compliance/hs-codes' },
+  { icon: FileCheck, name: 'Document Review', desc: 'Validate trade docs', color: '#154230', href: '/compliance/document-review' },
 ];
 
 const recentChecks = [
@@ -200,7 +200,7 @@ export default function ComplianceLandingPage() {
               const Icon = tool.icon;
               const isGreen = index % 2 === 0;
               return (
-                <Link key={tool.name} href={`/compliance/${tool.name.toLowerCase().replace(/\s+/g, '-')}`} className={`rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}>
+                <Link key={tool.name} href={tool.href} className={`rounded-xl p-6 shadow-sm hover:opacity-90 transition-opacity ${isGreen ? 'bg-[#154230]' : 'bg-[#5D1E21]'}`}>
                   <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 bg-white/20">
                     <Icon className="w-7 h-7 text-white" />
                   </div>
@@ -244,7 +244,7 @@ export default function ComplianceLandingPage() {
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-[#101111]">Recent Compliance Checks</h2>
-                    <Link href="/compliance/check/new" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                    <Link href="/compliance/hs-codes" className="flex items-center gap-2 px-4 py-2 bg-[#154230] text-white text-sm font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
                       <FileCheck className="w-4 h-4" />
                       New Check
                     </Link>
