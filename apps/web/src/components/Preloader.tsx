@@ -5,17 +5,17 @@ import Image from 'next/image';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
 const mobileImages = [
-  '/prelaoder1.PNG',
   '/prelaoder2.PNG',
   '/prelaoder3.PNG',
   '/prelaoder4.PNG',
+  '/prelaoder1.PNG',
 ];
 
 const desktopImages = [
-  '/prelaoder-d1.PNG',
   '/prelaoder-d2.PNG',
   '/prelaoder-d3.PNG',
   '/prelaoder-d4.PNG',
+  '/prelaoder-d1.PNG',
 ];
 
 interface PreloaderProps {
