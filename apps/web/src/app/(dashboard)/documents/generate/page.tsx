@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { FileText, Download, Loader2, Check, ArrowRight, Plus, Trash2, Building2, Plane, Ship, Truck, File, Printer, Package, Globe } from 'lucide-react';
 import PageHeader from '@/components/PageHeader';
 import BottomNav from '@/components/BottomNav';
@@ -89,14 +90,29 @@ const currencies = ['USD', 'EUR', 'GBP', 'CNY', 'AED', 'INR', 'JPY', 'SGD'];
 const paymentTerms = ['T/T 30 Days', 'T/T 60 Days', 'T/T at Sight', 'L/C 30 Days', 'L/C 60 Days', 'D/P', 'D/A'];
 const units = ['PCS', 'KG', 'MT', 'SETS', 'BOXES', 'PALLET', '20FT', '40FT'];
 
-export default function DocumentGeneratorPage() {
+function DocumentGeneratorContent() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedDoc, setGeneratedDoc] = useState<{ type: string; preview: string } | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
+  const typeParam = searchParams.get('type') || 'Commercial Invoice';
+
+  const getDocTypeFromName = (name: string): DocumentFormData['documentType'] => {
+    const mapping: Record<string, DocumentFormData['documentType']> = {
+      'Commercial Invoice': 'commercial_invoice',
+      'Bill of Lading': 'bill_of_lading',
+      'Certificate of Origin': 'certificate_of_origin',
+      'Letter of Credit': 'proforma_invoice',
+      'Packing List': 'packing_list',
+      'Customs Invoice': 'commercial_invoice',
+    };
+    return mapping[name] || 'commercial_invoice';
+  };
+
   const [formData, setFormData] = useState<DocumentFormData>({
-    documentType: 'commercial_invoice',
+    documentType: getDocTypeFromName(typeParam),
     sellerName: '',
     sellerAddress: '',
     sellerCity: '',
@@ -749,5 +765,13 @@ export default function DocumentGeneratorPage() {
 
       <BottomNav activeItem="compliance" />
     </div>
+  );
+}
+
+export default function DocumentGeneratorPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#E6E2DA] flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#154230]" /></div>}>
+      <DocumentGeneratorContent />
+    </Suspense>
   );
 }
