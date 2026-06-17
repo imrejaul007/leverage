@@ -2,7 +2,23 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import PageHeader from '@/components/PageHeader';
 import BottomNav from '@/components/BottomNav';
+import {
+  Star,
+  Heart,
+  Share2,
+  MessageSquare,
+  Check,
+  Truck,
+  Package,
+  Shield,
+  Clock,
+  ChevronRight,
+  Plus,
+  Minus,
+} from 'lucide-react';
 
 interface Supplier {
   id: string;
@@ -54,7 +70,7 @@ const supplier: Supplier = {
   id: '1',
   name: 'Global Trade Exports',
   country: 'India',
-  countryCode: '🇮🇳',
+  countryCode: 'IN',
   verified: true,
   rating: 4.8,
   responseTime: '< 2h',
@@ -72,8 +88,12 @@ const products: Record<string, Product> = {
     originalPrice: 950,
     currency: 'USD',
     moq: '50 MT',
-    image: '🍚',
-    images: ['🍚', '🌾', '🍲'],
+    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800',
+    images: [
+      'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800',
+      'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=800',
+      'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800',
+    ],
     category: 'Food & Agriculture',
     supplier: supplier,
     tradeTerms: ['FOB', 'CIF', 'EXW'],
@@ -93,26 +113,27 @@ const products: Record<string, Product> = {
     salesCount: 1248,
     relatedProducts: ['5', '8', '10'],
     reviews: [
-      { id: '1', author: 'Ahmed K.', rating: 5, date: '2024-01-15', comment: 'Excellent quality rice.', country: '🇦🇪' },
-      { id: '2', author: 'Sarah M.', rating: 5, date: '2024-01-10', comment: 'Fast delivery.', country: '🇬🇧' },
+      { id: '1', author: 'Ahmed K.', rating: 5, date: '2024-01-15', comment: 'Excellent quality rice. Will order again!', country: 'AE' },
+      { id: '2', author: 'Sarah M.', rating: 5, date: '2024-01-10', comment: 'Fast delivery and great packaging.', country: 'GB' },
+      { id: '3', author: 'John D.', rating: 4, date: '2024-01-05', comment: 'Good product, slightly higher moisture than expected.', country: 'US' },
     ],
   },
   '2': {
     id: '2',
     name: 'Organic Cotton Yarn 40/1',
-    description: 'Premium quality 100% organic cotton yarn.',
-    price: 3.20,
+    description: 'Premium quality 100% organic cotton yarn for weaving and knitting.',
+    price: 4.20,
     currency: 'USD',
     moq: '10 MT',
-    image: '🧶',
-    images: ['🧶', '🧵'],
+    image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800',
+    images: ['https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800'],
     category: 'Textiles',
     supplier: supplier,
     tradeTerms: ['FOB', 'CIF'],
     specifications: {
       'Count': 'Ne 40/1',
       'Type': 'Combed',
-      'Material': '100% Organic',
+      'Material': '100% Organic Cotton',
     },
     packaging: 'Cone 1.5kg',
     paymentTerms: ['LC at Sight', 'TT 30% Advance'],
@@ -124,15 +145,15 @@ const products: Record<string, Product> = {
   },
   '5': {
     id: '5',
-    name: 'Olive Oil Extra Virgin',
-    description: 'Cold pressed, first harvest olive oil.',
+    name: 'Olive Oil Extra Virgin Premium',
+    description: 'Cold pressed, first harvest olive oil from Aegean region.',
     price: 4.50,
     currency: 'USD',
     moq: '5 MT',
-    image: '🫒',
-    images: ['🫒'],
+    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800',
+    images: ['https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800'],
     category: 'Food & Agriculture',
-    supplier: { ...supplier, id: '3', name: 'Turkey Merchants', country: 'Turkey', countryCode: '🇹🇷', rating: 4.9 },
+    supplier: { ...supplier, id: '3', name: 'Turkey Merchants', country: 'Turkey', rating: 4.9 },
     tradeTerms: ['FOB', 'CIF', 'EXW'],
     featured: true,
     specifications: {
@@ -151,26 +172,13 @@ const products: Record<string, Product> = {
 };
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState<'quote' | 'bid' | 'requirement'>('quote');
-  const [quantity, setQuantity] = useState('');
-  const [bidAmount, setBidAmount] = useState('');
-  const [message, setMessage] = useState('');
+  const [activeTab, setActiveTab] = useState<'quote' | 'bid'>('quote');
+  const [quantity, setQuantity] = useState('50');
   const [selectedTradeTerm, setSelectedTradeTerm] = useState('FOB');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-
-  // Requirement form state
-  const [requirementForm, setRequirementForm] = useState({
-    quantity: '',
-    targetPrice: '',
-    customSpecs: '',
-    deliveryLocation: '',
-    deliveryTimeline: '',
-    paymentTerms: '',
-    additionalRequirements: '',
-  });
 
   const product = products[params.id] || products['1'];
   const relatedProducts = product.relatedProducts?.map(id => products[id]).filter(Boolean) || [];
@@ -181,126 +189,68 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   }, [product.reviews]);
 
   const handleQuoteRequest = async () => {
-    if (!quantity || !message) return;
+    if (!quantity) return;
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setQuantity('');
-      setMessage('');
-    }, 3000);
-  };
-
-  const handleBid = async () => {
-    if (!quantity || !bidAmount || !message) return;
-    setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setQuantity('');
-      setBidAmount('');
-      setMessage('');
-    }, 3000);
-  };
-
-  const handleRequirementSubmit = async () => {
-    if (!requirementForm.quantity || !requirementForm.deliveryLocation) return;
-    setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setRequirementForm({
-        quantity: '',
-        targetPrice: '',
-        customSpecs: '',
-        deliveryLocation: '',
-        deliveryTimeline: '',
-        paymentTerms: '',
-        additionalRequirements: '',
-      });
-    }, 3000);
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      await navigator.share({
-        title: product.name,
-        text: `Check out ${product.name} on Leverage`,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-    }
-  };
-
-  const updateRequirement = (field: string, value: string) => {
-    setRequirementForm(prev => ({ ...prev, [field]: value }));
+    setTimeout(() => setShowSuccess(false), 3000);
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 pb-24 sm:pb-6">
-      {/* Back Button & Actions */}
-      <div className="flex items-center justify-between">
-        <Link href="/marketplace" className="inline-flex items-center gap-2 text-[#D8CCBC] hover:text-[#F4F1EA] text-sm">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Marketplace
-        </Link>
-        <div className="flex items-center gap-2">
-          <button onClick={handleShare} className="p-2 text-[#D8CCBC] hover:text-[#F4F1EA]">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-2.4-2.6-4-4-4-1.6 0-3 1.6-3 4 0 1.6 1.6 3 4 3 2.482 0 2.938.114 3.342.658M9.144 7.758C9.09 7.348 9 6.897 9 6.5c0-2.4-2.6-4-4-4s-4 1.6-4 4c0 .397.09.848.144 1.258M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-          <button onClick={() => setIsFavorite(!isFavorite)} className={`p-2 ${isFavorite ? 'text-red-400' : 'text-[#D8CCBC]'} hover:text-red-400`}>
-            <svg className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#E6E2DA] pb-24">
+      <PageHeader
+        title={product.name}
+        subtitle={product.category}
+        backHref="/marketplace"
+      />
 
       {/* Success Toast */}
       {showSuccess && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-500 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-bounce">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          {activeTab === 'quote' ? 'Quote request sent!' : activeTab === 'bid' ? 'Bid submitted!' : 'Requirements sent to supplier!'}
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#16A34A] text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-bounce">
+          <Check className="w-5 h-5" />
+          Quote request sent successfully!
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <nav className="text-sm text-[#D8CCBC]/60">
-        <Link href="/marketplace" className="hover:text-[#C49A6C]">Marketplace</Link>
-        <span className="mx-2">/</span>
-        <Link href={`/marketplace?category=${product.category}`} className="hover:text-[#C49A6C]">{product.category}</Link>
-        <span className="mx-2">/</span>
-        <span className="text-[#F4F1EA]">{product.name}</span>
-      </nav>
-
-      {/* Product Image Gallery */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-3">
-          <div className="aspect-square bg-gradient-to-br from-[#0E3B36] to-[#081512] rounded-2xl p-8 flex items-center justify-center relative">
-            <span className="text-8xl sm:text-9xl">{product.images?.[selectedImage] || product.image}</span>
+      <div className="px-4 -mt-6 space-y-4">
+        {/* Image Gallery */}
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div className="relative aspect-square">
+            <Image
+              src={product.images[selectedImage]}
+              alt={product.name}
+              fill
+              className="object-cover"
+            />
             {product.featured && (
-              <span className="absolute top-4 left-4 px-3 py-1 bg-[#C49A6C] text-[#081512] text-xs font-semibold rounded-lg">Featured</span>
+              <span className="absolute top-4 left-4 px-3 py-1 bg-[#A6824A] text-white text-xs font-semibold rounded-lg">
+                Featured
+              </span>
             )}
+            <div className="absolute top-4 right-4 flex gap-2">
+              <button
+                onClick={() => setIsFavorite(!isFavorite)}
+                className={`p-2 rounded-full shadow ${isFavorite ? 'bg-red-500 text-white' : 'bg-white text-[#4A4A4A]'}`}
+              >
+                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+              </button>
+              <button className="p-2 rounded-full bg-white shadow text-[#4A4A4A]">
+                <Share2 className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          {product.images && product.images.length > 1 && (
-            <div className="flex gap-2">
+          {product.images.length > 1 && (
+            <div className="p-4 flex gap-2 overflow-x-auto">
               {product.images.map((img, i) => (
-                <button key={i} onClick={() => setSelectedImage(i)}
-                  className={`w-16 h-16 rounded-lg bg-[#0E3B36] flex items-center justify-center ${selectedImage === i ? 'ring-2 ring-[#C49A6C]' : ''}`}>
-                  <span className="text-2xl">{img}</span>
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 ${
+                    selectedImage === i ? 'border-[#154230]' : 'border-transparent'
+                  }`}
+                >
+                  <Image src={img} alt="" width={64} height={64} className="object-cover w-full h-full" />
                 </button>
               ))}
             </div>
@@ -308,332 +258,328 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
         </div>
 
         {/* Product Info */}
-        <div className="space-y-4">
-          <div>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <span className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC] text-xs rounded">{product.category}</span>
-              {product.tradeTerms.slice(0, 2).map(term => (
-                <span key={term} className="px-2 py-1 bg-[#0E3B36] text-[#D8CCBC]/70 text-xs rounded">{term}</span>
-              ))}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <p className="text-[#4A4A4A] text-sm">{product.category}</p>
+              <h1 className="text-xl font-bold text-[#101111]">{product.name}</h1>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#F4F1EA] mb-2">{product.name}</h1>
-            <p className="text-[#D8CCBC]/70 text-sm">{product.description}</p>
+            {product.supplier.verified && (
+              <span className="px-2 py-1 bg-[#154230]/10 text-[#154230] text-xs font-medium rounded-lg flex items-center gap-1">
+                <Shield className="w-3 h-3" />
+                Verified
+              </span>
+            )}
           </div>
 
-          {/* Rating & Sales */}
-          <div className="flex items-center gap-4 text-sm">
+          <p className="text-[#4A4A4A] text-sm mb-4">{product.description}</p>
+
+          {/* Rating */}
+          <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center gap-1">
-              {[1,2,3,4,5].map(star => (
-                <svg key={star} className={`w-4 h-4 ${star <= averageRating ? 'text-[#C49A6C]' : 'text-[#D8CCBC]/30'}`} fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`w-4 h-4 ${star <= averageRating ? 'text-[#A6824A] fill-[#A6824A]' : 'text-gray-300'}`}
+                />
               ))}
-              <span className="ml-1 text-[#F4F1EA] font-medium">{averageRating.toFixed(1)}</span>
-              <span className="text-[#D8CCBC]/50">({product.reviews.length} reviews)</span>
             </div>
-            <span className="text-[#D8CCBC]/50">|</span>
-            <span className="text-[#D8CCBC]/70">{product.salesCount.toLocaleString()} sold</span>
+            <span className="text-[#101111] font-medium text-sm">{averageRating.toFixed(1)}</span>
+            <span className="text-[#4A4A4A] text-sm">({product.reviews.length} reviews)</span>
+            <span className="text-[#4A4A4A]">|</span>
+            <span className="text-[#4A4A4A] text-sm">{product.salesCount.toLocaleString()} sold</span>
           </div>
 
-          {/* Price Card */}
-          <div className="bg-gradient-to-br from-[#0E3B36]/50 to-transparent rounded-2xl p-4 sm:p-6">
-            <div className="flex items-end gap-4 mb-4">
-              <div>
-                <p className="text-[#D8CCBC]/60 text-sm">Reference Price</p>
-                <p className="text-2xl sm:text-3xl font-bold text-[#C49A6C]">${product.price}</p>
-                <p className="text-[#D8CCBC]/50 text-sm">/{product.currency}</p>
+          {/* Price */}
+          <div className="flex items-end gap-4 p-4 bg-[#E6E2DA] rounded-xl mb-4">
+            <div>
+              <p className="text-[#4A4A4A] text-xs">Reference Price</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-[#154230]">${product.price}</span>
+                <span className="text-[#4A4A4A]">/{product.currency}</span>
               </div>
-              <div className="flex-1">
-                <p className="text-[#D8CCBC]/60 text-sm">MOQ</p>
-                <p className="text-lg font-semibold text-[#F4F1EA]">{product.moq}</p>
-              </div>
+              {product.originalPrice && (
+                <p className="text-[#4A4A4A] text-sm line-through">${product.originalPrice}</p>
+              )}
+            </div>
+            <div className="flex-1">
+              <p className="text-[#4A4A4A] text-xs">MOQ</p>
+              <p className="text-lg font-semibold text-[#101111]">{product.moq}</p>
             </div>
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-2">
-            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-              <p className="text-sm font-bold text-[#C49A6C]">{product.supplyCapacity}</p>
-              <p className="text-[#D8CCBC]/50 text-xs">Supply</p>
-            </div>
-            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.responseTime}</p>
-              <p className="text-[#D8CCBC]/50 text-xs">Response</p>
-            </div>
-            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.responseRate}</p>
-              <p className="text-[#D8CCBC]/50 text-xs">Response Rate</p>
-            </div>
-            <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-center">
-              <p className="text-sm font-bold text-[#C49A6C]">{product.supplier.products}</p>
-              <p className="text-[#D8CCBC]/50 text-xs">Products</p>
-            </div>
-          </div>
-
-          {/* Supplier Card */}
-          <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0E3B36] to-[#081512] flex items-center justify-center text-2xl">
-                {product.supplier.countryCode}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 bg-[#E6E2DA] rounded-xl flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#154230]/10 rounded-lg flex items-center justify-center">
+                <Truck className="w-5 h-5 text-[#154230]" />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-[#F4F1EA]">{product.supplier.name}</h3>
-                  {product.supplier.verified && (
-                    <svg className="w-4 h-4 text-[#C49A6C]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 mt-1 text-sm">
-                  <span className="flex items-center gap-1 text-[#C49A6C]">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    {product.supplier.rating}
-                  </span>
-                  <span className="text-[#D8CCBC]/50">Est. {product.supplier.established}</span>
-                </div>
+              <div>
+                <p className="text-[#101111] font-medium text-sm">{product.supplyCapacity}</p>
+                <p className="text-[#4A4A4A] text-xs">Supply Capacity</p>
+              </div>
+            </div>
+            <div className="p-3 bg-[#E6E2DA] rounded-xl flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#154230]/10 rounded-lg flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[#154230]" />
+              </div>
+              <div>
+                <p className="text-[#101111] font-medium text-sm">{product.supplier.responseTime}</p>
+                <p className="text-[#4A4A4A] text-xs">Response Time</p>
               </div>
             </div>
           </div>
-
-          {/* Message Supplier */}
-          <button className="w-full py-3 bg-[#0E3B36] text-[#D8CCBC] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#0f4a42] transition-colors">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            Message Supplier
-          </button>
         </div>
-      </div>
 
-      {/* Action Tabs */}
-      <div className="flex gap-2 overflow-x-auto">
-        <button onClick={() => setActiveTab('quote')}
-          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'quote' ? 'bg-[#C49A6C] text-[#081512]' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
-          📋 Get Quote
-        </button>
-        <button onClick={() => setActiveTab('bid')}
-          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'bid' ? 'bg-emerald-500 text-white' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
-          🎯 Place Bid
-        </button>
-        <button onClick={() => setActiveTab('requirement')}
-          className={`px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === 'requirement' ? 'bg-blue-500 text-white' : 'bg-[#0E3B36] text-[#D8CCBC]'}`}>
-          📝 Send Requirements
-        </button>
-      </div>
-
-      {/* Quote Form */}
-      {activeTab === 'quote' && (
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-[#F4F1EA]">Request Quotation</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
-              <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="MT"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
+        {/* Supplier Card */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Supplier</p>
+          <div className="flex items-center gap-4 p-3 bg-[#E6E2DA] rounded-xl">
+            <div className="w-14 h-14 bg-[#154230] rounded-xl flex items-center justify-center text-white font-bold text-lg">
+              {product.supplier.countryCode}
             </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Trade Terms</label>
-              <select value={selectedTradeTerm} onChange={(e) => setSelectedTradeTerm(e.target.value)}
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]">
-                {product.tradeTerms.map(term => <option key={term} value={term}>{term}</option>)}
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
-            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3}
-              placeholder="Describe your requirements, destination port, delivery timeline..."
-              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none" />
-          </div>
-          <button onClick={handleQuoteRequest} disabled={isSubmitting}
-            className="w-full py-4 bg-[#C49A6C] text-[#081512] font-semibold rounded-xl hover:bg-[#D4AA82] transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-            {isSubmitting ? <><span className="w-5 h-5 border-2 border-[#081512]/30 border-t-[#081512] rounded-full animate-spin" />Sending...</> : '📤 Send Quote Request'}
-          </button>
-        </div>
-      )}
-
-      {/* Bid Form */}
-      {activeTab === 'bid' && (
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-[#F4F1EA]">Place Your Bid</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Quantity *</label>
-              <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="MT"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
-            </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Your Bid Price *</label>
-              <input type="number" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} placeholder="per MT"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C]" />
-            </div>
-          </div>
-          <div className="bg-[#0E3B36]/30 rounded-xl p-3">
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-[#D8CCBC]/60">Market Price:</span>
-              <span className="text-[#F4F1EA]">${product.price}/MT</span>
-            </div>
-            {bidAmount && (
-              <div className="flex justify-between text-sm">
-                <span className="text-[#D8CCBC]/60">Your Bid:</span>
-                <span className={parseFloat(bidAmount) < product.price ? 'text-emerald-400' : 'text-[#F4F1EA]'}>
-                  ${bidAmount}/MT {parseFloat(bidAmount) < product.price ? '(Competitive!)' : ''}
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-[#101111]">{product.supplier.name}</p>
+                {product.supplier.verified && (
+                  <Check className="w-4 h-4 text-[#154230]" />
+                )}
+              </div>
+              <p className="text-[#4A4A4A] text-sm">{product.supplier.country} | Est. {product.supplier.established}</p>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="flex items-center gap-1 text-[#A6824A] text-sm">
+                  <Star className="w-4 h-4 fill-current" />
+                  {product.supplier.rating}
                 </span>
+                <span className="text-[#4A4A4A] text-sm">{product.supplier.products} products</span>
               </div>
-            )}
+            </div>
+            <button className="px-4 py-2 border border-[#154230] text-[#154230] rounded-lg text-sm font-medium hover:bg-[#154230]/5">
+              View Profile
+            </button>
           </div>
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Message *</label>
-            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3}
-              placeholder="Add notes for supplier..."
-              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-[#C49A6C] resize-none" />
-          </div>
-          <button onClick={handleBid} disabled={isSubmitting}
-            className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-            {isSubmitting ? <><span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Submitting...</> : '🎯 Submit Bid'}
-          </button>
         </div>
-      )}
 
-      {/* Requirements Form */}
-      {activeTab === 'requirement' && (
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6 space-y-4">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <span className="text-2xl">📝</span>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-[#F4F1EA]">Send Your Requirements</h3>
-              <p className="text-[#D8CCBC]/60 text-sm">Tell the supplier exactly what you need</p>
-            </div>
+        {/* Trade Terms */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Trade Terms</p>
+          <div className="flex flex-wrap gap-2">
+            {product.tradeTerms.map((term) => (
+              <span key={term} className="px-3 py-1 bg-[#E6E2DA] text-[#101111] rounded-lg text-sm font-medium">
+                {term}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Request Quote Form */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Request Quote</p>
+
+          {/* Tabs */}
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setActiveTab('quote')}
+              className={`flex-1 py-2 rounded-xl font-medium text-sm ${
+                activeTab === 'quote'
+                  ? 'bg-[#154230] text-white'
+                  : 'bg-[#E6E2DA] text-[#4A4A4A]'
+              }`}
+            >
+              Get Quote
+            </button>
+            <button
+              onClick={() => setActiveTab('bid')}
+              className={`flex-1 py-2 rounded-xl font-medium text-sm ${
+                activeTab === 'bid'
+                  ? 'bg-[#A6824A] text-white'
+                  : 'bg-[#E6E2DA] text-[#4A4A4A]'
+              }`}
+            >
+              Place Bid
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Required Quantity *</label>
-              <input type="text" value={requirementForm.quantity} onChange={(e) => updateRequirement('quantity', e.target.value)}
-                placeholder="e.g., 100 MT"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
+          {/* Quantity */}
+          <div className="mb-4">
+            <label className="text-[#4A4A4A] text-sm mb-2 block">Quantity</label>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setQuantity(Math.max(1, parseInt(quantity) - 1).toString())}
+                className="w-12 h-12 bg-[#E6E2DA] rounded-xl flex items-center justify-center"
+              >
+                <Minus className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="flex-1 h-12 px-4 bg-[#E6E2DA] rounded-xl text-center text-[#101111] font-medium focus:outline-none"
+              />
+              <button
+                onClick={() => setQuantity((parseInt(quantity) + 1).toString())}
+                className="w-12 h-12 bg-[#E6E2DA] rounded-xl flex items-center justify-center"
+              >
+                <Plus className="w-5 h-5 text-[#4A4A4A]" />
+              </button>
+              <span className="text-[#4A4A4A]">{product.currency}</span>
             </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Target Price (Optional)</label>
-              <input type="text" value={requirementForm.targetPrice} onChange={(e) => updateRequirement('targetPrice', e.target.value)}
-                placeholder="e.g., $800/MT"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
-            </div>
+            <p className="text-[#4A4A4A] text-xs mt-2">MOQ: {product.moq}</p>
           </div>
 
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Custom Specifications *</label>
-            <textarea value={requirementForm.customSpecs} onChange={(e) => updateRequirement('customSpecs', e.target.value)} rows={3}
-              placeholder="Describe your exact requirements:&#10;• Specific grade or quality needed&#10;• Required certifications&#10;• Packaging preferences&#10;• Any customization needs..."
-              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500 resize-none" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Delivery Location *</label>
-              <input type="text" value={requirementForm.deliveryLocation} onChange={(e) => updateRequirement('deliveryLocation', e.target.value)}
-                placeholder="e.g., Dubai, UAE"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
-            </div>
-            <div>
-              <label className="block text-[#D8CCBC] text-sm mb-2">Delivery Timeline</label>
-              <input type="text" value={requirementForm.deliveryTimeline} onChange={(e) => updateRequirement('deliveryTimeline', e.target.value)}
-                placeholder="e.g., Within 30 days"
-                className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500" />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Preferred Payment Terms</label>
-            <select value={requirementForm.paymentTerms} onChange={(e) => updateRequirement('paymentTerms', e.target.value)}
-              className="w-full h-12 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500">
-              <option value="">Select payment terms</option>
-              {product.paymentTerms.map(term => <option key={term} value={term}>{term}</option>)}
-              <option value="LC 90 Days">LC 90 Days</option>
-              <option value="TT 30% Advance">TT 30% Advance</option>
-              <option value="Open Account">Open Account</option>
+          {/* Trade Term */}
+          <div className="mb-4">
+            <label className="text-[#4A4A4A] text-sm mb-2 block">Trade Terms</label>
+            <select
+              value={selectedTradeTerm}
+              onChange={(e) => setSelectedTradeTerm(e.target.value)}
+              className="w-full h-12 px-4 bg-[#E6E2DA] rounded-xl text-[#101111] focus:outline-none"
+            >
+              {product.tradeTerms.map((term) => (
+                <option key={term} value={term}>{term}</option>
+              ))}
             </select>
           </div>
 
-          <div>
-            <label className="block text-[#D8CCBC] text-sm mb-2">Additional Requirements</label>
-            <textarea value={requirementForm.additionalRequirements} onChange={(e) => updateRequirement('additionalRequirements', e.target.value)} rows={3}
-              placeholder="Any other requirements:&#10;• Sample needed?&#10;• Inspection requirements&#10;• Insurance preferences&#10;• Special handling needs..."
-              className="w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl text-[#F4F1EA] focus:outline-none focus:border-blue-500 resize-none" />
+          {/* Total Estimate */}
+          <div className="p-4 bg-[#154230]/5 rounded-xl mb-4">
+            <div className="flex justify-between items-center">
+              <span className="text-[#4A4A4A]">Estimated Total</span>
+              <span className="text-xl font-bold text-[#154230]">
+                ${(product.price * parseInt(quantity || '0')).toLocaleString()}
+              </span>
+            </div>
           </div>
 
-          <button onClick={handleRequirementSubmit} disabled={isSubmitting}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+          <button
+            onClick={handleQuoteRequest}
+            disabled={isSubmitting}
+            className="w-full py-4 bg-[#154230] text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
             {isSubmitting ? (
-              <><span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</>
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Sending...
+              </>
             ) : (
-              <>📤 Send Requirements to Supplier</>
+              <>
+                <MessageSquare className="w-5 h-5" />
+                Request Quote
+              </>
             )}
           </button>
         </div>
-      )}
 
-      {/* Specifications */}
-      <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Product Specifications</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {Object.entries(product.specifications).map(([key, value]) => (
-            <div key={key} className="bg-[#0E3B36]/30 rounded-lg p-3">
-              <p className="text-[#D8CCBC]/60 text-xs">{key}</p>
-              <p className="text-[#F4F1EA] font-medium text-sm mt-1">{value}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Certifications */}
-      <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Certifications</h2>
-        <div className="flex flex-wrap gap-2">
-          {product.certifications.map(cert => (
-            <span key={cert} className="px-4 py-2 bg-[#0E3B36] text-[#C49A6C] rounded-xl font-medium">
-              ✓ {cert}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Reviews */}
-      {product.reviews.length > 0 && (
-        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-4 sm:p-6">
-          <h2 className="text-lg font-semibold text-[#F4F1EA] mb-4">Customer Reviews</h2>
-          <div className="space-y-4">
-            {product.reviews.map(review => (
-              <div key={review.id} className="border-b border-[rgba(255,255,255,0.05)] pb-4 last:border-0 last:pb-0">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xl">{review.country}</span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#F4F1EA] font-medium">{review.author}</span>
-                      <div className="flex">
-                        {[1,2,3,4,5].map(star => (
-                          <svg key={star} className={`w-4 h-4 ${star <= review.rating ? 'text-[#C49A6C]' : 'text-[#D8CCBC]/30'}`} fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-[#D8CCBC]/50 text-xs">{new Date(review.date).toLocaleDateString()}</p>
-                  </div>
-                </div>
-                <p className="text-[#D8CCBC]/80 text-sm">{review.comment}</p>
+        {/* Specifications */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Specifications</p>
+          <div className="space-y-2">
+            {Object.entries(product.specifications).map(([key, value]) => (
+              <div key={key} className="flex justify-between py-2 border-b border-black/5 last:border-0">
+                <span className="text-[#4A4A4A]">{key}</span>
+                <span className="text-[#101111] font-medium">{value}</span>
               </div>
             ))}
           </div>
         </div>
-      )}
 
-      {/* Bottom Navigation */}
+        {/* Certifications */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Certifications</p>
+          <div className="flex flex-wrap gap-2">
+            {product.certifications.map((cert) => (
+              <span key={cert} className="px-4 py-2 bg-[#154230]/10 text-[#154230] rounded-xl font-medium text-sm flex items-center gap-2">
+                <Check className="w-4 h-4" />
+                {cert}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Packaging */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Packaging</p>
+          <p className="text-[#4A4A4A]">{product.packaging}</p>
+        </div>
+
+        {/* Payment Terms */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-[#101111] font-bold mb-3">Payment Terms</p>
+          <div className="flex flex-wrap gap-2">
+            {product.paymentTerms.map((term) => (
+              <span key={term} className="px-3 py-1 bg-[#E6E2DA] text-[#101111] rounded-lg text-sm">
+                {term}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews */}
+        {product.reviews.length > 0 && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[#101111] font-bold">Reviews ({product.reviews.length})</p>
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-[#A6824A] fill-[#A6824A]" />
+                <span className="font-medium text-[#101111]">{averageRating.toFixed(1)}</span>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {product.reviews.map((review) => (
+                <div key={review.id} className="p-4 bg-[#E6E2DA] rounded-xl">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {review.author.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-[#101111]">{review.author}</span>
+                        <span className="text-[#4A4A4A] text-sm">{review.country}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-3 h-3 ${star <= review.rating ? 'text-[#A6824A] fill-[#A6824A]' : 'text-gray-300'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-[#4A4A4A] text-sm">{new Date(review.date).toLocaleDateString()}</span>
+                  </div>
+                  <p className="text-[#4A4A4A] text-sm">{review.comment}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <p className="text-[#101111] font-bold mb-3">Related Products</p>
+            <div className="space-y-3">
+              {relatedProducts.map((rel) => (
+                <Link
+                  key={rel.id}
+                  href={`/marketplace/${rel.id}`}
+                  className="flex items-center gap-3 p-3 bg-[#E6E2DA] rounded-xl hover:bg-[#154230]/10 transition-colors"
+                >
+                  <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                    <Image src={rel.image} alt={rel.name} width={64} height={64} className="object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-[#101111] truncate">{rel.name}</p>
+                    <p className="text-[#154230] font-semibold">${rel.price}/{rel.currency}</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-[#4A4A4A]" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       <BottomNav activeItem="marketplace" />
     </div>
   );
