@@ -11,6 +11,51 @@ datasource db {
 }
 
 // ============================================
+// USER & AUTH MODELS
+// ============================================
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  password       String?
+  firstName      String?
+  lastName       String?
+  role           String   @default("BUYER")
+  avatar         String?
+  phone          String?
+  company        String?
+  country        String?
+
+  // Auth
+  isEmailVerified Boolean @default(false)
+  isMfaEnabled    Boolean @default(false)
+  mfaSecret      String?
+  lastLoginAt    DateTime?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  sessions       Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String   @unique
+  ipAddress    String?
+  userAgent    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// ============================================
 // FREIGHT & LOGISTICS MODELS
 // ============================================
 

@@ -97,30 +97,37 @@ export default function SignupPage() {
       return;
     }
 
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          role: 'BUYER',
+        }),
+      });
 
-    // Store user data (demo mode)
-    const userData = {
-      id: `user-${Date.now()}`,
-      email: formData.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      company: formData.company,
-      country: formData.country,
-      phone: formData.phone,
-      role: 'admin',
-      createdAt: new Date().toISOString(),
-    };
+      const result = await response.json();
 
-    localStorage.setItem('leverage_user', JSON.stringify(userData));
-    localStorage.setItem('accessToken', 'demo-token-' + Date.now());
-    localStorage.setItem('refreshToken', 'demo-refresh-' + Date.now());
+      if (!response.ok) {
+        throw new Error(result.message || result.error || 'Signup failed');
+      }
 
-    setIsLoading(false);
-    router.push('/dashboard');
+      localStorage.setItem('accessToken', result.data.accessToken);
+      localStorage.setItem('refreshToken', result.data.refreshToken);
+      localStorage.setItem('user', JSON.stringify(result.data.user));
+
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Signup failed. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   const isStep1Valid = formData.email && validateEmail(formData.email) &&

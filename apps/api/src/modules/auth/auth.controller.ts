@@ -59,6 +59,18 @@ export class AuthController {
     return this.authService.verifyOtp(req.user.id, dto.code);
   }
 
+  @Public()
+  @Post('send-otp')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Send OTP to email for verification' })
+  async sendOtp(@Body() dto: { email: string }) {
+    const user = await this.authService.getUserByEmail(dto.email);
+    if (!user) {
+      return { sent: false, message: 'If the email exists, an OTP has been sent' };
+    }
+    return this.authService.sendOtp(user.id, user.email);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('mfa/setup')
   @ApiOperation({ summary: 'Setup MFA for the user' })
