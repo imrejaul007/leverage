@@ -1,22 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AiAgent } from './entities/ai-agent.entity';
-import { AiConversation } from './entities/ai-conversation.entity';
-import { AiEmbedding } from './entities/ai-embedding.entity';
-import { AiMessage } from './entities/ai-message.entity';
-import { AiSession } from './entities/ai-session.entity';
-import { FraudSignal } from './entities/fraud-signal.entity';
+import { AiController } from './ai.controller';
+import { AiService } from './ai.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      AiAgent,
-      AiConversation,
-      AiEmbedding,
-      AiMessage,
-      AiSession,
-      FraudSignal,
-    ]),
-  ],
+  controllers: [AiController],
+  providers: [AiService],
+  exports: [AiService],
 })
 export class AiModule {}

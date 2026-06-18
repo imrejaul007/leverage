@@ -1,15 +1,22 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DocumentsController } from './documents.controller';
 import { DocumentsService } from './documents.service';
-import { DocumentGeneratorService } from './document-generator.service';
-import { TradeDocument } from './entities/trade-document.entity';
-import { DocumentTemplate } from './entities/document-template.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TradeDocument, DocumentTemplate])],
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET') || 'secret',
+        signOptions: { expiresIn: '7d' },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [DocumentsController],
-  providers: [DocumentsService, DocumentGeneratorService],
+  providers: [DocumentsService],
   exports: [DocumentsService],
 })
 export class DocumentsModule {}

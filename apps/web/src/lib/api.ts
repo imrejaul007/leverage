@@ -67,22 +67,22 @@ export const api = new ApiClient();
 // Auth API
 export const authApi = {
   login: (email: string, password: string) =>
-    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/auth/login', { email, password }),
+    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/v1/auth/login', { email, password }),
 
   signup: (data: SignupData) =>
-    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/auth/signup', data),
+    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/v1/auth/signup', data),
 
   logout: () =>
-    api.post<{ success: boolean }>('/api/auth/logout'),
+    api.post<{ success: boolean }>('/api/v1/auth/logout'),
 
   refresh: (refreshToken: string) =>
-    api.post<{ accessToken: string; refreshToken: string }>('/api/auth/refresh', { refreshToken }),
+    api.post<{ accessToken: string; refreshToken: string }>('/api/v1/auth/refresh', { refreshToken }),
 
   me: () =>
-    api.get<{ user: User }>('/api/auth/me'),
+    api.get<{ user: User }>('/api/v1/auth/me'),
 
   demo: () =>
-    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/auth/demo'),
+    api.post<{ data: { user: User; accessToken: string; refreshToken: string } }>('/api/v1/auth/demo'),
 };
 
 export interface User {

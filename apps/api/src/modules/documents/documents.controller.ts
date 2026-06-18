@@ -1,10 +1,48 @@
 import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, Req, Res, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { DocumentsService, GenerateDocumentDto, SignDocumentDto } from './documents.service';
+import { DocumentsService } from './documents.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { DocumentStatus } from './entities/trade-document.entity';
-import { DocumentCategory } from '../../common/enums';
 import { CurrentUser, CurrentUserPayload } from '../auth/decorators/current-user.decorator';
+import { Response } from 'express';
+
+interface GenerateDocumentDto {
+  documentType: string;
+  sellerName: string;
+  sellerAddress: string;
+  sellerCity: string;
+  sellerCountry: string;
+  sellerPhone: string;
+  sellerEmail: string;
+  sellerTaxId: string;
+  buyerName: string;
+  buyerAddress: string;
+  buyerCity: string;
+  buyerCountry: string;
+  buyerPhone: string;
+  buyerEmail: string;
+  buyerTaxId: string;
+  invoiceNumber: string;
+  invoiceDate: string;
+  dueDate: string;
+  originCountry: string;
+  destinationCountry: string;
+  portOfLoading: string;
+  portOfDischarge: string;
+  shippingMethod: string;
+  vesselName: string;
+  voyageNumber: string;
+  currency: string;
+  paymentTerms: string;
+  totalAmount: number;
+  lineItems: Array<{
+    description: string;
+    hsCode: string;
+    quantity: number;
+    unit: string;
+    unitPrice: number;
+    total: number;
+  }>;
+}
 
 @ApiTags('Documents')
 @ApiBearerAuth()
@@ -19,26 +57,41 @@ export class DocumentsController {
   @ApiResponse({ status: 201, description: 'Document generated successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   async generate(@Body() dto: GenerateDocumentDto, @CurrentUser() user: CurrentUserPayload) {
-    return this.documentsService.generate(user.id, dto);
+    const pdfBuffer = await this.documentsService.generateDocument(user.id, dto);
+
+    return {
+      success: true,
+      message: 'Document generated successfully',
+      documentType: dto.documentType,
+      invoiceNumber: dto.invoiceNumber,
+      data: pdfBuffer.toString('base64'),
+    };
+  }
+
+  @Post('generate-pdf')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Generate and download a trade document as PDF' })
+  async generatePDF(
+    @Body() dto: GenerateDocumentDto,
+    @CurrentUser() user: CurrentUserPayload,
+    @Res() res: Response,
+  ) {
+    const pdfBuffer = await this.documentsService.generateDocument(user.id, dto);
+
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Disposition', `attachment; filename="${dto.documentType}-${dto.invoiceNumber}.html"`);
+    res.send(pdfBuffer);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all documents for the authenticated user' })
-  @ApiQuery({ name: 'type', required: false, enum: DocumentCategory })
-  @ApiQuery({ name: 'status', required: false, enum: DocumentStatus })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  @ApiQuery({ name: 'offset', required: false, type: Number })
   async findAll(
     @CurrentUser() user: CurrentUserPayload,
-    @Query('type') type: DocumentCategory,
-    @Query('status') status: DocumentStatus,
-    @Query('limit') limit: number,
-    @Query('offset') offset: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
   ) {
     return this.documentsService.findAll({
       userId: user.id,
-      type,
-      status,
       limit,
       offset,
     });
@@ -75,7 +128,7 @@ export class DocumentsController {
   @ApiResponse({ status: 400, description: 'Cannot sign document in current state' })
   async sign(
     @Param('id') id: string,
-    @Body() dto: SignDocumentDto,
+    @Body() dto: any,
     @CurrentUser() user: CurrentUserPayload,
   ) {
     return this.documentsService.sign(id, user.id, dto);

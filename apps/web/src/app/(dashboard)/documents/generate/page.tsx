@@ -196,15 +196,41 @@ function DocumentGeneratorContent() {
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    // Simulate PDF generation
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setGeneratedDoc({ type: formData.documentType, preview: 'generated' });
-    setIsGenerating(false);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/documents/generate-pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${formData.documentType}-${formData.invoiceNumber}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        setGeneratedDoc({ type: formData.documentType, preview: 'generated' });
+      } else {
+        alert('Failed to generate document. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error generating document:', error);
+      alert('Error generating document. Please check your connection.');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleDownload = () => {
-    // In production, this would trigger actual PDF download
-    alert('PDF download would be triggered here. In production, this generates a real PDF document.');
+    // Re-download the generated document
+    handleGenerate();
   };
 
   const handlePrint = () => {

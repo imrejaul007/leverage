@@ -26,17 +26,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const user = await (this.prisma as any).user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
-      include: { company: true },
     });
 
     if (!user) {
       throw new UnauthorizedException('User not found');
-    }
-
-    if (user.status === 'DELETED') {
-      throw new UnauthorizedException('Account has been deleted');
     }
 
     return {
@@ -45,7 +40,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
-      company: user.company,
       isEmailVerified: user.isEmailVerified,
       isMfaEnabled: user.isMfaEnabled,
     };

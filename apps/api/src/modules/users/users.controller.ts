@@ -2,7 +2,6 @@ import { Controller, Get, Patch, Delete, Body, UseGuards, Req } from '@nestjs/co
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -19,12 +18,12 @@ export class UsersController {
 
   @Patch('me')
   @ApiOperation({ summary: 'Update current user profile' })
-  async updateProfile(@Req() req: any, @Body() dto: UpdateProfileDto) {
+  async updateProfile(@Req() req: any, @Body() dto: any) {
     return this.usersService.updateProfile(req.user.id, dto);
   }
 
   @Delete('me')
-  @ApiOperation({ summary: 'Delete current user account (soft delete)' })
+  @ApiOperation({ summary: 'Delete current user account' })
   async deleteAccount(@Req() req: any) {
     return this.usersService.deleteAccount(req.user.id);
   }

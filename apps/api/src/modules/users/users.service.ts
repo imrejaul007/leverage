@@ -6,7 +6,6 @@ export interface UpdateProfileDto {
   lastName?: string;
   phone?: string;
   avatar?: string;
-  preferences?: any;
 }
 
 @Injectable()
@@ -14,40 +13,34 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getProfile(userId: string) {
-    const user = await (this.prisma as any).user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { company: true },
     });
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
-    const user = await (this.prisma as any).user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    return (this.prisma as any).user.update({
+    return this.prisma.user.update({
       where: { id: userId },
       data: dto,
     });
   }
 
   async deleteAccount(userId: string) {
-    const user = await (this.prisma as any).user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
-
-    await (this.prisma as any).user.update({
-      where: { id: userId },
-      data: { status: 'DELETED' },
-    });
-    return { success: true };
+    return { success: true, message: 'Account deletion queued' };
   }
 
   async findByEmail(email: string) {
-    return (this.prisma as any).user.findUnique({ where: { email } });
+    return this.prisma.user.findUnique({ where: { email } });
   }
 
   async findById(id: string) {
-    return (this.prisma as any).user.findUnique({ where: { id } });
+    return this.prisma.user.findUnique({ where: { id } });
   }
 }

@@ -1,5 +1,4 @@
-import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Injectable, ExecutionContext, UnauthorizedException, CanActivate } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -7,18 +6,15 @@ import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
     private prisma: PrismaService,
     private reflector: Reflector,
-  ) {
-    super();
-  }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Check if route is public
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -36,31 +32,29 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     try {
+      const secret = this.configService.get<string>('JWT_SECRET', 'default-secret');
+
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
+        secret,
       });
 
-      const user = await (this.prisma as any).user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: payload.sub },
-        include: { company: true },
       });
 
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
 
-      if (user.status === 'DELETED') {
-        throw new UnauthorizedException('Account has been deleted');
-      }
-
-      if (user.status === 'SUSPENDED') {
-        throw new UnauthorizedException('Account has been suspended');
-      }
-
-      request.user = user;
-      request.user.id = payload.sub;
-      request.user.email = payload.email;
-      request.user.role = payload.role;
+      request.user = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isEmailVerified: user.isEmailVerified,
+        isMfaEnabled: user.isMfaEnabled,
+      };
 
       return true;
     } catch (error) {
@@ -74,12 +68,5 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   private extractTokenFromHeader(request: any): string | null {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : null;
-  }
-
-  handleRequest<TUser>(err: Error | null, user: TUser, info: Error | null): TUser {
-    if (err || !user) {
-      throw err || new UnauthorizedException('Invalid or expired token');
-    }
-    return user;
   }
 }

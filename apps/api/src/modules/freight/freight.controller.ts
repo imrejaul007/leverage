@@ -18,7 +18,7 @@ export class FreightController {
   @Public()
   @Get('quotes/:id')
   async getQuote(@Param('id') id: string) {
-    return this.freightService.getQuoteById(id, 'user');
+    return this.freightService.getQuoteById(id);
   }
 
   @UseGuards(JwtAuthGuard)

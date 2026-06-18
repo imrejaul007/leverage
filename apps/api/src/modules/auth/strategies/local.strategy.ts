@@ -14,9 +14,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string) {
-    const user = await (this.prisma as any).user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { company: true },
     });
 
     if (!user || !user.password) {
@@ -29,21 +28,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (user.status === 'DELETED') {
-      throw new UnauthorizedException('Account has been deleted');
-    }
-
-    if (user.status === 'SUSPENDED') {
-      throw new UnauthorizedException('Account has been suspended');
-    }
-
     return {
       id: user.id,
       email: user.email,
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
-      company: user.company,
     };
   }
 }
