@@ -1,30 +1,28 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import {
-  Brain, Database, Zap, Bot, Globe, Package, DollarSign, Shield, Truck, FileText,
-  Users, Sparkles, Send, Layers, Check, CreditCard, TrendingUp, BarChart3, ShoppingCart,
-  MessageCircle, Phone, Mail, Search, Clock, AlertCircle, ArrowRight, PhoneCall, FileCheck,
-  Building2, Scale, ArrowUpRight, ArrowDownRight
+  Brain, Bot, Globe, Sparkles, Send, Layers, Check, CreditCard, BarChart3,
+  ShoppingCart, TrendingUp, Truck, FileText, Users, MessageCircle, Phone, Lock,
+  Mic, Menu, X, Zap, ChevronRight
 } from 'lucide-react';
 
 // ============================================================================
-// LEVERGE COPILOT - UNIVERSAL INTENT ENGINE
+// FUTURISTIC COPILOT - GLASSMORPHISM DESIGN
 // ============================================================================
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
-  type?: 'analytics' | 'commerce' | 'communication' | 'workflow' | 'document';
 }
 
 interface QuickAction {
   label: string;
   command: string;
-  icon: string;
+  color: string;
 }
 
 export default function CopilotPage() {
@@ -32,27 +30,25 @@ export default function CopilotPage() {
     {
       id: '1',
       role: 'assistant',
-      content: `Welcome to LEVERGE Copilot 👋
+      content: `Welcome to LEVERGE Copilot ✨
 
-I'm your AI-powered trade assistant. Ask me anything or give me commands.
+I'm your AI-powered trade assistant. Tell me what you need.
 
-📊 Analytics: "What are my sales?"
-🛒 Buy: "I want to buy cotton shirts from Vietnam"
-📦 Sell: "I want to sell tea to UAE"
-🚢 Track: "Track shipment MSC123"
-📄 Docs: "Generate invoice for order #5432"
-💰 Finance: "Show outstanding invoices"
-📞 Comms: "Answer my supplier calls"
+Try:
+• "What are my sales?"
+• "I want to buy cotton shirts from Vietnam"
+• "Track shipment MSC123"
+• "Generate invoice"
 
-How can I help today?`,
-      type: 'analytics',
+How can I help?`,
     },
   ]);
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [workflowSteps, setWorkflowSteps] = useState<{ agent: string; task: string; status: string }[]>([]);
+  const [showWorkflow, setShowWorkflow] = useState(false);
+  const [workflowSteps, setWorkflowSteps] = useState<{ agent: string; task: string }[]>([]);
   const [currentStep, setCurrentStep] = useState(-1);
-  const [pendingAction, setPendingAction] = useState<{ intent: string; entities: Record<string, string> } | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -69,170 +65,65 @@ How can I help today?`,
   // INTENT ENGINE
   // ============================================================================
 
-  const identifyIntent = (text: string): { intent: string; category: string; entities: Record<string, string> } => {
+  const identifyIntent = (text: string): { intent: string; category: string } => {
     const lower = text.toLowerCase();
 
-    // ANALYTICS Questions
-    if (lower.match(/what are my sales|my sales|sales this month|revenue/i) ||
-        lower.match(/how much.*sell|total.*order|turnover/i)) {
-      return { intent: 'analytics_sales', category: 'Analytics', entities: {} };
+    if (lower.match(/what are my sales|my sales|sales this month|revenue/i)) {
+      return { intent: 'analytics_sales', category: 'Analytics' };
+    }
+    if (lower.match(/outstanding|invoice.*due|overdue|show.*invoice/i)) {
+      return { intent: 'finance_outstanding', category: 'Finance' };
+    }
+    if (lower.match(/buy|import.*from/i)) {
+      return { intent: 'buy', category: 'Commerce' };
+    }
+    if (lower.match(/sell|export.*to|sell.*to/i)) {
+      return { intent: 'sell', category: 'Commerce' };
+    }
+    if (lower.match(/track|shipment|where is/i)) {
+      return { intent: 'track', category: 'Logistics' };
+    }
+    if (lower.match(/invoice|generate.*doc/i)) {
+      return { intent: 'invoice', category: 'Documents' };
+    }
+    if (lower.match(/supplier|which.*most|best supplier/i)) {
+      return { intent: 'supplier', category: 'Analytics' };
+    }
+    if (lower.match(/compare|year.*vs|growth/i)) {
+      return { intent: 'compare', category: 'Analytics' };
+    }
+    if (lower.match(/book.*freight|cheapest|shipping/i)) {
+      return { intent: 'freight', category: 'Logistics' };
+    }
+    if (lower.match(/escrow|payment protection/i)) {
+      return { intent: 'escrow', category: 'Finance' };
+    }
+    if (lower.match(/call|answer.*phone/i)) {
+      return { intent: 'call', category: 'Comms' };
+    }
+    if (lower.match(/repeat|duplicate|last.*order/i)) {
+      return { intent: 'repeat', category: 'Memory' };
+    }
+    if (lower.match(/yes|yeah|confirm|proceed|approve/i)) {
+      return { intent: 'confirm', category: 'Confirmation' };
     }
 
-    if (lower.match(/top product|best selling|most popular/i)) {
-      return { intent: 'analytics_top_products', category: 'Analytics', entities: {} };
-    }
-
-    if (lower.match(/supplier.*revenue|which supplier.*most|best supplier/i)) {
-      return { intent: 'analytics_supplier_performance', category: 'Analytics', entities: {} };
-    }
-
-    if (lower.match(/compare|vs|versus|year over year|growth/i)) {
-      return { intent: 'analytics_comparison', category: 'Analytics', entities: {} };
-    }
-
-    if (lower.match(/outstanding|invoice.*due|overdue|pending payment|show.*invoice/i)) {
-      return { intent: 'finance_outstanding', category: 'Finance', entities: {} };
-    }
-
-    // BUY Intent
-    if (lower.match(/i want to buy|i want to purchase|need to import|buy.*from|import.*from/i)) {
-      return { intent: 'buy_product', category: 'Commerce', entities: extractEntities(text) };
-    }
-
-    // SELL Intent
-    if (lower.match(/i want to sell|i want to export|sell.*to|export.*to|find.*buyer|looking.*buyer/i)) {
-      return { intent: 'sell_product', category: 'Commerce', entities: extractEntities(text) };
-    }
-
-    // TRACK Intent
-    if (lower.match(/track|shipment|where is|delivery status|where.*order/i)) {
-      const entities = extractEntities(text);
-      const match = text.match(/(MSC[A-Z0-9]+|ABC\d+|ORD-\d+)/i);
-      if (match) entities.shipmentId = match[1];
-      return { intent: 'track_shipment', category: 'Logistics', entities };
-    }
-
-    // BOOK FREIGHT
-    if (lower.match(/book.*freight|cheapest.*route|shipping.*to|book.*container/i)) {
-      return { intent: 'book_freight', category: 'Logistics', entities: extractEntities(text) };
-    }
-
-    // DOCUMENT Intent
-    if (lower.match(/generate.*invoice|create.*invoice|download.*invoice|invoice.*order/i)) {
-      return { intent: 'generate_invoice', category: 'Documents', entities: extractEntities(text) };
-    }
-
-    if (lower.match(/generate.*(bill of lading|bl)|create.*bl|bill of lading/i)) {
-      return { intent: 'generate_bl', category: 'Documents', entities: {} };
-    }
-
-    if (lower.match(/generate.*(coo|certificate of origin)|create.*coo/i)) {
-      return { intent: 'generate_coo', category: 'Documents', entities: {} };
-    }
-
-    if (lower.match(/generate.*document|export.*document|all.*document/i)) {
-      return { intent: 'generate_all_docs', category: 'Documents', entities: {} };
-    }
-
-    // PAYMENT / ESCROW
-    if (lower.match(/create.*escrow|set up.*escrow|escrow.*order/i)) {
-      return { intent: 'create_escrow', category: 'Finance', entities: {} };
-    }
-
-    if (lower.match(/lc|letter of credit|open.*lc/i)) {
-      return { intent: 'create_lc', category: 'Finance', entities: {} };
-    }
-
-    // RFQ / QUOTATION
-    if (lower.match(/create.*rfq|request.*quote|new.*quotation|send.*rfq/i)) {
-      return { intent: 'create_rfq', category: 'Commerce', entities: {} };
-    }
-
-    // COMMUNICATION
-    if (lower.match(/answer.*call|incoming.*call|phone.*call|take.*call/i)) {
-      return { intent: 'handle_call', category: 'Communication', entities: {} };
-    }
-
-    if (lower.match(/whatsapp|message.*supplier|chat.*buyer/i)) {
-      return { intent: 'handle_whatsapp', category: 'Communication', entities: {} };
-    }
-
-    if (lower.match(/reply.*email|email.*supplier|respond.*buyer/i)) {
-      return { intent: 'handle_email', category: 'Communication', entities: {} };
-    }
-
-    // REPEAT / MEMORY
-    if (lower.match(/repeat.*last|duplicate.*order|same.*order|last.*shipment/i)) {
-      return { intent: 'repeat_order', category: 'Memory', entities: {} };
-    }
-
-    if (lower.match(/preferred.*supplier|usual.*provider|my.*logistics|use.*same.*supplier/i)) {
-      return { intent: 'preferred_provider', category: 'Memory', entities: {} };
-    }
-
-    // SUPPORT
-    if (lower.match(/support|help|issue|problem|not working/i)) {
-      return { intent: 'support', category: 'Support', entities: {} };
-    }
-
-    // EXPAND / STRATEGY
-    if (lower.match(/expand.*market|enter.*country|new.*market|go.*uae|go.*germany/i)) {
-      return { intent: 'expand_market', category: 'Strategy', entities: extractEntities(text) };
-    }
-
-    // Confirmation intents
-    if (lower.match(/^yes$|^yeah$|^yep$|^confirm$|^proceed$|^go ahead$|^do it$|^approve$|^execute$|^start$/)) {
-      return { intent: 'confirm_task', category: 'Confirmation', entities: {} };
-    }
-
-    // Default
-    return { intent: 'general', category: 'General', entities: {} };
-  };
-
-  const extractEntities = (text: string): Record<string, string> => {
-    const entities: Record<string, string> = {};
-
-    // Extract product
-    const products = ['cotton shirts', 'tea', 'rice', 'textiles', 'garments', 'fabric', 'yarn', 'cotton', 'denim'];
-    for (const p of products) {
-      if (text.toLowerCase().includes(p)) {
-        entities.product = p;
-        break;
-      }
-    }
-
-    // Extract country
-    const countries = ['vietnam', 'germany', 'uae', 'dubai', 'india', 'china', 'brazil', 'usa', 'uk'];
-    for (const c of countries) {
-      if (text.toLowerCase().includes(c)) {
-        entities.country = c;
-        break;
-      }
-    }
-
-    // Extract quantity
-    const qtyMatch = text.match(/(\d+[\d,]*)\s*(unit|pieces|shirts|kg|tons|containers)/i);
-    if (qtyMatch) {
-      entities.quantity = qtyMatch[1];
-      entities.unit = qtyMatch[2];
-    }
-
-    // Extract budget
-    const budgetMatch = text.match(/\$?(\d+[\d,]*)/);
-    if (budgetMatch) {
-      entities.amount = budgetMatch[1];
-    }
-
-    return entities;
+    return { intent: 'general', category: 'General' };
   };
 
   // ============================================================================
-  // RESPONSE GENERATORS
+  // RESPONSE GENERATOR
   // ============================================================================
 
-  const getAnalyticsResponse = (intent: string): string => {
-    const responses: Record<string, string> = {
-      analytics_sales: `📊 Your Sales Overview
+  const getResponse = (intent: string): { steps: { agent: string; task: string }[]; response: string } => {
+    const responses: Record<string, { steps: { agent: string; task: string }[]; response: string }> = {
+      analytics_sales: {
+        steps: [
+          { agent: 'TwinOS', task: 'Loading merchant profile...' },
+          { agent: 'Analytics Engine', task: 'Fetching sales data...' },
+          { agent: 'MemoryOS', task: 'Compiling insights...' },
+        ],
+        response: `📊 Your Sales Performance
 
 This Month: $1.28M (+18% ↑)
 Last Month: $1.08M
@@ -245,534 +136,195 @@ Top Products:
 Top Markets:
 • Germany - $420K
 • UAE - $380K
-• France - $280K
-
-Growth vs Last Year: +30%`,
-      analytics_top_products: `🏆 Top Performing Products
-
-1. Cotton Shirts
-   Revenue: $520K
-   Units Sold: 52,000
-   Margin: 18%
-
-2. Denim Jeans
-   Revenue: $310K
-   Units Sold: 18,000
-   Margin: 22%
-
-3. Polo T-Shirts
-   Revenue: $180K
-   Units Sold: 24,000
-   Margin: 15%
-
-4. Linen Trousers
-   Revenue: $140K
-   Units Sold: 12,000
-   Margin: 20%`,
-      analytics_supplier_performance: `🏭 Supplier Performance
-
-Top Supplier by Revenue:
-
-1. Vietnam Textiles Ltd
-   Purchases: $2.4M
-   Orders: 23
-   Success Rate: 95%
-   Avg Delivery: 17 days
-
-2. Germany Trading GmbH
-   Purchases: $1.8M
-   Orders: 45
-   Success Rate: 98%
-   Avg Delivery: 5 days
-
-3. UAE Merchants LLC
-   Purchases: $1.2M
-   Orders: 32
-   Success Rate: 92%
-   Avg Delivery: 12 days`,
-      analytics_comparison: `📈 Year-over-Year Comparison
-
-2025 Full Year: $8.2M
-2026 YTD: $10.7M
-
-Growth: +30% ↑
-
-Breakdown:
-• Exports: +42%
-• Domestic: +15%
-
-Top Growth Markets:
-• Germany: +38%
-• UAE: +45%
-• France: +28%
-
-Product Mix Shift:
-• Higher value products +25%
-• Bulk orders +18%`,
-      finance_outstanding: `💰 Outstanding Invoices
-
-Total Outstanding: $67,000
-
-• ABC Retail GmbH: $45,000
-  Due: 15 days ago
-
-• Berlin Fashion: $22,000
-  Due: 3 days ago
-
-Recent Payments:
-• Paris Mode SA: $38,000 ✓
-• Dubai Traders: $52,000 ✓
-
-Would you like me to send payment reminders?`,
-    };
-    return responses[intent] || responses.analytics_sales;
-  };
-
-  const getCommerceWorkflow = (intent: string, entities: Record<string, string>): { steps: { agent: string; task: string }[]; response: string } => {
-    if (intent === 'buy_product') {
-      return {
+• France - $280K`,
+      },
+      finance_outstanding: {
         steps: [
-          { agent: 'TwinOS', task: 'Loading company preferences...' },
-          { agent: 'MemoryOS', task: 'Checking previous suppliers...' },
+          { agent: 'Finance Agent', task: 'Scanning invoices...' },
+          { agent: 'MemoryOS', task: 'Checking payment history...' },
+        ],
+        response: `💰 Outstanding Invoices
+
+Total: $67,000
+
+• ABC Retail GmbH: $45,000 (15 days overdue)
+• Berlin Fashion: $22,000 (3 days overdue)
+
+Recent:
+• Paris Mode SA: $38,000 ✓ Paid
+• Dubai Traders: $52,000 ✓ Paid
+
+Send payment reminders?`,
+      },
+      buy: {
+        steps: [
+          { agent: 'TwinOS', task: 'Loading preferences...' },
+          { agent: 'MemoryOS', task: 'Checking past suppliers...' },
           { agent: 'Global Nexha', task: 'Searching Vietnam suppliers...' },
-          { agent: 'Import Agent', task: 'Verifying credentials...' },
-          { agent: 'Negotiation Agent', task: 'Preparing negotiation strategy...' },
-          { agent: 'Compliance Agent', task: 'Checking import regulations...' },
-          { agent: 'Finance Agent', task: 'Setting up payment terms...' },
-          { agent: 'Logistics Agent', task: 'Comparing freight options...' },
+          { agent: 'Negotiation Agent', task: 'Preparing strategy...' },
+          { agent: 'Compliance Agent', task: 'Checking regulations...' },
+          { agent: 'Finance Agent', task: 'Setting up payment...' },
+          { agent: 'Logistics Agent', task: 'Calculating freight...' },
         ],
-        response: `🛒 Buy Order Initiated
+        response: `🛒 Purchase Order Ready
 
-I've coordinated the organization:
+Product: 10,000 Cotton Shirts
+Supplier: Vietnam Textiles Ltd ⭐
+Price: $3.15/unit
+Total: $31,500
 
-📍 Source: Vietnam
-🏭 Suppliers Found: 17
-⭐ Best Match: Vietnam Textiles Ltd (96%)
+✅ HS Code: 6205.20 (12% duty)
+✅ Escrow: Ready to fund
+✅ Freight: MSC, 18 days
 
-Preliminary Quote:
-• Product: ${entities.product || 'Cotton Shirts'}
-• Price: $3.15/unit
-• Quantity: ${entities.quantity || '10,000'} units
-• Total: $31,500
-
-⚠️ Awaiting negotiation completion.
-
-Shall I proceed with negotiation?`,
-      };
-    }
-
-    if (intent === 'sell_product') {
-      return {
+Shall I proceed with order?`,
+      },
+      sell: {
         steps: [
-          { agent: 'TwinOS', task: 'Loading export preferences...' },
-          { agent: 'Global Nexha', task: 'Analyzing UAE market...' },
-          { agent: 'Export Agent', task: 'Finding buyer agents...' },
-          { agent: 'Sales Agent', task: 'Matching product to buyers...' },
-          { agent: 'Compliance Agent', task: 'Checking export licenses...' },
-          { agent: 'Pricing Agent', task: 'Setting competitive prices...' },
+          { agent: 'Export Agent', task: 'Analyzing market...' },
+          { agent: 'Global Nexha', task: 'Finding UAE buyers...' },
+          { agent: 'Pricing Agent', task: 'Setting prices...' },
         ],
-        response: `📦 Sell Opportunity Initiated
+        response: `📦 Export Opportunity
 
-I've coordinated the organization:
+Market: UAE
+Demand: 50,000 units/month
 
-📍 Target Market: ${entities.country || 'UAE'}
-🔍 Potential Buyers: 23 found
-
-Top Matches:
+Top Buyers:
 1. Dubai Food Trading LLC
 2. Abu Dhabi Organic Market
 3. Sharjah Retail Group
 
-Estimated Demand: 50,000 units/month
-
-Would you like me to:
-• Create product listings?
-• Send offers to buyers?
-• Prepare export documentation?`,
-      };
-    }
-
-    if (intent === 'create_rfq') {
-      return {
+Ready to create offers?`,
+      },
+      track: {
         steps: [
-          { agent: 'RFQ Agent', task: 'Creating RFQ template...' },
-          { agent: 'Global Nexha', task: 'Broadcasting to 500+ suppliers...' },
-          { agent: 'MemoryOS', task: 'Filtering preferred suppliers...' },
-          { agent: 'SUTAR', task: 'Setting up response tracking...' },
-        ],
-        response: `📋 RFQ Created
-
-Broadcasting to Global Nexha network...
-
-✓ 500+ suppliers notified
-✓ 23 preferred suppliers targeted
-⏱ Response deadline: 7 days
-
-RFQ Details:
-• Product: ${entities.product || 'Cotton Shirts'}
-• Quantity: ${entities.quantity || '10,000'} units
-• Destination: ${entities.country || 'Germany'}
-
-I'll notify you when quotes arrive.`,
-      };
-    }
-
-    return {
-      steps: [{ agent: 'SUTAR', task: 'Processing request...' }],
-      response: 'Processing your request...',
-    };
-  };
-
-  const getLogisticsWorkflow = (intent: string, entities: Record<string, string>): { steps: { agent: string; task: string }[]; response: string } => {
-    if (intent === 'track_shipment') {
-      return {
-        steps: [
-          { agent: 'Logistics Agent', task: 'Connecting to carrier API...' },
-          { agent: 'SUTAR', task: 'Fetching location data...' },
+          { agent: 'Logistics Agent', task: 'Connecting to MSC...' },
+          { agent: 'Global Nexha', task: 'Fetching location...' },
           { agent: 'MemoryOS', task: 'Updating timeline...' },
         ],
-        response: `🚢 Shipment Tracking
+        response: `🚢 Shipment Status
 
-Container: ${entities.shipmentId || 'MSCKU123456'}
+Container: MSCKU123456
 Vessel: Maersk Everest
 
-Current Status:
 📍 Location: Singapore Port
-🚢 Status: On vessel
 ⏱ ETA: July 18, 2026
 
 Milestones:
-✓ Order confirmed
-✓ Payment received
-✓ Loaded in Ho Chi Minh
-→ Currently in transit
-○ Customs clearance pending
-○ Delivery
-
-All documents verified. On schedule.`,
-      };
-    }
-
-    if (intent === 'book_freight') {
-      return {
+✅ Order confirmed
+✅ Payment received
+✅ Loaded vessel
+🔄 In transit
+⏳ Customs pending`,
+      },
+      invoice: {
         steps: [
-          { agent: 'Logistics Agent', task: 'Connecting to carrier network...' },
-          { agent: 'Global Nexha', task: 'Comparing 12 carriers...' },
-          { agent: 'SUTAR', task: 'Analyzing optimal routes...' },
+          { agent: 'Documentation Agent', task: 'Loading template...' },
+          { agent: 'MemoryOS', task: 'Fetching order data...' },
+          { agent: 'Documentation Agent', task: 'Generating PDF...' },
+        ],
+        response: `📄 Documents Generated
+
+✅ Commercial Invoice #INV-2026-5432
+✅ Packing List
+✅ Bill of Lading
+✅ Certificate of Origin
+
+Download ready in Documents section.`,
+      },
+      supplier: {
+        steps: [
+          { agent: 'MemoryOS', task: 'Analyzing supplier data...' },
+          { agent: 'Analytics Engine', task: 'Calculating rankings...' },
+        ],
+        response: `🏭 Top Supplier by Revenue
+
+Vietnam Textiles Ltd
+Revenue: $2.4M (12 months)
+Orders: 23 successful
+Success Rate: 95%
+Avg Delivery: 17 days
+
+View full supplier analysis?`,
+      },
+      confirm: {
+        steps: [
+          { agent: 'SUTAR', task: 'Executing order...' },
+          { agent: 'Finance Agent', task: 'Funding escrow...' },
+          { agent: 'Documentation Agent', task: 'Finalizing docs...' },
+          { agent: 'Logistics Agent', task: 'Booking vessel...' },
+        ],
+        response: `✅ ORDER CONFIRMED!
+
+Order #5432 is now active.
+
+🔒 Escrow: $31,500 secured
+📋 Documents: Invoice, PL, BL, COO
+🚢 Shipping: MSC booked
+📍 ETA: July 18, 2026
+
+I'll keep you updated on progress.`,
+      },
+      freight: {
+        steps: [
+          { agent: 'Logistics Agent', task: 'Comparing carriers...' },
+          { agent: 'Global Nexha', task: 'Checking rates...' },
         ],
         response: `🚢 Freight Options
 
-Best rates for ${entities.country || 'Germany'} route:
-
-1. MSC Ocean
-   Price: $4,200
+1. MSC Ocean - $4,200 ⭐
    Transit: 18 days
-   ⭐ Recommended
 
-2. Maersk
-   Price: $4,600
+2. Maersk - $4,600
    Transit: 16 days
 
-3. CMA CGM
-   Price: $4,850
+3. CMA CGM - $4,850
    Transit: 15 days
 
-Shall I book MSC Ocean at $4,200?`,
-      };
-    }
+Book MSC at $4,200?`,
+      },
+    };
 
-    return {
-      steps: [{ agent: 'Logistics Agent', task: 'Processing...' }],
-      response: 'Processing logistics request...',
+    return responses[intent] || {
+      steps: [{ agent: 'SUTAR', task: 'Processing request...' }],
+      response: 'I can help with sales, buying, selling, tracking, documents, and more. What would you like to do?'
     };
   };
 
-  const getDocumentWorkflow = (intent: string): { steps: { agent: string; task: string }[]; response: string } => {
-    const steps: { agent: string; task: string }[] = [
-      { agent: 'Documentation Agent', task: 'Loading templates...' },
-      { agent: 'MemoryOS', task: 'Fetching order data...' },
-      { agent: 'Documentation Agent', task: 'Filling document fields...' },
-    ];
-
-    let response = '';
-    let doc = '';
-
-    switch (intent) {
-      case 'generate_invoice':
-        steps.push({ agent: 'Documentation Agent', task: 'Generating Commercial Invoice...' });
-        doc = '✓ Commercial Invoice';
-        break;
-      case 'generate_bl':
-        steps.push({ agent: 'Documentation Agent', task: 'Generating Bill of Lading...' });
-        doc = '✓ Bill of Lading';
-        break;
-      case 'generate_coo':
-        steps.push({ agent: 'Documentation Agent', task: 'Generating Certificate of Origin...' });
-        doc = '✓ Certificate of Origin';
-        break;
-      case 'generate_all_docs':
-        steps.push({ agent: 'Documentation Agent', task: 'Generating all documents...' });
-        doc = '✓ Commercial Invoice\n✓ Packing List\n✓ Bill of Lading\n✓ Certificate of Origin';
-        break;
-      default:
-        doc = '✓ Documents';
-    }
-
-    steps.push({ agent: 'SUTAR', task: 'Final verification...' });
-    steps.push({ agent: 'Merchant', task: 'Awaiting approval...' });
-
-    response = `📄 Document Generation Complete
-
-${doc}
-
-Status: Ready for Download
-
-Documents saved to your Documents section and emailed to buyer.`;
-
-    return { steps, response };
-  };
-
-  const getFinanceWorkflow = (intent: string): { steps: { agent: string; task: string }[]; response: string } => {
-    const steps: { agent: string; task: string }[] = [
-      { agent: 'Finance Agent', task: 'Setting up secure payment...' },
-      { agent: 'SUTAR', task: 'Verifying both parties...' },
-    ];
-
-    let response = '';
-
-    if (intent === 'create_escrow') {
-      steps.push({ agent: 'Finance Agent', task: 'Creating escrow account...' });
-      steps.push({ agent: 'SUTAR', task: 'Confirming terms...' });
-      response = `🔒 Escrow Created
-
-Amount: $31,500
-Buyer: ABC Fashion GmbH
-Seller: Vietnam Textiles Ltd
-
-Release Conditions:
-• Goods delivered and verified
-• Documents submitted
-• Buyer confirmation received
-
-Funds secured until delivery complete.
-
-Payment link sent to both parties.`;
-    } else if (intent === 'create_lc') {
-      steps.push({ agent: 'Finance Agent', task: 'Initiating Letter of Credit...' });
-      steps.push({ agent: 'SUTAR', task: 'Coordinating with bank...' });
-      response = `📃 Letter of Credit Initiated
-
-LC Amount: $50,000
-Issuing Bank: Deutsche Bank
-Advising Bank: VietinBank
-
-Documents Required:
-• Commercial Invoice
-• Bill of Lading
-• Certificate of Origin
-• Packing List
-• Insurance Certificate
-
-LC Number: LC-2026-5432
-Valid Until: August 30, 2026`;
-    } else {
-      response = 'Processing payment request...';
-    }
-
-    return { steps, response };
-  };
-
-  const getCommunicationWorkflow = (intent: string): { steps: { agent: string; task: string }[]; response: string } => {
-    const steps: { agent: string; task: string }[] = [
-      { agent: 'Communication Agent', task: 'Activating communication skills...' },
-    ];
-
-    let response = '';
-
-    if (intent === 'handle_call') {
-      steps.push({ agent: 'Voice Agent', task: 'Answering incoming call...' });
-      steps.push({ agent: 'SUTAR', task: 'Transcribing conversation...' });
-      steps.push({ agent: 'MemoryOS', task: 'Updating supplier records...' });
-      response = `📞 Voice Assistant Active
-
-Incoming call from: Vietnam Textiles Ltd
-
-SUTAR Voice Agent answered:
-
-"Hello, this is ABC Fashion's AI Assistant. How may I help you today?"
-
-Call Summary (saved to MemoryOS):
-• Caller: Nguyen Van Minh, Vietnam Textiles
-• Request: Delivery confirmation for Order #5432
-• Action: Delivery confirmed for July 18
-• Follow-up: Invoice copy sent via email
-
-Task created for your review.`;
-    } else if (intent === 'handle_whatsapp') {
-      steps.push({ agent: 'WhatsApp Agent', task: 'Monitoring messages...' });
-      steps.push({ agent: 'MemoryOS', task: 'Retrieving conversation history...' });
-      response = `💬 WhatsApp Integration Active
-
-Latest Message from Vietnam Textiles:
-
-"Can we confirm delivery for July 18?"
-
-Auto-Response Sent (based on your preferences):
-"July 18 delivery confirmed. Thank you!"
-
-✓ Message logged to MemoryOS
-✓ Supplier relationship updated
-✓ Delivery status synced`;
-    } else if (intent === 'handle_email') {
-      steps.push({ agent: 'Email Agent', task: 'Scanning inbox...' });
-      steps.push({ agent: 'SUTAR', task: 'Categorizing emails...' });
-      steps.push({ agent: 'MemoryOS', task: 'Linking to orders...' });
-      response = `📧 Email Processing Complete
-
-Processed: 7 emails
-
-• 3 RFQ requests → Forwarded to RFQ Agent
-• 2 delivery confirmations → Logged to orders
-• 1 payment receipt → Updated in Finance
-• 1 query → Responded automatically
-
-Summary saved to your inbox.`;
-    }
-
-    return { steps, response };
-  };
-
-  const getMemoryResponse = (intent: string): { steps: { agent: string; task: string }[]; response: string } => {
-    const steps: { agent: string; task: string }[] = [
-      { agent: 'MemoryOS', task: 'Searching trade memory...' },
-    ];
-
-    let response = '';
-
-    if (intent === 'repeat_order') {
-      steps.push({ agent: 'MemoryOS', task: 'Found Order #2341...' });
-      steps.push({ agent: 'SUTAR', task: 'Duplicating order details...' });
-      response = `📋 Last Order Found
-
-Order #2341 (March 2026)
-Supplier: Vietnam Textiles Ltd
-Product: Cotton Shirts 8,000 units
-Price: $26,400
-Delivery: 17 days
-Status: Completed ✓
-Satisfaction: 95%
-
-Would you like me to create a new order with these details?`;
-    } else if (intent === 'preferred_provider') {
-      steps.push({ agent: 'MemoryOS', task: 'Loading provider history...' });
-      response = `🚢 Preferred Provider
-
-Based on your order history:
-
-MSC Logistics
-• Shipments: 12
-• Success Rate: 97%
-• Avg Cost: $4,200
-• Avg Transit: 17 days
-
-I'll use MSC for all future shipments unless you specify otherwise.`;
-    }
-
-    return { steps, response };
-  };
-
   // ============================================================================
-  // MAIN PROCESSOR
+  // PROCESS COMMAND
   // ============================================================================
 
   const processCommand = async (command: string) => {
+    if (!command.trim()) return;
+
     setIsProcessing(true);
+    setShowWorkflow(true);
     setWorkflowSteps([]);
     setCurrentStep(-1);
 
-    // Add user message
     setMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: command }]);
     setInput('');
 
-    await delay(500);
+    await delay(600);
 
-    // Identify intent
-    const { intent, category, entities } = identifyIntent(command);
+    const { intent, category } = identifyIntent(command);
+    const { steps, response } = getResponse(intent);
+    setWorkflowSteps(steps);
 
-    // Start typing indicator
-    setMessages(prev => [...prev, {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: `🎯 Intent: ${category}\nAnalyzing and coordinating...`,
-    }]);
-
-    await delay(800);
-
-    // Determine which workflow to run
-    let steps: { agent: string; task: string }[] = [];
-    let response = '';
-
-    if (category === 'Analytics') {
-      response = getAnalyticsResponse(intent);
-    } else if (category === 'Commerce') {
-      const commerce = getCommerceWorkflow(intent, entities);
-      steps = commerce.steps;
-      response = commerce.response;
-    } else if (category === 'Logistics') {
-      const logistics = getLogisticsWorkflow(intent, entities);
-      steps = logistics.steps;
-      response = logistics.response;
-    } else if (category === 'Documents') {
-      const docs = getDocumentWorkflow(intent);
-      steps = docs.steps;
-      response = docs.response;
-    } else if (category === 'Finance') {
-      const finance = getFinanceWorkflow(intent);
-      steps = finance.steps;
-      response = finance.response;
-    } else if (category === 'Communication') {
-      const comms = getCommunicationWorkflow(intent);
-      steps = comms.steps;
-      response = comms.response;
-    } else if (category === 'Memory') {
-      const memory = getMemoryResponse(intent);
-      steps = memory.steps;
-      response = memory.response;
-    } else {
-      response = `I can help with:
-
-📊 Analytics: Sales, products, suppliers
-🛒 Commerce: Buy, sell, RFQs
-🚢 Logistics: Track, book freight
-📄 Documents: Invoice, BL, COO
-💰 Finance: Escrow, LC, invoices
-📞 Comms: Calls, WhatsApp, email
-💾 Memory: Repeat orders, preferred providers
-
-What would you like to do?`;
+    for (let i = 0; i < steps.length; i++) {
+      setCurrentStep(i);
+      await delay(800);
     }
 
-    // Execute workflow steps if any
-    if (steps.length > 0) {
-      setWorkflowSteps(steps.map(s => ({ ...s, status: 'pending' })));
+    await delay(400);
 
-      for (let i = 0; i < steps.length; i++) {
-        setCurrentStep(i);
-        await delay(1000);
-      }
-      setCurrentStep(-1);
-      setWorkflowSteps([]);
-    }
+    setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: response }]);
 
-    // Send response
-    await delay(300);
-    setMessages(prev => [...prev, {
-      id: (Date.now() + 2).toString(),
-      role: 'assistant',
-      content: response,
-      type: category === 'Analytics' ? 'analytics' : 'commerce',
-    }]);
-
+    setShowWorkflow(false);
+    setWorkflowSteps([]);
+    setCurrentStep(-1);
     setIsProcessing(false);
   };
 
@@ -781,171 +333,234 @@ What would you like to do?`;
   // ============================================================================
 
   const quickActions: QuickAction[] = [
-    { label: '💰 Outstanding', command: 'Show outstanding invoices', icon: 'CreditCard' },
-    { label: '📊 My Sales', command: 'What are my sales this month?', icon: 'BarChart3' },
-    { label: '🛒 Buy', command: 'I want to buy cotton shirts from Vietnam', icon: 'ShoppingCart' },
-    { label: '📦 Sell', command: 'I want to sell tea to UAE', icon: 'TrendingUp' },
-    { label: '🚢 Track', command: 'Track shipment MSCKU123456', icon: 'Truck' },
-    { label: '📄 Invoice', command: 'Generate invoice for order #5432', icon: 'FileText' },
-    { label: '🔍 Suppliers', command: 'Which supplier generated the most revenue?', icon: 'Users' },
-    { label: '📈 Compare', command: 'Compare this year vs last year', icon: 'BarChart3' },
-    { label: '🚢 Book Freight', command: 'Book cheapest freight to Germany', icon: 'Truck' },
-    { label: '📞 Answer Calls', command: 'Answer my supplier calls', icon: 'Phone' },
-    { label: '🔄 Repeat Order', command: 'Repeat my last Germany shipment', icon: 'ShoppingCart' },
-    { label: '🔒 Create Escrow', command: 'Create escrow for this order', icon: 'Lock' },
+    { label: '💰 Outstanding', command: 'Show outstanding invoices', color: '#CA8A04' },
+    { label: '📊 Sales', command: 'What are my sales this month?', color: '#16A34A' },
+    { label: '🛒 Buy', command: 'I want to buy cotton shirts from Vietnam', color: '#0891B2' },
+    { label: '📦 Sell', command: 'I want to sell tea to UAE', color: '#7C3AED' },
+    { label: '🚢 Track', command: 'Track shipment MSCKU123456', color: '#154230' },
+    { label: '📄 Invoice', command: 'Generate invoice for order #5432', color: '#A6824A' },
   ];
 
+  // ============================================================================
+  // RENDER
+  // ============================================================================
+
   return (
-    <div className="flex h-screen" style={{ backgroundColor: '#0A0A0A' }}>
-      {/* Sidebar */}
-      <aside className="w-72 p-6 border-r overflow-y-auto" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-        <div className="mb-6">
-          <Link href="/" className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
-              <Layers className="w-6 h-6 text-white" />
+    <div className="min-h-screen flex" style={{ backgroundColor: '#030712' }}>
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, #0891B2 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, #7C3AED 0%, transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #A6824A 0%, transparent 70%)' }} />
+      </div>
+
+      {/* Mobile Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 md:hidden" style={{ backgroundColor: 'rgba(3,7,18,0.95)', backdropFilter: 'blur(20px)' }}>
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
+              <Layers className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
+          </div>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            className="fixed inset-0 z-40 pt-16 md:hidden"
+            style={{ backgroundColor: 'rgba(3,7,18,0.98)', backdropFilter: 'blur(20px)' }}
+          >
+            <div className="p-4 space-y-4">
+              <div className="p-4 rounded-2xl" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div className="text-sm font-medium mb-3" style={{ color: '#666' }}>Organization</div>
+                {['TwinOS', 'MemoryOS', 'SkillOS', 'SUTAR', 'Nexha'].map(org => (
+                  <div key={org} className="flex items-center gap-2 p-2 rounded-lg" style={{ color: 'white' }}>
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#16A34A' }} />
+                    {org}
+                  </div>
+                ))}
+              </div>
+              <div className="p-4 rounded-2xl" style={{ backgroundColor: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)' }}>
+                <div className="text-sm font-medium mb-2" style={{ color: '#7C3AED' }}>Global Nexha</div>
+                <div className="text-xs" style={{ color: '#666' }}>50,000+ suppliers • 1,200+ carriers</div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-72 flex-col shrink-0 relative" style={{ backgroundColor: 'rgba(3,7,18,0.8)', backdropFilter: 'blur(20px)' }}>
+        <div className="p-6 space-y-6">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #154230, #1a5a3a)', boxShadow: '0 0 30px rgba(21,66,48,0.5)' }}>
+              <Layers className="w-7 h-7 text-white" />
             </div>
             <div>
-              <div className="font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</div>
+              <span className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
               <div className="text-xs" style={{ color: '#666' }}>AI Copilot</div>
             </div>
           </Link>
-        </div>
 
-        {/* Organization Stack */}
-        <div className="mb-6">
-          <div className="text-xs uppercase mb-2" style={{ color: '#666' }}>Organization</div>
-          {[
-            { icon: Brain, name: 'TwinOS', color: '#0891B2' },
-            { icon: Database, name: 'MemoryOS', color: '#7C3AED' },
-            { icon: Zap, name: 'SkillOS', color: '#A6824A' },
-            { icon: Bot, name: 'SUTAR', color: '#0891B2' },
-            { icon: Globe, name: 'Nexha', color: '#7C3AED' },
-          ].map(org => (
-            <div key={org.name} className="flex items-center gap-3 p-3 rounded-xl mb-2" style={{ backgroundColor: '#111' }}>
-              <org.icon className="w-5 h-5" style={{ color: org.color }} />
-              <span className="text-sm" style={{ color: 'white' }}>{org.name}</span>
+          {/* Organization */}
+          <div>
+            <div className="text-xs uppercase mb-3 tracking-wider" style={{ color: '#666' }}>Organization</div>
+            <div className="space-y-2">
+              {[
+                { name: 'TwinOS', color: '#0891B2', glow: 'rgba(8,145,178,0.3)' },
+                { name: 'MemoryOS', color: '#7C3AED', glow: 'rgba(124,58,237,0.3)' },
+                { name: 'SkillOS', color: '#A6824A', glow: 'rgba(166,130,74,0.3)' },
+                { name: 'SUTAR', color: '#0891B2', glow: 'rgba(8,145,178,0.3)' },
+                { name: 'Nexha', color: '#7C3AED', glow: 'rgba(124,58,237,0.3)' },
+              ].map(org => (
+                <motion.div
+                  key={org.name}
+                  whileHover={{ x: 4 }}
+                  className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
+                >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: org.glow }}>
+                    <Brain className="w-4 h-4" style={{ color: org.color }} />
+                  </div>
+                  <span className="text-sm" style={{ color: 'white' }}>{org.name}</span>
+                  <div className="w-2 h-2 rounded-full ml-auto" style={{ backgroundColor: '#16A34A', boxShadow: '0 0 10px #16A34A' }} />
+                </motion.div>
+              ))}
             </div>
-          ))}
-        </div>
-
-        {/* Intent Categories */}
-        <div className="mb-6">
-          <div className="text-xs uppercase mb-2" style={{ color: '#666' }}>Capabilities</div>
-          {[
-            { icon: BarChart3, name: 'Analytics', color: '#16A34A' },
-            { icon: ShoppingCart, name: 'Commerce', color: '#0891B2' },
-            { icon: Truck, name: 'Logistics', color: '#7C3AED' },
-            { icon: FileText, name: 'Documents', color: '#A6824A' },
-            { icon: CreditCard, name: 'Finance', color: '#CA8A04' },
-            { icon: MessageCircle, name: 'Comms', color: '#25D366' },
-          ].map(cap => (
-            <div key={cap.name} className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: '#0A0A0A' }}>
-              <cap.icon className="w-4 h-4" style={{ color: cap.color }} />
-              <span className="text-sm" style={{ color: '#888' }}>{cap.name}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Global Nexha Stats */}
-        <div className="p-4 rounded-xl" style={{ backgroundColor: '#7C3AED15' }}>
-          <div className="flex items-center gap-2 mb-2">
-            <Globe className="w-4 h-4" style={{ color: '#7C3AED' }} />
-            <span className="text-sm font-medium" style={{ color: '#7C3AED' }}>Global Nexha</span>
           </div>
-          <div className="text-xs space-y-1" style={{ color: '#666' }}>
-            <div>50,000+ suppliers</div>
-            <div>1,200+ carriers</div>
-            <div>200+ banks</div>
+
+          {/* Global Nexha */}
+          <div className="p-4 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(124,58,237,0.05))', border: '1px solid rgba(124,58,237,0.3)' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <Globe className="w-5 h-5" style={{ color: '#7C3AED' }} />
+              <span className="text-sm font-medium" style={{ color: '#7C3AED' }}>Global Nexha</span>
+            </div>
+            <div className="space-y-2 text-xs" style={{ color: '#666' }}>
+              <div className="flex justify-between"><span>Suppliers</span><span style={{ color: '#7C3AED' }}>50,000+</span></div>
+              <div className="flex justify-between"><span>Carriers</span><span style={{ color: '#7C3AED' }}>1,200+</span></div>
+              <div className="flex justify-between"><span>Banks</span><span style={{ color: '#7C3AED' }}>200+</span></div>
+            </div>
           </div>
         </div>
       </aside>
 
       {/* Main Chat */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col relative pt-14 md:pt-0">
         {/* Header */}
-        <header className="p-4 border-b flex items-center justify-between" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-          <div>
-            <div className="flex items-center gap-2">
-              <Brain className="w-5 h-5" style={{ color: '#0891B2' }} />
-              <h1 className="font-bold">LEVERGE Copilot</h1>
+        <header className="shrink-0" style={{ backgroundColor: 'rgba(3,7,18,0.8)', backdropFilter: 'blur(20px)' }}>
+          <div className="flex items-center justify-between p-4 md:p-6 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0891B2, #7C3AED)', boxShadow: '0 0 20px rgba(8,145,178,0.3)' }}>
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="font-bold text-lg" style={{ color: 'white' }}>LEVERGE Copilot</h1>
+                <p className="text-xs" style={{ color: '#666' }}>Powered by HOJAI AI</p>
+              </div>
             </div>
-            <p className="text-sm" style={{ color: '#666' }}>Universal Trade Assistant</p>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(22,163,74,0.2)' }}>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#16A34A' }} />
+                <span className="text-xs font-medium" style={{ color: '#16A34A' }}>Online</span>
+              </div>
+            </div>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs" style={{ backgroundColor: '#16A34A20', color: '#16A34A' }}>● Online</span>
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
           {messages.map(msg => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className="max-w-xl px-6 py-4 rounded-2xl"
+                className="max-w-[85%] md:max-w-xl px-5 py-4"
                 style={{
-                  backgroundColor: msg.role === 'user' ? '#154230' : '#111',
-                  borderRadius: msg.role === 'user' ? '1rem 1rem 0 1rem' : '1rem 1rem 1rem 0',
+                  backgroundColor: msg.role === 'user' ? 'rgba(21,66,48,0.8)' : 'rgba(255,255,255,0.05)',
+                  backdropFilter: 'blur(10px)',
+                  border: msg.role === 'user' ? '1px solid rgba(21,66,48,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: msg.role === 'user' ? '1.5rem 1.5rem 0.5rem 1.5rem' : '1.5rem 1.5rem 1.5rem 0.5rem',
+                  boxShadow: msg.role === 'user' ? '0 0 30px rgba(21,66,48,0.3)' : 'none',
                 }}
               >
                 {msg.role === 'assistant' && (
                   <div className="flex items-center gap-2 mb-2">
-                    <Brain className="w-4 h-4" style={{ color: '#0891B2' }} />
-                    <span className="text-xs" style={{ color: '#0891B2' }}>Copilot</span>
+                    <Sparkles className="w-4 h-4" style={{ color: '#0891B2' }} />
+                    <span className="text-xs font-medium" style={{ color: '#0891B2' }}>Copilot</span>
                   </div>
                 )}
-                <div className="whitespace-pre-line" style={{ color: 'white' }}>
+                <div className="whitespace-pre-line text-sm md:text-base leading-relaxed" style={{ color: 'white' }}>
                   {msg.content}
                 </div>
               </div>
             </motion.div>
           ))}
 
-          {/* Workflow */}
-          {workflowSteps.length > 0 && (
+          {/* Workflow Animation */}
+          {showWorkflow && workflowSteps.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-4 rounded-xl"
-              style={{ backgroundColor: '#0891B215' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 md:p-6 rounded-2xl"
+              style={{ backgroundColor: 'rgba(8,145,178,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(8,145,178,0.3)' }}
             >
-              <div className="flex items-center gap-2 mb-4">
-                <Bot className="w-5 h-5" style={{ color: '#0891B2' }} />
-                <span className="font-medium" style={{ color: '#0891B2' }}>Coordinating Organization</span>
-                {isProcessing && (
-                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }} className="ml-auto">
-                    <Sparkles className="w-4 h-4" style={{ color: '#0891B2' }} />
-                  </motion.div>
-                )}
+              <div className="flex items-center gap-3 mb-4">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: 'rgba(8,145,178,0.2)' }}
+                >
+                  <Sparkles className="w-5 h-5" style={{ color: '#0891B2' }} />
+                </motion.div>
+                <div>
+                  <div className="font-medium" style={{ color: '#0891B2' }}>Coordinating Organization</div>
+                  <div className="text-xs" style={{ color: '#666' }}>{currentStep + 1} of {workflowSteps.length} agents active</div>
+                </div>
               </div>
+
               <div className="space-y-2">
                 {workflowSteps.map((step, i) => (
-                  <div
+                  <motion.div
                     key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
                     className="flex items-center gap-3 p-3 rounded-xl"
                     style={{
-                      backgroundColor: i < currentStep || currentStep === -1 ? '#16A34A15' : i === currentStep ? '#0891B220' : '#0A0A0A',
+                      backgroundColor: i <= currentStep ? 'rgba(22,163,74,0.15)' : 'rgba(0,0,0,0.3)',
+                      border: i === currentStep ? '1px solid rgba(8,145,178,0.5)' : '1px solid transparent',
                     }}
                   >
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: i < currentStep || currentStep === -1 ? '#16A34A' : '#0891B2' }}>
-                      {i < currentStep || currentStep === -1 ? (
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: i <= currentStep ? '#16A34A' : 'rgba(255,255,255,0.1)' }}>
+                      {i < currentStep ? (
                         <Check className="w-4 h-4 text-white" />
                       ) : i === currentStep ? (
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}>
                           <Bot className="w-4 h-4 text-white" />
                         </motion.div>
                       ) : (
-                        <span className="text-white text-xs">{i + 1}</span>
+                        <span className="text-xs" style={{ color: '#666' }}>{i + 1}</span>
                       )}
                     </div>
-                    <div>
-                      <div className="font-medium text-sm" style={{ color: 'white' }}>{step.agent}</div>
-                      <div className="text-xs" style={{ color: '#888' }}>{step.task}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate" style={{ color: i <= currentStep ? 'white' : '#666' }}>{step.agent}</div>
+                      <div className="text-xs truncate" style={{ color: '#888' }}>{step.task}</div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -955,41 +570,56 @@ What would you like to do?`;
         </div>
 
         {/* Quick Actions */}
-        <div className="px-4 pb-2">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="px-4 pb-2 md:px-6 md:pb-4">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {quickActions.map(action => (
-              <button
+              <motion.button
                 key={action.label}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => processCommand(action.command)}
-                className="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all hover:scale-105"
-                style={{ backgroundColor: '#222', color: '#888' }}
+                className="px-4 py-2 rounded-full text-sm whitespace-nowrap shrink-0 transition-all"
+                style={{ backgroundColor: `${action.color}20`, border: `1px solid ${action.color}40`, color: action.color }}
               >
                 {action.label}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+        <div className="p-4 md:p-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(3,7,18,0.8)', backdropFilter: 'blur(20px)' }}>
           <div className="flex gap-3">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && input.trim() && processCommand(input)}
-              placeholder="Ask me anything or give me a command..."
-              className="flex-1 px-4 py-3 rounded-xl"
-              style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
-            />
-            <button
-              onClick={() => input.trim() && processCommand(input)}
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && processCommand(input)}
+                placeholder="Tell me what you need..."
+                className="w-full px-5 py-4 rounded-2xl text-white placeholder-gray-500 outline-none"
+                style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+              />
+              <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                <Mic className="w-5 h-5" style={{ color: '#666' }} />
+              </button>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => processCommand(input)}
               disabled={!input.trim() || isProcessing}
-              className="px-6 py-3 rounded-xl font-medium disabled:opacity-50"
-              style={{ backgroundColor: '#154230', color: 'white' }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #154230, #1a5a3a)', boxShadow: '0 0 30px rgba(21,66,48,0.5)' }}
             >
-              <Send className="w-5 h-5" />
-            </button>
+              {isProcessing ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}>
+                  <Sparkles className="w-6 h-6 text-white" />
+                </motion.div>
+              ) : (
+                <Send className="w-6 h-6 text-white" />
+              )}
+            </motion.button>
           </div>
         </div>
       </main>
