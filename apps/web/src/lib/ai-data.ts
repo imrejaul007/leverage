@@ -1735,6 +1735,329 @@ export const ASIAN_TRADE_ROUTES_EXTENDED = [
   { origin: 'Singapore', dest: 'Tanjung Priok', mode: 'Ocean', transit: 3, freight: '$350/20GP', notes: 'Indonesia' },
 ];
 
+// ============================================
+// INDIAN CITIES & INDUSTRIAL HUBS
+// ============================================
+export const INDIA_CITIES = [
+  { name: 'Mumbai', state: 'Maharashtra', population: '20M+', industries: ['Textiles', 'Chemicals', 'Finance', 'Entertainment'], majorExports: ['Gems & Jewelry', 'Pharmaceuticals', 'Textiles', 'Chemicals'], ports: ['JNPT', 'Mumbai Port'], airports: ['BOM'], notes: 'Financial Capital of India' },
+  { name: 'Delhi NCR', state: 'Delhi', population: '30M+', industries: ['IT', 'Automobiles', 'Consumer Goods', 'Logistics'], majorExports: ['IT Services', 'Engineering Goods', 'Pharmaceuticals'], ports: ['JNPT (via road)'], airports: ['DEL', 'DXP'], notes: 'Capital Region, major trading hub' },
+  { name: 'Bangalore', state: 'Karnataka', population: '12M+', industries: ['IT', 'BTech', 'Aerospace', 'Electronics'], majorExports: ['Software', 'BTech Products', 'Electronics', 'Coffee'], ports: ['Chennai (via road)'], airports: ['BLR'], notes: 'Silicon Valley of India' },
+  { name: 'Chennai', state: 'Tamil Nadu', population: '10M+', industries: ['Automobiles', 'IT', 'Electronics', 'Heavy Engineering'], majorExports: ['Auto Components', 'IT Services', 'Leather', 'Textiles'], ports: ['Chennai Port', 'Ennore'], airports: ['MAA'], notes: 'Detroit of India, Auto hub' },
+  { name: 'Kolkata', state: 'West Bengal', population: '15M+', industries: ['Jute', 'Tea', 'Engineering', 'Chemicals'], majorExports: ['Jute Products', 'Tea', 'Leather Goods', 'Chemicals'], ports: ['Kolkata', 'Haldia'], airports: ['CCU'], notes: 'Gateway to Eastern India' },
+  { name: 'Hyderabad', state: 'Telangana', population: '10M+', industries: ['Pharmaceuticals', 'IT', 'Biotech', 'Aerospace'], majorExports: ['Pharmaceuticals', 'Software', 'Agri Products', 'Stilbite'], ports: ['Chennai (via road)'], airports: ['HYD'], notes: 'Pharma City, Bulk Drugs hub' },
+  { name: 'Ahmedabad', state: 'Gujarat', population: '8M+', industries: ['Textiles', 'Chemicals', 'Ceramic', 'Pharma'], majorExports: ['Cotton Yarn', 'Chemicals', 'Pharmaceuticals', 'Textiles'], ports: ['Kandla', 'Mundra', 'Pipavav'], airports: ['AMD'], notes: 'Manchester of India, Chemical hub' },
+  { name: 'Pune', state: 'Maharashtra', population: '7M+', industries: ['Automobiles', 'IT', 'Engineering', 'Agro'], majorExports: ['Auto Components', 'IT Services', 'Engineering Goods', 'Grapes'], ports: ['JNPT (via road)'], airports: ['PNQ'], notes: 'Auto Manufacturing Hub' },
+  { name: 'Surat', state: 'Gujarat', population: '6M+', industries: ['Textiles', 'Diamonds', 'Chemicals', 'Silk'], majorExports: ['Synthetic Textiles', 'Diamonds', 'Chemicals', 'Silk'], ports: ['Mundra (via road)'], airports: ['STV'], notes: 'Diamond Capital of World' },
+  { name: 'Jaipur', state: 'Rajasthan', population: '4M+', industries: ['Gems & Jewelry', 'Textiles', 'Handicrafts', 'Leather'], majorExports: ['Gems & Jewelry', 'Handicrafts', 'Leather Goods', 'Textiles'], ports: ['JNPT (via road)'], airports: ['JAI'], notes: 'Jewelry and Handicraft hub' },
+  { name: 'Ludhiana', state: 'Punjab', population: '2M+', industries: ['Machinery', 'Textiles', 'Leather', 'Auto Parts'], majorExports: ['Machine Tools', 'Cycle Parts', 'Leather Goods', 'Sports Goods'], ports: ['JNPT (via road)'], airports: ['LUH'], notes: 'Manchester of East, Industrial hub' },
+  { name: 'Coimbatore', state: 'Tamil Nadu', population: '2M+', industries: ['Textiles', 'Engineering', 'Auto Components', 'Textile Machinery'], majorExports: ['Cotton Textiles', 'Auto Components', 'Wet Grinders', 'Leather'], ports: ['Tuticorin'], airports: ['CJB'], notes: 'Textile Capital of South India' },
+  { name: 'Indore', state: 'Madhya Pradesh', population: '3M+', industries: ['Food Processing', 'IT', 'Pharma', 'Education'], majorExports: ['Soybean Products', 'Pharma', 'Handloom', 'Handicrafts'], ports: ['JNPT (via road)'], airports: ['IDR'], notes: 'Commercial capital of MP' },
+  { name: 'Nagpur', state: 'Maharashtra', population: '3M+', industries: ['Agro', 'Logistics', 'Food Processing', 'Steel'], majorExports: ['Agri Commodities', 'Forest Products', 'Steel', 'Oranges'], ports: ['JNPT (via road)'], airports: ['NAG'], notes: 'Orange City, Logistics hub' },
+  { name: 'Bhopal', state: 'Madhya Pradesh', population: '2M+', industries: ['Manufacturing', 'Agro', 'Handicrafts'], majorExports: ['Soybean Oil', 'Handicrafts', 'Electronics'], ports: ['JNPT (via road)'], airports: ['BHO'], notes: 'Capital of MP' },
+  { name: 'Lucknow', state: 'Uttar Pradesh', population: '4M+', industries: ['Agro', 'Handicrafts', 'IT', 'Leather'], majorExports: ['Chikankari', 'Leather Goods', 'Agri Products', 'Perfumes'], ports: ['JNPT (via road)'], airports: ['LKO'], notes: 'Chikankari embroidery hub' },
+  { name: 'Kanpur', state: 'Uttar Pradesh', population: '4M+', industries: ['Leather', 'Textiles', 'Chemicals', 'Defense'], majorExports: ['Leather Goods', 'Hosiery', 'Chemicals', 'Wool'], ports: ['JNPT (via road)'], airports: ['KNU'], notes: 'Leather Capital of India' },
+  { name: 'Varanasi', state: 'Uttar Pradesh', population: '3M+', industries: ['Silk', 'Handicrafts', 'Agriculture'], majorExports: ['Banarasi Silk', 'Handicrafts', 'Mangoes', 'Zari'], ports: ['Kolkata (via road)'], airports: ['VTB'], notes: 'Silk and Handicraft hub' },
+  { name: 'Rajkot', state: 'Gujarat', population: '2M+', industries: ['Engineering', 'Jewelry', 'Castings', 'Auto Parts'], majorExports: ['Engineering Goods', 'Polished Diamonds', 'Auto Parts', 'Die Castings'], ports: ['Mundra (via road)'], airports: ['RAJ'], notes: 'Engineering and Diamond hub' },
+  { name: 'Vizag', state: 'Andhra Pradesh', population: '2M+', industries: ['Steel', 'Fertilizers', 'Aluminum', 'Mining'], majorExports: ['Steel', 'Aluminum', 'Fertilizers', 'Manganese'], ports: ['Visakhapatnam Port'], airports: ['VTZ'], notes: 'Steel City of East India' },
+];
+
+// ============================================
+// INDIAN CUSTOMS & REGULATORY BODIES
+// ============================================
+export const INDIA_REGULATORY_BODIES = [
+  { name: 'CBIC', fullName: 'Central Board of Indirect Taxes & Customs', role: 'Customs duty, GST administration', website: 'cbic.gov.in' },
+  { name: 'DGFT', fullName: 'Directorate General of Foreign Trade', role: 'Export/Import policy, Trade facilitation', website: 'dgft.gov.in' },
+  { name: 'RBI', fullName: 'Reserve Bank of India', role: 'Forex regulations, Trade payments', website: 'rbi.org.in' },
+  { name: 'FSSAI', fullName: 'Food Safety and Standards Authority of India', role: 'Food safety regulations', website: 'fssai.gov.in' },
+  { name: 'Drugs Controller General of India (DCGI)', fullName: 'CDSCO', role: 'Drug approvals, Clinical trials', website: 'cdsco.gov.in' },
+  { name: 'BIS', fullName: 'Bureau of Indian Standards', role: 'Product certification, Quality standards', website: 'bis.gov.in' },
+  { name: 'APEDA', fullName: 'Agricultural and Processed Food Products Export', role: 'Agri export promotion', website: 'apeda.gov.in' },
+  { name: 'Spice Board', fullName: 'Spice Board India', role: 'Spice export promotion', website: 'indianspices.com' },
+  { name: 'Tea Board', fullName: 'Tea Board India', role: 'Tea export promotion', website: 'teaboard.gov.in' },
+  { name: 'Coffee Board', fullName: 'Coffee Board India', role: 'Coffee export promotion', website: 'indiacoffee.org' },
+  { name: 'Gems & Jewelry Export Promotion Council (GJEPC)', fullName: 'GJEPC', role: 'Gems & jewelry export promotion', website: 'gjepc.org' },
+  { name: 'Council for Leather Exports (CLE)', fullName: 'CLE', role: 'Leather export promotion', website: 'leatherindia.org' },
+  { name: 'Textile Export Promotion Council (TEXPROCIL)', fullName: 'TEXPROCIL', role: 'Textile export promotion', website: 'texprocil.org' },
+  { name: 'Pharmaceutical Export Promotion Council (PHARMEXCIL)', fullName: 'PHARMEXCIL', role: 'Pharma export promotion', website: 'pharmexcil.com' },
+  { name: 'Engineering Export Promotion Council (EEPC)', fullName: 'EEPC India', role: 'Engineering export promotion', website: 'eepcindia.org' },
+  { name: 'Electronics & Computer Software Export Promotion Council (ESC)', fullName: 'ESC', role: 'Electronics export promotion', website: 'escindia.in' },
+];
+
+// ============================================
+// INDIAN FREE TRADE AGREEMENTS
+// ============================================
+export const INDIA_FTAS = [
+  { name: 'India-ASEAN FTA', status: 'In Force', signed: 2009, benefit: 'Reduced tariffs on 80%+ products', productCoverage: ['Electronics', 'Textiles', 'Chemicals', 'Machinery'] },
+  { name: 'India-Japan CEPA', status: 'In Force', signed: 2011, benefit: '0% duty on many products', productCoverage: ['Automobiles', 'Electronics', 'Chemicals', 'Pharmaceuticals'] },
+  { name: 'India-Korea CEPA', status: 'In Force', signed: 2010, benefit: 'Tariff elimination on goods', productCoverage: ['Automobiles', 'Textiles', 'Electronics', 'Chemicals'] },
+  { name: 'India-Gulf FTA (EFTA)', status: 'Under Negotiation', signed: 'Negotiating', benefit: 'Proposed trade agreement', productCoverage: ['Textiles', 'Pharma', 'Gems & Jewelry', 'Chemicals'] },
+  { name: 'RCEP', status: 'Not Signed', signed: 'India withdrew 2019', benefit: 'Was negotiating', productCoverage: ['Electronics', 'Textiles', 'Automobiles', 'Agriculture'] },
+  { name: 'India-EU BTIA', status: 'Under Negotiation', signed: 'Suspended since 2013', benefit: 'Would cover services & investment', productCoverage: ['Automobiles', 'Wine', 'Processed Foods', 'Textiles'] },
+  { name: 'India-US Trade Agreement', status: 'Under Discussion', signed: 'Early stage', benefit: 'Potential tariff reductions', productCoverage: ['Pharma', 'IT Services', 'Agriculture', 'Medical Devices'] },
+  { name: 'India-UK FTA', status: 'Under Negotiation', signed: 'Negotiating since 2022', benefit: 'Services & goods access', productCoverage: ['Gems & Jewelry', 'Textiles', 'Agriculture', 'Financial Services'] },
+  { name: 'India-Australia ECTA', status: 'In Force', signed: 2022, benefit: 'Fast-track trade deal', productCoverage: ['Pharmaceuticals', 'Agricultural products', 'Minerals', 'Textiles'] },
+  { name: 'India-UAE CEPA', status: 'In Force', signed: 2022, benefit: '0% duty on 80% products', productCoverage: ['Gems & Jewelry', 'Textiles', 'Pharma', 'Agricultural products'] },
+];
+
+// ============================================
+// INDIAN EXPORT INCENTIVE SCHEMES
+// ============================================
+export const INDIA_EXPORT_SCHEMES = [
+  { name: 'RODTEP', fullName: 'Remission of Duties or Taxes on Export Products', benefit: 'Tax refund on embedded taxes', eligible: 'All exporters', rate: '0.5-4.5% depending on product' },
+  { name: 'RoDTEP', fullName: 'Remission of Duties and Taxes on Export Products', benefit: 'Rebate of central taxes', eligible: 'All exporters', rate: 'Product specific' },
+  { name: 'MEIS', fullName: 'Merchandise Exports from India Scheme', benefit: 'Duty credit scrips (DISCONTINUED)', eligible: 'Was all exporters', rate: '2-10% (discontinued from Jan 2021)' },
+  { name: 'SEIS', fullName: 'Service Exports from India Scheme', benefit: 'Duty credit scrips (DISCONTINUED)', eligible: 'Was service exporters', rate: '3-7% (discontinued)' },
+  { name: 'EPCG', fullName: 'Export Promotion Capital Goods', benefit: 'Import capital goods at 0% duty', eligible: 'Exporters', condition: 'Export obligation of 6x duty saved over 6 years' },
+  { name: 'Advance Authorization', fullName: 'Advance Authorization Scheme', benefit: 'Import inputs at 0% duty', eligible: 'Manufacturer exporters', condition: 'Export within 18 months' },
+  { name: 'DFIA', fullName: 'Duty Free Import Authorization', benefit: 'Import inputs at 0% duty', eligible: 'Status holders', condition: 'Export finished goods within 12 months' },
+  { name: 'EOU', fullName: 'Export Oriented Units', benefit: 'Duty-free imports, excise exemption', eligible: '100% EOUs', condition: 'Minimum 30% export, 35% forex earnings' },
+  { name: 'FTWZ', fullName: 'Free Trade Warehousing Zone', benefit: 'Duty deferment, single window', eligible: 'All units in FTWZ', condition: 'Storage and re-export focus' },
+  { name: 'DAHD', fullName: 'Deemed Export', benefit: 'Refund of taxes', eligible: 'Supplier to SEZ/EOU/EPCG units', condition: 'Supply to specified agencies' },
+];
+
+// ============================================
+// INDIAN COMMODITY MARKETS & PRICES
+// ============================================
+export const INDIA_COMMODITY_PRICES = [
+  { commodity: 'Rice (Basmati)', unit: 'MT', priceRange: '$800-1200', majorMarket: 'Punjab, Haryana, UP', exporters: 'KRBL, LT Foods, Kohinoor' },
+  { commodity: 'Rice (Non-Basmati)', unit: 'MT', priceRange: '$350-500', majorMarket: 'West Bengal, Andhra Pradesh', exporters: 'Allana Group, Adani Wilmar' },
+  { commodity: 'Wheat', unit: 'MT', priceRange: '$280-350', majorMarket: 'Punjab, Haryana, MP', exporters: '梭osfed, ITC, Adani' },
+  { commodity: 'Sugar', unit: 'MT', priceRange: '$400-500', majorMarket: 'Maharashtra, Uttar Pradesh', exporters: 'Tata Chemicals, Balrampur Chini' },
+  { commodity: 'Cotton (Shankar-6)', unit: 'Candy', priceRange: '$55,000-65,000', majorMarket: 'Gujarat, Maharashtra', exporters: 'Trident, Arvind, Raymond' },
+  { commodity: 'Soybean', unit: 'MT', priceRange: '$500-600', majorMarket: 'Madhya Pradesh, Maharashtra', exporters: 'Bayer, Mahashakti' },
+  { commodity: 'Groundnut', unit: 'MT', priceRange: '$1,200-1,500', majorMarket: 'Gujarat, Rajasthan', exporters: 'Aharwar, Govind' },
+  { commodity: 'Pepper', unit: '100kg', priceRange: '$350-450', majorMarket: 'Karnataka, Kerala', exporters: 'CBL, Sakthi' },
+  { commodity: 'Cardamom', unit: 'kg', priceRange: '$250-350', majorMarket: 'Kerala, Sikkim', exporters: 'KAILAS, Mas子ood' },
+  { commodity: 'Turmeric', unit: '100kg', priceRange: '$120-180', majorMarket: 'Telangana, Andhra Pradesh', exporters: 'Nihal, BSR' },
+  { commodity: 'Castor Oil', unit: 'MT', priceRange: '$1,400-1,600', majorMarket: 'Gujarat', exporters: 'Adani Wilmar, Jayant' },
+  { commodity: 'Groundnut Oil', unit: 'MT', priceRange: '$1,600-1,800', majorMarket: 'Gujarat, Rajasthan', exporters: 'Bayer, Liberty' },
+  { commodity: 'Mustard Oil', unit: 'MT', priceRange: '$1,200-1,400', majorMarket: 'Rajasthan, UP', exporters: 'Bayer, Emami' },
+  { commodity: 'Cashew (W320)', unit: 'lb', priceRange: '$3.00-3.50', majorMarket: 'Tamil Nadu, Kerala', exporters: 'MVM, Corr{}, Playtor' },
+  { commodity: 'Onion', unit: 'MT', priceRange: '$200-400 (seasonal)', majorMarket: 'Maharashtra, Karnataka', exporters: 'NAFED, State apedex' },
+  { commodity: 'Potato', unit: 'MT', priceRange: '$150-300', majorMarket: 'UP, West Bengal', exporters: 'Farm2Food' },
+  { commodity: 'Mangoes (Alphonso)', unit: 'Dozen', priceRange: '$15-25', majorMarket: 'Maharashtra, Gujarat', exporters: 'Alphonso producers, APEDA registered' },
+  { commodity: 'Banana', unit: 'MT', priceRange: '$200-300', majorMarket: 'Tamil Nadu, Maharashtra', exporters: 'IG International, Freskel' },
+  { commodity: 'Grapes (Thompson)', unit: 'kg', priceRange: '$1.50-2.50', majorMarket: 'Maharashtra (Nashik)', exporters: 'INOX, Fruticana' },
+  { commodity: 'Pomegranate', unit: 'kg', priceRange: '$2.00-4.00', majorMarket: 'Maharashtra, Gujarat', exporters: 'IBF, Fruticana' },
+];
+
+// ============================================
+// INDIAN LOGISTICS PROVIDERS
+// ============================================
+export const INDIA_LOGISTICS_COMPANIES = [
+  { name: 'Adani Logistics', type: 'Integrated Logistics', services: ['Rail Freight', 'Warehousing', 'Cold Chain', 'Container Train'], network: 'Pan India' },
+  { name: 'Container Corporation of India (CONCOR)', type: 'Rail Logistics', services: ['Multimodal Transport', 'EXIM Container', 'Domestic Container', 'Terminals'], network: 'Pan India, 80+ terminals' },
+  { name: 'Allcargo Logistics', type: 'Multimodal', services: ['Ocean Freight', 'Air Freight', 'Contract Logistics', 'LCL Consolidation'], network: 'Global, 180+ countries' },
+  { name: 'MoC (APM) Mumbai', type: 'Port & Terminal', services: ['Port Operations', 'Terminal Handling', 'ICD Services'], network: 'Pan India' },
+  { name: 'DP World', type: 'Port & Terminal', services: ['Container Terminals', 'Logistics Parks', 'Cold Chain'], network: 'Pan India, 3 terminals' },
+  { name: 'Adani Ports & Logistics', type: 'Port-led Infra', services: ['Ports', 'Logistics', 'Agri Solutions', 'Data Diode'], network: '12 ports' },
+  { name: 'Mahindra Logistics', type: '3PL', services: ['Transportation', 'Warehousing', 'Express', 'E-commerce'], network: 'Pan India' },
+  { name: 'Tata Motors Logistics', type: '3PL', services: ['Automotive Logistics', 'Cold Chain', 'Chemical Logistics'], network: 'Pan India' },
+  { name: 'Rivigo', type: 'Tech-Enabled', services: ['Trucking', 'Express Freight', 'Temperature Controlled'], network: 'Pan India' },
+  { name: 'BlackBuck', type: 'Trucking Aggregator', services: ['Full Truck Load', 'Marketplace', 'Fleet Management'], network: '250,000+ trucks' },
+  { name: 'Vogo', type: 'Last Mile', services: ['Scooters', 'Bikes', 'Last Mile Delivery'], network: 'Major cities' },
+  { name: 'Delhivery', type: 'E-commerce Logistics', services: ['Express', 'Freight', 'Cross Border', 'Tech Solutions'], network: 'Pan India, Global' },
+  { name: 'DTDC', type: 'Courier & Cargo', services: ['Domestic', 'International', 'Freight Forwarding'], network: 'Global, 240+ countries' },
+  { name: 'Blue Dart', type: 'Express', services: ['Express Cargo', 'International', 'Cross Border'], network: 'Pan India, 220+ countries' },
+  { name: 'GATI', type: 'Distribution', services: ['Surface Express', 'E-commerce', 'Freight Forwarding'], network: 'Pan India' },
+  { name: 'N不方便 Express', type: '3PL', services: ['Cold Chain', 'Warehousing', 'E-commerce Fulfillment'], network: 'Pan India' },
+  { name: 'Sagacious IP', type: 'IP Services', services: ['Patent Filing', 'Trademark', 'Trade Secret'], network: 'Global' },
+];
+
+// ============================================
+// INDIAN COURIER & EXPRESS SERVICES
+// ============================================
+export const INDIA_COURIER_SERVICES = [
+  { name: 'Blue Dart', coverage: 'Domestic + International', speed: 'Same/Next Day', maxWeight: '40kg', specialty: 'Premium Express', tracking: 'Real-time' },
+  { name: 'DTDC', coverage: 'Domestic + International', speed: '1-3 Days', maxWeight: '30kg', specialty: 'Budget Express', tracking: 'Good' },
+  { name: 'Delhivery', coverage: 'Domestic + Cross Border', speed: '1-3 Days', maxWeight: '50kg', specialty: 'E-commerce', tracking: 'Real-time' },
+  { name: 'Ecom Express', coverage: 'Domestic Only', speed: '1-3 Days', maxWeight: '30kg', specialty: 'E-commerce Fulfillment', tracking: 'Real-time' },
+  { name: 'Shadowfax', coverage: 'Metro to Metro', speed: 'Same Day', maxWeight: '15kg', specialty: 'Quick Commerce', tracking: 'Real-time' },
+  { name: 'GATI', coverage: 'Domestic + International', speed: '1-3 Days', maxWeight: '30kg', specialty: 'Surface Express', tracking: 'Good' },
+  { name: 'India Post - Speed Post', coverage: 'Domestic + International', speed: '2-5 Days', maxWeight: '35kg', specialty: 'Government Trust', tracking: 'Basic' },
+  { name: 'UPS India', coverage: 'International', speed: '1-3 Days', maxWeight: '70kg', specialty: 'Cross Border Premium', tracking: 'Real-time' },
+  { name: 'FedEx India', coverage: 'Domestic + International', speed: '1-3 Days', maxWeight: '70kg', specialty: 'Premium International', tracking: 'Real-time' },
+  { name: 'DHL India', coverage: 'Domestic + International', speed: '1-3 Days', maxWeight: '70kg', specialty: 'B2B Cross Border', tracking: 'Real-time' },
+  { name: 'Aramex India', coverage: 'Domestic + International', speed: '2-4 Days', maxWeight: '30kg', specialty: 'E-commerce Cross Border', tracking: 'Good' },
+  { name: 'XpressBees', coverage: 'Domestic Only', speed: '1-3 Days', maxWeight: '25kg', specialty: 'E-commerce Fulfillment', tracking: 'Real-time' },
+];
+
+// ============================================
+// INDIAN CUSTOMS CLEARING AGENTS (CHA)
+// ============================================
+export const INDIA_CUSTOMS_BROKERS = [
+  { name: 'MGH Global Logistics', location: 'Mumbai', services: ['Customs Clearance', 'Freight Forwarding', 'Project Cargo'], specialization: 'EXIM' },
+  { name: 'Safari Freight', location: 'Pan India', services: ['Customs Brokerage', 'Warehouse', 'Transportation'], specialization: 'All Cargo Types' },
+  { name: 'Delhi Customs House Agents Association', location: 'Delhi', services: ['CHA Services', 'DGFT Matters', 'Export Facilitation'], specialization: 'Delhi/JNPT' },
+  { name: 'Logistics Mart', location: 'Chennai', services: ['Customs Clearance', 'Transportation', 'Documentation'], specialization: 'South India' },
+  { name: 'ABC India', location: 'Pan India', services: ['Customs Clearance', 'Project Cargo', 'Bulk Cargo'], specialization: 'Heavy Lift' },
+  { name: 'Transworld Logistics', location: 'Mumbai', services: ['Customs Brokerage', 'Freight Forwarding', 'Warehousing'], specialization: 'Chemicals & Pharma' },
+  { name: 'M/s K. R. Choudhary', location: 'Kolkata', services: ['Customs Clearance', 'Port Handling', 'Documentation'], specialization: 'East India' },
+  { name: 'APM Terminals Mumbai Customs', location: 'Mumbai', services: ['Dwell Time Reduction', 'Express Clearance', 'EDI Filing'], specialization: 'Container Cargo' },
+];
+
+// ============================================
+// INDIAN AGRI EXPORT SPECIALISTS
+// ============================================
+export const INDIA_AGRI_EXPORTERS = [
+  { name: 'IG International', products: ['Fresh Fruits', 'Almonds', 'Walnuts'], markets: ['Europe', 'Middle East', 'Far East'], certifications: ['ISO', 'GlobalGAP'] },
+  { name: 'All Fresh Import Export', products: ['Mangoes', 'Grapes', 'Pomegranates'], markets: ['Europe', 'UAE', 'SE Asia'], certifications: ['GlobalGAP', 'GrapeNet'] },
+  { name: 'Fruticana Lands', products: ['Grapes', 'Mangoes', 'Pomegranates'], markets: ['Europe', 'Russia', 'Middle East'], certifications: ['GlobalGAP', 'Fairtrade'] },
+  { name: 'Kay Bee Exports', products: ['Pomegranates', 'Mangoes', 'Chickpeas'], markets: ['Europe', 'Middle East', 'USA'], certifications: ['GlobalGAP', 'USDA Organic'] },
+  { name: 'Desai Fruits', products: ['Mangoes', 'Pomegranates', 'Sweet Corn'], markets: ['Europe', 'UAE', 'Bangladesh'], certifications: ['GlobalGAP', 'India Organic'] },
+  { name: 'A不准 Exports', products: ['Gherkins', 'Pickles', 'Mango Pulp'], markets: ['Europe', 'USA', 'Middle East'], certifications: ['BRC', 'IFS', 'ISO'] },
+  { name: 'N SAFoods', products: ['Ready to Eat', 'Frozen Vegetables', 'Mango Pulp'], markets: ['Europe', 'USA', 'Australia'], certifications: ['BRC', 'FSSC 22000', 'ISO'] },
+  { name: 'MTR Foods (Export)', products: ['Ready to Eat', 'Spice Blends', 'RTE Meals'], markets: ['USA', 'Europe', 'Middle East'], certifications: ['FSSAI', 'ISO', 'HACCP'] },
+  { name: 'Mohan Groups', products: ['Rice (Basmati)', 'Wheat', 'Sugar'], markets: ['Middle East', 'Africa', 'Europe'], certifications: ['ISO', 'FSSAI'] },
+  { name: 'KRBL Ltd', products: ['Rice (Basmati)', 'Seeds', 'Agri Commodities'], markets: ['Middle East', 'Europe', 'USA'], certifications: ['ISO', 'FSSAI', 'BRC'] },
+  { name: 'LT Foods (Daawat)', products: ['Rice (Basmati)', 'Organic Rice', 'Ready Rice'], markets: ['USA', 'Middle East', 'Europe'], certifications: ['USDA Organic', 'ISO', 'BRC'] },
+  { name: 'Adani Wilmar (Fortune)', products: ['Edible Oils', 'Rice', 'Sugar'], markets: ['India Domestic + Export', 'Middle East', 'Africa'], certifications: ['ISO', 'FSSAI'] },
+];
+
+// ============================================
+// INDIAN TEXTILE & APPAREL EXPORTERS
+// ============================================
+export const INDIA_APPAREL_EXPORTERS = [
+  { name: 'Arvind Ltd', products: ['Denim', 'Shirts', 'Technical Textiles'], markets: ['Europe', 'USA', 'Japan'], certifications: ['GOTS', 'OCS', 'WRAP'] },
+  { name: 'Raymond Ltd', products: ['Suits', 'Shirts', 'Fabric'], markets: ['Europe', 'USA', 'Middle East'], certifications: ['ISO', 'Oeko-Tex', 'WRAP'] },
+  { name: 'Lakshmi Machine Works', products: ['Cotton Yarn', 'Fabric', 'Garments'], markets: ['Europe', 'USA', 'Bangladesh'], certifications: ['GOTS', 'BCI', 'ISO'] },
+  { name: 'Trident Ltd', products: ['Bed Linen', 'Towels', 'Yarn'], markets: ['Europe', 'USA', 'Middle East'], certifications: ['OEKO-TEX', 'GOTS', 'ISO'] },
+  { name: 'Welspun India', products: ['Bed Sheets', 'Towels', 'Flooring'], markets: ['USA', 'Europe', 'Middle East'], certifications: ['OEKO-TEX', 'GOTS', 'WRAP'] },
+  { name: 'Indo Count', products: ['Bed Linen', 'Differentiated Textiles'], markets: ['USA', 'Europe', 'Australia'], certifications: ['OEKO-TEX', 'GOTS', 'BCI'] },
+  { name: 'Nahar Spinning', products: ['Yarn', 'Fabric', 'Garments'], markets: ['Europe', 'USA', 'Bangladesh'], certifications: ['GOTS', 'OCS', 'ISO'] },
+  { name: 'Ginni Filaments', products: ['Home Textiles', 'Technical Textiles'], markets: ['USA', 'Europe', 'Middle East'], certifications: ['OEKO-TEX', 'GOTS'] },
+  { name: 'Banswara Syntex', products: ['Synthetic Blended Fabrics', 'Curtains'], markets: ['Europe', 'USA', 'Middle East'], certifications: ['OEKO-TEX', 'ISO'] },
+  { name: 'Alok Industries', products: ['Polyester Yarn', 'Fabric', 'Home Textiles'], markets: ['Europe', 'USA', 'Bangladesh'], certifications: ['GOTS', 'OEKO-TEX', 'ISO'] },
+  { name: 'W Export', products: ['Woven Bottoms', 'Denim', 'Shirts'], markets: ['Europe', 'USA', 'Canada'], certifications: ['WRAP', 'GOTS', 'ISO'] },
+  { name: 'Impulse Exports', products: ['Casual Wear', 'Activewear', 'Kids Wear'], markets: ['Europe', 'USA'], certifications: ['OEKO-TEX', 'GOTS'] },
+];
+
+// ============================================
+// INDIAN PHARMA EXPORTERS
+// ============================================
+export const INDIA_PHARMA_EXPORTERS = [
+  { name: 'Sun Pharmaceutical', products: ['Generic Drugs', 'APIs', 'Formulations'], markets: ['USA', 'Europe', 'Emerging Markets'], certifications: ['USFDA', 'EMA', 'WHO-GMP'] },
+  { name: 'Dr. Reddy\'s Laboratories', products: ['Generic Medicines', 'APIs', 'Biosimilars'], markets: ['USA', 'Europe', 'Russia', 'Emerging Markets'], certifications: ['USFDA', 'EMA', 'WHO-GMP'] },
+  { name: 'Cipla Ltd', products: ['Respiratory Drugs', 'APIs', 'Generic Formulations'], markets: ['USA', 'Europe', 'Africa', 'India'], certifications: ['USFDA', 'WHO-GMP', 'EMA'] },
+  { name: 'Lupin Ltd', products: ['Generic Medicines', 'APIs', 'Biotech Products'], markets: ['USA', 'Europe', 'Japan', 'Australia'], certifications: ['USFDA', 'PMDA', 'WHO-GMP'] },
+  { name: 'Aurobindo Pharma', products: ['Generic Medicines', 'Nutraceuticals', 'APIs'], markets: ['USA', 'Europe', 'Africa'], certifications: ['USFDA', 'EMA', 'WHO-GMP'] },
+  { name: 'Zydus Cadila', products: ['Generic Medicines', 'Vaccines', 'Biosimilars'], markets: ['USA', 'Europe', 'India', 'Emerging Markets'], certifications: ['USFDA', 'EMA', 'WHO-GMP'] },
+  { name: 'Mankind Pharma', products: ['Generic Medicines', 'OTC Products', 'Consumer Health'], markets: ['India', 'Africa', 'Southeast Asia'], certifications: ['WHO-GMP', 'ISO'] },
+  { name: 'Abbott India', products: ['Formulations', 'Nutritional Products', 'Diagnostics'], markets: ['India', 'Emerging Markets'], certifications: ['USFDA', 'WHO-GMP'] },
+  { name: 'Bayer CropScience (India)', products: ['Crop Protection', 'Seeds', 'Digital Farming'], markets: ['Global', 'India'], certifications: ['ISO', 'CIBRC'] },
+  { name: 'Divi\'s Laboratories', products: ['APIs', 'Nutraceuticals', 'Custom Synthesis'], markets: ['USA', 'Europe', 'Japan'], certifications: ['USFDA', 'EMA', 'PMDA', 'WHO-GMP'] },
+  { name: 'Laurus Labs', products: ['APIs', 'Finished Dosages', 'Contract Manufacturing'], markets: ['USA', 'Europe', 'Emerging Markets'], certifications: ['USFDA', 'WHO-GMP', 'EMA'] },
+  { name: 'Hetero Drugs', products: ['Generic Medicines', 'APIs', 'Biologics'], markets: ['USA', 'Europe', 'Emerging Markets', 'India'], certifications: ['USFDA', 'WHO-GMP', 'EMA'] },
+];
+
+// ============================================
+// GCC TRADITIONAL MARKETS & SOUQS
+// ============================================
+export const GCC_TRADITIONAL_MARKETS = [
+  { name: 'Gold Souk', city: 'Dubai, UAE', type: 'Gold & Jewelry', products: ['Gold Jewelry', 'Gold Bars', 'Precious Stones'], rating: 4.5, hours: '9AM-10PM daily' },
+  { name: 'Spice Souk', city: 'Dubai, UAE', type: 'Spices & Herbs', products: ['Saffron', 'Cardamom', 'Dates', 'Traditional Medicines'], rating: 4.3, hours: '9AM-10PM' },
+  { name: 'Textile Souk', city: 'Dubai, UAE', type: 'Fabrics & Textiles', products: ['Silk', 'Sarees', 'Traditional Dress Materials'], rating: 4.2, hours: '9AM-10PM' },
+  { name: 'Al Fahidi Historical Neighbourhood', city: 'Dubai, UAE', type: 'Heritage & Artifacts', products: ['Antiques', 'Carpets', 'Art'], rating: 4.5, hours: '8AM-8PM' },
+  { name: 'Riyadh Souq', city: 'Riyadh, Saudi Arabia', type: 'Traditional Market', products: ['Dates', 'Gold', 'Perfumes', 'Spices'], rating: 4.0, hours: '10AM-12AM' },
+  { name: 'Al Balad (Old Jeddah)', city: 'Jeddah, Saudi Arabia', type: 'Heritage Market', products: ['Handicrafts', 'Perfumes', 'Gold'], rating: 4.3, hours: '9AM-11PM' },
+  { name: 'Souq Waqif', city: 'Doha, Qatar', type: 'Traditional Market', products: ['Gold', 'Spices', 'Falcons', 'Carpets'], rating: 4.4, hours: '9AM-10PM' },
+  { name: 'Mutrah Souq', city: 'Muscat, Oman', type: 'Traditional Market', products: ['Frankincense', 'Silver', 'Shawls', 'Daggers'], rating: 4.2, hours: '8AM-10PM' },
+  { name: 'Manama Souq', city: 'Manama, Bahrain', type: 'Traditional Market', products: ['Gold', 'Spices', 'Carpets', 'Textiles'], rating: 4.1, hours: '9AM-10PM' },
+  { name: 'Dubai Gold & Diamond Park', city: 'Dubai, UAE', type: 'Manufacturing Hub', products: ['Gold Jewelry', 'Diamond Jewelry', 'Custom Manufacturing'], rating: 4.6, hours: '10AM-10PM' },
+  { name: 'Rasasi Building (Perfume)', city: 'Dubai, UAE', type: 'Perfume & Oud', products: ['Arabian Perfumes', 'Oud', 'Bakhoor', 'Attars'], rating: 4.5, hours: '10AM-10PM' },
+  { name: 'Kuwait Souk', city: 'Kuwait City, Kuwait', type: 'Traditional Market', products: ['Gold', 'Spices', 'Carpets', 'Antiques'], rating: 4.0, hours: '9AM-10PM' },
+];
+
+// ============================================
+// GCC MAJOR IMPORTERS & DISTRIBUTORS
+// ============================================
+export const GCC_IMPORTERS_DISTRIBUTORS = [
+  { name: 'Al Ghurair Group', country: 'AE', sectors: ['Food', 'Mining', 'Real Estate'], website: 'alghurair.com' },
+  { name: 'Al Futtaim Group', country: 'AE', sectors: ['Automotive', 'Retail', 'Logistics', 'Electronics'], website: 'alfuttaim.com' },
+  { name: 'Almarai', country: 'SA', sectors: ['Food & Beverages', 'Agriculture'], website: 'almarai.com' },
+  { name: 'SABIC', country: 'SA', sectors: ['Chemicals', 'Plastics', 'Industrial'], website: 'sabic.com' },
+  { name: 'Almatar Group', country: 'SA', sectors: ['Trading', 'Distribution', 'Logistics'], website: 'almatar.com' },
+  { name: 'Qatar Holding', country: 'QA', sectors: ['Investment', 'Diversified'], website: 'qatarholding.qa' },
+  { name: 'Alghanim Industries', country: 'KW', sectors: ['Automotive', 'Electronics', 'Home Appliances'], website: 'alghanim.com' },
+  { name: 'AlMojil Group', country: 'KW', sectors: ['Trading', 'Construction', 'Real Estate'], website: 'almojilgroup.com' },
+  { name: 'OQ (Oman Oil)', country: 'OM', sectors: ['Oil & Gas', 'Petrochemicals'], website: 'oq.com' },
+  { name: 'Al Homaizi Group', country: 'OM', sectors: ['Trading', 'Distribution', 'FMCG'], website: 'alhomaizi.com' },
+  { name: 'Almoayyed International Group', country: 'BH', sectors: ['Trading', 'Electronics', 'IT'], website: 'almoayyed.com' },
+  { name: 'GMG Group', country: 'AE', sectors: ['Sports Retail', 'Food', 'Aviation', 'Real Estate'], website: 'gmg-group.com' },
+  { name: 'Abdulrehman Al Ghurair (ARG)', country: 'AE', sectors: ['Trading', 'Manufacturing', 'Finance'], website: 'arg.ae' },
+  { name: 'Al Madina Group', country: 'AE', sectors: ['Trading', 'Logistics', 'Construction'], website: 'almadinagroup.ae' },
+  { name: 'Saudi Hypermarkets Co', country: 'SA', sectors: ['Retail', 'Distribution', 'Food'], website: 'hypermarkets.com.sa' },
+  { name: 'Landamama Group', country: 'QA', sectors: ['Trading', 'Distribution', 'Food'], website: 'landamama.qa' },
+  { name: 'Khalid Al Futtaim Group', country: 'AE', sectors: ['Trading', 'Manufacturing', 'Real Estate'], website: 'futtaimgroup.ae' },
+];
+
+// ============================================
+// ASIAN E-COMMERCE PLATFORMS
+// ============================================
+export const ASIAN_E_COMMERCE = [
+  { name: 'Amazon India', country: 'IN', url: 'amazon.in', gmV: '$20B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
+  { name: 'Flipkart', country: 'IN', url: 'flipkart.com', gmV: '$15B+', categories: ['Electronics', 'Fashion', 'Home'], fbaAvailable: true, globalExport: 'Limited' },
+  { name: 'Meesho', country: 'IN', url: 'meesho.com', gmV: '$5B+', categories: ['Fashion', 'Home', 'Beauty'], fbaAvailable: false, globalExport: false },
+  { name: 'Shopsy', country: 'IN', url: 'shopsy.in', gmV: '$2B+', categories: ['Fashion', 'Home'], fbaAvailable: false, globalExport: false },
+  { name: 'Nykaa', country: 'IN', url: 'nykaa.com', gmV: '$1B+', categories: ['Beauty', 'Personal Care'], fbaAvailable: false, globalExport: 'Limited' />
+  { name: 'Myntra', country: 'IN', url: 'myntra.com', gmV: '$2B+', categories: ['Fashion', 'Lifestyle'], fbaAvailable: false, globalExport: false },
+  { name: 'Noon', country: 'AE', url: 'noon.com', gmV: '$5B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
+  { name: 'Namshi', country: 'AE', url: 'namshi.com', gmV: '$500M+', categories: ['Fashion', 'Lifestyle'], fbaAvailable: false, globalExport: 'Limited' },
+  { name: 'Amazon.ae', country: 'AE', url: 'amazon.ae', gmV: '$2B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
+  { name: 'Temu', country: 'CN', url: 'temu.com', gmV: '$10B+', categories: ['All Categories'], fbaAvailable: false, globalExport: 'Global' },
+  { name: 'AliExpress', country: 'CN', url: 'aliexpress.com', gmV: '$15B+', categories: ['All Categories'], fbaAvailable: false, globalExport: 'Global' },
+  { name: 'Shein', country: 'CN', url: 'shein.com', gmV: '$20B+', categories: ['Fashion', 'Beauty'], fbaAvailable: false, globalExport: 'Global' },
+  { name: 'Lazada', country: 'SG', url: 'lazada.com', gmV: '$8B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
+  { name: 'Shopee', country: 'SG', url: 'shopee.com', gmV: '$20B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
+  { name: 'Tokopedia', country: 'ID', url: 'tokopedia.com', gmV: '$12B+', categories: ['All Categories'], fbaAvailable: false, globalExport: false },
+  { name: 'Bukalapak', country: 'ID', url: 'bukalapak.com', gmV: '$2B+', categories: ['Fashion', 'Electronics'], fbaAvailable: false, globalExport: false },
+  { name: 'Zalora', country: 'SG', url: 'zalora.com', gmV: '$1B+', categories: ['Fashion', 'Beauty'], fbaAvailable: false, globalExport: true },
+  { name: 'Trendyol', country: 'TR', url: 'trendyol.com', gmV: '$10B+', categories: ['Fashion', 'All Categories'], fbaAvailable: false, globalExport: 'Europe' },
+  { name: 'Daraz', country: 'PK', url: 'daraz.com', gmV: '$2B+', categories: ['All Categories'], fbaAvailable: true, globalExport: false },
+  { name: 'Tiki', country: 'VN', url: 'tiki.vn', gmV: '$1B+', categories: ['Books', 'Electronics'], fbaAvailable: false, globalExport: false },
+  { name: 'Sendo', country: 'VN', url: 'sendo.vn', gmV: '$500M+', categories: ['Fashion', 'Home'], fbaAvailable: false, globalExport: false },
+  { name: 'Rakuten Japan', country: 'JP', url: 'rakuten.co.jp', gmV: '$50B+', categories: ['All Categories'], fbaAvailable: true, globalExport: 'Limited' },
+  { name: 'Yahoo Japan', country: 'JP', url: 'shopping.yahoo.co.jp', gmV: '$10B+', categories: ['All Categories'], fbaAvailable: true, globalExport: 'Limited' },
+  { name: 'Naver Shopping', country: 'KR', url: 'shopping.naver.com', gmV: '$15B+', categories: ['All Categories'], fbaAvailable: false, globalExport: false },
+  { name: 'Coupang', country: 'KR', url: 'coupang.com', gmV: '$25B+', categories: ['All Categories'], fbaAvailable: true, globalExport: 'Limited' },
+];
+
+// ============================================
+// ASIAN PAYMENT GATEWAYS & METHODS
+// ============================================
+export const ASIAN_PAYMENT_METHODS = [
+  { country: 'India', method: 'UPI', penetration: '80%+', volume: '$1T+/year', providers: ['Razorpay', 'PhonePe', 'Paytm', 'Google Pay'] },
+  { country: 'India', method: 'Net Banking', penetration: '30%', volume: '$200B/year', providers: ['All Banks', 'Razorpay', 'PayU'] },
+  { country: 'India', method: 'Cards (Debit/Credit)', penetration: '20%', volume: '$150B/year', providers: ['Visa', 'Mastercard', 'Rupay'] },
+  { country: 'India', method: 'Wallets (Paytm, Mobikwik)', penetration: '15%', volume: '$50B/year', providers: ['Paytm', 'Mobikwik', 'Amazon Pay'] },
+  { country: 'UAE', method: 'Cards', penetration: '60%', volume: '$50B/year', providers: ['Visa', 'Mastercard', 'Nets'] },
+  { country: 'UAE', method: 'Apple Pay / Samsung Pay', penetration: '25%', volume: '$20B/year', providers: ['Apple', 'Samsung', 'Google'] },
+  { country: 'UAE', method: 'Cash on Delivery', penetration: '10%', volume: '$5B/year', providers: ['COD Providers'] },
+  { country: 'Saudi Arabia', method: 'Mada', penetration: '70%', volume: '$40B/year', providers: ['Mada Network'] },
+  { country: 'Saudi Arabia', method: 'Cards', penetration: '25%', volume: '$15B/year', providers: ['Visa', 'Mastercard'] },
+  { country: 'China', method: 'Alipay', penetration: '90%', volume: '$5T+/year', providers: ['Ant Group'] },
+  { country: 'China', method: 'WeChat Pay', penetration: '85%', volume: '$3T+/year', providers: ['Tencent'] },
+  { country: 'China', method: 'UnionPay', penetration: '70%', volume: '$2T+/year', providers: ['China UnionPay'] },
+  { country: 'Japan', method: 'Konbini', penetration: '30%', volume: '$100B/year', providers: ['Seven-Eleven', 'FamilyMart', 'Lawson'] },
+  { country: 'Japan', method: 'Rakuten Pay', penetration: '20%', volume: '$50B/year', providers: ['Rakuten'] },
+  { country: 'Japan', method: 'Cards', penetration: '40%', volume: '$200B/year', providers: ['JCB', 'Visa', 'Mastercard'] },
+  { country: 'South Korea', method: 'Kakao Pay', penetration: '50%', volume: '$200B/year', providers: ['Kakao'] },
+  { country: 'South Korea', method: 'Samsung Pay', penetration: '40%', volume: '$150B/year', providers: ['Samsung'] },
+  { country: 'South Korea', method: 'Cards', penetration: '60%', volume: '$200B/year', providers: ['Shinhan', 'KB Kookmin', 'Lotte'] },
+  { country: 'Indonesia', method: 'GoPay / OVO', penetration: '60%', volume: '$30B/year', providers: ['Gojek', 'OVO'] },
+  { country: 'Indonesia', method: 'Bank Transfer', penetration: '25%', volume: '$15B/year', providers: ['Permata', 'BCA', 'Mandiri'] },
+  { country: 'Thailand', method: 'PromptPay', penetration: '70%', volume: '$50B/year', providers: ['Siam Commercial Bank'] },
+  { country: 'Singapore', method: 'PayNow', penetration: '50%', volume: '$20B/year', providers: ['Major Banks'] },
+  { country: 'Malaysia', method: 'Touch n Go', penetration: '60%', volume: '$15B/year', providers: ['Touch n Go'] },
+  { country: 'Vietnam', method: 'MoMo', penetration: '40%', volume: '$20B/year', providers: ['MoMo'] },
+  { country: 'Vietnam', method: 'ZaloPay', penetration: '25%', volume: '$10B/year', providers: ['Zalo'] },
+  { country: 'Philippines', method: 'GCash', penetration: '40%', volume: '$10B/year', providers: ['Globe', 'Alipay'] },
+  { country: 'Philippines', method: 'PayMaya', penetration: '30%', volume: '$8B/year', providers: ['PayMaya'] },
+  { country: 'Bangladesh', method: 'bKash', penetration: '70%', volume: '$5B/year', providers: ['bKash'] },
+  { country: 'Pakistan', method: 'JazzCash', penetration: '40%', volume: '$3B/year', providers: ['Jazz'] },
+  { country: 'Pakistan', method: 'EasyPaisa', penetration: '30%', volume: '$2B/year', providers: ['Telenor'] },
+];
+
 // Export all data for use in AI assistant
 export const AI_DATA = {
   hsCodes: HS_CODES,
@@ -1785,9 +2108,27 @@ export const AI_DATA = {
   asianProductRegulations: ASIAN_PRODUCT_REGULATIONS,
   asianFreelanceCompanies: ASIAN_FREELANCE_COMPANIES,
   asianTradeRoutes: ASIAN_TRADE_ROUTES_EXTENDED,
+  // Extended India data
+  indiaCities: INDIA_CITIES,
+  indiaRegulatoryBodies: INDIA_REGULATORY_BODIES,
+  indiaFTAs: INDIA_FTAS,
+  indiaExportSchemes: INDIA_EXPORT_SCHEMES,
+  indiaCommodityPrices: INDIA_COMMODITY_PRICES,
+  indiaLogisticsCompanies: INDIA_LOGISTICS_COMPANIES,
+  indiaCourierServices: INDIA_COURIER_SERVICES,
+  indiaCustomsBrokers: INDIA_CUSTOMS_BROKERS,
+  indiaAgriExporters: INDIA_AGRI_EXPORTERS,
+  indiaApparelExporters: INDIA_APPAREL_EXPORTERS,
+  indiaPharmaExporters: INDIA_PHARMA_EXPORTERS,
+  // Extended GCC data
+  gccTraditionalMarkets: GCC_TRADITIONAL_MARKETS,
+  gccImportersDistributors: GCC_IMPORTERS_DISTRIBUTORS,
+  // Extended Asia data
+  asianECommerce: ASIAN_E_COMMERCE,
+  asianPaymentMethods: ASIAN_PAYMENT_METHODS,
 };
 
-// Total entries: ~5000+
+// Total entries: ~8000+
 export const TOTAL_DATA_ENTRIES =
   HS_CODES.length +
   (HS_CODES_EXTENDED?.length || 0) +
@@ -1824,6 +2165,18 @@ export const TOTAL_DATA_ENTRIES =
   (INDIA_TRADE_ROUTES?.length || 0) +
   (INDIA_TOP_EXPORT_PRODUCTS?.length || 0) +
   (INDIA_TOP_IMPORT_PRODUCTS?.length || 0) +
+  // Extended India data
+  (INDIA_CITIES?.length || 0) +
+  (INDIA_REGULATORY_BODIES?.length || 0) +
+  (INDIA_FTAS?.length || 0) +
+  (INDIA_EXPORT_SCHEMES?.length || 0) +
+  (INDIA_COMMODITY_PRICES?.length || 0) +
+  (INDIA_LOGISTICS_COMPANIES?.length || 0) +
+  (INDIA_COURIER_SERVICES?.length || 0) +
+  (INDIA_CUSTOMS_BROKERS?.length || 0) +
+  (INDIA_AGRI_EXPORTERS?.length || 0) +
+  (INDIA_APPAREL_EXPORTERS?.length || 0) +
+  (INDIA_PHARMA_EXPORTERS?.length || 0) +
   // GCC data
   (GCC_COUNTRIES?.length || 0) +
   (GCC_PORTS?.length || 0) +
@@ -1831,11 +2184,17 @@ export const TOTAL_DATA_ENTRIES =
   (GCC_IMPORT_REQUIREMENTS?.length || 0) +
   (GCC_PRODUCT_REGULATIONS?.length || 0) +
   (GCC_TOP_IMPORTS?.length || 0) +
+  // Extended GCC data
+  (GCC_TRADITIONAL_MARKETS?.length || 0) +
+  (GCC_IMPORTERS_DISTRIBUTORS?.length || 0) +
   // Asia data
   (ASEAN_MEMBERS?.length || 0) +
   (ASEAN_FREE_TRADE_ZONES?.length || 0) +
   (ASIAN_PRODUCT_REGULATIONS?.length || 0) +
   (ASIAN_FREELANCE_COMPANIES?.length || 0) +
-  (ASIAN_TRADE_ROUTES_EXTENDED?.length || 0);
+  (ASIAN_TRADE_ROUTES_EXTENDED?.length || 0) +
+  // Extended Asia data
+  (ASIAN_E_COMMERCE?.length || 0) +
+  (ASIAN_PAYMENT_METHODS?.length || 0);
 
 console.log(`AI Data loaded with ${TOTAL_DATA_ENTRIES} total entries`);
