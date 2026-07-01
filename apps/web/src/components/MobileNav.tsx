@@ -23,10 +23,10 @@ import {
 
 const mainNavItems = [
   { name: 'Home', href: '/dashboard', icon: Home },
-  { name: 'Browse', href: '/marketplace', icon: Search },
-  { name: 'Post RFQ', href: '/rfqs/new', icon: Plus, isAction: true },
-  { name: 'Inbox', href: '/marketplace/inbox', icon: MessageSquare },
-  { name: 'Account', href: '/settings', icon: User },
+  { name: 'Freight', href: '/freight', icon: Truck },
+  { name: 'Sell', href: '/products/new', icon: Plus, isAction: true },
+  { name: 'Experts', href: '/consultations', icon: Headphones },
+  { name: 'Inbox', href: '/messages', icon: MessageSquare },
 ];
 
 const secondaryNavItems = [
