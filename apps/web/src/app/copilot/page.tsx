@@ -89,7 +89,7 @@ How can I help today?`,
       return { intent: 'analytics_comparison', category: 'Analytics', entities: {} };
     }
 
-    if (lower.match(/outstanding|invoice.*due|overdue|pending payment/i)) {
+    if (lower.match(/outstanding|invoice.*due|overdue|pending payment|show.*invoice/i)) {
       return { intent: 'finance_outstanding', category: 'Finance', entities: {} };
     }
 
@@ -775,12 +775,18 @@ What would you like to do?`;
   // ============================================================================
 
   const quickActions: QuickAction[] = [
-    { label: 'Sales', command: 'What are my sales this month?', icon: 'BarChart3' },
-    { label: 'Buy', command: 'I want to buy cotton shirts from Vietnam', icon: 'ShoppingCart' },
-    { label: 'Sell', command: 'I want to sell tea to UAE', icon: 'TrendingUp' },
-    { label: 'Track', command: 'Track shipment MSCKU123456', icon: 'Truck' },
-    { label: 'Invoice', command: 'Generate invoice for order #5432', icon: 'FileText' },
-    { label: 'Suppliers', command: 'Which supplier generated the most revenue?', icon: 'Users' },
+    { label: '💰 Outstanding', command: 'Show outstanding invoices', icon: 'CreditCard' },
+    { label: '📊 My Sales', command: 'What are my sales this month?', icon: 'BarChart3' },
+    { label: '🛒 Buy', command: 'I want to buy cotton shirts from Vietnam', icon: 'ShoppingCart' },
+    { label: '📦 Sell', command: 'I want to sell tea to UAE', icon: 'TrendingUp' },
+    { label: '🚢 Track', command: 'Track shipment MSCKU123456', icon: 'Truck' },
+    { label: '📄 Invoice', command: 'Generate invoice for order #5432', icon: 'FileText' },
+    { label: '🔍 Suppliers', command: 'Which supplier generated the most revenue?', icon: 'Users' },
+    { label: '📈 Compare', command: 'Compare this year vs last year', icon: 'BarChart3' },
+    { label: '🚢 Book Freight', command: 'Book cheapest freight to Germany', icon: 'Truck' },
+    { label: '📞 Answer Calls', command: 'Answer my supplier calls', icon: 'Phone' },
+    { label: '🔄 Repeat Order', command: 'Repeat my last Germany shipment', icon: 'ShoppingCart' },
+    { label: '🔒 Create Escrow', command: 'Create escrow for this order', icon: 'Lock' },
   ];
 
   return (
