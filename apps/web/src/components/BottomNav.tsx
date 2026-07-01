@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Plus, MessageSquare, FileText, Package, Truck, Settings, User, BarChart3, Shield, Briefcase } from 'lucide-react';
+import { Home, Search, Plus, MessageSquare, FileText, Package, Truck, Settings, User, BarChart3, Shield, Briefcase, Headphones, MapPin } from 'lucide-react';
 
 interface BottomNavProps {
   activeItem?: string;
@@ -14,11 +14,16 @@ const idMapping: Record<string, string> = {
   'order': 'home',
   'products': 'home',
   'product': 'home',
-  'compliance': 'home',
-  'ai': 'home',
-  'settings': 'home',
-  'account': 'home',
-  'analytics': 'home',
+  'compliance': 'compliance',
+  'ai': 'ai',
+  'settings': 'settings',
+  'account': 'settings',
+  'analytics': 'analytics',
+  'freight': 'freight',
+  'freight/quotes': 'freight',
+  'freight/features': 'freight',
+  'consultations': 'consultations',
+  'consultations/schedule': 'consultations',
   'browse': 'browse',
   'marketplace': 'browse',
   'sell': 'sell',
@@ -33,10 +38,10 @@ const idMapping: Record<string, string> = {
 
 const navItems = [
   { id: 'home', href: '/dashboard', icon: Home, label: 'Home' },
-  { id: 'browse', href: '/marketplace', icon: Search, label: 'Browse' },
+  { id: 'freight', href: '/freight', icon: Truck, label: 'Freight' },
   { id: 'sell', href: '/products/new', icon: Plus, label: 'Sell', primary: true },
-  { id: 'rfq', href: '/rfqs/new', icon: FileText, label: 'Post RFQ' },
-  { id: 'inbox', href: '/marketplace/inbox', icon: MessageSquare, label: 'Inbox' },
+  { id: 'consultations', href: '/consultations', icon: Headphones, label: 'Experts' },
+  { id: 'inbox', href: '/messages', icon: MessageSquare, label: 'Inbox' },
 ];
 
 export default function BottomNav({ activeItem = 'home' }: BottomNavProps) {
