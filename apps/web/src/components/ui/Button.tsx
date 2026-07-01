@@ -7,18 +7,20 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'accent' | 'secondary' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] disabled:opacity-50 disabled:cursor-not-allowed';
+  ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
+    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed gap-2';
 
     const variants = {
-      primary: 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]/90 active:scale-[0.98]',
-      accent: 'bg-[var(--color-accent)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent-light)] active:scale-[0.98]',
-      secondary: 'bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent)]/30',
-      ghost: 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]/50',
-      outline: 'border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10',
+      primary: 'bg-[#154230] text-white hover:bg-[#1a5a3a] active:scale-[0.98]',
+      accent: 'bg-[#A6824A] text-white hover:bg-[#8a6a3a] active:scale-[0.98]',
+      secondary: 'bg-[#E6E2DA] text-[#101111] hover:bg-[#D5D1C9] active:scale-[0.98]',
+      ghost: 'text-[#4A4A4A] hover:bg-black/5 active:scale-[0.98]',
+      outline: 'border-2 border-[#154230] text-[#154230] hover:bg-[#154230]/5 active:scale-[0.98]',
     };
 
     const sizes = {
@@ -42,7 +44,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             </svg>
             Loading...
           </>
-        ) : children}
+        ) : (
+          <>
+            {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+            {children}
+            {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+          </>
+        )}
       </button>
     );
   }
