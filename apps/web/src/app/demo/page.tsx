@@ -1538,8 +1538,8 @@ function AISection() {
             <Bot className="w-4 h-4" style={{ color: '#0891B2' }} />
             <span className="text-sm font-medium" style={{ color: '#0891B2' }}>Powered by HOJAI AI</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: '#101111' }}>Your AI Trade Partner</h2>
-          <p className="text-lg" style={{ color: '#4A4A4A' }}>Natural language commands for documents, compliance, and insights</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: '#101111' }}>Your AI Agent Works Autonomously</h2>
+          <p className="text-lg" style={{ color: '#4A4A4A' }}>Just tell me what you need. I'll do everything for you.</p>
         </div>
 
         <div className="rounded-2xl overflow-hidden shadow-xl" style={{ backgroundColor: 'white' }}>
