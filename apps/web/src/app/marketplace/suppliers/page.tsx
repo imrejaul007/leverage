@@ -23,15 +23,44 @@ import { products } from '@/data/products';
 
 // Sample suppliers data
 const suppliersData = [
-  { id: 'sup-001', name: 'Global Trade Exports', location: 'Mumbai, Maharashtra', country: 'India', rating: 4.8, reviews: 128, products: 45, years: 12, gst: true, verified: true, type: 'Exporter', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200' },
-  { id: 'sup-002', name: 'Cotton World Ltd', location: 'Ahmedabad, Gujarat', country: 'India', rating: 4.7, reviews: 96, products: 32, years: 8, gst: true, verified: true, type: 'Manufacturer', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200' },
-  { id: 'sup-003', name: 'MetalLink Global', location: 'Dubai, UAE', country: 'UAE', rating: 4.9, reviews: 78, products: 28, years: 15, gst: true, verified: true, type: 'Exporter', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200' },
-  { id: 'sup-004', name: 'Shanghai Import Co.', location: 'Shanghai, China', country: 'China', rating: 4.6, reviews: 89, products: 56, years: 6, gst: false, verified: false, type: 'Manufacturer', image: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200' },
-  { id: 'sup-005', name: 'Turkey Merchants', location: 'Istanbul, Turkey', country: 'Turkey', rating: 4.9, reviews: 156, products: 67, years: 18, gst: true, verified: true, type: 'Exporter', image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=200' },
+  // India
+  { id: 'sup-001', name: 'Global Trade Exports', location: 'Mumbai, Maharashtra', country: 'India', rating: 4.8, reviews: 128, products: 45, years: 12, gst: true, verified: true, type: 'Exporter' },
+  { id: 'sup-002', name: 'Cotton World Ltd', location: 'Ahmedabad, Gujarat', country: 'India', rating: 4.7, reviews: 96, products: 32, years: 8, gst: true, verified: true, type: 'Manufacturer' },
+  { id: 'sup-006', name: 'Spice Route International', location: 'Kochi, Kerala', country: 'India', rating: 4.9, reviews: 210, products: 78, years: 15, gst: true, verified: true, type: 'Exporter' },
+  // UAE
+  { id: 'sup-003', name: 'MetalLink Global', location: 'Dubai, UAE', country: 'UAE', rating: 4.9, reviews: 78, products: 28, years: 15, gst: true, verified: true, type: 'Exporter' },
+  { id: 'sup-007', name: 'Gulf Trading House', location: 'Abu Dhabi, UAE', country: 'UAE', rating: 4.6, reviews: 45, products: 34, years: 10, gst: true, verified: true, type: 'Distributor' },
+  // China
+  { id: 'sup-004', name: 'Shanghai Import Co.', location: 'Shanghai, China', country: 'China', rating: 4.6, reviews: 89, products: 56, years: 6, gst: false, verified: false, type: 'Manufacturer' },
+  { id: 'sup-008', name: 'Shenzhen Electronics', location: 'Shenzhen, China', country: 'China', rating: 4.5, reviews: 67, products: 89, years: 8, gst: false, verified: false, type: 'Manufacturer' },
+  // Turkey
+  { id: 'sup-005', name: 'Turkey Merchants', location: 'Istanbul, Turkey', country: 'Turkey', rating: 4.9, reviews: 156, products: 67, years: 18, gst: true, verified: true, type: 'Exporter' },
+  // Singapore
+  { id: 'sup-009', name: 'Asia Pacific Trading', location: 'Singapore', country: 'Singapore', rating: 4.8, reviews: 92, products: 54, years: 12, gst: true, verified: true, type: 'Exporter' },
+  // USA
+  { id: 'sup-010', name: 'American Imports LLC', location: 'Houston, Texas', country: 'USA', rating: 4.7, reviews: 58, products: 41, years: 9, gst: false, verified: true, type: 'Importer' },
+  // Germany
+  { id: 'sup-011', name: 'EuroTrade GmbH', location: 'Hamburg, Germany', country: 'Germany', rating: 4.9, reviews: 134, products: 62, years: 20, gst: true, verified: true, type: 'Distributor' },
   { id: 'sup-006', name: 'Ethiopia Direct', location: 'Addis Claude, Ethiopia', country: 'Ethiopia', rating: 4.8, reviews: 64, products: 23, years: 10, gst: true, verified: true, type: 'Exporter', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=200' },
 ];
 
-const cities = ['All India', 'Mumbai', 'Delhi', 'Ahmedabad', 'Surat', 'Dubai', 'Shanghai', 'Istanbul'];
+const cities = [
+  'All India',
+  // India
+  'Mumbai', 'Delhi', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Jaipur', 'Lucknow', 'Chandigarh',
+  // Middle East
+  'Dubai', 'Abu Dhabi', 'Riyadh', 'Jeddah', 'Doha', 'Muscat', 'Kuwait City', 'Manama', 'Beirut',
+  // Southeast Asia
+  'Singapore', 'Kuala Lumpur', 'Bangkok', 'Jakarta', 'Manila', 'Ho Chi Minh City', 'Hanoi',
+  // East Asia
+  'Shanghai', 'Beijing', 'Hong Kong', 'Tokyo', 'Seoul',
+  // Europe
+  'London', 'Amsterdam', 'Hamburg', 'Milan', 'Paris', 'Frankfurt',
+  // USA
+  'New York', 'Los Angeles', 'Houston', 'Chicago',
+  // Africa
+  'Cairo', 'Lagos', 'Nairobi', 'Johannesburg'
+];
 const businessTypes = ['All Types', 'Manufacturer', 'Exporter', 'Wholesaler', 'Distributor'];
 
 function WhatsAppIcon({ className = "w-4 h-4" }: { className?: string }) {

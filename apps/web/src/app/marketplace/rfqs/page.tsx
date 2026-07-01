@@ -22,8 +22,11 @@ const rfqsData = [
   { id: 'rfq-001', title: 'Basmati Rice 1121 Steam', quantity: '500 MT', budget: '$4,50,000', location: 'Dubai, UAE', deadline: '15 days', responses: 12, category: 'Food & Agriculture', status: 'active' },
   { id: 'rfq-002', title: 'Copper Cathode 99.99%', quantity: '100 MT', budget: '$7,50,000', location: 'Mumbai, India', deadline: '7 days', responses: 8, category: 'Metals & Minerals', status: 'active' },
   { id: 'rfq-003', title: 'Cotton Yarn 40s Ne', quantity: '50,000 KG', budget: '$2,10,000', location: 'Surat, India', deadline: '30 days', responses: 5, category: 'Textiles', status: 'active' },
-  { id: 'rfq-004', title: 'Solar Panels 550W', quantity: '10,000 units', budget: '$16,50,000', location: 'Delhi, India', deadline: '45 days', responses: 3, category: 'Energy', status: 'active' },
+  { id: 'rfq-004', title: 'Solar Panels 550W', quantity: '10,000 units', budget: '$16,50,000', location: 'Riyadh, Saudi Arabia', deadline: '45 days', responses: 3, category: 'Energy', status: 'active' },
   { id: 'rfq-005', title: 'Olive Oil Extra Virgin', quantity: '20 MT', budget: '$90,000', location: 'London, UK', deadline: '20 days', responses: 15, category: 'Food & Agriculture', status: 'closed' },
+  { id: 'rfq-006', title: 'Steel Billets IS 2062', quantity: '200 MT', budget: '$1,24,000', location: 'Singapore', deadline: '10 days', responses: 7, category: 'Metals & Minerals', status: 'active' },
+  { id: 'rfq-007', title: 'Coffee Beans Arabica', quantity: '50 MT', budget: '$1,60,000', location: 'Hamburg, Germany', deadline: '25 days', responses: 4, category: 'Food & Agriculture', status: 'active' },
+  { id: 'rfq-008', title: 'Cotton Fabric Grey', quantity: '100,000 meters', budget: '$80,000', location: 'Jakarta, Indonesia', deadline: '30 days', responses: 9, category: 'Textiles', status: 'active' },
 ];
 
 const categories = ['All', 'Food & Agriculture', 'Textiles', 'Metals & Minerals', 'Energy', 'Chemicals'];

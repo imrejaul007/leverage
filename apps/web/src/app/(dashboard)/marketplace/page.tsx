@@ -36,7 +36,23 @@ const categories = [
   { name: 'Energy', emoji: '⚡' },
 ];
 
-const nearbyCities = ['All India', 'Delhi', 'Mumbai', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore'];
+const nearbyCities = [
+  'All India',
+  // India
+  'Mumbai', 'Delhi', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Jaipur', 'Lucknow', 'Chandigarh',
+  // Middle East
+  'Dubai', 'Abu Dhabi', 'Sharjah', 'Riyadh', 'Jeddah', 'Doha', 'Muscat', 'Kuwait City', 'Manama', 'Beirut',
+  // Southeast Asia
+  'Singapore', 'Kuala Lumpur', 'Bangkok', 'Jakarta', 'Manila', 'Ho Chi Minh City', 'Hanoi',
+  // East Asia
+  'Shanghai', 'Beijing', 'Hong Kong', 'Tokyo', 'Seoul',
+  // Europe
+  'London', 'Amsterdam', 'Hamburg', 'Milan', 'Paris', 'Frankfurt',
+  // USA
+  'New York', 'Los Angeles', 'Houston', 'Chicago',
+  // Africa
+  'Cairo', 'Lagos', 'Nairobi', 'Johannesburg'
+];
 
 const priceFilters = ['All Prices', 'Under 500', '500-1K', '1K-5K', 'Above 5K'];
 
