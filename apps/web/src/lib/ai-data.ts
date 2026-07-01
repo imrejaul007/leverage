@@ -1402,6 +1402,339 @@ export const PACKAGING_STANDARDS = [
   { name: 'SSCC', description: 'Serial Shipping Container Code', applicable: 'Logistics units, pallets, cartons' },
 ];
 
+// ============================================
+// INDIA-CENTRIC DATA
+// ============================================
+export const INDIA_STATES = [
+  { code: 'MH', name: 'Maharashtra', majorPorts: ['Mumbai JNPT', 'Navi Mumbai', 'Mumbai Air Cargo'], sezCount: 8, industrialHubs: ['Mumbai', 'Pune', 'Nagpur'] },
+  { code: 'TN', name: 'Tamil Nadu', majorPorts: ['Chennai', 'Tuticorin', 'Ennore'], sezCount: 6, industrialHubs: ['Chennai', 'Coimbatore', 'Madurai'] },
+  { code: 'KA', name: 'Karnataka', majorPorts: ['Mangalore', 'Karwar'], sezCount: 5, industrialHubs: ['Bangalore', 'Mysore', 'Hubli'] },
+  { code: 'GJ', name: 'Gujarat', majorPorts: ['Kandla', 'Mundra', 'Pipavav', 'Dahej'], sezCount: 4, industrialHubs: ['Ahmedabad', 'Surat', 'Vadodara'] },
+  { code: 'AP', name: 'Andhra Pradesh', majorPorts: ['Visakhapatnam', 'Kakinada'], sezCount: 3, industrialHubs: ['Vijayawada', 'Visakhapatnam'] },
+  { code: 'TS', name: 'Telangana', majorPorts: ['Hyderabad (inland)'], sezCount: 4, industrialHubs: ['Hyderabad', 'Secunderabad'] },
+  { code: 'WB', name: 'West Bengal', majorPorts: ['Kolkata', 'Haldia'], sezCount: 2, industrialHubs: ['Kolkata', 'Siliguri'] },
+  { code: 'KL', name: 'Kerala', majorPorts: ['Cochin', 'Kollam'], sezCount: 2, industrialHubs: ['Kochi', 'Thiruvananthapuram'] },
+  { code: 'OR', name: 'Odisha', majorPorts: ['Paradip', 'Dhamra'], sezCount: 2, industrialHubs: ['Bhubaneswar', 'Rourkela'] },
+  { code: 'GO', name: 'Goa', majorPorts: ['Mormugao'], sezCount: 0, industrialHubs: ['Verna'] },
+];
+
+export const INDIA_PORTS = [
+  { code: 'INBOM', name: 'Mumbai JNPT', type: 'Container', capacity: '5.5M TEU', draft: '15m', operators: ['APM Terminals', 'DP World', 'PSA'] },
+  { code: 'INMUN', name: 'Mumbai Port', type: 'General/Bulk', capacity: '1.2M TEU', draft: '10m', operators: ['Mumbai Port Trust'] },
+  { code: 'INMAH', name: 'Mundra Port', type: 'Container/Bulk', capacity: '7.0M TEU', draft: '16m', operators: ['Adani Ports'] },
+  { code: 'INKAN', name: 'Kandla Port', type: 'Bulk/Liquid', capacity: 'NA', draft: '12m', operators: ['Deendayal Port Authority'] },
+  { code: 'INTUT', name: 'Tuticorin Port', type: 'Container', capacity: '0.8M TEU', draft: '14m', operators: ['DP World'] },
+  { code: 'INCHE', name: 'Chennai Port', type: 'Container', capacity: '2.0M TEU', draft: '15m', operators: ['Chennai Port Trust'] },
+  { code: 'INKRI', name: 'Kakinada Port', type: 'Container/Bulk', capacity: '0.4M TEU', draft: '12m', operators: ['Kakinada SEZ'] },
+  { code: 'INVSK', name: 'Visakhapatnam Port', type: 'Bulk/Container', capacity: '0.6M TEU', draft: '16m', operators: ['Visakhapatnam Port Trust'] },
+  { code: 'INPAR', name: 'Paradip Port', type: 'Bulk', capacity: 'NA', draft: '14m', operators: ['Paradip Port Authority'] },
+  { code: 'INHAL', name: 'Haldia Port', type: 'Container/Bulk', capacity: '0.5M TEU', draft: '12m', operators: ['Kolkata Port Trust'] },
+  { code: 'INCOK', name: 'Cochin Port', type: 'Container', capacity: '0.6M TEU', draft: '12m', operators: ['Cochin Port Trust'] },
+  { code: 'INMNR', name: 'Mangalore Port', type: 'Bulk/Container', capacity: '0.3M TEU', draft: '14m', operators: ['New Mangalore Port Trust'] },
+  { code: 'INPIA', name: 'Pipavav Port', type: 'Container/Bulk', capacity: '1.2M TEU', draft: '14m', operators: ['APM Terminals'] },
+  { code: 'INDHA', name: 'Dhamra Port', type: 'Bulk', capacity: 'NA', draft: '18m', operators: ['Adani Ports'] },
+  { code: 'INENR', name: 'Ennore Port', type: 'Bulk', capacity: 'NA', draft: '12m', operators: ['Chennai Port Trust'] },
+];
+
+export const INDIA_SEZ = [
+  { name: 'Santacruz Electronics Export Processing Zone (SEEPZ)', location: 'Mumbai', type: 'Electronics', units: '200+', famousFor: 'Gems & Jewelry, Electronics' },
+  { name: 'SIPCOT - Sriperumbudur', location: 'Chennai', type: 'Multi-product', units: '100+', famousFor: 'Auto Components, Electronics' },
+  { name: 'Nanguneri SEZ', location: 'Tamil Nadu', type: 'Multi-product', units: '50+', famousFor: 'Textiles, Engineering' },
+  { name: 'Chennai Port SEZ', location: 'Chennai', type: 'Container', units: '30+', famousFor: 'Logistics, Trading' },
+  { name: 'Kandla SEZ (KASEZ)', location: 'Gujarat', type: 'Multi-product', units: '200+', famousFor: 'Textiles, Chemicals, Gems' },
+  { name: 'Mundra SEZ', location: 'Gujarat', type: 'Port-based', units: '100+', famousFor: 'Agri, Logistics, Trading' },
+  { name: 'JNPT SEZ', location: 'Mumbai', type: 'Container/FTWZ', units: '50+', famousFor: 'Logistics, Trading, E-commerce' },
+  { name: 'Mahindra City SEZ', location: 'Chennai', type: 'IT/ITES', units: '80+', famousFor: 'IT Services, BPO' },
+  { name: 'Cyberabad SEZ', location: 'Hyderabad', type: 'IT/ITES', units: '300+', famousFor: 'IT Services, Pharma' },
+  { name: 'Bangalore Electronics City', location: 'Bangalore', type: 'Electronics', units: '200+', famousFor: 'IT Hardware, Semiconductors' },
+  { name: 'KIADB - Electronic City Phase 2', location: 'Bangalore', type: 'Electronics', units: '100+', famousFor: 'Electronics Manufacturing' },
+  { name: 'Shedas 'SEZ - Electronics', location: 'Noida', type: 'Electronics', units: '80+', famousFor: 'Mobile Manufacturing, Electronics' },
+];
+
+export const INDIA_GST_RATES = [
+  { rate: 0, category: 'Exempt', examples: ['Fresh fruits', 'Vegetables', 'Milk', 'Bread', 'Curry powder (some)'] },
+  { rate: 0.25, category: 'Compounded', examples: ['Small traders', 'Restaurants (unbranded)'] },
+  { rate: 1, category: 'Branded goods', examples: ['Manufacturing without ITC', 'Job work'] },
+  { rate: 5, category: 'Essential goods', examples: ['Sugar', 'Tea', ' edible oil', 'Cotton yarn', 'Small restaurants'] },
+  { rate: 12, category: 'Standard (lower)', examples: ['Computers', 'Processed food', 'Business class air travel'] },
+  { rate: 18, category: 'Standard', examples: ['Most items', 'IT services', 'Financial services', 'Textiles'] },
+  { rate: 28, category: 'Standard (higher)', examples: ['Luxury goods', 'AC restaurants (5-star)', 'Cars', 'Tobacco products'] },
+];
+
+export const INDIA_HS_CODES_COMMON = [
+  { code: '090111', description: 'Coffee, not roasted, not decaffeinated', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '090121', description: 'Coffee, roasted, not decaffeinated', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '090112', description: 'Coffee, not roasted, decaffeinated', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '090211', description: 'Tea (including dust)', category: 'Agriculture', duty_rate: 100, gst: 5 },
+  { code: '090411', description: 'Pepper, neither crushed nor ground', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '090412', description: 'Pepper, crushed or ground', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '100110', description: 'Durum wheat', category: 'Agriculture', duty_rate: 50, gst: 5 },
+  { code: '100190', description: 'Other wheat (including meslin)', category: 'Agriculture', duty_rate: 50, gst: 5 },
+  { code: '120110', description: 'Soya beans, seed', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '120190', description: 'Soya beans, other', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '150710', description: 'Soya bean oil, crude', category: 'Agriculture', duty_rate: 30, gst: 5 },
+  { code: '150790', description: 'Soya bean oil, refined', category: 'Agriculture', duty_rate: 40, gst: 5 },
+  { code: '170112', description: 'Beet sugar, raw', category: 'Agriculture', duty_rate: 100, gst: 5 },
+  { code: '170199', description: 'Other cane or beet sugar', category: 'Agriculture', duty_rate: 100, gst: 5 },
+  { code: '240120', description: 'Tobacco, partly/wholly stemmed', category: 'Agriculture', duty_rate: 100, gst: 28 },
+  { code: '520100', description: 'Cotton, not carded or combed', category: 'Textiles', duty_rate: 5, gst: 5 },
+  { code: '520300', description: 'Cotton, carded or combed', category: 'Textiles', duty_rate: 5, gst: 5 },
+  { code: '610910', description: 'T-shirts, singlets, cotton', category: 'Apparel', duty_rate: 10, gst: 12 },
+  { code: '620342', description: 'Mens trousers, cotton', category: 'Apparel', duty_rate: 10, gst: 12 },
+  { code: '711311', description: 'Silver jewelry', category: 'Gems & Jewelry', duty_rate: 10, gst: 3 },
+  { code: '711319', description: 'Gold jewelry', category: 'Gems & Jewelry', duty_rate: 10, gst: 3 },
+  { code: '711320', description: 'Jewelry of base metals', category: 'Gems & Jewelry', duty_rate: 10, gst: 18 },
+  { code: '847130', description: 'Laptops, tablets', category: 'Electronics', duty_rate: 0, gst: 18 },
+  { code: '851712', description: 'Mobile phones', category: 'Electronics', duty_rate: 0, gst: 18 },
+  { code: '852872', description: 'Color TV', category: 'Electronics', duty_rate: 10, gst: 18 },
+  { code: '870322', description: 'Motor vehicles, 1000-1500cc', category: 'Automobiles', duty_rate: 60, gst: 28 },
+  { code: '870323', description: 'Motor vehicles, 1500-3000cc', category: 'Automobiles', duty_rate: 60, gst: 28 },
+  { code: '870321', description: 'Motor vehicles, <1000cc', category: 'Automobiles', duty_rate: 60, gst: 18 },
+];
+
+export const INDIA_TRADE_ROUTES = [
+  { origin: 'Shanghai', dest: 'Mumbai JNPT', mode: 'Ocean', transit: 18, freight: '$2,500/20GP', frequency: 'Daily' },
+  { origin: 'Shenzhen', dest: 'Mumbai JNPT', mode: 'Ocean', transit: 16, freight: '$2,400/20GP', frequency: 'Daily' },
+  { origin: 'Hong Kong', dest: 'Chennai', mode: 'Ocean', transit: 12, freight: '$1,800/20GP', frequency: 'Weekly' },
+  { origin: 'Singapore', dest: 'Mumbai JNPT', mode: 'Ocean', transit: 7, freight: '$1,200/20GP', frequency: 'Daily' },
+  { origin: 'Dubai', dest: 'Mumbai JNPT', mode: 'Ocean', transit: 4, freight: '$800/20GP', frequency: 'Daily' },
+  { origin: 'Colombo', dest: 'Chennai', mode: 'Ocean', transit: 1, freight: '$300/20GP', frequency: 'Daily' },
+  { origin: 'Shanghai', dest: 'Chennai', mode: 'Ocean', transit: 14, freight: '$2,200/20GP', frequency: 'Weekly' },
+  { origin: 'Busan', dest: 'Mumbai JNPT', mode: 'Ocean', transit: 10, freight: '$1,500/20GP', frequency: 'Weekly' },
+  { origin: 'Frankfurt', dest: 'Mumbai Air Cargo', mode: 'Air', transit: 1, freight: '$4.5/kg', frequency: 'Daily' },
+  { origin: 'London', dest: 'Delhi Air Cargo', mode: 'Air', transit: 1, freight: '$4.0/kg', frequency: 'Daily' },
+  { origin: 'New York', dest: 'Mumbai Air Cargo', mode: 'Air', transit: 1, freight: '$5.0/kg', frequency: 'Daily' },
+  { origin: 'Hong Kong', dest: 'Kolkata', mode: 'Ocean', transit: 12, freight: '$1,700/20GP', frequency: 'Weekly' },
+];
+
+export const INDIA_TOP_EXPORT_PRODUCTS = [
+  { hsCode: '7113', description: 'Gold & precious metal jewelry', exportValue: '$20B+', majorMarkets: ['USA', 'UAE', 'Hong Kong', 'Singapore'] },
+  { hsCode: '7108', description: 'Gold (non-monetary)', exportValue: '$35B+', majorMarkets: ['Switzerland', 'UAE', 'Singapore', 'Hong Kong'] },
+  { hsCode: '1201', description: 'Soya beans', exportValue: '$3B+', majorMarkets: ['China', 'Bangledesh', 'Vietnam', 'Iran'] },
+  { hsCode: '3004', description: 'Medicines (dosage form)', exportValue: '$20B+', majorMarkets: ['USA', 'South Africa', 'Russia', 'UK'] },
+  { hsCode: '5201', description: 'Raw cotton', exportValue: '$5B+', majorMarkets: ['Bangladesh', 'China', 'Vietnam', 'Pakistan'] },
+  { hsCode: '8702', description: 'Motor vehicles for transport of persons', exportValue: '$5B+', majorMarkets: ['USA', 'Saudi Arabia', 'Mexico', 'Nigeria'] },
+  { hsCode: '8529', description: 'Parts for TV receivers', exportValue: '$3B+', majorMarkets: ['USA', 'China', 'Germany', 'Japan'] },
+  { hsCode: '8517', description: 'Telephones', exportValue: '$2B+', majorMarkets: ['USA', 'UAE', 'China', 'Netherlands'] },
+  { hsCode: '0801', description: 'Cashew nuts, fresh or dried', exportValue: '$3B+', majorMarkets: ['USA', 'Netherlands', 'Germany', 'Japan'] },
+  { hsCode: '0904', description: 'Pepper', exportValue: '$800M', majorMarkets: ['USA', 'China', 'Germany', 'Indonesia'] },
+  { hsCode: '8703', description: 'Motor cars etc.', exportValue: '$3B+', majorMarkets: ['USA', 'South Africa', 'Saudi Arabia', 'Mexico'] },
+  { hsCode: '9018', description: 'Medical instruments', exportValue: '$2B+', majorMarkets: ['USA', 'China', 'Germany', 'Brazil'] },
+];
+
+export const INDIA_TOP_IMPORT_PRODUCTS = [
+  { hsCode: '2710', description: 'Petroleum oils (crude)', importValue: '$150B+', majorSources: ['Iraq', 'Saudi Arabia', 'UAE', 'Nigeria'] },
+  { hsCode: '2711', description: 'Petroleum gases', importValue: '$20B+', majorSources: ['USA', 'Qatar', 'Australia', 'Nigeria'] },
+  { hsCode: '7102', description: 'Diamonds', importValue: '$25B+', majorSources: ['Belgium', 'UAE', 'Israel', 'South Africa'] },
+  { hsCode: '8525', description: 'Broadcasting apparatus', importValue: '$10B+', majorSources: ['China', 'Vietnam', 'Hong Kong', 'South Korea'] },
+  { hsCode: '8471', description: 'Computers', importValue: '$10B+', majorSources: ['China', 'Taiwan', 'USA', 'South Korea'] },
+  { hsCode: '8517', description: 'Telephones', importValue: '$20B+', majorSources: ['China', 'Vietnam', 'South Korea', 'Taiwan'] },
+  { hsCode: '7204', description: 'Ferrous waste/scrap', importValue: '$5B+', majorSources: ['UAE', 'USA', 'UK', 'Netherlands'] },
+  { hsCode: '1201', description: 'Soya beans', importValue: '$3B+', majorSources: ['Brazil', 'Argentina', 'USA', 'Ukraine'] },
+  { hsCode: '8542', description: 'Electronic integrated circuits', importValue: '$15B+', majorSources: ['Taiwan', 'China', 'South Korea', 'Vietnam'] },
+  { hsCode: '8802', description: 'Aircraft', importValue: '$5B+', majorSources: ['France', 'USA', 'UK', 'Germany'] },
+];
+
+// ============================================
+// GCC (GULF COOPERATION COUNCIL) DATA
+// ============================================
+export const GCC_COUNTRIES = [
+  { code: 'AE', name: 'United Arab Emirates', capital: 'Abu Dhabi', currency: 'AED', avgDuty: 5, vat: 5, majorPorts: ['Jebel Ali', 'Port Rashid', 'Khalifa Port'], airports: ['Dubai DXB', 'Abu Dhabi AUH', 'Sharjah SHJ'], customs: 'UAE Customs', notes: 'Free trade zones in Dubai, Abu Dhabi, Ras Al Khaimah' },
+  { code: 'SA', name: 'Saudi Arabia', capital: 'Riyadh', currency: 'SAR', avgDuty: 5, vat: 15, majorPorts: ['Jeddah Islamic', 'Dammam', 'King Abdullah'], airports: ['Jeddah JED', 'Riyadh RUH', 'Dammam DMM'], customs: 'Saudi Customs', notes: 'SASO certification required for many products' },
+  { code: 'QA', name: 'Qatar', capital: 'Doha', currency: 'QAR', avgDuty: 5, vat: 0, majorPorts: ['Hamad Port', 'Doha Port'], airports: ['Doha DOH'], customs: 'Qatar Customs', notes: 'No VAT as of 2024, strict import controls' },
+  { code: 'KW', name: 'Kuwait', capital: 'Kuwait City', currency: 'KWD', avgDuty: 5, vat: 0, majorPorts: ['Shuwaikh Port', 'Doha Port', 'Abdulla Port'], airports: ['Kuwait City KWI'], customs: 'Kuwait Customs', notes: 'No VAT, KUCAS certification required' },
+  { code: 'OM', name: 'Oman', capital: 'Muscat', currency: 'OMR', avgDuty: 5, vat: 5, majorPorts: ['Salalah', 'Muscat', 'Sohar'], airports: ['Muscat MCT', 'Salalah SLL'], customs: 'Oman Customs', notes: 'Salam standard certification, Oman has FTZ in Salalah' },
+  { code: 'BH', name: 'Bahrain', capital: 'Manama', currency: 'BHD', avgDuty: 5, vat: 10, majorPorts: ['Khalifa Bin Salman Port', 'Manama Port'], airports: ['Bahrain BAH'], customs: 'Bahrain Customs', notes: 'No customs duty on GCC-origin goods' },
+];
+
+export const GCC_PORTS = [
+  { code: 'AEJEA', name: 'Jebel Ali Port', country: 'AE', type: 'Container', capacity: '22M TEU', operator: 'DP World', features: ['Mega hub', 'Free zone', '50+ weekly services'] },
+  { code: 'AEPRA', name: 'Port Rashid', country: 'AE', type: 'Mixed', capacity: '1.5M TEU', operator: 'DP World', features: ['Near Dubai', 'Free zone access'] },
+  { code: 'AEKHL', name: 'Khalifa Port', country: 'AE', type: 'Container', capacity: '8M TEU', operator: 'ADPM Group', features: ['Deep water', 'New expansion'] },
+  { code: 'SAJED', name: 'Jeddah Islamic Port', country: 'SA', type: 'Container/Bulk', capacity: '8M TEU', operator: 'Mawani', features: ['Gateway to Saudi', 'Pilgrimage hub'] },
+  { code: 'SAKAP', name: 'King Abdullah Port', country: 'SA', type: 'Container', capacity: '6M TEU', operator: 'Mawani', features: ['New port', 'Connected to industrial cities'] },
+  { code: 'SADMM', name: 'Dammam Port', country: 'SA', type: 'Mixed', capacity: '2M TEU', operator: 'Mawani', features: ['Eastern Province hub', 'Rail connection'] },
+  { code: 'QAHMD', name: 'Hamad Port', country: 'QA', type: 'Container', capacity: '7.5M TEU', operator: 'Mwani Qatar', features: ['New mega port', 'NPP terminal'] },
+  { code: 'KWSWK', name: 'Shuwaikh Port', country: 'KW', type: 'Mixed', capacity: '1.5M TEU', operator: 'Kuwait Ports', features: ['Gateway to Kuwait', 'Near city'] },
+  { code: 'OMSLZ', name: 'Salalah Port', country: 'OM', type: 'Container', capacity: '6M TEU', operator: 'APM Terminals', features: ['Transshipment hub', 'Gateway to Arabian Gulf'] },
+  { code: 'OMSXR', name: 'Sohar Port', country: 'OM', type: 'Container/Bulk', capacity: '3M TEU', operator: 'Sohar Port', features: ['Industrial hub', 'Rail connection'] },
+  { code: 'BHKBH', name: 'Khalifa Bin Salman Port', country: 'BH', type: 'Container', capacity: '1.5M TEU', operator: 'Gulf Bulk', features: ['Near Bahrain', 'Industrial zone'] },
+];
+
+export const GCC_FREE_TRADE_ZONES = [
+  { name: 'JAFZ (Jebel Ali Free Zone)', country: 'AE', city: 'Dubai', type: 'General', companies: '9000+', benefits: ['100% ownership', '0% corporate tax', 'No personal income tax', 'Duty-free imports', 'Repatriation of profits'] },
+  { name: 'DAFZA (Dubai Airport Free Zone)', country: 'AE', city: 'Dubai', type: 'Aviation/Logistics', companies: '1800+', benefits: ['100% ownership', 'Customs duty suspension', 'Easy visa procedures'] },
+  { name: 'DIFZ (Dubai International Financial Centre)', country: 'AE', city: 'Dubai', type: 'Finance', companies: '2500+', benefits: ['100% foreign ownership', 'Common law framework', 'Tax incentives'] },
+  { name: 'Kizad (Khalifa Industrial Zone Abu Dhabi)', country: 'AE', city: 'Abu Dhabi', type: 'General', companies: '1000+', benefits: ['100% ownership', 'Strategic location', 'Competitive land prices'] },
+  { name: 'RAK FTZ (Ras Al Khaimah)', country: 'AE', city: 'RAK', type: 'General', companies: '12000+', benefits: ['100% ownership', 'Low setup costs', 'No office requirement'] },
+  { name: 'Jebel Ali Free Zone South', country: 'AE', city: 'Dubai', type: 'Logistics', companies: '500+', benefits: ['Adjacent to port', 'Warehouse options', 'Customs bonded'] },
+  { name: 'Saudi Arabian Oil Co (Aramco) Industrial', country: 'SA', city: 'Various', type: 'Energy/Petrochem', companies: '500+', benefits: ['Industrial ecosystem', 'Energy access', 'Government support'] },
+  { name: 'King Abdullah Economic City', country: 'SA', city: 'Rabigh', type: 'General', companies: '300+', benefits: ['Port access', 'Rail connection', 'Business environment'] },
+  { name: 'Salalah Free Zone', country: 'OM', city: 'Salalah', type: 'Logistics', companies: '200+', benefits: ['Strategic location', 'Transshipment', 'Low costs'] },
+];
+
+export const GCC_IMPORT_REQUIREMENTS = [
+  // UAE
+  { country: 'AE', requirement: 'Commercial Invoice', details: 'Arabic or English, attested', mandatory: true },
+  { country: 'AE', requirement: 'Certificate of Origin', details: 'Attested by UAE Embassy or Arab Chamber', mandatory: true },
+  { country: 'AE', requirement: 'Bill of Lading', details: 'Switch BL may be required', mandatory: true },
+  { country: 'AE', requirement: 'Packing List', details: 'In Arabic or English', mandatory: true },
+  { country: 'AE', requirement: 'CPC (Cargo Pre-registration)', details: 'Required before arrival', mandatory: true },
+  { country: 'AE', requirement: 'UAE Pre-clearance (SMS)', details: 'Submit via UAE eGovernment', mandatory: true },
+  // Saudi Arabia
+  { country: 'SA', requirement: 'Commercial Invoice', details: 'Arabic + English, legalised', mandatory: true },
+  { country: 'SA', requirement: 'SASO Certificate', details: 'For regulated products', mandatory: true },
+  { country: 'SA', requirement: 'SABER Certificate', details: 'Product conformity assessment', mandatory: true },
+  { country: 'SA', requirement: 'SFDA Import License', details: 'For food/cosmetics/medical', mandatory: false },
+  { country: 'SA', requirement: 'SFDA Certificate', details: 'Food safety compliance', mandatory: false },
+  { country: 'SA', requirement: 'Certificate of Origin', details: 'Attested by Saudi Embassy', mandatory: true },
+  // Qatar
+  { country: 'QA', requirement: 'Commercial Invoice', details: 'Arabic or English', mandatory: true },
+  { country: 'QA', requirement: 'Certificate of Origin', details: 'Attested', mandatory: true },
+  { country: 'QA', requirement: 'MOI Import Permit', details: 'For some products', mandatory: false },
+  { country: 'QA', requirement: 'Qatar Pre-clearance', details: 'Required before arrival', mandatory: true },
+  // Kuwait
+  { country: 'KW', requirement: 'Commercial Invoice', details: 'Arabic + English', mandatory: true },
+  { country: 'KW', requirement: 'KUCAS Certificate', details: 'Product conformity', mandatory: true },
+  { country: 'KW', requirement: 'Certificate of Origin', details: 'Attested', mandatory: true },
+  { country: 'KW', requirement: 'MOI Approval', details: 'For regulated goods', mandatory: false },
+];
+
+export const GCC_PRODUCT_REGULATIONS = [
+  { product: 'Electronics', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'SASO/IECEE conformity', description: 'Must meet Saudi standards and be registered in IECEE database' },
+  { product: 'Food Products', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'Halal Certificate', description: 'Halal certification from approved body required for meat products' },
+  { product: 'Cosmetics', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'SFDA Registration', description: 'Product registration with Gulf Cosmetic Center required' },
+  { product: 'Toys', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'SASO Toy Safety', description: 'Must meet GCC Toy Safety Regulation' },
+  { product: 'Automotive Parts', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'SASO/GMark', description: 'Emissions and safety standards, GCC mark required' },
+  { product: 'Construction Materials', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'GSO Standards', description: 'Must meet Gulf Technical Regulations' },
+  { product: 'Textiles', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'Labeling', description: 'Fiber content, care instructions in Arabic' },
+  { product: 'Medical Devices', countries: ['AE', 'SA', 'QA', 'KW', 'OM', 'BH'], requirement: 'Ministry of Health Approval', description: 'Registration with health authority required' },
+];
+
+export const GCC_TOP_IMPORTS = [
+  { country: 'AE', product: 'Vehicles & Parts', value: '$35B', sources: ['Japan', 'USA', 'Germany', 'UK'] },
+  { country: 'AE', product: 'Electronics', value: '$40B', sources: ['China', 'USA', 'South Korea', 'Hong Kong'] },
+  { country: 'AE', product: 'Gold & Precious Metals', value: '$75B', sources: ['India', 'Switzerland', 'South Africa'] },
+  { country: 'AE', product: 'Machinery', value: '$25B', sources: ['USA', 'Germany', 'Japan', 'China'] },
+  { country: 'SA', product: 'Vehicles', value: '$15B', sources: ['USA', 'Japan', 'Germany', 'South Korea'] },
+  { country: 'SA', product: 'Electronics', value: '$20B', sources: ['China', 'USA', 'South Korea'] },
+  { country: 'SA', product: 'Food Products', value: '$15B', sources: ['Brazil', 'India', 'USA', 'Argentina'] },
+  { country: 'SA', product: 'Machinery', value: '$18B', sources: ['Germany', 'USA', 'Japan', 'China'] },
+  { country: 'QA', product: 'Vehicles', value: '$5B', sources: ['Japan', 'USA', 'Germany'] },
+  { country: 'QA', product: 'Electronics', value: '$6B', sources: ['China', 'USA', 'South Korea'] },
+  { country: 'QA', product: 'Food', value: '$4B', sources: ['Brazil', 'India', 'USA'] },
+  { country: 'KW', product: 'Vehicles', value: '$4B', sources: ['USA', 'Japan', 'Germany'] },
+  { country: 'KW', product: 'Electronics', value: '$4B', sources: ['China', 'USA', 'South Korea'] },
+];
+
+// ============================================
+// ASIAN COUNTRIES - DETAILED DATA
+// ============================================
+export const ASEAN_MEMBERS = [
+  { code: 'ID', name: 'Indonesia', capital: 'Jakarta', currency: 'IDR', duty: 7.5, vat: 11, majorPort: 'Tanjung Priok', sezCount: 10 },
+  { code: 'MY', name: 'Malaysia', capital: 'Kuala Lumpur', currency: 'MYR', duty: 6, vat: 6, majorPort: 'Port Klang', sezCount: 20 },
+  { code: 'PH', name: 'Philippines', capital: 'Manila', currency: 'PHP', duty: 9, vat: 12, majorPort: 'Manila', sezCount: 400+ },
+  { code: 'SG', name: 'Singapore', capital: 'Singapore', currency: 'SGD', duty: 0, vat: 9, majorPort: 'Singapore', sezCount: 1 },
+  { code: 'TH', name: 'Thailand', capital: 'Bangkok', currency: 'THB', duty: 8, vat: 7, majorPort: 'Laem Chabang', sezCount: 8 },
+  { code: 'VN', name: 'Vietnam', capital: 'Hanoi', currency: 'VND', duty: 9, vat: 10, majorPort: 'Ho Chi Minh City', sezCount: 30 },
+  { code: 'BN', name: 'Brunei', capital: 'Bandar Seri Begawan', currency: 'BND', duty: 0, vat: 0, majorPort: 'Muara', sezCount: 1 },
+  { code: 'KH', name: 'Cambodia', capital: 'Phnom Penh', currency: 'KHR', duty: 0, vat: 10, majorPort: 'Sihanoukville', sezCount: 20 },
+  { code: 'LA', name: 'Laos', capital: 'Vientiane', currency: 'LAK', duty: 10, vat: 10, majorPort: 'Vientiane (inland)', sezCount: 12 },
+  { code: 'MM', name: 'Myanmar', capital: 'Naypyidaw', currency: 'MMK', duty: 12, vat: 5, majorPort: 'Yangon', sezCount: 5 },
+];
+
+export const ASEAN_FREE_TRADE_ZONES = [
+  { name: 'Bintan Industrial Estate', country: 'ID', type: 'Manufacturing', focus: 'Electronics, Textiles', benefits: ['Tax holidays', 'Duty free imports', 'Simplified procedures'] },
+  { name: 'Batam Industrial Park', country: 'ID', type: 'Manufacturing', focus: 'Electronics, Marine', benefits: ['Near Singapore', 'Infrastructure', 'Labor availability'] },
+  { name: 'Johor SEZ', country: 'MY', type: 'Gateway', focus: 'Logistics, Manufacturing', benefits: ['Strategic location', 'Singapore proximity', 'Incentives'] },
+  { name: 'Penang FTZ', country: 'MY', type: 'Electronics', focus: 'Semiconductors, EMS', benefits: ['Industry cluster', 'Skilled labor', 'Infrastructure'] },
+  { name: 'Kuala Lumpur FTZ', country: 'MY', type: 'General', focus: 'Various', benefits: ['Capital access', 'Business hub', 'Tax incentives'] },
+  { name: 'Phnom Penh SEZ', country: 'KH', type: 'Manufacturing', focus: 'Garments, Electronics', benefits: ['Low labor cost', 'Tax holidays', 'Export oriented'] },
+  { name: 'Sihanoukville SEZ', country: 'KH', type: 'Port/Industrial', focus: 'Manufacturing, Logistics', benefits: ['Port access', 'Incentives', 'China-backed'] },
+  { name: 'Long Thanh Industrial Zone', country: 'VN', type: 'Manufacturing', focus: 'Electronics, Garments', benefits: ['Near Ho Chi Minh', 'New airport', 'Incentives'] },
+  { name: 'Hanoi Industrial Zones', country: 'VN', type: 'Manufacturing', focus: 'Textiles, Electronics', benefits: ['Labor pool', 'Government support', 'Infrastructure'] },
+  { name: 'Danang Hi-tech Park', country: 'VN', type: 'Hi-tech', focus: 'R&D, Electronics', benefits: ['High-tech incentives', 'Skilled workforce', 'Location'] },
+  { name: 'Eastern Seaboard Industrial', country: 'TH', type: 'Manufacturing', focus: 'Auto, Electronics', benefits: ['Industry cluster', 'Infrastructure', 'Government support'] },
+  { name: 'Laem Chabang Industrial', country: 'TH', type: 'Manufacturing', focus: 'Auto, Electronics', benefits: ['Port adjacent', 'Industry zone', 'Incentives'] },
+  { name: 'Map Ta Phut Industrial', country: 'TH', type: 'Petrochem', focus: 'Chemicals, Energy', benefits: ['Petrochem hub', 'Deep water port', 'Utilities'] },
+  { name: 'Jurong Island', country: 'SG', type: 'Petrochem', focus: 'Petrochemicals, Energy', benefits: ['World-class infrastructure', 'R&D', 'Industry cluster'] },
+  { name: 'Changi Business Park', country: 'SG', type: 'Services', focus: 'Finance, Tech, HQ', benefits: ['Business environment', 'Talent pool', 'Connectivity'] },
+  { name: 'Clark Economic Zone', country: 'PH', type: 'Manufacturing', focus: 'Electronics, BPO', benefits: ['Tax incentives', 'Infrastructure', 'Labor'] },
+  { name: 'PEZA Export Zone', country: 'PH', type: 'Export', focus: 'IT, Manufacturing', benefits: ['Income tax holiday', 'Duty free imports', 'No VAT'] },
+];
+
+export const ASIAN_PRODUCT_REGULATIONS = [
+  // China
+  { country: 'CN', regulation: 'CCC Certification', products: 'Electronics, Toys, Auto Parts', description: 'China Compulsory Certification - mandatory for listed products' },
+  { country: 'CN', regulation: 'China RoHS', products: 'Electronics', description: 'Restriction of Hazardous Substances in electrical products' },
+  { country: 'CN', regulation: 'CNCA Registration', products: 'Food, Cosmetics, Medical', description: 'Registration with Certification and Accreditation Administration' },
+  { country: 'CN', regulation: 'CFDA Approval', products: 'Food, Medical Devices', description: 'China Food and Drug Administration clearance' },
+  // Japan
+  { country: 'JP', regulation: 'PSE Mark', products: 'Electronics, Appliances', description: 'Electrical appliance safety - must display before sale' },
+  { country: 'JP', regulation: 'JIS Mark', products: 'Industrial products', description: 'Japanese Industrial Standards certification' },
+  { country: 'JP', regulation: 'Radio Law', products: 'Wireless devices', description: 'TELEC certification for radio equipment' },
+  { country: 'JP', regulation: 'Food Sanitation Law', products: 'Food, Food utensils', description: 'Ministry of Health clearance required' },
+  // South Korea
+  { country: 'KR', regulation: 'KC Mark', products: 'Electronics, Safety equipment', description: 'Korea Certification - mandatory safety mark' },
+  { country: 'KR', regulation: 'K-REACH', products: 'Chemicals', description: 'Korea REACH - chemical registration' },
+  { country: 'KR', regulation: 'MFDS Approval', products: 'Food, Cosmetics, Medical', description: 'Ministry of Food and Drug Safety' },
+  // ASEAN
+  { country: 'TH', regulation: 'TISI Standard', products: 'Various', description: 'Thai Industrial Standards Institute mandatory standards' },
+  { country: 'VN', regulation: 'QCVN', products: 'Various', description: 'Vietnamese Technical Regulations - mandatory standards' },
+  { country: 'ID', regulation: 'SNI Mark', products: 'Various', description: 'Indonesian National Standard - mandatory for some products' },
+  { country: 'MY', regulation: 'SIRIM Certification', products: 'Electronics, Telecom', description: 'Standards body certification' },
+  { country: 'PH', regulation: 'BPS Mark', products: 'Various', description: 'Bureau of Product Standards certification' },
+];
+
+export const ASIAN_FREELANCE_COMPANIES = [
+  { name: 'Reliance Industries', country: 'IN', sector: 'Conglomerate', revenue: '$100B+' },
+  { name: 'Tata Group', country: 'IN', sector: 'Conglomerate', revenue: '$110B+' },
+  { name: 'Infosys', country: 'IN', sector: 'IT Services', revenue: '$17B+' },
+  { name: 'Wipro', country: 'IN', sector: 'IT Services', revenue: '$10B+' },
+  { name: 'TCS', country: 'IN', sector: 'IT Services', revenue: '$25B+' },
+  { name: 'Larsen & Toubro', country: 'IN', sector: 'Engineering', revenue: '$20B+' },
+  { name: 'Bharti Enterprises', country: 'IN', sector: 'Telecom', revenue: '$15B+' },
+  { name: 'Adani Group', country: 'IN', sector: 'Conglomerate', revenue: '$30B+' },
+  { name: 'Al-Futtaim Group', country: 'AE', sector: 'Conglomerate', revenue: '$10B+' },
+  { name: 'Al Habtoor Group', country: 'AE', sector: 'Conglomerate', revenue: '$5B+' },
+  { name: 'Al Mabani', country: 'AE', sector: 'General Trading', revenue: '$3B+' },
+  { name: 'Emirates Group', country: 'AE', sector: 'Aviation/Logistics', revenue: '$30B+' },
+  { name: 'Almarai', country: 'SA', sector: 'Food & Beverages', revenue: '$9B+' },
+  { name: 'SABIC', country: 'SA', sector: 'Chemicals', revenue: '$40B+' },
+  { name: 'Saudi Aramco', country: 'SA', sector: 'Energy', revenue: '$500B+' },
+  { name: 'Baladna', country: 'QA', sector: 'Food & Beverages', revenue: '$1B+' },
+  { name: 'Qatar Petroleum', country: 'QA', sector: 'Energy', revenue: '$80B+' },
+  { name: 'Alghanim Industries', country: 'KW', sector: 'Conglomerate', revenue: '$5B+' },
+  { name: 'OQ', country: 'OM', sector: 'Energy', revenue: '$20B+' },
+  { name: 'Alba', country: 'BH', sector: 'Aluminum', revenue: '$3B+' },
+];
+
+export const ASIAN_TRADE_ROUTES_EXTENDED = [
+  // India - Middle East
+  { origin: 'Mumbai JNPT', dest: 'Jebel Ali', mode: 'Ocean', transit: 4, freight: '$700/20GP', notes: 'Main India-GCC route' },
+  { origin: 'Chennai', dest: 'Jebel Ali', mode: 'Ocean', transit: 7, freight: '$900/20GP', notes: 'Weekly service' },
+  { origin: 'Kandla', dest: 'Jeddah', mode: 'Ocean', transit: 10, freight: '$1,000/20GP', notes: 'Cargo for Saudi' },
+  { origin: 'Mumbai', dest: 'Doha (Hamad)', mode: 'Ocean', transit: 5, freight: '$850/20GP', notes: 'Direct service' },
+  // India - Southeast Asia
+  { origin: 'Chennai', dest: 'Singapore', mode: 'Ocean', transit: 7, freight: '$600/20GP', notes: 'Frequent service' },
+  { origin: 'Kolkata', dest: 'Bangkok', mode: 'Ocean', transit: 8, freight: '$700/20GP', notes: 'Weekly' },
+  { origin: 'Mumbai', dest: 'Ho Chi Minh City', mode: 'Ocean', transit: 12, freight: '$900/20GP', notes: 'Vietnam route' },
+  { origin: 'Chennai', dest: 'Port Klang', mode: 'Ocean', transit: 6, freight: '$550/20GP', notes: 'Malaysia gateway' },
+  // Middle East - Asia
+  { origin: 'Jebel Ali', dest: 'Shanghai', mode: 'Ocean', transit: 14, freight: '$1,200/20GP', notes: 'Main trade lane' },
+  { origin: 'Jeddah', dest: 'Mumbai', mode: 'Ocean', transit: 8, freight: '$800/20GP', notes: 'Return cargo' },
+  { origin: 'Hamad Port', dest: 'Singapore', mode: 'Ocean', transit: 10, freight: '$1,000/20GP', notes: 'New route' },
+  // China - Middle East
+  { origin: 'Shanghai', dest: 'Jebel Ali', mode: 'Ocean', transit: 18, freight: '$2,500/20GP', notes: 'Mega vessels' },
+  { origin: 'Shenzhen', dest: 'Jeddah', mode: 'Ocean', transit: 16, freight: '$2,200/20GP', notes: 'Saudi gateway' },
+  { origin: 'Ningbo', dest: 'Hamad Port', mode: 'Ocean', transit: 20, freight: '$2,800/20GP', notes: 'Qatar route' },
+  // ASEAN Routes
+  { origin: 'Singapore', dest: 'Laem Chabang', mode: 'Ocean', transit: 2, freight: '$200/20GP', notes: 'Short hop' },
+  { origin: 'Singapore', dest: 'Ho Chi Minh City', mode: 'Ocean', transit: 3, freight: '$300/20GP', notes: 'Vietnam service' },
+  { origin: 'Port Klang', dest: 'Manila', mode: 'Ocean', transit: 4, freight: '$400/20GP', notes: 'Philippines' },
+  { origin: 'Singapore', dest: 'Tanjung Priok', mode: 'Ocean', transit: 3, freight: '$350/20GP', notes: 'Indonesia' },
+];
+
 // Export all data for use in AI assistant
 export const AI_DATA = {
   hsCodes: HS_CODES,
@@ -1430,9 +1763,31 @@ export const AI_DATA = {
   tradeFaq: TRADE_FAQ,
   industries: INDUSTRIES,
   packagingStandards: PACKAGING_STANDARDS,
+  // India-specific data
+  indiaStates: INDIA_STATES,
+  indiaPorts: INDIA_PORTS,
+  indiaSez: INDIA_SEZ,
+  indiaGstRates: INDIA_GST_RATES,
+  indiaHsCodes: INDIA_HS_CODES_COMMON,
+  indiaTradeRoutes: INDIA_TRADE_ROUTES,
+  indiaTopExports: INDIA_TOP_EXPORT_PRODUCTS,
+  indiaTopImports: INDIA_TOP_IMPORT_PRODUCTS,
+  // GCC-specific data
+  gccCountries: GCC_COUNTRIES,
+  gccPorts: GCC_PORTS,
+  gccFreeTradeZones: GCC_FREE_TRADE_ZONES,
+  gccImportRequirements: GCC_IMPORT_REQUIREMENTS,
+  gccProductRegulations: GCC_PRODUCT_REGULATIONS,
+  gccTopImports: GCC_TOP_IMPORTS,
+  // Asia-specific data
+  aseanMembers: ASEAN_MEMBERS,
+  aseanFreeTradeZones: ASEAN_FREE_TRADE_ZONES,
+  asianProductRegulations: ASIAN_PRODUCT_REGULATIONS,
+  asianFreelanceCompanies: ASIAN_FREELANCE_COMPANIES,
+  asianTradeRoutes: ASIAN_TRADE_ROUTES_EXTENDED,
 };
 
-// Total entries: ~3000+
+// Total entries: ~5000+
 export const TOTAL_DATA_ENTRIES =
   HS_CODES.length +
   (HS_CODES_EXTENDED?.length || 0) +
@@ -1459,6 +1814,28 @@ export const TOTAL_DATA_ENTRIES =
   (TRADE_FINANCE_BANKS?.length || 0) +
   (TRADE_FAQ?.length || 0) +
   (INDUSTRIES?.length || 0) +
-  (PACKAGING_STANDARDS?.length || 0);
+  (PACKAGING_STANDARDS?.length || 0) +
+  // India data
+  (INDIA_STATES?.length || 0) +
+  (INDIA_PORTS?.length || 0) +
+  (INDIA_SEZ?.length || 0) +
+  (INDIA_GST_RATES?.length || 0) +
+  (INDIA_HS_CODES_COMMON?.length || 0) +
+  (INDIA_TRADE_ROUTES?.length || 0) +
+  (INDIA_TOP_EXPORT_PRODUCTS?.length || 0) +
+  (INDIA_TOP_IMPORT_PRODUCTS?.length || 0) +
+  // GCC data
+  (GCC_COUNTRIES?.length || 0) +
+  (GCC_PORTS?.length || 0) +
+  (GCC_FREE_TRADE_ZONES?.length || 0) +
+  (GCC_IMPORT_REQUIREMENTS?.length || 0) +
+  (GCC_PRODUCT_REGULATIONS?.length || 0) +
+  (GCC_TOP_IMPORTS?.length || 0) +
+  // Asia data
+  (ASEAN_MEMBERS?.length || 0) +
+  (ASEAN_FREE_TRADE_ZONES?.length || 0) +
+  (ASIAN_PRODUCT_REGULATIONS?.length || 0) +
+  (ASIAN_FREELANCE_COMPANIES?.length || 0) +
+  (ASIAN_TRADE_ROUTES_EXTENDED?.length || 0);
 
 console.log(`AI Data loaded with ${TOTAL_DATA_ENTRIES} total entries`);
