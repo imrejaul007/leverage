@@ -1,216 +1,281 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
 import {
-  Search,
-  MapPin,
-  Phone,
-  CheckCircle,
-  Plus,
-  ShoppingCart,
-  ArrowLeft,
-  Star,
-  Clock,
-  Globe,
-  Building2,
-  Package,
-  Award,
-  Shield,
+  Star, MapPin, Clock, CheckCircle, Phone, MessageCircle, Shield, Award,
+  ChevronRight, ArrowLeft, Globe, Calendar, TrendingUp, Package, FileText
 } from 'lucide-react';
-import { products } from '@/data/products';
 
-function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  );
-}
-
-const supplierData: Record<string, any> = {
-  'sup-001': { name: 'Global Trade Exports', location: 'Mumbai, Maharashtra', country: 'India', rating: 4.8, reviews: 128, years: 12, gst: true, verified: true, type: 'Exporter', description: 'Leading exporter of premium agricultural products including basmati rice, spices, and pulses. We serve clients in 50+ countries with quality assurance at every step.', products: 45, image: null },
-  'sup-002': { name: 'Cotton World Ltd', location: 'Ahmedabad, Gujarat', country: 'India', rating: 4.7, reviews: 96, years: 8, gst: true, verified: true, type: 'Manufacturer', description: 'Premier manufacturer of organic and conventional cotton yarn, fabrics, and garments. GOTS certified facility with modern machinery.', products: 32, image: null },
-  'sup-003': { name: 'MetalLink Global', location: 'Dubai, UAE', country: 'UAE', rating: 4.9, reviews: 78, years: 15, gst: true, verified: true, type: 'Exporter', description: 'Trusted supplier of industrial metals including copper, aluminum, and steel products. LME registered with global logistics capabilities.', products: 28, image: null },
+// Demo supplier data
+const supplierData = {
+  id: '1',
+  name: 'Global Textile Exports Pvt Ltd',
+  type: 'Manufacturer',
+  location: 'Mumbai, India',
+  established: '2010',
+  rating: 4.8,
+  reviews: 234,
+  responseTime: '< 1 hour',
+  gst: true,
+  verified: true,
+  tradeVolume: '$5M - $10M',
+  description: 'Leading manufacturer and exporter of premium quality textiles, cotton fabrics, and apparel. We specialize in sustainable manufacturing with state-of-the-art facilities.',
+  image: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=800',
+  products: [
+    { id: '1', name: 'Premium Cotton Fabric', price: '$4.50/meter', moq: '500 meters', image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400' },
+    { id: '2', name: 'Organic Cotton Yarn', price: '$6.80/kg', moq: '1000 kg', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400' },
+    { id: '3', name: 'Bamboo Blend Fabric', price: '$8.20/meter', moq: '300 meters', image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=400' },
+  ],
+  certifications: ['ISO 9001:2015', 'GOTS Certified', 'OEKO-TEX'],
+  yearsInBusiness: 14,
+  totalOrders: 1247,
+  onTimeDelivery: '98%',
 };
 
 export default function SupplierDetailPage() {
-  const params = useParams();
-  const supplierId = params.id as string;
-  const supplier = supplierData[supplierId] || supplierData['sup-001'];
-  const supplierProducts = products.filter(p => p.supplierId === supplierId).slice(0, 6);
+  const [activeTab, setActiveTab] = useState('products');
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  const supplier = supplierData;
+  const supplierProducts = supplier.products;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
-      <Toaster position="top-right" />
-
-      {/* Mobile Header */}
-      <header className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="flex items-center px-4 py-3">
-          <Link href="/marketplace/suppliers" className="p-2 -ml-2 mr-2"><ArrowLeft className="w-5 h-5 text-gray-600" /></Link>
-          <span className="font-medium text-gray-900 flex-1">Supplier Profile</span>
-          <Link href="/marketplace/cart" className="p-2"><ShoppingCart className="w-5 h-5 text-gray-600" /></Link>
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/marketplace/suppliers" className="flex items-center gap-2" style={{ color: '#4A4A4A' }}>
+            <ArrowLeft className="w-5 h-5" />
+            Back to Suppliers
+          </Link>
+          <Link href="/" className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>
+            LEVERGE
+          </Link>
         </div>
       </header>
 
-      {/* Desktop Header */}
-      <header className="hidden md:block bg-gradient-to-br from-[#154230] via-[#1a5a3a] to-[#0d3d28]">
-        <div className="bg-[#0d2e20]">
-          <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between text-sm text-white/80">
-            <span>LEVERAGE Marketplace</span>
-            <div className="flex items-center gap-4"><span>24x7 Support</span><Link href="/contact" className="flex items-center gap-1"><Phone className="w-4 h-4" />+1-xxx-xxx-xxxx</Link></div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-6">
-            <Link href="/"><Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" /></Link>
-            <div className="flex-1 max-w-xl relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input type="text" placeholder="Search products..." className="w-full h-11 pl-12 pr-4 bg-white rounded-xl text-gray-900" />
-            </div>
-            <div className="flex items-center gap-3">
-              <Link href="/marketplace/login" className="px-4 py-2 bg-white/10 rounded-lg text-white">Sign In</Link>
-              <Link href="/marketplace/cart" className="relative p-2 bg-white/10 rounded-lg"><ShoppingCart className="w-5 h-5 text-white" /></Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Breadcrumb */}
-        <div className="hidden md:block mb-4">
-          <div className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-[#154230]">Home</Link>
-            <span className="text-gray-400">/</span>
-            <Link href="/marketplace/suppliers" className="text-gray-500 hover:text-[#154230]">Suppliers</Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-[#154230]">{supplier.name}</span>
-          </div>
-        </div>
-
-        {/* Supplier Card */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="p-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                <div className="w-24 h-24 md:w-32 md:h-32 bg-[#154230] rounded-lg flex items-center justify-center text-white text-4xl font-bold">
-                  {supplier.name.charAt(0)}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Supplier Hero */}
+        <div className="rounded-2xl overflow-hidden mb-8" style={{ backgroundColor: 'white' }}>
+          <div className="h-32" style={{ backgroundColor: '#154230' }} />
+          <div className="px-6 pb-6">
+            <div className="flex flex-col md:flex-row gap-6 -mt-12">
+              <div className="w-24 h-24 rounded-xl overflow-hidden border-4" style={{ borderColor: 'white', backgroundColor: '#E6E2DA' }}>
+                <img src={supplier.image} alt={supplier.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 pt-4 md:pt-12">
+                <h1 className="text-2xl font-bold" style={{ color: '#101111' }}>{supplier.name}</h1>
+                <p className="mt-1" style={{ color: '#4A4A4A' }}>{supplier.type}</p>
+                <div className="flex flex-wrap items-center gap-4 mt-3">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-5 h-5 fill-current" style={{ color: '#CA8A04' }} />
+                    <span className="font-bold">{supplier.rating}</span>
+                    <span className="text-sm" style={{ color: '#4A4A4A' }}>({supplier.reviews} reviews)</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-4 h-4" style={{ color: '#4A4A4A' }} />
+                    <span style={{ color: '#4A4A4A' }}>{supplier.location}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" style={{ color: '#4A4A4A' }} />
+                    <span style={{ color: '#4A4A4A' }}>Responds {supplier.responseTime}</span>
+                  </div>
                 </div>
               </div>
-
-              {/* Info */}
-              <div className="flex-1">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{supplier.name}</h1>
-                    <div className="flex items-center gap-2 text-gray-500 mt-1">
-                      <MapPin className="w-4 h-4" />
-                      <span>{supplier.location}</span>
-                      <span className="text-gray-400">|</span>
-                      <Globe className="w-4 h-4" />
-                      <span>{supplier.country}</span>
-                    </div>
-                  </div>
-                  {supplier.verified && (
-                    <span className="px-3 py-1 bg-amber-100 text-amber-800 text-sm font-bold rounded-full flex items-center gap-1">
-                      <CheckCircle className="w-4 h-4" /> TrustSEAL
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-gray-600 mt-4">{supplier.description}</p>
-
-                {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <div className="flex items-center justify-center gap-1 text-amber-400 mb-1"><Star className="w-5 h-5" /><span className="text-2xl font-bold text-gray-900">{supplier.rating}</span></div>
-                    <p className="text-sm text-gray-500">Rating</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900">{supplier.reviews}</p>
-                    <p className="text-sm text-gray-500">Reviews</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900">{supplier.products}</p>
-                    <p className="text-sm text-gray-500">Products</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-2xl font-bold text-gray-900">{supplier.years}+</p>
-                    <p className="text-sm text-gray-500">Years</p>
-                  </div>
-                </div>
-
-                {/* Trust Badges */}
-                <div className="flex flex-wrap gap-3 mt-6">
-                  {supplier.gst && <span className="px-3 py-1.5 bg-green-100 text-green-700 text-sm rounded-lg flex items-center gap-1"><CheckCircle className="w-4 h-4" />GST Verified</span>}
-                  <span className="px-3 py-1.5 bg-blue-100 text-blue-700 text-sm rounded-lg flex items-center gap-1"><Shield className="w-4 h-4" />Verified Supplier</span>}
-                  <span className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-lg flex items-center gap-1"><Award className="w-4 h-4" />{supplier.type}</span>
-                </div>
-
-                {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                  <button onClick={() => toast.success('Enquiry sent!')} className="flex-1 py-3 bg-[#154230] hover:bg-[#1a5a3a] text-white font-bold rounded-lg">Send Enquiry</button>
-                  <div className="flex gap-3">
-                    <button className="px-6 py-3 border border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 flex items-center gap-2"><WhatsAppIcon className="w-5 h-5" />WhatsApp</button>
-                    <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg flex items-center gap-2"><Phone className="w-5 h-5" />Call</button>
-                  </div>
-                </div>
+              <div className="flex gap-3 pt-4 md:pt-12">
+                <button className="px-6 py-3 rounded-xl font-bold text-white" style={{ backgroundColor: '#154230' }}>
+                  Send Enquiry
+                </button>
+                <button className="px-6 py-3 rounded-xl font-bold" style={{ backgroundColor: '#25D366', color: 'white' }}>
+                  <MessageCircle className="w-5 h-5 inline mr-1" /> WhatsApp
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Products */}
-        {supplierProducts.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Products by {supplier.name}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {supplierProducts.map(product => (
-                <Link key={product.id} href={`/marketplace/products/${product.id}`} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="relative h-40"><Image src={product.image} alt={product.name} fill className="object-cover" unoptimized /></div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 line-clamp-2 text-sm">{product.name}</h3>
-                    <p className="text-lg font-bold text-gray-900 mt-2">₹{product.price.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500 mt-1">{product.moq} MOQ</p>
-                  </div>
-                </Link>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Tabs */}
+            <div className="flex gap-4 border-b" style={{ borderColor: '#E5E5E5' }}>
+              {['products', 'about', 'reviews'].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="pb-3 px-2 font-medium capitalize"
+                  style={{
+                    color: activeTab === tab ? '#154230' : '#4A4A4A',
+                    borderBottom: activeTab === tab ? '2px solid #154230' : '2px solid transparent',
+                  }}
+                >
+                  {tab}
+                </button>
               ))}
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex gap-2 z-40">
-        <button className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#154230] text-[#154230] font-bold rounded-lg"><WhatsAppIcon className="w-5 h-5" />WhatsApp</button>
-        <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-600 text-white font-bold rounded-lg"><Phone className="w-5 h-5" />Call Now</button>
-      </div>
+            {/* Products Tab */}
+            {activeTab === 'products' && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {supplierProducts.map(product => (
+                  <Link
+                    key={product.id}
+                    href={`/marketplace/products/${product.id}`}
+                    className="rounded-xl overflow-hidden"
+                    style={{ backgroundColor: 'white' }}
+                  >
+                    <div className="aspect-square overflow-hidden">
+                      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium" style={{ color: '#101111' }}>{product.name}</h3>
+                      <p className="font-bold mt-1" style={{ color: '#154230' }}>{product.price}</p>
+                      <p className="text-sm mt-1" style={{ color: '#4A4A4A' }}>MOQ: {product.moq}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
 
-      {/* Desktop Footer */}
-      <footer className="hidden md:block bg-gray-900 text-white py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between">
-          <div>
-            <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} className="object-contain brightness-0 invert mb-4" />
-            <p className="text-gray-400 text-sm">The Global Trade Operating System</p>
+            {/* About Tab */}
+            {activeTab === 'about' && (
+              <div className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+                <h2 className="font-bold mb-4" style={{ color: '#101111' }}>About {supplier.name}</h2>
+                <p style={{ color: '#4A4A4A' }}>{supplier.description}</p>
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <div>
+                    <p className="text-sm" style={{ color: '#4A4A4A' }}>Established</p>
+                    <p className="font-medium">{supplier.established}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm" style={{ color: '#4A4A4A' }}>Total Orders</p>
+                    <p className="font-medium">{supplier.totalOrders.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm" style={{ color: '#4A4A4A' }}>On-Time Delivery</p>
+                    <p className="font-medium" style={{ color: '#16A34A' }}>{supplier.onTimeDelivery}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm" style={{ color: '#4A4A4A' }}>Trade Volume</p>
+                    <p className="font-medium">{supplier.tradeVolume}</p>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <p className="text-sm mb-2" style={{ color: '#4A4A4A' }}>Certifications</p>
+                  <div className="flex flex-wrap gap-2">
+                    {supplier.certifications.map(cert => (
+                      <span key={cert} className="px-3 py-1 rounded-full text-sm" style={{ backgroundColor: '#15423015', color: '#154230' }}>
+                        <Award className="w-4 h-4 inline mr-1" />{cert}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Reviews Tab */}
+            {activeTab === 'reviews' && (
+              <div className="space-y-4">
+                <div className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="text-4xl font-bold" style={{ color: '#154230' }}>{supplier.rating}</div>
+                    <div>
+                      <div className="flex">
+                        {[1,2,3,4,5].map(i => (
+                          <Star key={i} className="w-5 h-5 fill-current" style={{ color: '#CA8A04' }} />
+                        ))}
+                      </div>
+                      <p className="text-sm mt-1" style={{ color: '#4A4A4A' }}>Based on {supplier.reviews} reviews</p>
+                    </div>
+                  </div>
+                </div>
+                {[1,2,3].map(i => (
+                  <div key={i} className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold" style={{ backgroundColor: '#154230', color: 'white' }}>
+                          {String.fromCharCode(65 + i)}
+                        </div>
+                        <div>
+                          <p className="font-medium">Company {String.fromCharCode(65 + i)}</p>
+                          <p className="text-sm" style={{ color: '#4A4A4A' }}>Verified Buyer</p>
+                        </div>
+                      </div>
+                      <div className="flex">
+                        {[1,2,3,4,5].map(s => (
+                          <Star key={s} className="w-4 h-4 fill-current" style={{ color: '#CA8A04' }} />
+                        ))}
+                      </div>
+                    </div>
+                    <p style={{ color: '#4A4A4A' }}>
+                      Excellent quality products and professional service. Highly recommended for textile exports.
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex gap-8 text-sm">
-            <div>
-              <h4 className="font-semibold mb-2">Platform</h4>
-              <ul className="space-y-1 text-gray-400">
-                <li><Link href="/marketplace">Products</Link></li>
-                <li><Link href="/marketplace/suppliers">Suppliers</Link></li>
-                <li><Link href="/marketplace/rfqs">RFQs</Link></li>
-              </ul>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Trust Badges */}
+            <div className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+              <h3 className="font-bold mb-4">Trust Badges</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" style={{ color: '#16A34A' }} />
+                  <span>GST Verified</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" style={{ color: '#0891B2' }} />
+                  <span>Verified Supplier</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" style={{ color: '#A6824A' }} />
+                  <span>High Response Rate</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+              <h3 className="font-bold mb-4">Quick Stats</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span style={{ color: '#4A4A4A' }}>Years in Business</span>
+                  <span className="font-bold">{supplier.yearsInBusiness}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: '#4A4A4A' }}>Total Orders</span>
+                  <span className="font-bold">{supplier.totalOrders.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: '#4A4A4A' }}>On-Time Delivery</span>
+                  <span className="font-bold" style={{ color: '#16A34A' }}>{supplier.onTimeDelivery}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact */}
+            <div className="p-6 rounded-xl" style={{ backgroundColor: 'white' }}>
+              <h3 className="font-bold mb-4">Contact Supplier</h3>
+              <button className="w-full py-3 rounded-xl font-bold text-white mb-3" style={{ backgroundColor: '#154230' }}>
+                Send Enquiry
+              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="py-3 rounded-xl font-medium" style={{ backgroundColor: '#25D366', color: 'white' }}>
+                  <MessageCircle className="w-5 h-5 inline mr-1" /> WhatsApp
+                </button>
+                <button className="py-3 rounded-xl font-medium" style={{ backgroundColor: '#16A34A', color: 'white' }}>
+                  <Phone className="w-5 h-5 inline mr-1" /> Call
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">© {new Date().getFullYear()} LEVERAGE. All rights reserved.</div>
-      </footer>
+      </div>
     </div>
   );
 }

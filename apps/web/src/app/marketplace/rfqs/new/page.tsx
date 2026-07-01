@@ -28,7 +28,6 @@ export default function NewRFQPage() {
     location: '',
     deadline: '',
     description: '',
-    attachments: [] as string[],
   });
 
   const handleSubmit = () => {
@@ -37,7 +36,7 @@ export default function NewRFQPage() {
       return;
     }
     toast.success('RFQ posted successfully!');
-    setTimeout(() => window.location.href = '/marketplace/rfqs', 1500);
+    setTimeout(() => { window.location.href = '/marketplace/rfqs'; }, 1500);
   };
 
   return (
@@ -169,12 +168,7 @@ export default function NewRFQPage() {
         </div>
       </div>
 
-      {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 z-40">
-        <button onClick={handleSubmit} className="w-full py-3 bg-[#5D1E21] text-white font-bold rounded-lg">Post RFQ</button>
-      </div>
-
-      {/* Footer */}
+      {/* Desktop Footer */}
       <footer className="hidden md:block bg-gray-900 text-white py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-gray-400 text-sm">© {new Date().getFullYear()} LEVERAGE. All rights reserved.</p>
