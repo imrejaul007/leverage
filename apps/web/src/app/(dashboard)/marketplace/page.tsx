@@ -126,7 +126,7 @@ export default function MarketplacePage() {
                     className="w-full h-12 pl-12 pr-4 bg-white rounded-l-xl text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
-                <button className="px-8 h-12 bg-[#A6824A] hover:bg-[#8a6a3a] text-white font-semibold rounded-r-xl transition-colors">
+                <button className="px-8 h-12 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-semibold rounded-r-xl transition-colors">
                   Search
                 </button>
               </div>
@@ -137,7 +137,7 @@ export default function MarketplacePage() {
               <Link href="/login" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors">
                 Sign In
               </Link>
-              <Link href="/rfqs/new" className="px-5 py-2.5 bg-[#A6824A] hover:bg-[#8a6a3a] text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+              <Link href="/rfqs/new" className="px-5 py-2.5 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-medium rounded-lg transition-colors flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Post RFQ
               </Link>
@@ -183,7 +183,7 @@ export default function MarketplacePage() {
             <h3 className="font-bold text-lg">Can't find what you need?</h3>
             <p className="text-white/80 text-sm">Post a Request for Quote and let suppliers come to you</p>
           </div>
-          <Link href="/rfqs/new" className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#A6824A] font-semibold rounded-lg hover:bg-white/90 transition-colors">
+          <Link href="/rfqs/new" className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#5D1E21] font-semibold rounded-lg hover:bg-white/90 transition-colors">
             <Plus className="w-5 h-5" />
             Post RFQ
           </Link>
