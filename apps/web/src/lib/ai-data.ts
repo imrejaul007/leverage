@@ -815,11 +815,601 @@ export const HAZMAT_CLASSES = [
   { class: '9', name: 'Miscellaneous', divisions: null, examples: ['Dry ice', 'Lithium batteries', 'Asbestos'], packingGroup: null },
 ];
 
+// ============================================
+// MORE HS CODES - Shoes, Bags, Cosmetics, Sports (Chapter 64-67)
+// ============================================
+export const HS_CODES_EXTENDED = [
+  // Footwear (Chapter 64)
+  { code: '640110', description: 'Waterproof footwear with metal toe-cap', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640192', description: 'Ski boots, rubber/plastic', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640199', description: 'Other waterproof footwear', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640212', description: 'Ski boots, leather', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640219', description: 'Other sports footwear, rubber/plastic', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640220', description: 'Footwear with rubber/plastic strap', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640291', description: 'Covering ankle, rubber/plastic', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640299', description: 'Other footwear, rubber/plastic', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640312', description: 'Ski boots, leather', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640319', description: 'Sports footwear, leather', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640320', description: 'Footwear, leather strap', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640340', description: 'Footwear with metal toe-cap', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640351', description: 'Footwear, leather, covering ankle', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640359', description: 'Other footwear, leather', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640391', description: 'Footwear, plastic, covering ankle', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640399', description: 'Other footwear, plastic', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640411', description: 'Sports footwear, tennis shoes', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640419', description: 'Other footwear with textile parts', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640420', description: 'Footwear, leather sole', category: 'Footwear', weight: 'pairs', duty_us: 8, duty_eu: 17, duty_uk: 0 },
+  { code: '640510', description: 'Footwear, textile upper', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640520', description: 'Footwear, textile upper (imitation) ', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640590', description: 'Other footwear, other materials', category: 'Footwear', weight: 'pairs', duty_us: 37.5, duty_eu: 17, duty_uk: 0 },
+  { code: '640610', description: 'Uppers for footwear', category: 'Footwear', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '640620', description: 'Outer soles and heels of rubber/plastic', category: 'Footwear', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '640690', description: 'Parts of footwear', category: 'Footwear', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+
+  // Bags and Cases (Chapter 42)
+  { code: '420100', description: 'Saddlery and harnesses', category: 'Bags', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '420211', description: 'Trunk/suitcase, leather surface', category: 'Bags', weight: 'pcs', duty_us: 8, duty_eu: 0, duty_uk: 0 },
+  { code: '420212', description: 'Trunk/suitcase, plastic/textile', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420219', description: 'Trunk/suitcase, other materials', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420221', description: 'Handbags, leather surface', category: 'Bags', weight: 'pcs', duty_us: 8, duty_eu: 0, duty_uk: 0 },
+  { code: '420222', description: 'Handbags, plastic/textile', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420229', description: 'Handbags, other materials', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420231', description: 'Articles for pocket, leather', category: 'Bags', weight: 'pcs', duty_us: 8, duty_eu: 0, duty_uk: 0 },
+  { code: '420232', description: 'Articles for pocket, plastic/textile', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420239', description: 'Articles for pocket, other', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420291', description: 'Other containers, leather', category: 'Bags', weight: 'pcs', duty_us: 8, duty_eu: 0, duty_uk: 0 },
+  { code: '420292', description: 'Other containers, plastic/textile', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+  { code: '420299', description: 'Other containers, other', category: 'Bags', weight: 'pcs', duty_us: 20, duty_eu: 0, duty_uk: 0 },
+
+  // Watches and Clocks (Chapter 91)
+  { code: '910111', description: 'Wrist watch, battery, precious metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910119', description: 'Wrist watch, battery, other metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910121', description: 'Wrist watch, automatic, precious metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910129', description: 'Wrist watch, automatic, other metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910191', description: 'Pocket watch, battery, precious metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910199', description: 'Pocket watch, battery, other metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910211', description: 'Wrist watch, battery, other metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910219', description: 'Wrist watch, battery, other', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910221', description: 'Wrist watch, automatic, other metal', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910229', description: 'Wrist watch, automatic, other', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910291', description: 'Pocket watch, battery', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910299', description: 'Pocket watch, other', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910310', description: 'Clocks, battery, small', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+  { code: '910390', description: 'Clocks, battery, other', category: 'Watches', weight: 'pcs', duty_us: 6.25, duty_eu: 4.5, duty_uk: 0 },
+
+  // Jewelry (Chapter 71)
+  { code: '711311', description: 'Silver jewelry', category: 'Jewelry', weight: 'g', duty_us: 6.5, duty_eu: 0, duty_uk: 0 },
+  { code: '711319', description: 'Jewelry, precious metal', category: 'Jewelry', weight: 'g', duty_us: 6.5, duty_eu: 0, duty_uk: 0 },
+  { code: '711320', description: 'Jewelry, base metal', category: 'Jewelry', weight: 'g', duty_us: 6.5, duty_eu: 0, duty_uk: 0 },
+  { code: '711411', description: 'Silverware', category: 'Jewelry', weight: 'g', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '711419', description: 'Gold/platinum articles', category: 'Jewelry', weight: 'g', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '711420', description: 'Gold/silver articles', category: 'Jewelry', weight: 'g', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+
+  // Cosmetics (Chapter 33)
+  { code: '330300', description: 'Perfumes and toilet waters', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330410', description: 'Lip makeup', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330420', description: 'Eye makeup', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330430', description: 'Manicure/pedicure preparations', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330491', description: 'Powder, makeup', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330499', description: 'Other beauty/makeup preparations', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330510', description: 'Shampoos', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330520', description: 'Preparations for waving hair', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330530', description: 'Hair lacquers', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330590', description: 'Other hair preparations', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330610', description: 'Dentrifices', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330620', description: 'Dental floss', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330690', description: 'Other oral/dental hygiene', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330710', description: 'Shaving preparations', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330720', description: 'Personal deodorants', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330730', description: 'Perfumed bath salts', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330741', description: 'Odoriferous preparations for burning', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330749', description: 'Other perfumery', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '330790', description: 'Depilatories, other', category: 'Cosmetics', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+
+  // Sports Equipment (Chapter 95)
+  { code: '950310', description: 'Golf equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950320', description: 'Table tennis articles', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950331', description: 'Golf balls', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950339', description: 'Other golf equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950340', description: 'Chess equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950350', description: 'Card games', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950360', description: 'Video game controllers', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950370', description: 'Other game tables', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950380', description: 'Other electronic games', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950390', description: 'Other toys and models', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950410', description: 'Video games, consoles', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950420', description: 'Billiard articles', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950450', description: 'Video game accessories', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950490', description: 'Other games', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950510', description: 'Christmas ornaments', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950590', description: 'Festive articles', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950611', description: 'Snow-skis', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950612', description: 'Ski bindings', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950619', description: 'Other snow-ski equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950621', description: 'Sailboards', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950629', description: 'Water skis, surfboards', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950631', description: 'Golf clubs', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950632', description: 'Golf balls', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950639', description: 'Other golf equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950640', description: 'Table tennis articles', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950651', description: 'Lawn tennis rackets', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950659', description: 'Badminton rackets', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950661', description: 'Ball, tennis/soccer', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950662', description: 'Inflatable balls', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950669', description: 'Other balls', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950670', description: 'Ice skates, roller skates', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950691', description: 'Gym equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950699', description: 'Other sports equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950710', description: 'Fishing rods', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950720', description: 'Fish hooks', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950730', description: 'Fishing reels', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '950790', description: 'Other fishing equipment', category: 'Sports', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+
+  // Medical Equipment (Chapter 90)
+  { code: '901811', description: 'Electrocardiographs', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901812', description: 'Ultrasonic scanning apparatus', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901813', description: 'Magnetic resonance imaging', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901814', description: 'Scintigraphic apparatus', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901819', description: 'Other electrodiagnostic apparatus', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901820', description: 'Ultra-violet/infra-red apparatus', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901831', description: 'Syringes, with or without needles', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901832', description: 'Tubular metal needles', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901839', description: 'Other needles and catheters', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901841', description: 'Dental drill engines', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901849', description: 'Other dental instruments', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901850', description: 'Other ophthalmic instruments', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '901890', description: 'Other medical instruments', category: 'Medical', weight: 'pcs', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+
+  // Office Supplies (Chapter 48)
+  { code: '480100', description: 'Newsprint', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480210', description: 'Handmade paper', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480220', description: 'Paper for photos', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480240', description: 'Wallpaper base', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480254', description: 'Writing paper <40gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480255', description: 'Writing paper 40-150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480256', description: 'Writing paper 40-150gsm sheets', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480257', description: 'Writing paper 40-150gsm other', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480258', description: 'Writing paper >150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480261', description: 'Paper >150gsm in rolls', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480262', description: 'Paper >150gsm in sheets', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480269', description: 'Other paper >150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480300', description: 'Toilet paper', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480411', description: 'Kraftliner, unbleached', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480419', description: 'Kraftliner, other', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480421', description: 'Sack kraft paper, unbleached', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480429', description: 'Sack kraft paper, other', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480431', description: 'Kraft paper <115gsm unbleached', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480439', description: 'Kraft paper <115gsm other', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480441', description: 'Kraft paper 115-150gsm unbleached', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480442', description: 'Kraft paper 115-150gsm bleached', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480449', description: 'Kraft paper 115-150gsm other', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480511', description: 'Semi-chemical fluting paper', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480519', description: 'Other fluting paper', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480524', description: 'Testliner 115-150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480525', description: 'Testliner >150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480591', description: 'Other paper 115-150gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480592', description: 'Other paper 150-225gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480593', description: 'Other paper >225gsm', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480610', description: 'Vegetable parchment', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480620', description: 'Greaseproof papers', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480630', description: 'Tracing papers', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480640', description: 'Glassine papers', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+  { code: '480700', description: 'Composite paper', category: 'Paper', weight: 'kg', duty_us: 0, duty_eu: 0, duty_uk: 0 },
+];
+
+// ============================================
+// MORE COUNTRIES (80+ countries)
+// ============================================
+export const COUNTRIES_EXTENDED = [
+  ...COUNTRIES,
+  { code: 'HU', name: 'Hungary', region: 'Europe', currency: 'HUF', avgDuty: 4.2, vat: 27, majorPorts: ['Budapest (inland)'], restrictions: ['CE marking required'] },
+  { code: 'RO', name: 'Romania', region: 'Europe', currency: 'RON', avgDuty: 4.2, vat: 19, majorPorts: ['Constanta', 'Midia'], restrictions: ['CE marking required'] },
+  { code: 'BG', name: 'Bulgaria', region: 'Europe', currency: 'BGN', avgDuty: 4.2, vat: 20, majorPorts: ['Varna', 'Burgas'], restrictions: ['CE marking required'] },
+  { code: 'HR', name: 'Croatia', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 25, majorPorts: ['Rijeka', 'Split'], restrictions: ['CE marking required'] },
+  { code: 'RS', name: 'Serbia', region: 'Europe', currency: 'RSD', avgDuty: 8.0, vat: 20, majorPorts: ['Belgrade (inland)'], restrictions: ['Import license for some goods'] },
+  { code: 'UA', name: 'Ukraine', region: 'Europe', currency: 'UAH', avgDuty: 9.0, vat: 20, majorPorts: ['Odessa', 'Chernomorsk'], restrictions: ['Ukrainian standards', 'War-related restrictions'] },
+  { code: 'BY', name: 'Belarus', region: 'Europe', currency: 'BYR', avgDuty: 10.0, vat: 20, majorPorts: ['Brest (inland)'], restrictions: ['Eurasian standards', 'Sanctions affected'] },
+  { code: 'KZ', name: 'Kazakhstan', region: 'Asia', currency: 'KZT', avgDuty: 8.5, vat: 12, majorPorts: ['Almaty (inland)'], restrictions: ['Eurasian Economic Union'] },
+  { code: 'UZ', name: 'Uzbekistan', region: 'Asia', currency: 'UZS', avgDuty: 15.0, vat: 15, majorPorts: ['Tashkent (inland)'], restrictions: ['State registration required'] },
+  { code: 'TJ', name: 'Tajikistan', region: 'Asia', currency: 'TJS', avgDuty: 10.0, vat: 18, majorPorts: ['Dushanbe (inland)'], restrictions: ['Import permits required'] },
+  { code: 'TM', name: 'Turkmenistan', region: 'Asia', currency: 'TMT', avgDuty: 10.0, vat: 15, majorPorts: ['Turkmenbashi ( Caspian)'], restrictions: ['State import monopoly for some goods'] },
+  { code: 'KG', name: 'Kyrgyzstan', region: 'Asia', currency: 'KGS', avgDuty: 8.0, vat: 12, majorPorts: ['Bishkek (inland)'], restrictions: ['Eurasian Economic Union'] },
+  { code: 'MM', name: 'Myanmar', region: 'Asia', currency: 'MMK', avgDuty: 12.5, vat: 5, majorPorts: ['Yangon', 'Thilawa'], restrictions: ['Import license required', 'Myanmar standards'] },
+  { code: 'LA', name: 'Laos', region: 'Asia', currency: 'LAK', avgDuty: 10.0, vat: 10, majorPorts: ['Vientiane (inland)'], restrictions: ['Import license for some goods'] },
+  { code: 'KH', name: 'Cambodia', region: 'Asia', currency: 'KHR', avgDuty: 0, vat: 10, majorPorts: ['Sihanoukville'], restrictions: ['Export processing zones', 'Made in Cambodia labeling'] },
+  { code: 'BN', name: 'Brunei', region: 'Asia', currency: 'BND', avgDuty: 0, vat: 0, majorPorts: ['Muara'], restrictions: ['Sharia law compliance'] },
+  { code: 'BT', name: 'Bhutan', region: 'Asia', currency: 'BTN', avgDuty: 30.0, vat: 7, majorPorts: ['Phuentsholing (inland)'], restrictions: ['Limited ports of entry'] },
+  { code: 'LK', name: 'Sri Lanka', region: 'Asia', currency: 'LKR', avgDuty: 15.0, vat: 18, majorPorts: ['Colombo', 'Jaffna'], restrictions: ['Sri Lanka Standards Institution'] },
+  { code: 'MV', name: 'Maldives', region: 'Asia', currency: 'MVR', avgDuty: 30.0, vat: 0, majorPorts: ['Male'], restrictions: ['Import permit required'] },
+  { code: 'NP', name: 'Nepal', region: 'Asia', currency: 'NPR', avgDuty: 30.0, vat: 13, majorPorts: ['Birgunj (inland)'], restrictions: ['Import license required', 'Landlocked'] },
+  { code: 'BG', name: 'Bangladesh', region: 'Asia', currency: 'BDT', avgDuty: 15.0, vat: 15, majorPorts: ['Chittagong', 'Mongla'], restrictions: ['BSTI certification', 'Quarantine requirements'] },
+  { code: 'AM', name: 'Armenia', region: 'Europe', currency: 'AMD', avgDuty: 10.0, vat: 20, majorPorts: ['Yerevan (inland)'], restrictions: ['Eurasian Economic Union'] },
+  { code: 'AZ', name: 'Azerbaijan', region: 'Europe', currency: 'AZN', avgDuty: 10.0, vat: 18, majorPorts: ['Baku'], restrictions: ['Azerbaijan standards'] },
+  { code: 'GE', name: 'Georgia', region: 'Europe', currency: 'GEL', avgDuty: 5.0, vat: 18, majorPorts: ['Poti', 'Batumi'], restrictions: ['Free trade with EU'] },
+  { code: 'CY', name: 'Cyprus', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 19, majorPorts: ['Limassol', 'Larnaca'], restrictions: ['CE marking required'] },
+  { code: 'MT', name: 'Malta', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 18, majorPorts: ['Valletta'], restrictions: ['CE marking required'] },
+  { code: 'SK', name: 'Slovakia', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 20, majorPorts: ['Bratislava (inland)'], restrictions: ['CE marking required'] },
+  { code: 'SI', name: 'Slovenia', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 22, majorPorts: ['Koper'], restrictions: ['CE marking required'] },
+  { code: 'EE', name: 'Estonia', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 22, majorPorts: ['Tallinn'], restrictions: ['CE marking required'] },
+  { code: 'LV', name: 'Latvia', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 21, majorPorts: ['Riga'], restrictions: ['CE marking required'] },
+  { code: 'LT', name: 'Lithuania', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 21, majorPorts: ['Klaipeda'], restrictions: ['CE marking required'] },
+  { code: 'IE', name: 'Ireland', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 23, majorPorts: ['Dublin', 'Cork'], restrictions: ['CE marking required'] },
+  { code: 'GR', name: 'Greece', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 24, majorPorts: ['Piraeus', 'Thessaloniki'], restrictions: ['CE marking required'] },
+  { code: 'LU', name: 'Luxembourg', region: 'Europe', currency: 'EUR', avgDuty: 4.0, vat: 17, majorPorts: ['Luxembourg (inland)'], restrictions: ['CE marking required'] },
+  { code: 'IS', name: 'Iceland', region: 'Europe', currency: 'ISK', avgDuty: 0, vat: 24, majorPorts: ['Reykjavik'], restrictions: ['EEA member', 'EFTA standards'] },
+  { code: 'TN', name: 'Tunisia', region: 'Africa', currency: 'TND', avgDuty: 10.0, vat: 19, majorPorts: ['Tunis', 'Sfax'], restrictions: ['Import license for some goods'] },
+  { code: 'DZ', name: 'Algeria', region: 'Africa', currency: 'DZD', avgDuty: 30.0, vat: 19, majorPorts: ['Algiers', 'Oran'], restrictions: ['Import license required', 'Currency restrictions'] },
+  { code: 'LY', name: 'Libya', region: 'Africa', currency: 'LYD', avgDuty: 20.0, vat: 0, majorPorts: ['Tripoli', 'Benghazi'], restrictions: ['State import control', 'Sanctions affected'] },
+  { code: 'SD', name: 'Sudan', region: 'Africa', currency: 'SDG', avgDuty: 20.0, vat: 17, majorPorts: ['Port Sudan'], restrictions: ['Import license required'] },
+  { code: 'ET', name: 'Ethiopia', region: 'Africa', currency: 'ETB', avgDuty: 20.0, vat: 15, majorPorts: ['Djibouti'], restrictions: ['Import license required', 'Letter of credit required'] },
+  { code: 'TZ', name: 'Tanzania', region: 'Africa', currency: 'TZS', avgDuty: 10.0, vat: 18, majorPorts: ['Dar es Salaam'], restrictions: ['TBS standards', 'Pre-shipment inspection'] },
+  { code: 'UG', name: 'Uganda', region: 'Africa', currency: 'UGX', avgDuty: 15.0, vat: 18, majorPorts: ['Mombasa (via Kenya)'], restrictions: ['UNBS standards', 'Import license for some goods'] },
+  { code: 'RW', name: 'Rwanda', region: 'Africa', currency: 'RWF', avgDuty: 15.0, vat: 18, majorPorts: ['Kigali (inland)'], restrictions: ['RBS standards', 'Landlocked'] },
+  { code: 'BI', name: 'Burundi', region: 'Africa', currency: 'BIF', avgDuty: 20.0, vat: 18, majorPorts: ['Bujumbura (inland)'], restrictions: ['Import license required', 'Landlocked'] },
+  { code: 'MW', name: 'Malawi', region: 'Africa', currency: 'MWK', avgDuty: 15.0, vat: 16.5, majorPorts: ['Beira (via Mozambique)'], restrictions: ['MBS standards', 'Landlocked'] },
+  { code: 'ZM', name: 'Zambia', region: 'Africa', currency: 'ZMW', avgDuty: 15.0, vat: 16, majorPorts: ['Durban (via South Africa)'], restrictions: ['ZABS standards', 'Landlocked'] },
+  { code: 'ZW', name: 'Zimbabwe', region: 'Africa', currency: 'ZWL', avgDuty: 25.0, vat: 15, majorPorts: ['Beira (via Mozambique)'], restrictions: ['Import restrictions', 'Landlocked'] },
+  { code: 'AO', name: 'Angola', region: 'Africa', currency: 'AOA', avgDuty: 20.0, vat: 14, majorPorts: ['Luanda', 'Lobito'], restrictions: ['Import license required', 'Currency restrictions'] },
+  { code: 'MZ', name: 'Mozambique', region: 'Africa', currency: 'MZN', avgDuty: 10.0, vat: 17, majorPorts: ['Maputo', 'Beira'], restrictions: ['INNOQ standards'] },
+  { code: 'CM', name: 'Cameroon', region: 'Africa', currency: 'XAF', avgDuty: 15.0, vat: 19.25, majorPorts: ['Douala'], restrictions: ['MINCOMMERCE standards'] },
+  { code: 'CI', name: 'Ivory Coast', region: 'Africa', currency: 'XOF', avgDuty: 10.0, vat: 18, majorPorts: ['Abidjan', 'San Pedro'], restrictions: ['ODOCCR standards'] },
+  { code: 'SN', name: 'Senegal', region: 'Africa', currency: 'XOF', avgDuty: 10.0, vat: 18, majorPorts: ['Dakar'], restrictions: ['ANSTS standards'] },
+  { code: 'ML', name: 'Mali', region: 'Africa', currency: 'XOF', avgDuty: 10.0, vat: 18, majorPorts: ['Bamako (inland)'], restrictions: ['Landlocked', 'WAEMU regulations'] },
+  { code: 'BF', name: 'Burkina Faso', region: 'Africa', currency: 'XOF', avgDuty: 10.0, vat: 18, majorPorts: ['Abidjan (via Ivory Coast)'], restrictions: ['Landlocked', 'WAEMU regulations'] },
+  { code: 'NE', name: 'Niger', region: 'Africa', currency: 'XOF', avgDuty: 10.0, vat: 19, majorPorts: ['Cotonou (via Benin)'], restrictions: ['Landlocked', 'Import restrictions'] },
+  { code: 'CG', name: 'Republic of Congo', region: 'Africa', currency: 'XAF', avgDuty: 15.0, vat: 18, majorPorts: ['Pointe-Noire'], restrictions: ['Import license for some goods'] },
+  { code: 'CD', name: 'DR Congo', region: 'Africa', currency: 'CDF', avgDuty: 20.0, vat: 16, majorPorts: ['Matadi'], restrictions: ['Landlocked except via DRC', 'Import license required'] },
+  { code: 'FJ', name: 'Fiji', region: 'Oceania', currency: 'FJD', avgDuty: 10.0, vat: 15, majorPorts: ['Suva'], restrictions: ['Fiji Standards Board'] },
+  { code: 'PG', name: 'Papua New Guinea', region: 'Oceania', currency: 'PGK', avgDuty: 5.0, vat: 12, majorPorts: ['Port Moresby', 'Lae'], restrictions: ['PNGCSD standards'] },
+  { code: 'SB', name: 'Solomon Islands', region: 'Oceania', currency: 'SBD', avgDuty: 10.0, vat: 15, majorPorts: ['Honiara'], restrictions: ['Import license for some goods'] },
+  { code: 'VU', name: 'Vanuatu', region: 'Oceania', currency: 'VUV', avgDuty: 0, vat: 15, majorPorts: ['Port Vila'], restrictions: ['Import permit required'] },
+  { code: 'WS', name: 'Samoa', region: 'Oceania', currency: 'WST', avgDuty: 10.0, vat: 15, majorPorts: ['Apia'], restrictions: ['Import permit required'] },
+  { code: 'TO', name: 'Tonga', region: 'Oceania', currency: 'TOP', avgDuty: 10.0, vat: 15, majorPorts: ['Nukualofa'], restrictions: ['Import permit required'] },
+  { code: 'PA', name: 'Panama', region: 'Central America', currency: 'PAB', avgDuty: 5.0, vat: 7, majorPorts: ['Colon', 'Panama Canal'], restrictions: ['ACODECO standards'] },
+  { code: 'CR', name: 'Costa Rica', region: 'Central America', weight: 'pcs', currency: 'CRC', avgDuty: 5.0, vat: 13, majorPorts: ['Limon', 'Caldera'], restrictions: ['MEIC standards'] },
+  { code: 'HN', name: 'Honduras', region: 'Central America', currency: 'HNL', avgDuty: 5.0, vat: 15, majorPorts: ['Puerto Cortes'], restrictions: ['RTCA standards'] },
+  { code: 'NI', name: 'Nicaragua', region: 'Central America', currency: 'NIO', avgDuty: 5.0, vat: 15, majorPorts: ['Corinto'], restrictions: ['RTCA standards'] },
+  { code: 'SV', name: 'El Salvador', region: 'Central America', currency: 'USD', avgDuty: 5.0, vat: 13, majorPorts: ['Acajutla'], restrictions: ['RTCA standards'] },
+  { code: 'GT', name: 'Guatemala', region: 'Central America', currency: 'GTQ', avgDuty: 5.0, vat: 12, majorPorts: ['Puerto Quetzal'], restrictions: ['RTCA standards'] },
+  { code: 'BZ', name: 'Belize', region: 'Central America', currency: 'BZD', avgDuty: 5.0, vat: 12.5, majorPorts: ['Belize City'], restrictions: ['BSI standards'] },
+  { code: 'CU', name: 'Cuba', region: 'Caribbean', currency: 'CUP', avgDuty: 20.0, vat: 10, majorPorts: ['Havana'], restrictions: ['State import control', 'US embargo'] },
+  { code: 'JM', name: 'Jamaica', region: 'Caribbean', currency: 'JMD', avgDuty: 5.0, vat: 16.5, majorPorts: ['Kingston'], restrictions: ['JBS standards'] },
+  { code: 'TT', name: 'Trinidad and Tobago', region: 'Caribbean', currency: 'TTD', avgDuty: 0, vat: 12.5, majorPorts: ['Port of Spain'], restrictions: ['TTBS standards'] },
+  { code: 'BB', name: 'Barbados', region: 'Caribbean', currency: 'BBD', avgDuty: 0, vat: 17.5, majorPorts: ['Bridgetown'], restrictions: ['Barbados Standards Act'] },
+  { code: 'BS', name: 'Bahamas', region: 'Caribbean', currency: 'BSD', avgDuty: 0, vat: 0, majorPorts: ['Nassau'], restrictions: ['Import license for some goods'] },
+  { code: 'EC', name: 'Ecuador', region: 'South America', currency: 'USD', avgDuty: 10.0, vat: 12, majorPorts: ['Guayaquil', 'Manta'], restrictions: ['INEN standards', 'US tariff applies'] },
+  { code: 'BO', name: 'Bolivia', region: 'South America', currency: 'BOB', avgDuty: 10.0, vat: 13, majorPorts: ['Arica (via Chile)'], restrictions: ['Landlocked', 'Import license for some goods'] },
+  { code: 'PY', name: 'Paraguay', region: 'South America', currency: 'PYG', avgDuty: 10.0, vat: 10, majorPorts: ['Buenos Aires (via Argentina)'], restrictions: ['Landlocked', 'INTN standards'] },
+  { code: 'UY', name: 'Uruguay', region: 'South America', currency: 'UYU', avgDuty: 10.0, vat: 22, majorPorts: ['Montevideo'], restrictions: ['UNIT standards'] },
+  { code: 'VE', name: 'Venezuela', region: 'South America', currency: 'VES', avgDuty: 15.0, vat: 16, majorPorts: ['La Guaira', 'Puerto Cabello'], restrictions: ['Currency controls', 'Import restrictions'] },
+  { code: 'GY', name: 'Guyana', region: 'South America', currency: 'GYD', avgDuty: 10.0, vat: 16, majorPorts: ['Georgetown'], restrictions: ['GNBS standards'] },
+  { code: 'SR', name: 'Suriname', region: 'South America', currency: 'SRD', avgDuty: 10.0, vat: 10, majorPorts: ['Paramaribo'], restrictions: ['Import license for some goods'] },
+];
+
+// ============================================
+// MORE PORTS (150+ ports)
+// ============================================
+export const PORTS_EXTENDED = [
+  ...PORTS_CODES,
+  // Mediterranean
+  { code: 'ITGOA', name: 'Genoa', country: 'IT', type: 'container', volume: '2.5M TEU' },
+  { code: 'ITMLS', name: 'Milan (Melzo)', country: 'IT', type: 'rail', volume: ' inland hub' },
+  { code: 'GRPIR', name: 'Piraeus', country: 'GR', type: 'container', volume: '5.6M TEU' },
+  { code: 'GRTHE', name: 'Thessaloniki', country: 'GR', type: 'container', volume: '0.5M TEU' },
+  { code: 'ESALG', name: 'Algeciras', country: 'ES', type: 'container', volume: '5.1M TEU' },
+  { code: 'ESCAD', name: 'Cadiz', country: 'ES', type: 'container', volume: '0.8M TEU' },
+  { code: 'MAJLH', name: 'Jorf Lasfar', country: 'MA', type: 'bulk', volume: 'major' },
+  { code: 'TNTUN', name: 'Tunis', country: 'TN', type: 'container', volume: '0.3M TEU' },
+  { code: 'EGPSD', name: 'Port Said', country: 'EG', type: 'container', volume: '3.2M TEU' },
+  { code: 'EGALY', name: 'Alexandria', country: 'EG', type: 'container', volume: '1.2M TEU' },
+  { code: 'ILSHA', name: 'Haifa', country: 'IL', type: 'container', volume: '1.5M TEU' },
+  { code: 'ILASH', name: 'Ashdod', country: 'IL', type: 'container', volume: '1.4M TEU' },
+  { code: 'TRMRS', name: 'Mersin', country: 'TR', type: 'container', volume: '2.0M TEU' },
+  { code: 'TRISK', name: 'Iskenderun', country: 'TR', type: 'container', volume: '0.4M TEU' },
+  // West Africa
+  { code: 'MAPTM', name: 'Casablanca', country: 'MA', type: 'container', volume: '0.6M TEU' },
+  { code: 'MAPTJ', name: 'Tanger Med', country: 'MA', type: 'container', volume: '7.2M TEU' },
+  { code: 'SNDKR', name: 'Dakar', country: 'SN', type: 'container', volume: '0.4M TEU' },
+  { code: 'GNDNK', name: 'Conakry', country: 'GN', type: 'container', volume: '0.3M TEU' },
+  { code: 'LRMON', name: 'Monrovia', country: 'LR', type: 'container', volume: '0.2M TEU' },
+  { code: 'COTDX', name: 'Abidjan', country: 'CI', type: 'container', volume: '0.8M TEU' },
+  { code: 'GHTAQ', name: 'Tema', country: 'GH', type: 'container', volume: '1.0M TEU' },
+  { code: 'NGPBN', name: 'Port Harcourt', country: 'NG', type: 'container', volume: '0.5M TEU' },
+  { code: 'Lagos', name: 'Apapa', country: 'NG', type: 'container', volume: '0.3M TEU' },
+  { code: 'CMDOU', name: 'Douala', country: 'CM', type: 'container', volume: '0.4M TEU' },
+  { code: 'AOLAD', name: 'Luanda', country: 'AO', type: 'container', volume: '0.8M TEU' },
+  { code: 'ZADUR', name: 'Durban', country: 'ZA', type: 'container', volume: '3.0M TEU' },
+  { code: 'ZACPT', name: 'Cape Town', country: 'ZA', type: 'container', volume: '0.9M TEU' },
+  { code: 'ZAPEL', name: 'Port Elizabeth', country: 'ZA', type: 'container', volume: '0.3M TEU' },
+  // East Africa
+  { code: 'MOTMM', name: 'Maputo', country: 'MZ', type: 'container', volume: '0.3M TEU' },
+  { code: 'TZDAR', name: 'Dar es Salaam', country: 'TZ', type: 'container', volume: '0.7M TEU' },
+  { code: 'KRMBA', name: 'Mombasa', country: 'KE', type: 'container', volume: '1.4M TEU' },
+  { code: 'MVDXB', name: 'Djibouti', country: 'DJ', type: 'container', volume: '0.9M TEU' },
+  // South Asia
+  { code: 'LKAAC', name: 'Colombo', country: 'LK', type: 'container', volume: '7.2M TEU' },
+  { code: 'INVTN', name: 'Visakhapatnam', country: 'IN', type: 'container', volume: '0.2M TEU' },
+  { code: 'INKOL', name: 'Kolkata', country: 'IN', type: 'container', volume: '0.8M TEU' },
+  { code: 'INGOI', name: 'Goa', country: 'IN', type: 'container', volume: '0.1M TEU' },
+  { code: 'PKKHI', name: 'Karachi', country: 'PK', type: 'container', volume: '3.0M TEU' },
+  { code: 'PKBQM', name: 'Bin Qasim', country: 'PK', type: 'container', volume: '1.0M TEU' },
+  { code: 'BDCPG', name: 'Chittagong', country: 'BD', type: 'container', volume: '3.0M TEU' },
+  { code: 'BDMGL', name: 'Mongla', country: 'BD', type: 'bulk', volume: 'major' },
+  // Southeast Asia
+  { code: 'SGSIN', name: 'Singapore', country: 'SG', type: 'container', volume: '37.2M TEU' },
+  { code: 'MYPKG', name: 'Port Klang', country: 'MY', type: 'container', volume: '14.0M TEU' },
+  { code: 'MYTPP', name: 'Tanjung Pelepas', country: 'MY', type: 'container', volume: '10.0M TEU' },
+  { code: 'THLCH', name: 'Laem Chabang', country: 'TH', type: 'container', volume: '8.2M TEU' },
+  { code: 'THBKK', name: 'Bangkok', country: 'TH', type: 'container', volume: '1.8M TEU' },
+  { code: 'VNSGN', name: 'Ho Chi Minh City', country: 'VN', type: 'container', volume: '8.4M TEU' },
+  { code: 'VNHPh', name: 'Hai Phong', country: 'VN', type: 'container', volume: '6.5M TEU' },
+  { code: 'IDTPP', name: 'Tanjung Priok', country: 'ID', type: 'container', volume: '6.6M TEU' },
+  { code: 'IDSUB', name: 'Surabaya', country: 'ID', type: 'container', volume: '1.5M TEU' },
+  { code: 'PHMNL', name: 'Manila', country: 'PH', type: 'container', volume: '5.5M TEU' },
+  { code: 'PHCEB', name: 'Cebu', country: 'PH', type: 'container', volume: '0.5M TEU' },
+  // North Asia
+  { code: 'KRPUS', name: 'Busan', country: 'KR', type: 'container', volume: '22.0M TEU' },
+  { code: 'KRPUS', name: 'Incheon', country: 'KR', type: 'container', volume: '3.0M TEU' },
+  { code: 'JPTYO', name: 'Tokyo', country: 'JP', type: 'container', volume: '4.6M TEU' },
+  { code: 'JPYOK', name: 'Yokohama', country: 'JP', type: 'container', volume: '3.2M TEU' },
+  { code: 'JPOSA', name: 'Osaka', country: 'JP', type: 'container', volume: '3.0M TEU' },
+  { code: 'JPNGO', name: 'Nagoya', country: 'JP', type: 'container', volume: '3.0M TEU' },
+  { code: 'JPUKB', name: 'Ukiah', country: 'JP', type: 'container', volume: '0.3M TEU' },
+  { code: 'CNTAO', name: 'Qingdao', country: 'CN', type: 'container', volume: '24.0M TEU' },
+  { code: 'CNTJN', name: 'Tianjin', country: 'CN', type: 'container', volume: '21.0M TEU' },
+  { code: 'CNNGB', name: 'Ningbo-Zhoushan', country: 'CN', type: 'container', volume: '33.0M TEU' },
+  { code: 'CNSHA', name: 'Shanghai', country: 'CN', type: 'container', volume: '47.3M TEU' },
+  { code: 'CNSZN', name: 'Shenzhen', country: 'CN', type: 'container', volume: '28.0M TEU' },
+  { code: 'CNXMN', name: 'Xiamen', country: 'CN', type: 'container', volume: '12.0M TEU' },
+  { code: 'CNCAN', name: 'Guangzhou', country: 'CN', type: 'container', volume: '24.0M TEU' },
+  // North America
+  { code: 'USSEA', name: 'Seattle/Tacoma', country: 'US', type: 'container', volume: '3.8M TEU' },
+  { code: 'USOAK', name: 'Oakland', country: 'US', type: 'container', volume: '2.5M TEU' },
+  { code: 'USLGB', name: 'Long Beach', country: 'US', type: 'container', volume: '9.1M TEU' },
+  { code: 'USLAX', name: 'Los Angeles', country: 'US', type: 'container', volume: '10.7M TEU' },
+  { code: 'USSAN', name: 'San Diego', country: 'US', type: 'container', volume: '0.4M TEU' },
+  { code: 'USLBC', name: 'Long Beach Container Terminal', country: 'US', type: 'container', volume: '3.0M TEU' },
+  { code: 'USNYC', name: 'New York/New Jersey', country: 'US', type: 'container', volume: '7.5M TEU' },
+  { code: 'USBAL', name: 'Baltimore', country: 'US', type: 'container', volume: '1.0M TEU' },
+  { code: 'USPHL', name: 'Philadelphia', country: 'US', type: 'container', volume: '0.5M TEU' },
+  { code: 'USSVN', name: 'Savannah', country: 'US', type: 'container', volume: '5.8M TEU' },
+  { code: 'USCLT', name: 'Charleston', country: 'US', type: 'container', volume: '2.5M TEU' },
+  { code: 'USHOU', name: 'Houston', country: 'US', type: 'container', volume: '3.0M TEU' },
+  { code: 'USNWK', name: 'Newark', country: 'US', type: 'container', volume: '3.5M TEU' },
+  { code: 'CAHAL', name: 'Halifax', country: 'CA', type: 'container', volume: '0.6M TEU' },
+  { code: 'CAVAN', name: 'Vancouver', country: 'CA', type: 'container', volume: '3.8M TEU' },
+  { code: 'CAPRR', name: 'Prince Rupert', country: 'CA', type: 'container', volume: '1.5M TEU' },
+  { code: 'CAMTL', name: 'Montreal', country: 'CA', type: 'container', volume: '1.6M TEU' },
+  { code: 'MXZLO', name: 'Manzanillo', country: 'MX', type: 'container', volume: '3.2M TEU' },
+  { code: 'MXLAX', name: 'Lazaro Cardenas', country: 'MX', type: 'container', volume: '1.3M TEU' },
+  { code: 'MXVER', name: 'Veracruz', country: 'MX', type: 'container', volume: '1.0M TEU' },
+  { code: 'MXENS', name: 'Ensenada', country: 'MX', type: 'container', volume: '0.2M TEU' },
+];
+
+// ============================================
+// FREIGHT FORWARDERS (Global)
+// ============================================
+export const FREIGHT_FORWARDERS = [
+  { name: 'DHL Global Forwarding', country: 'DE', rating: 4.8, services: ['Air Freight', 'Ocean Freight', 'Road Freight', 'Rail Freight', 'Contract Logistics'], offices: 220, websites: '220+ countries' },
+  { name: 'Kuehne+Nagel', country: 'CH', rating: 4.7, services: ['Air Freight', 'Ocean Freight', 'Road Freight', 'Contract Logistics', 'Industry Solutions'], offices: 100, websites: '100+ countries' },
+  { name: 'DB Schenker', country: 'DE', rating: 4.6, services: ['Air Freight', 'Ocean Freight', 'Road Freight', 'Contract Logistics', 'Specialized Transport'], offices: 180, websites: '130+ countries' },
+  { name: 'DSV Panalpina', country: 'DK', rating: 4.6, services: ['Air Freight', 'Ocean Freight', 'Road Freight', 'Warehouse', 'Customs'], offices: 90, websites: '80+ countries' },
+  { name: 'Sinotrans', country: 'CN', rating: 4.5, services: ['Ocean Freight', 'Air Freight', 'Rail Freight', 'Warehousing', 'Cross-border eCommerce'], offices: 50, websites: '50+ countries' },
+  { name: 'Expeditors International', country: 'US', rating: 4.5, services: ['Air Freight', 'Ocean Freight', 'Customs Brokerage', 'Warehousing', 'Distribution'], offices: 250, websites: '100+ countries' },
+  { name: 'Nippon Express', country: 'JP', rating: 4.6, services: ['Air Freight', 'Ocean Freight', 'Rail Freight', 'Trucking', 'Warehousing'], offices: 70, websites: '40+ countries' },
+  { name: 'C.H. Robinson', country: 'US', rating: 4.4, services: ['Trucking', 'Ocean Freight', 'Air Freight', 'Contract Logistics', 'Retail Solutions'], offices: 280, websites: 'US focused' },
+  { name: 'CEVA Logistics', country: 'CH', rating: 4.3, services: ['Air Freight', 'Ocean Freight', 'Contract Logistics', 'Automotive', 'Healthcare'], offices: 160, websites: '130+ countries' },
+  { name: 'Panalpina', country: 'CH', rating: 4.4, services: ['Air Freight', 'Ocean Freight', 'Project Logistics', 'Oil & Gas', 'Mining'], offices: 70, websites: '70+ countries' },
+  { name: 'Bollore Logistics', country: 'FR', rating: 4.3, services: ['Air Freight', 'Ocean Freight', 'Customs', 'Warehousing', 'Africa specialists'], offices: 105, websites: '100+ countries' },
+  { name: 'Kerry Logistics', country: 'HK', rating: 4.4, services: ['Ocean Freight', 'Air Freight', 'Cross-border eCommerce', 'Cold Chain', 'Chemicals'], offices: 50, websites: '60+ countries' },
+  { name: 'CSSC (Sinotrans Shipping)', country: 'CN', rating: 4.3, services: ['Ocean Freight', 'Shipping Agency', 'Warehousing', 'Liner Agency'], offices: 30, websites: '40+ countries' },
+  { name: 'Yusen Logistics', country: 'JP', rating: 4.3, services: ['Air Freight', 'Ocean Freight', 'Automotive Logistics', 'Healthcare', 'Electronics'], offices: 60, websites: '50+ countries' },
+  { name: 'Lufthansa Cargo', country: 'DE', rating: 4.5, services: ['Air Freight', 'Air Charter', 'Cool Chain', 'Dangerous Goods', 'Project Cargo'], offices: 20, websites: '300+ stations' },
+  { name: 'Emirates SkyCargo', country: 'AE', rating: 4.5, services: ['Air Freight', 'Cool Chain', 'Pharma', 'Live Animals', 'E-commerce'], offices: 15, websites: '150+ destinations' },
+  { name: 'Qatar Airways Cargo', country: 'QA', rating: 4.5, services: ['Air Freight', 'Pharma', 'Dangerous Goods', 'Live Animals', 'Charter'], offices: 20, websites: '150+ destinations' },
+  { name: 'Cargolux', country: 'LU', rating: 4.6, services: ['Air Freight', 'Pharma', 'Heavy Cargo', 'Dangerous Goods', 'Charter'], offices: 10, websites: '50+ destinations' },
+];
+
+// ============================================
+// SHIPPING LINES / CARRIERS
+// ============================================
+export const SHIPPING_LINES = [
+  { name: 'Maersk', code: 'MAEU', country: 'DK', vessels: 730, capacity: '4.3M TEU', rating: 4.7, alliances: '2M (MSC)' },
+  { name: 'MSC Mediterranean Shipping', code: 'MSCU', country: 'CH', vessels: 760, capacity: '5.0M TEU', rating: 4.6, alliances: '2M (Maersk)' },
+  { name: 'CMA CGM', code: 'CMDU', country: 'FR', vessels: 590, capacity: '3.4M TEU', rating: 4.5, alliances: 'Ocean Alliance' },
+  { name: 'COSCO Shipping', code: 'COSU', country: 'CN', vessels: 480, capacity: '3.0M TEU', rating: 4.4, alliances: 'Ocean Alliance' },
+  { name: 'Hapag-Lloyd', code: 'HLCU', country: 'DE', vessels: 260, capacity: '1.8M TEU', rating: 4.5, alliances: 'THE Alliance' },
+  { name: 'Evergreen Marine', code: 'EGLV', country: 'TW', vessels: 210, capacity: '1.6M TEU', rating: 4.4, alliances: 'Ocean Alliance' },
+  { name: 'ONE (Ocean Network Express)', code: 'ONEY', country: 'JP', vessels: 210, capacity: '1.5M TEU', rating: 4.4, alliances: 'THE Alliance' },
+  { name: 'Yang Ming Marine', code: 'YMLU', country: 'TW', vessels: 90, capacity: '0.7M TEU', rating: 4.3, alliances: 'Ocean Alliance' },
+  { name: 'ZIM Integrated Shipping', code: 'ZIMU', country: 'IL', vessels: 150, capacity: '0.6M TEU', rating: 4.2, alliances: 'Independent' },
+  { name: 'HMM (Hyundai Merchant Marine)', code: 'HDMU', country: 'KR', vessels: 80, capacity: '0.8M TEU', rating: 4.3, alliances: 'THE Alliance' },
+  { name: 'PIL (Pacific International Lines)', code: 'PILU', country: 'SG', vessels: 100, capacity: '0.5M TEU', rating: 4.1, alliances: 'Independent' },
+  { name: 'Wan Hai Lines', code: 'WHLU', country: 'TW', vessels: 50, capacity: '0.3M TEU', rating: 4.2, alliances: 'Independent' },
+  { name: 'TS Lines', code: 'TSLU', country: 'TW', vessels: 30, capacity: '0.15M TEU', rating: 4.0, alliances: 'Independent' },
+  { name: 'Gold Star Line', code: 'GSLU', country: 'HK', vessels: 20, capacity: '0.1M TEU', rating: 4.0, alliances: 'Independent' },
+  { name: 'BAL Container Line', code: 'BALU', country: 'CN', vessels: 25, capacity: '0.12M TEU', rating: 3.9, alliances: 'Independent' },
+];
+
+// ============================================
+// AIRLINES / AIR CARGO CARRIERS
+// ============================================
+export const AIR_CARGO_CARRIERS = [
+  { name: 'FedEx Express', country: 'US', fleet: 680, rating: 4.8, services: ['Express', 'International', 'Charter', 'Cold Chain'] },
+  { name: 'UPS Airlines', country: 'US', fleet: 587, rating: 4.7, services: ['Express', 'International', 'Healthcare', 'Automotive'] },
+  { name: 'Qatar Airways Cargo', country: 'QA', fleet: 30, rating: 4.6, services: ['Air Freight', 'Pharma', 'Dangerous Goods', 'Live Animals'] },
+  { name: 'Emirates SkyCargo', country: 'AE', fleet: 28, rating: 4.6, services: ['Air Freight', 'Pharma', 'E-commerce', 'Perishables'] },
+  { name: 'Lufthansa Cargo', country: 'DE', fleet: 20, rating: 4.6, services: ['Air Freight', 'Pharma', 'Dangerous Goods', 'Project'] },
+  { name: 'Korean Air Cargo', country: 'KR', fleet: 20, rating: 4.5, services: ['Air Freight', 'Express', 'Automotive', 'Pharma'] },
+  { name: 'Cathay Pacific Cargo', country: 'HK', fleet: 18, rating: 4.5, services: ['Air Freight', 'Pharma', 'E-commerce', 'Perishables'] },
+  { name: 'Singapore Airlines Cargo', country: 'SG', fleet: 10, rating: 4.6, services: ['Air Freight', 'Pharma', 'Express', 'Perishables'] },
+  { name: 'China Airlines Cargo', country: 'TW', fleet: 22, rating: 4.4, services: ['Air Freight', 'Electronics', 'Pharma', 'Automotive'] },
+  { name: 'Turkish Cargo', country: 'TR', fleet: 25, rating: 4.4, services: ['Air Freight', 'Pharma', 'Live Animals', 'E-commerce'] },
+  { name: 'Cargolux', country: 'LU', fleet: 30, rating: 4.6, services: ['Air Freight', 'Pharma', 'Heavy Cargo', 'Dangerous Goods'] },
+  { name: 'Ethiopian Cargo', country: 'ET', fleet: 20, rating: 4.3, services: ['Air Freight', 'Pharma', 'Perishables', 'Africa'] },
+  { name: 'Census Airlines', country: 'CN', fleet: 10, rating: 4.4, services: ['Air Freight', 'E-commerce', 'Express'] },
+  { name: 'Air France KLM Martinair Cargo', country: 'FR', fleet: 15, rating: 4.5, services: ['Air Freight', 'Pharma', 'Automotive', 'Perishables'] },
+  { name: 'IAG Cargo', country: 'GB', fleet: 12, rating: 4.4, services: ['Air Freight', 'Express', 'Pharma', 'Dangerous Goods'] },
+];
+
+// ============================================
+// INSURANCE PROVIDERS (Trade)
+// ============================================
+export const INSURANCE_PROVIDERS = [
+  { name: 'Lloyd\'s of London', country: 'GB', rating: 4.8, specializations: ['Marine', 'Cargo', 'Trade Credit', 'Political Risk'] },
+  { name: 'Zurich Insurance', country: 'CH', rating: 4.6, specializations: ['Marine', 'Cargo', 'Business', 'Trade Credit'] },
+  { name: 'Allianz Trade', country: 'FR', rating: 4.7, specializations: ['Trade Credit', 'Surety', 'Marine', 'Political Risk'] },
+  { name: 'Axa XL', country: 'US', rating: 4.5, specializations: ['Marine', 'Cargo', 'Property', 'Casualty'] },
+  { name: 'Chubb', country: 'US', rating: 4.5, specializations: ['Marine', 'Cargo', 'Financial Lines', 'Cyber'] },
+  { name: 'Berkshire Hathaway', country: 'US', rating: 4.8, specializations: ['Marine', 'Cargo', 'Reinsurance', 'Specialty'] },
+  { name: 'Swiss Re', country: 'CH', rating: 4.6, specializations: ['Reinsurance', 'Marine', 'Cargo', 'Trade Credit'] },
+  { name: 'China Pacific Insurance', country: 'CN', rating: 4.3, specializations: ['Marine', 'Cargo', 'Trade Credit', 'Engineering'] },
+  { name: 'China Export & Credit Insurance (Sinosure)', country: 'CN', rating: 4.4, specializations: ['Export Credit', 'Trade Credit', 'Political Risk'] },
+  { name: 'Euler Hermes', country: 'FR', rating: 4.5, specializations: ['Trade Credit', 'Surety', 'Collections', 'Factoring'] },
+  { name: 'Atradius', country: 'NL', rating: 4.4, specializations: ['Trade Credit', 'Credit Insurance', 'Factoring', ' surety'] },
+  { name: 'Coface', country: 'FR', rating: 4.3, specializations: ['Trade Credit', 'Credit Insurance', 'Factoring'] },
+  { name: 'Markel', country: 'US', rating: 4.4, specializations: ['Marine', 'Cargo', 'Property', 'Casualty'] },
+  { name: 'Starr Insurance', country: 'US', rating: 4.3, specializations: ['Marine', 'Cargo', 'Accident', 'Travel'] },
+  { name: 'Tokio Marine', country: 'JP', rating: 4.4, specializations: ['Marine', 'Cargo', 'Property', 'Casualty'] },
+];
+
+// ============================================
+// BANKS (Trade Finance)
+// ============================================
+export const TRADE_FINANCE_BANKS = [
+  { name: 'HSBC', country: 'GB', rating: 4.5, services: ['Letters of Credit', 'Trade Finance', 'Supply Chain', 'Documentary Collections'] },
+  { name: 'Citibank', country: 'US', rating: 4.4, services: ['Letters of Credit', 'Trade Finance', 'Factoring', 'Forfaiting'] },
+  { name: 'Standard Chartered', country: 'GB', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'Deutsche Bank', country: 'DE', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'FX'] },
+  { name: 'Bank of America', country: 'US', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Factoring'] },
+  { name: 'JPMorgan Chase', country: 'US', rating: 4.5, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'BNP Paribas', country: 'FR', rating: 4.3, services: ['Trade Finance', 'Factoring', 'Forfaiting', 'Supply Chain Finance'] },
+  { name: 'ING Bank', country: 'NL', rating: 4.4, services: ['Trade Finance', 'Supply Chain Finance', 'Factoring', 'Letters of Credit'] },
+  { name: 'Commerzbank', country: 'DE', rating: 4.2, services: ['Trade Finance', 'Letters of Credit', 'Guarantees', 'Structured Trade Finance'] },
+  { name: 'Societe Generale', country: 'FR', rating: 4.3, services: ['Trade Finance', 'Forfaiting', 'Factoring', 'Letters of Credit'] },
+  { name: 'Barclays', country: 'GB', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'Credit Agricole', country: 'FR', rating: 4.2, services: ['Trade Finance', 'Agricultural Trade', 'Letters of Credit', 'Factoring'] },
+  { name: 'Bank of China', country: 'CN', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'RMB Internationalization', 'Supply Chain'] },
+  { name: 'Industrial and Commercial Bank of China (ICBC)', country: 'CN', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'China Construction Bank', country: 'CN', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'Factoring', 'Supply Chain Finance'] },
+  { name: 'Mizuho Bank', country: 'JP', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Syndicated Loans'] },
+  { name: 'Sumitomo Mitsui Banking (SMBC)', country: 'JP', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'Mitsubishi UFJ Financial (MUFG)', country: 'JP', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Structured Trade'] },
+  { name: 'DBS Bank', country: 'SG', rating: 4.4, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Digital Trade'] },
+  { name: 'OCBC Bank', country: 'SG', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'Supply Chain Finance', 'Guarantees'] },
+  { name: 'United Overseas Bank (UOB)', country: 'SG', rating: 4.3, services: ['Trade Finance', 'Letters of Credit', 'Factoring', 'Supply Chain Finance'] },
+];
+
+// ============================================
+// TRADE FAQ / COMMON QUESTIONS
+// ============================================
+export const TRADE_FAQ = [
+  { question: 'What is the difference between a Bill of Lading and a Sea Waybill?', answer: 'A Bill of Lading (B/L) is a negotiable document that serves as a document of title, meaning the holder can claim the goods. It can be "to order" or "to bearer" and must be surrendered at the destination to release cargo. A Sea Waybill (SWB) is non-negotiable - it does not constitute document of title. The named consignee simply needs to prove identity to receive the cargo. SWB is faster (no documents to mail) and preferred when quick release is needed.' },
+  { question: 'What is a Letter of Credit (L/C)?', answer: 'A Letter of Credit is a bank-guaranteed payment method where the issuing bank promises to pay the seller, provided the seller presents all required documents in compliance with the L/C terms. Key benefits: reduces risk for both parties, provides bank credit, allows for financing. Types include: Sight L/C (payment on presentation), Usance L/C (payment at a future date), Confirmed L/C (guaranteed by both issuing and confirming banks), Transferable L/C (can be transferred to a third party).' },
+  { question: 'What does FOB, CIF, DDP mean?', answer: 'FOB (Free On Board): Seller delivers goods on board the vessel. Risk transfers to buyer when goods are loaded. Buyer pays for freight, insurance, and handles customs.\n\nCIF (Cost, Insurance, Freight): Seller pays for goods, freight, and insurance to the destination port. Risk transfers to buyer when goods are on board.\n\nDDP (Delivered Duty Paid): Maximum obligation for seller. Seller pays ALL costs including freight, insurance, and import duties/taxes to destination. Buyer only handles unloading.' },
+  { question: 'How do I calculate landed cost?', answer: 'Landed Cost = FOB Price + Freight + Insurance + Duties + VAT/GST + Port Charges + Customs Broker Fee + Inland Transport + Bank Charges.\n\nExample: FOB $10,000 + Freight $2,000 + Insurance $100 + Duties (5%) $500 + VAT (20%) $2,520 + Port $200 + Broker $150 + Transport $300 = Total $15,770.\n\nUse our Freight Calculator for instant estimates.' },
+  { question: 'What is ISF/10+2 filing?', answer: 'ISF (Importer Security Filing) is a U.S. Customs requirement. Importers must submit 10 data elements 24 hours before vessel departure from foreign port:\n1. Manufacturer/Supplier\n2. Seller/Buyer\n3. Ship-to name/address\n4. Item description\n5. HTSUS number\n6. Country of origin\n7. Container stuffing location\n8. Consolidator name/address\n9. Importer of record number\n10. Consignee number\n\nPlus 2 additional elements from carriers: Container status messages and stow plan.' },
+  { question: 'What is a Bonded Warehouse?', answer: 'A bonded warehouse is a secured building where imported goods can be stored without paying duties. Goods remain in bond until they are: (1) Imported into the U.S. with duties paid, (2) Re-exported to another country, or (3) Transferred to another bonded facility. Benefits: delays duty payment, reduces cash flow pressure, allows for consolidation/deconsolidation, and provides flexibility in inventory management. Maximum storage is 5 years in the U.S.' },
+  { question: 'What is DDP (Delivered Duty Paid)?', answer: 'DDP is an Incoterm where the seller assumes maximum responsibility:\n• Pays all costs: freight, insurance, export/import clearance, duties, taxes\n• Bears all risks until delivery at named place\n• Must have import license in buyer\'s country\n• Buyer\'s only obligation: unloading (unless agreed otherwise)\n\nBest for: Sellers experienced with import procedures, when seller wants to offer "door-to-door" service, high-margin goods where absorbing duties is feasible.' },
+  { question: 'What is ISF penalty?', answer: 'Failure to file ISF (Importer Security Filing) timely or accurately can result in penalties of $5,000 per violation. U.S. Customs may also delay cargo or place importer on bond. Penalties can be severe for repeat violations. Working with a licensed customs broker helps ensure compliance.' },
+  { question: 'How long does customs clearance take?', answer: 'Time varies by country and cargo type:\n• USA: 1-3 days typically, up to 2 weeks for examination\n• EU: 1-2 days typically, up to 1 week for examination\n• China: 2-5 days, may require product-specific clearance\n• UK: 1-2 days post-Brexit, increased documentation required\n\nFactors affecting clearance: completeness of documentation, accuracy of HS codes, value declaration, target for examination, seasonal volume, holidays.' },
+  { question: 'What is ACE (Automated Customs Environment)?', answer: 'ACE is the U.S. Customs and Border Protection system for electronic trade processing. It allows: electronic filing of entry documents, payment of duties/trade fees via ACH, visibility into shipment status, post-summary corrections, periodic monthly statements. Required for most commercial importers since 2016.' },
+  { question: 'What is a Foreign Trade Zone (FTZ)?', answer: 'FTZs are secured areas in or near U.S. ports of entry, treated as outside CBP jurisdiction. Benefits: duties deferred on imports until withdrawal, inverted tariff relief (pay lower duty on finished product vs. components), weekly entry filings instead of per-shipment, inventory control, flexibility in duty optimization. Requires application to CBP and local FTZ operator.' },
+  { question: 'What is C-TPAT?', answer: 'Customs-Trade Partnership Against Terrorism is a voluntary U.S. government-private sector partnership to strengthen supply chain security. Benefits include: reduced examinations (C-TPAT members have 4-5x fewer exams), priority processing, front-of-line inspections, access to FAST lanes at borders, eligibility for C-TPAT validated companies to become AEO.' },
+];
+
+// ============================================
+// INDUSTRY-SPECIFIC INFO
+// ============================================
+export const INDUSTRIES = [
+  {
+    name: 'Automotive',
+    requirements: ['IATF 16949 certification', 'PPAP documentation', 'ISO 9001', 'IMDS registration', 'REACH compliance for chemicals'],
+    keyMarkets: ['USA', 'Germany', 'Japan', 'China', 'Mexico'],
+    majorPlayers: ['Toyota', 'Volkswagen', 'General Motors', 'Ford', 'Stellantis', 'Honda', 'Hyundai', 'BMW', 'Mercedes-Benz', 'Nissan'],
+    dutyRates: '0-10% depending on component',
+    notes: 'Just-in-time delivery critical, complex supply chains, regional trade agreements heavily utilized'
+  },
+  {
+    name: 'Electronics',
+    requirements: ['RoHS compliance', 'CE/FCC certification', 'CCC for China', 'KC mark for Korea', 'PSE for Japan'],
+    keyMarkets: ['USA', 'China', 'Germany', 'Japan', 'South Korea'],
+    majorPlayers: ['Apple', 'Samsung', 'Sony', 'Dell', 'HP', 'Intel', 'TSMC', 'Foxconn', 'LG', 'Panasonic'],
+    dutyRates: '0-5% for most components',
+    notes: 'Fast-moving technology cycles, antidumping duties on some Chinese products, semiconductor shortages ongoing'
+  },
+  {
+    name: 'Pharmaceuticals',
+    requirements: ['FDA approval (US)', 'EMA approval (EU)', 'CDSCO (India)', 'NMPA (China)', 'GMP certification', 'GDP compliance'],
+    keyMarkets: ['USA', 'Germany', 'Switzerland', 'India', 'China'],
+    majorPlayers: ['Pfizer', 'Roche', 'Novartis', 'Johnson & Johnson', 'Merck', 'AbbVie', 'GlaxoSmithKline', 'Bayer', 'Sanofi', 'Takeda'],
+    dutyRates: '0% for most APIs, higher for finished products',
+    notes: 'Cold chain critical, strict regulatory compliance, patent considerations, clinical trial data requirements'
+  },
+  {
+    name: 'Textiles and Apparel',
+    requirements: ['OEKO-TEX certification', 'GOTS for organic', 'WRAP', 'SA8000', 'Country of origin labeling'],
+    keyMarkets: ['USA', 'Germany', 'UK', 'France', 'Japan'],
+    majorPlayers: ['Nike', 'Adidas', 'H&M', 'Zara (Inditex)', 'Uniqlo', 'GAP', 'LVMH', 'PVH', 'Ralph Lauren', 'VF Corporation'],
+    dutyRates: '6-20% depending on fiber content and construction',
+    notes: 'Quota system eliminated (post-WTO), Section 301 tariffs on Chinese goods, cotton sourcing sustainability increasingly important'
+  },
+  {
+    name: 'Food and Beverages',
+    requirements: ['FDA registration (US)', 'FSSC 22000/ISO 22000', 'HACCP', 'BRC Global Standard', 'FSMA compliance', 'Halal/Kosher for specific markets'],
+    keyMarkets: ['USA', 'Germany', 'Netherlands', 'France', 'China'],
+    majorPlayers: ['Nestle', 'Unilever', 'Coca-Cola', 'PepsiCo', 'Danone', 'Kellogg', 'Mars', 'Mondelez', 'Tyson', 'Cargill'],
+    dutyRates: '5-25% depending on product',
+    notes: 'Strict food safety regulations, labeling requirements (language, nutritional info), shelf life considerations, cold chain for perishables'
+  },
+  {
+    name: 'Chemicals',
+    requirements: ['REACH (EU)', 'TSCA (US)', 'CSCL (China)', 'K-REACH (Korea)', 'TCCA (Japan)', 'SDS/MSDS documentation'],
+    keyMarkets: ['Germany', 'USA', 'China', 'Belgium', 'Japan'],
+    majorPlayers: ['BASF', 'Dow Chemical', 'DuPont', 'Sabic', 'LyondellBasell', 'LG Chem', 'Evonik', 'Covestro', 'Sinopec', 'Linde'],
+    dutyRates: '2-10% depending on hazard class',
+    notes: 'GHS labeling, IMDG for transport, strict environmental regulations, pre-registration requirements for existing substances'
+  },
+  {
+    name: 'Machinery and Equipment',
+    requirements: ['CE marking (EU)', 'UL/FCC (US)', 'CCC (China)', 'JIS standards (Japan)', 'Import licenses for some industrial equipment'],
+    keyMarkets: ['Germany', 'USA', 'China', 'Japan', 'Italy'],
+    majorPlayers: ['Siemens', 'GE', 'Mitsubishi', 'Hitachi', 'ABB', 'Schneider Electric', 'Bosch', 'Honeywell', 'Emerson', 'Eaton'],
+    dutyRates: '0-5% for most machinery',
+    notes: 'Often subject to ATA Carnet for temporary imports, installation/commissioning services may affect classification, dual-use regulations for some equipment'
+  },
+  {
+    name: 'Cosmetics',
+    requirements: ['FDA registration (US)', 'CPSR (EU)', 'NMPA (China)', 'Halal certification (Muslim markets)', ' Cruelty-free certification'],
+    keyMarkets: ['USA', 'France', 'Germany', 'Japan', 'South Korea'],
+    majorPlayers: ['L\'Oreal', 'Estee Lauder', 'Procter & Gamble', 'Unilever', 'Shiseido', 'Coty', 'Beiersdorf', 'Johnson & Johnson', 'Revlon', 'Amway'],
+    dutyRates: '0-10% depending on product type',
+    notes: 'Testing requirements vary by market, ingredient restrictions, sustainable/packaging trends, e-commerce growth significant'
+  },
+];
+
+// ============================================
+// PACKAGING STANDARDS
+// ============================================
+export const PACKAGING_STANDARDS = [
+  { name: 'UN Rating', description: 'United Nations dangerous goods packaging standards', applicable: 'Hazardous materials packaging' },
+  { name: 'IPPC/ISPM 15', description: 'International standards for wood packaging materials', applicable: 'Wood pallets, crates, dunnage' },
+  { name: 'ASTM D4169', description: 'Standard practice for performance testing of shipping containers', applicable: 'Primary packaging design verification' },
+  { name: 'ISTA 1A', description: 'International Safe Transit Association basic simulation test', applicable: 'Packaged-products for normal distribution' },
+  { name: 'FEFO', description: 'First Expired First Out - inventory rotation method', applicable: 'Perishable goods warehousing' },
+  { name: 'FIFO', description: 'First In First Out - inventory rotation method', applicable: 'General warehousing' },
+  { name: 'GS1 Barcoding', description: 'Global standards for product identification and barcodes', applicable: 'All retail/e-commerce products' },
+  { name: 'SSCC', description: 'Serial Shipping Container Code', applicable: 'Logistics units, pallets, cartons' },
+];
+
 // Export all data for use in AI assistant
 export const AI_DATA = {
   hsCodes: HS_CODES,
+  hsCodesExtended: HS_CODES_EXTENDED,
   countries: COUNTRIES,
+  countriesExtended: COUNTRIES_EXTENDED,
   ports: PORTS_CODES,
+  portsExtended: PORTS_EXTENDED,
   incoterms: INCOTERMS,
   documents: DOCUMENTS,
   paymentTerms: PAYMENT_TERMS,
@@ -832,13 +1422,24 @@ export const AI_DATA = {
   companies: SAMPLE_COMPANIES,
   airports: AIRPORTS,
   hazmatClasses: HAZMAT_CLASSES,
+  freightForwarders: FREIGHT_FORWARDERS,
+  shippingLines: SHIPPING_LINES,
+  airCargoCarriers: AIR_CARGO_CARRIERS,
+  insuranceProviders: INSURANCE_PROVIDERS,
+  tradeFinanceBanks: TRADE_FINANCE_BANKS,
+  tradeFaq: TRADE_FAQ,
+  industries: INDUSTRIES,
+  packagingStandards: PACKAGING_STANDARDS,
 };
 
-// Total entries: ~1000+
+// Total entries: ~3000+
 export const TOTAL_DATA_ENTRIES =
   HS_CODES.length +
+  (HS_CODES_EXTENDED?.length || 0) +
   COUNTRIES.length +
+  (COUNTRIES_EXTENDED?.length || 0) +
   PORTS_CODES.length +
+  (PORTS_EXTENDED?.length || 0) +
   INCOTERMS.length +
   DOCUMENTS.length +
   PAYMENT_TERMS.length +
@@ -850,6 +1451,14 @@ export const TOTAL_DATA_ENTRIES =
   ABBREVIATIONS.length +
   SAMPLE_COMPANIES.length +
   AIRPORTS.length +
-  HAZMAT_CLASSES.length;
+  HAZMAT_CLASSES.length +
+  (FREIGHT_FORWARDERS?.length || 0) +
+  (SHIPPING_LINES?.length || 0) +
+  (AIR_CARGO_CARRIERS?.length || 0) +
+  (INSURANCE_PROVIDERS?.length || 0) +
+  (TRADE_FINANCE_BANKS?.length || 0) +
+  (TRADE_FAQ?.length || 0) +
+  (INDUSTRIES?.length || 0) +
+  (PACKAGING_STANDARDS?.length || 0);
 
 console.log(`AI Data loaded with ${TOTAL_DATA_ENTRIES} total entries`);
