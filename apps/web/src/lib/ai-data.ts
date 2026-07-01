@@ -1633,7 +1633,7 @@ export const GCC_TOP_IMPORTS = [
 export const ASEAN_MEMBERS = [
   { code: 'ID', name: 'Indonesia', capital: 'Jakarta', currency: 'IDR', duty: 7.5, vat: 11, majorPort: 'Tanjung Priok', sezCount: 10 },
   { code: 'MY', name: 'Malaysia', capital: 'Kuala Lumpur', currency: 'MYR', duty: 6, vat: 6, majorPort: 'Port Klang', sezCount: 20 },
-  { code: 'PH', name: 'Philippines', capital: 'Manila', currency: 'PHP', duty: 9, vat: 12, majorPort: 'Manila', sezCount: 400+ },
+  { code: 'PH', name: 'Philippines', capital: 'Manila', currency: 'PHP', duty: 9, vat: 12, majorPort: 'Manila', sezCount: '400+' },
   { code: 'SG', name: 'Singapore', capital: 'Singapore', currency: 'SGD', duty: 0, vat: 9, majorPort: 'Singapore', sezCount: 1 },
   { code: 'TH', name: 'Thailand', capital: 'Bangkok', currency: 'THB', duty: 8, vat: 7, majorPort: 'Laem Chabang', sezCount: 8 },
   { code: 'VN', name: 'Vietnam', capital: 'Hanoi', currency: 'VND', duty: 9, vat: 10, majorPort: 'Ho Chi Minh City', sezCount: 30 },
@@ -1999,7 +1999,7 @@ export const ASIAN_E_COMMERCE = [
   { name: 'Flipkart', country: 'IN', url: 'flipkart.com', gmV: '$15B+', categories: ['Electronics', 'Fashion', 'Home'], fbaAvailable: true, globalExport: 'Limited' },
   { name: 'Meesho', country: 'IN', url: 'meesho.com', gmV: '$5B+', categories: ['Fashion', 'Home', 'Beauty'], fbaAvailable: false, globalExport: false },
   { name: 'Shopsy', country: 'IN', url: 'shopsy.in', gmV: '$2B+', categories: ['Fashion', 'Home'], fbaAvailable: false, globalExport: false },
-  { name: 'Nykaa', country: 'IN', url: 'nykaa.com', gmV: '$1B+', categories: ['Beauty', 'Personal Care'], fbaAvailable: false, globalExport: 'Limited' />
+  { name: 'Nykaa', country: 'IN', url: 'nykaa.com', gmV: '$1B+', categories: ['Beauty', 'Personal Care'], fbaAvailable: false, globalExport: 'Limited' },
   { name: 'Myntra', country: 'IN', url: 'myntra.com', gmV: '$2B+', categories: ['Fashion', 'Lifestyle'], fbaAvailable: false, globalExport: false },
   { name: 'Noon', country: 'AE', url: 'noon.com', gmV: '$5B+', categories: ['All Categories'], fbaAvailable: true, globalExport: true },
   { name: 'Namshi', country: 'AE', url: 'namshi.com', gmV: '$500M+', categories: ['Fashion', 'Lifestyle'], fbaAvailable: false, globalExport: 'Limited' },
