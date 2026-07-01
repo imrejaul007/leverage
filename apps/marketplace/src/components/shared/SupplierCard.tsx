@@ -2,31 +2,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, CheckCircle, MapPin, ArrowRight, MessageSquare, ExternalLink } from 'lucide-react';
+import { Star, CheckCircle, MapPin, ArrowRight, MessageSquare, Phone, Building2, Award, Clock } from 'lucide-react';
 import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-
-export interface Supplier {
-  id: string;
-  name: string;
-  logo?: string;
-  description: string;
-  location: string;
-  country?: string;
-  verified: boolean;
-  rating: number;
-  reviews: number;
-  products: number;
-  responseTime?: string;
-  categories: string[];
-  established?: string;
-  contactEmail?: string;
-  website?: string;
-}
+import { Button } from '@/components/ui/Button';
+import type { Supplier } from '@/data/suppliers';
 
 interface SupplierCardProps {
   supplier: Supplier;
-  variant?: 'default' | 'compact' | 'list';
+  variant?: 'default' | 'compact' | 'list' | 'indiamart';
   onContact?: (supplier: Supplier) => void;
 }
 
@@ -41,6 +24,124 @@ export function SupplierCard({
     onContact?.(supplier);
   };
 
+  // IndiaMART-style list card
+  if (variant === 'indiamart') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+      >
+        <Link href={`/suppliers/${supplier.id}`} className="block p-4">
+          <div className="flex gap-4">
+            {/* Logo */}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+              {supplier.logo ? (
+                <Image
+                  src={supplier.logo}
+                  alt={supplier.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#154230] font-bold text-2xl bg-gradient-to-br from-[#154230] to-[#1a5a3a] text-white">
+                  {supplier.name.charAt(0)}
+                </div>
+              )}
+              {supplier.verified && (
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
+                  <CheckCircle className="w-5 h-5 text-[#154230]" />
+                </div>
+              )}
+            </div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-gray-900 hover:text-[#154230] transition-colors line-clamp-1">
+                {supplier.name}
+              </h3>
+
+              <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
+                <MapPin className="w-3 h-3" />
+                <span>{supplier.location}</span>
+              </div>
+
+              {/* Business type & credentials */}
+              {supplier.businessType && (
+                <p className="text-xs text-gray-600 mt-2 line-clamp-1">
+                  {supplier.businessType}
+                </p>
+              )}
+
+              {/* Trust badges */}
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                {supplier.gstVerified && (
+                  <Badge variant="success" size="sm" className="gap-1">
+                    <CheckCircle className="w-3 h-3" />
+                    GST
+                  </Badge>
+                )}
+                {supplier.trustseal && (
+                  <Badge variant="emerald" size="sm" className="gap-1">
+                    <Award className="w-3 h-3" />
+                    TrustSEAL
+                  </Badge>
+                )}
+                {supplier.yearsInBusiness && (
+                  <span className="text-xs text-gray-500">
+                    {supplier.yearsInBusiness}+ years
+                  </span>
+                )}
+              </div>
+
+              {/* Stats */}
+              <div className="flex items-center gap-4 mt-3 text-sm">
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  <span className="font-semibold text-gray-900">{supplier.rating}</span>
+                  <span className="text-gray-400">({supplier.reviews})</span>
+                </div>
+                <div className="text-gray-500">
+                  <span className="font-medium text-gray-900">{supplier.products}</span> Products
+                </div>
+                {supplier.responseTime && (
+                  <div className="flex items-center gap-1 text-gray-500">
+                    <Clock className="w-3 h-3" />
+                    <span className="text-xs">{supplier.responseTime}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-2 mt-4">
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1 border-[#154230] text-[#154230]"
+              onClick={handleContact}
+            >
+              <MessageSquare className="w-4 h-4 mr-1" />
+              Send Inquiry
+            </Button>
+            <Button
+              size="sm"
+              variant="primary"
+              className="flex-1"
+              onClick={handleContact}
+            >
+              <Phone className="w-4 h-4 mr-1" />
+              View Phone
+            </Button>
+          </div>
+        </Link>
+      </motion.div>
+    );
+  }
+
+  // List variant
   if (variant === 'list') {
     return (
       <Link
@@ -97,6 +198,7 @@ export function SupplierCard({
     );
   }
 
+  // Default grid card
   return (
     <Link
       href={`/suppliers/${supplier.id}`}
@@ -191,3 +293,9 @@ export function SupplierCard({
     </Link>
   );
 }
+
+// Add motion import for indiamart variant
+import { motion } from 'framer-motion';
+
+// Re-export the Supplier type for convenience
+export type { Supplier };

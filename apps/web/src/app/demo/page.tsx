@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { jsPDF } from 'jspdf';
+import Link from 'next/link';
 import {
   Globe,
   FileText,
@@ -12,55 +14,69 @@ import {
   ShoppingCart,
   Package,
   Users,
-  MapPin,
   ArrowRight,
-  ChevronRight,
-  ChevronDown,
   Plus,
-  Minus,
   Check,
   Star,
   Send,
-  Mic,
-  Menu,
-  X,
   Play,
   Pause,
-  Zap,
   TrendingUp,
   Clock,
-  AlertCircle,
   Search,
-  Filter,
-  Eye,
   Heart,
   Share2,
   Building2,
-  BarChart3,
   CheckCircle2,
   FileCheck,
   Calculator,
   Ship,
   Building,
-  Scale,
   Lock,
   Sparkles,
   Layers,
-  Link2,
-  Cpu,
-  Database,
   Network,
   Activity,
+  Download,
+  X,
+  GitCompare,
+  PlusCircle,
+  MinusCircle,
+  ShoppingBag,
+  Anchor,
+  FileBox,
+  Globe2,
 } from 'lucide-react';
 
 // ============================================================================
-// LEVERAGE DEMO MODE - Full Feature Showcase
+// LEVERAGE DEMO MODE - Matching Theme: Cream, Emerald, Gold, Burgundy
 // ============================================================================
+
+// Theme Colors (matching globals.css)
+const theme = {
+  primary: '#154230',      // Emerald Green
+  primaryLight: '#1d5240',
+  secondary: '#A6824A',    // Antique Gold
+  secondaryLight: '#b89560',
+  accent: '#5D1E21',       // Burgundy
+  background: '#E6E2DA',   // Cream
+  backgroundAlt: '#F7F6F2',
+  foreground: '#101111',    // Dark
+  textMuted: '#4A4A4A',
+  white: '#FFFFFF',
+  success: '#16A34A',
+  warning: '#CA8A04',
+  error: '#DC2626',
+};
 
 export default function DemoPage() {
   const [activeSection, setActiveSection] = useState(0);
   const [demoPlaying, setDemoPlaying] = useState(false);
   const [animatedRoutes, setAnimatedRoutes] = useState<number[]>([]);
+  const [comparisonProducts, setComparisonProducts] = useState<number[]>([]);
+  const [showCompareModal, setShowCompareModal] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState(1);
 
   const sections = [
     { id: 'hero', name: 'Trade OS', icon: Layers },
@@ -86,33 +102,46 @@ export default function DemoPage() {
   }, [demoPlaying]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: theme.background, color: theme.foreground }}
+    >
+      {/* Navigation - Matches main site */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
+        style={{ backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'rgba(0,0,0,0.08)' }}
+      >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-                <Layers className="w-6 h-6 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+          <Link href="/" className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: theme.primary }}
+            >
+              <Layers className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">LEVERGE</h1>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">Trade OS Demo</p>
+              <span
+                className="text-xl font-bold tracking-tight brand-font"
+                style={{ color: theme.secondary }}
+              >
+                LEVERGE
+              </span>
+              <p className="text-[10px] uppercase tracking-widest" style={{ color: theme.textMuted }}>
+                Trade OS Demo
+              </p>
             </div>
-          </div>
+          </Link>
 
           <div className="hidden md:flex items-center gap-1">
             {sections.map((section, i) => (
               <button
                 key={section.id}
                 onClick={() => setActiveSection(i)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeSection === i
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                }`}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                style={{
+                  backgroundColor: activeSection === i ? `${theme.primary}15` : 'transparent',
+                  color: activeSection === i ? theme.primary : theme.textMuted,
+                }}
               >
                 {section.name}
               </button>
@@ -121,19 +150,32 @@ export default function DemoPage() {
 
           <button
             onClick={() => setDemoPlaying(!demoPlaying)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all text-white"
+            style={{ backgroundColor: theme.primary }}
           >
             {demoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            <span className="hidden sm:inline">{demoPlaying ? 'Stop Demo' : 'Auto Demo'}</span>
+            <span className="hidden sm:inline">{demoPlaying ? 'Stop' : 'Auto Demo'}</span>
           </button>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="pt-20">
+      <main className="pt-24 pb-24">
         <AnimatePresence mode="wait">
           {activeSection === 0 && <HeroSection key="hero" animatedRoutes={animatedRoutes} />}
-          {activeSection === 1 && <MarketplaceSection key="marketplace" />}
+          {activeSection === 1 && (
+            <MarketplaceSection
+              key="marketplace"
+              comparisonProducts={comparisonProducts}
+              setComparisonProducts={setComparisonProducts}
+              showCompareModal={showCompareModal}
+              setShowCompareModal={setShowCompareModal}
+              showCheckout={showCheckout}
+              setShowCheckout={setShowCheckout}
+              checkoutStep={checkoutStep}
+              setCheckoutStep={setCheckoutStep}
+            />
+          )}
           {activeSection === 2 && <DocumentsSection key="documents" />}
           {activeSection === 3 && <ComplianceSection key="compliance" />}
           {activeSection === 4 && <FreightSection key="freight" />}
@@ -143,17 +185,20 @@ export default function DemoPage() {
         </AnimatePresence>
       </main>
 
-      {/* Section Navigation */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl">
+      {/* Section Navigation - Bottom Bar */}
+      <div
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-2 rounded-2xl shadow-lg"
+        style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}30` }}
+      >
         {sections.map((section, i) => (
           <button
             key={section.id}
             onClick={() => setActiveSection(i)}
-            className={`p-3 rounded-xl transition-all ${
-              activeSection === i
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            }`}
+            className="p-3 rounded-xl transition-all"
+            style={{
+              backgroundColor: activeSection === i ? theme.primary : 'transparent',
+              color: activeSection === i ? theme.white : theme.textMuted,
+            }}
           >
             <section.icon className="w-5 h-5" />
           </button>
@@ -167,75 +212,51 @@ export default function DemoPage() {
 // SECTION 1: HERO - TRADE OS
 // ============================================================================
 
-function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
+function AnimatedCounter({ end, duration = 2000, suffix = '', prefix = '' }: { end: number; duration?: number; suffix?: string; prefix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setMousePos({
-          x: (e.clientX - rect.left) / rect.width,
-          y: (e.clientY - rect.top) / rect.height,
-        });
-      }
+    if (!isInView) return;
+    let startTime: number;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) requestAnimationFrame(animate);
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    requestAnimationFrame(animate);
+  }, [isInView, end, duration]);
 
+  return <div ref={ref}>{prefix}{count.toLocaleString()}{suffix}</div>;
+}
+
+function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
   const modules = [
-    { name: 'Marketplace', icon: ShoppingCart, color: 'emerald', delay: 0 },
-    { name: 'Documents', icon: FileText, color: 'blue', delay: 0.1 },
-    { name: 'Freight', icon: Truck, color: 'amber', delay: 0.2 },
-    { name: 'Compliance', icon: Shield, color: 'purple', delay: 0.3 },
-    { name: 'Payments', icon: CreditCard, color: 'rose', delay: 0.4 },
-    { name: 'AI Copilot', icon: Bot, color: 'cyan', delay: 0.5 },
+    { name: 'Marketplace', icon: ShoppingCart, color: theme.primary },
+    { name: 'Documents', icon: FileText, color: theme.secondary },
+    { name: 'Freight', icon: Truck, color: theme.accent },
+    { name: 'Compliance', icon: Shield, color: '#7C3AED' },
+    { name: 'Payments', icon: CreditCard, color: '#DC2626' },
+    { name: 'AI Copilot', icon: Bot, color: '#0891B2' },
   ];
 
   return (
     <motion.div
-      ref={containerRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] flex items-center justify-center relative overflow-hidden"
+      className="min-h-[calc(100vh-8rem)] flex items-center justify-center relative overflow-hidden"
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        {/* Grid */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(16, 185, 129, 0.5), transparent 50%),
-                             linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px)`,
-            backgroundSize: '100% 100%, 60px 60px, 60px 60px',
-          }}
-        />
-
-        {/* Floating Nodes */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-emerald-400/50 rounded-full"
-            initial={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-            }}
-            animate={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-            }}
-            transition={{
-              duration: 10 + Math.random() * 20,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
-        ))}
-      </div>
+      {/* Background Pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(${theme.primary} 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }}
+      />
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto px-6">
@@ -248,19 +269,17 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
         >
           <div className="inline-flex items-center gap-3 mb-6">
             <motion.div
-              className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/30"
-              animate={{
-                boxShadow: [
-                  '0 0 60px rgba(16, 185, 129, 0.4)',
-                  '0 0 100px rgba(16, 185, 129, 0.2)',
-                  '0 0 60px rgba(16, 185, 129, 0.4)',
-                ],
-              }}
+              className="relative w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl"
+              style={{ backgroundColor: theme.primary }}
+              animate={{ boxShadow: ['0 0 40px rgba(21,66,48,0.3)', '0 0 80px rgba(21,66,48,0.15)', '0 0 40px rgba(21,66,48,0.3)'] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
               <Layers className="w-10 h-10 text-white" />
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-400 rounded-full flex items-center justify-center">
-                <Sparkles className="w-3 h-3 text-slate-950" />
+              <div
+                className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: theme.secondary }}
+              >
+                <Sparkles className="w-3 h-3 text-white" />
               </div>
             </motion.div>
           </div>
@@ -269,7 +288,8 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-6xl md:text-8xl font-bold text-white mb-4 tracking-tight"
+            className="text-6xl md:text-8xl font-bold mb-4 tracking-tight brand-font"
+            style={{ color: theme.foreground }}
           >
             LEVERGE
           </motion.h1>
@@ -277,7 +297,8 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-xl md:text-2xl text-slate-400 mb-2"
+            className="text-xl md:text-2xl mb-2"
+            style={{ color: theme.textMuted }}
           >
             The Trade Operating System
           </motion.p>
@@ -285,7 +306,8 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-lg text-slate-500"
+            className="text-lg"
+            style={{ color: theme.secondary }}
           >
             One platform. Every trade function.
           </motion.p>
@@ -299,21 +321,25 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
         >
           {[
-            { label: 'Active Traders', value: '50,000+', icon: Users },
-            { label: 'Trade Volume', value: '$2.5B+', icon: TrendingUp },
-            { label: 'Countries', value: '120+', icon: Globe },
-            { label: 'Documents', value: '1M+', icon: FileCheck },
+            { label: 'Active Traders', value: 50000, suffix: '+', icon: Users },
+            { label: 'Trade Volume', value: 2.5, suffix: 'B+', prefix: '$', icon: TrendingUp },
+            { label: 'Countries', value: 120, suffix: '+', icon: Globe },
+            { label: 'Documents', value: 1, suffix: 'M+', icon: FileCheck },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.8 + i * 0.1 }}
-              className="bg-slate-900/50 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm"
+              className="rounded-2xl p-4 shadow-md"
+              style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}20` }}
             >
-              <stat.icon className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
-              <div className="text-sm text-slate-500">{stat.label}</div>
+              <stat.icon className="w-6 h-6 mx-auto mb-2" style={{ color: theme.primary }} />
+              <div className="text-2xl font-bold" style={{ color: theme.foreground }}>
+                {stat.prefix && <span style={{ color: theme.primary }}>{stat.prefix}</span>}
+                {stat.suffix === 'M+' ? <AnimatedCounter end={stat.value} suffix="M+" /> : <AnimatedCounter end={stat.value} suffix={stat.suffix} />}
+              </div>
+              <div className="text-sm" style={{ color: theme.textMuted }}>{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -332,57 +358,23 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 1.2 + i * 0.1 }}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="group relative bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6 cursor-pointer backdrop-blur-sm overflow-hidden"
+              className="relative rounded-2xl p-6 cursor-pointer shadow-md overflow-hidden"
+              style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}20` }}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br from-${module.color}-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`} />
-              <div className={`w-12 h-12 rounded-xl bg-${module.color}-500/20 flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform`}>
-                <module.icon className={`w-6 h-6 text-${module.color}-400`} />
-              </div>
-              <div className="text-sm font-medium text-slate-300">{module.name}</div>
-              <motion.div
-                className="absolute inset-0 border-2 border-emerald-500/0 rounded-2xl"
-                animate={{ borderColor: ['rgba(16, 185, 129, 0)', 'rgba(16, 185, 129, 0.5)', 'rgba(16, 185, 129, 0)'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ backgroundColor: `${module.color}10` }}
               />
+              <div
+                className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center"
+                style={{ backgroundColor: `${module.color}15` }}
+              >
+                <module.icon className="w-6 h-6" style={{ color: module.color }} />
+              </div>
+              <div className="text-sm font-medium" style={{ color: theme.foreground }}>{module.name}</div>
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Connection Lines Animation */}
-        <motion.svg
-          className="absolute inset-0 w-full h-full pointer-events-none opacity-30"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.3 }}
-          transition={{ delay: 1.5 }}
-        >
-          {[...Array(6)].map((_, i) => (
-            <motion.line
-              key={i}
-              x1="50%"
-              y1="50%"
-              x2={`${20 + (i % 3) * 30}%`}
-              y2={`${20 + Math.floor(i / 3) * 30}%`}
-              stroke="url(#gradient)"
-              strokeWidth="2"
-              strokeDasharray="10 10"
-              animate={{
-                strokeDashoffset: [0, -20],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: 'reverse',
-              }}
-            />
-          ))}
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0" />
-              <stop offset="50%" stopColor="#10b981" stopOpacity="1" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </motion.svg>
       </div>
     </motion.div>
   );
@@ -392,173 +384,199 @@ function HeroSection({ animatedRoutes }: { animatedRoutes: number[] }) {
 // SECTION 2: MARKETPLACE
 // ============================================================================
 
-function MarketplaceSection() {
-  const [products, setProducts] = useState([
-    { id: 1, name: 'Premium Basmati Rice 1121', price: 850, unit: 'MT', moq: '50 MT', supplier: 'Global Trade Exports', rating: 4.8, reviews: 128, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400', category: 'Food & Agriculture' },
-    { id: 2, name: 'Organic Cotton Yarn 40s', price: 4.20, unit: 'KG', moq: '1000 KG', supplier: 'Cotton World Ltd', rating: 4.7, reviews: 96, image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=400', category: 'Textiles' },
-    { id: 3, name: 'Copper Cathode 99.99%', price: 7250, unit: 'MT', moq: '25 MT', supplier: 'MetalLink Global', rating: 4.9, reviews: 78, image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=400', category: 'Metals' },
-    { id: 4, name: 'Solar Panels 550W', price: 165, unit: 'Unit', moq: '100 Units', supplier: 'Shanghai Import Co.', rating: 4.6, reviews: 89, image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400', category: 'Energy' },
-    { id: 5, name: 'Extra Virgin Olive Oil', price: 4.50, unit: 'L', moq: '5000 L', supplier: 'Turkey Merchants', rating: 4.9, reviews: 156, image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400', category: 'Food & Agriculture' },
-    { id: 6, name: 'Steel Billets Grade A', price: 520, unit: 'MT', moq: '100 MT', supplier: 'India Steel Corp', rating: 4.5, reviews: 64, image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=400', category: 'Metals' },
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  unit: string;
+  moq: string;
+  supplier: string;
+  rating: number;
+  reviews: number;
+  image: string;
+  category: string;
+  origin: string;
+  leadTime: string;
+  certifications: string[];
+}
+
+function MarketplaceSection({
+  comparisonProducts,
+  setComparisonProducts,
+  showCompareModal,
+  setShowCompareModal,
+  showCheckout,
+  setShowCheckout,
+  checkoutStep,
+  setCheckoutStep,
+}: any) {
+  const [products] = useState<Product[]>([
+    { id: 1, name: 'Premium Basmati Rice 1121', price: 850, unit: 'MT', moq: '50 MT', supplier: 'Global Trade Exports', rating: 4.8, reviews: 128, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400', category: 'Food & Agriculture', origin: 'India', leadTime: '14-21 days', certifications: ['ISO 22000', 'HACCP'] },
+    { id: 2, name: 'Organic Cotton Yarn 40s', price: 4.20, unit: 'KG', moq: '1000 KG', supplier: 'Cotton World Ltd', rating: 4.7, reviews: 96, image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=400', category: 'Textiles', origin: 'India', leadTime: '7-14 days', certifications: ['GOTS', 'OEKO-TEX'] },
+    { id: 3, name: 'Copper Cathode 99.99%', price: 7250, unit: 'MT', moq: '25 MT', supplier: 'MetalLink Global', rating: 4.9, reviews: 78, image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=400', category: 'Metals', origin: 'Chile', leadTime: '21-30 days', certifications: ['LME', 'ISO 9001'] },
+    { id: 4, name: 'Solar Panels 550W', price: 165, unit: 'Unit', moq: '100 Units', supplier: 'Shanghai Import Co.', rating: 4.6, reviews: 89, image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400', category: 'Energy', origin: 'China', leadTime: '14-21 days', certifications: ['IEC', 'TUV'] },
+    { id: 5, name: 'Extra Virgin Olive Oil', price: 4.50, unit: 'L', moq: '5000 L', supplier: 'Turkey Merchants', rating: 4.9, reviews: 156, image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400', category: 'Food & Agriculture', origin: 'Turkey', leadTime: '10-14 days', certifications: ['EU Organic', 'IFS'] },
+    { id: 6, name: 'Steel Billets Grade A', price: 520, unit: 'MT', moq: '100 MT', supplier: 'India Steel Corp', rating: 4.5, reviews: 64, image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=400', category: 'Metals', origin: 'India', leadTime: '14-21 days', certifications: ['BIS', 'ISO 9001'] },
   ]);
 
-  const [rfqs, setRfqs] = useState([
+  const [rfqs] = useState([
     { id: 'RFQ-001', title: 'Basmati Rice 1121 Premium', buyer: 'UAE Trading LLC', quantity: '500 MT', deadline: 'Jul 15, 2026', responses: 5, status: 'OPEN' },
     { id: 'RFQ-002', title: 'Organic Cotton Yarn', buyer: 'Germany Textiles', quantity: '10,000 KG', deadline: 'Jul 20, 2026', responses: 3, status: 'OPEN' },
     { id: 'RFQ-003', title: 'Electronic Components', buyer: 'Singapore Tech', quantity: '5,000 Units', deadline: 'Jul 25, 2026', responses: 8, status: 'OPEN' },
   ]);
 
   const [activeTab, setActiveTab] = useState<'products' | 'rfqs'>('products');
-  const [cart, setCart] = useState<number[]>([]);
+  const [cart, setCart] = useState<{ id: number; quantity: number }[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [showRFQForm, setShowRFQForm] = useState(false);
   const [newRFQ, setNewRFQ] = useState({ title: '', quantity: '', unit: 'MT', targetPrice: '', deadline: '' });
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  const categories = ['all', 'Food & Agriculture', 'Textiles', 'Metals', 'Energy'];
+  const filteredProducts = activeCategory === 'all' ? products : products.filter(p => p.category === activeCategory);
 
   const addToCart = (id: number) => {
-    setCart(prev => prev.includes(id) ? prev : [...prev, id]);
+    if (!cart.find(c => c.id === id)) setCart(prev => [...prev, { id, quantity: 1 }]);
+  };
+
+  const updateQuantity = (id: number, delta: number) => {
+    setCart(prev => prev.map(c => c.id === id ? { ...c, quantity: Math.max(1, c.quantity + delta) } : c));
   };
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
 
-  const submitRFQ = () => {
-    if (newRFQ.title && newRFQ.quantity) {
-      setRfqs(prev => [...prev, {
-        id: `RFQ-${String(prev.length + 1).padStart(3, '0')}`,
-        title: newRFQ.title,
-        buyer: 'Your Company',
-        quantity: `${newRFQ.quantity} ${newRFQ.unit}`,
-        deadline: newRFQ.deadline || 'Aug 1, 2026',
-        responses: 0,
-        status: 'OPEN'
-      }]);
-      setNewRFQ({ title: '', quantity: '', unit: 'MT', targetPrice: '', deadline: '' });
-      setShowRFQForm(false);
-    }
+  const toggleCompare = (id: number) => {
+    setComparisonProducts((prev: number[]) => {
+      if (prev.includes(id)) return prev.filter(p => p !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
   };
 
+  const cartTotal = cart.reduce((sum, item) => {
+    const product = products.find(p => p.id === item.id);
+    return sum + (product ? product.price * item.quantity : 0);
+  }, 0);
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-4"
-          >
-            <ShoppingCart className="w-4 h-4 text-emerald-400" />
-            <span className="text-emerald-400 text-sm font-medium">Global B2B Marketplace</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: `${theme.primary}15` }}>
+            <ShoppingCart className="w-4 h-4" style={{ color: theme.primary }} />
+            <span className="text-sm font-medium" style={{ color: theme.primary }}>Global B2B Marketplace</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Trade Globally</h2>
-          <p className="text-slate-400 text-lg">Connect with verified suppliers and buyers worldwide</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Trade Globally</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Connect with verified suppliers and buyers worldwide</p>
         </div>
+
+        {/* Compare Button */}
+        {comparisonProducts.length >= 2 && (
+          <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex justify-center mb-6">
+            <button onClick={() => setShowCompareModal(true)} className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-white transition-all" style={{ backgroundColor: theme.secondary }}>
+              <GitCompare className="w-5 h-5" /> Compare {comparisonProducts.length} Products
+            </button>
+          </motion.div>
+        )}
 
         {/* Tabs */}
         <div className="flex justify-center gap-4 mb-8">
-          <button
-            onClick={() => setActiveTab('products')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'products'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Package className="w-4 h-4 inline mr-2" />
-            Products ({products.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('rfqs')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'rfqs'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <FileText className="w-4 h-4 inline mr-2" />
-            RFQs ({rfqs.length})
-          </button>
+          {[
+            { key: 'products', label: 'Products', icon: Package, count: filteredProducts.length },
+            { key: 'rfqs', label: 'RFQs', icon: FileText, count: rfqs.length },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key as any)}
+              className="px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
+              style={{
+                backgroundColor: activeTab === tab.key ? theme.primary : theme.white,
+                color: activeTab === tab.key ? theme.white : theme.textMuted,
+                border: `1px solid ${activeTab === tab.key ? theme.primary : 'transparent'}`,
+              }}
+            >
+              <tab.icon className="w-4 h-4" /> {tab.label} ({tab.count})
+            </button>
+          ))}
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex justify-center gap-2 mb-8 flex-wrap">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={{
+                backgroundColor: activeCategory === cat ? theme.accent : `${theme.secondary}10`,
+                color: activeCategory === cat ? theme.white : theme.textMuted,
+              }}
+            >
+              {cat === 'all' ? 'All Categories' : cat}
+            </button>
+          ))}
         </div>
 
         {/* Products Grid */}
         <AnimatePresence mode="wait">
           {activeTab === 'products' && (
-            <motion.div
-              key="products"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {products.map((product, i) => (
+            <motion.div key="products" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product, i) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                   whileHover={{ y: -5 }}
-                  className={`group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden transition-all hover:border-emerald-500/50 ${
-                    cart.includes(product.id) ? 'ring-2 ring-amber-500' : ''
-                  }`}
+                  className="rounded-2xl overflow-hidden shadow-md transition-all"
+                  style={{ backgroundColor: theme.white, border: cart.find(c => c.id === product.id) ? `2px solid ${theme.secondary}` : `1px solid ${theme.secondary}20` }}
                 >
                   <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute top-3 left-3 px-3 py-1 bg-slate-900/80 backdrop-blur-sm rounded-lg text-xs text-slate-300">
-                      {product.category}
-                    </div>
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-lg text-xs" style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: theme.white }}>{product.category}</div>
                     <div className="absolute top-3 right-3 flex gap-2">
-                      <button
-                        onClick={() => toggleFavorite(product.id)}
-                        className={`p-2 rounded-lg backdrop-blur-sm transition-all ${
-                          favorites.includes(product.id) ? 'bg-rose-500 text-white' : 'bg-slate-900/80 text-slate-400 hover:text-white'
-                        }`}
-                      >
+                      <button onClick={() => toggleCompare(product.id)} className="p-2 rounded-lg transition-all" style={{ backgroundColor: comparisonProducts.includes(product.id) ? theme.secondary : 'rgba(0,0,0,0.7)', color: theme.white }}>
+                        <GitCompare className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => toggleFavorite(product.id)} className="p-2 rounded-lg transition-all" style={{ backgroundColor: favorites.includes(product.id) ? '#DC2626' : 'rgba(0,0,0,0.7)', color: theme.white }}>
                         <Heart className={`w-4 h-4 ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
                       </button>
-                      <button className="p-2 bg-slate-900/80 backdrop-blur-sm rounded-lg text-slate-400 hover:text-white transition-all">
-                        <Share2 className="w-4 h-4" />
-                      </button>
                     </div>
-                    {cart.includes(product.id) && (
-                      <div className="absolute bottom-3 left-3 px-3 py-1 bg-amber-500 text-slate-900 rounded-lg text-xs font-medium flex items-center gap-1">
-                        <Check className="w-3 h-3" /> In Cart
-                      </div>
-                    )}
                   </div>
                   <div className="p-5">
-                    <h3 className="font-semibold text-white mb-2 line-clamp-1">{product.name}</h3>
-                    <p className="text-sm text-slate-500 mb-3">{product.supplier}</p>
+                    <h3 className="font-semibold mb-2 line-clamp-1" style={{ color: theme.foreground }}>{product.name}</h3>
+                    <p className="text-sm mb-3" style={{ color: theme.textMuted }}>{product.supplier}</p>
                     <div className="flex items-center gap-2 mb-4">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                      <span className="text-sm text-slate-300">{product.rating}</span>
-                      <span className="text-sm text-slate-500">({product.reviews} reviews)</span>
+                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <span className="text-sm" style={{ color: theme.foreground }}>{product.rating}</span>
+                      <span className="text-sm" style={{ color: theme.textMuted }}>({product.reviews})</span>
+                      <span className="text-xs px-2 py-0.5 rounded ml-auto" style={{ backgroundColor: `${theme.success}20`, color: theme.success }}>{product.origin}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-2xl font-bold text-emerald-400">${product.price}</span>
-                        <span className="text-sm text-slate-500">/{product.unit}</span>
+                        <span className="text-2xl font-bold" style={{ color: theme.primary }}>${product.price}</span>
+                        <span className="text-sm" style={{ color: theme.textMuted }}>/{product.unit}</span>
                       </div>
-                      <span className="text-xs text-slate-500">MOQ: {product.moq}</span>
+                      <span className="text-xs" style={{ color: theme.textMuted }}>MOQ: {product.moq}</span>
                     </div>
                     <button
                       onClick={() => addToCart(product.id)}
-                      className={`w-full mt-4 py-3 rounded-xl font-medium transition-all ${
-                        cart.includes(product.id)
-                          ? 'bg-amber-500/20 text-amber-400 cursor-default'
-                          : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                      }`}
+                      className="w-full mt-4 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2"
+                      style={{
+                        backgroundColor: cart.find(c => c.id === product.id) ? `${theme.secondary}20` : theme.primary,
+                        color: cart.find(c => c.id === product.id) ? theme.secondary : theme.white,
+                      }}
                     >
-                      {cart.includes(product.id) ? 'Added to Cart' : 'Add to Cart'}
+                      {cart.find(c => c.id === product.id) ? (
+                        <div className="flex items-center gap-2">
+                          <button onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, -1); }} className="p-1 rounded hover:bg-white/20"><MinusCircle className="w-4 h-4" /></button>
+                          <span>{cart.find(c => c.id === product.id)?.quantity}</span>
+                          <button onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, 1); }} className="p-1 rounded hover:bg-white/20"><PlusCircle className="w-4 h-4" /></button>
+                        </div>
+                      ) : 'Add to Cart'}
                     </button>
                   </div>
                 </motion.div>
@@ -567,188 +585,229 @@ function MarketplaceSection() {
           )}
 
           {activeTab === 'rfqs' && (
-            <motion.div
-              key="rfqs"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
+            <motion.div key="rfqs" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
               <div className="flex justify-end">
-                <button
-                  onClick={() => setShowRFQForm(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create RFQ
+                <button onClick={() => setShowRFQForm(true)} className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-white transition-all" style={{ backgroundColor: theme.primary }}>
+                  <Plus className="w-4 h-4" /> Create RFQ
                 </button>
               </div>
-
-              {/* RFQ Form */}
-              <AnimatePresence>
-                {showRFQForm && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-6"
-                  >
-                    <h3 className="text-lg font-semibold text-white mb-4">Create New RFQ</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-sm text-slate-400 mb-2">Product Title</label>
-                        <input
-                          type="text"
-                          value={newRFQ.title}
-                          onChange={(e) => setNewRFQ(prev => ({ ...prev, title: e.target.value }))}
-                          placeholder="e.g., Premium Basmati Rice"
-                          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-                        />
+              {rfqs.map((rfq, i) => (
+                <motion.div key={rfq.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}20` }}>
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${theme.success}20`, color: theme.success }}>{rfq.status}</span>
+                        <span className="text-sm" style={{ color: theme.textMuted }}>{rfq.id}</span>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm text-slate-400 mb-2">Quantity</label>
-                          <input
-                            type="text"
-                            value={newRFQ.quantity}
-                            onChange={(e) => setNewRFQ(prev => ({ ...prev, quantity: e.target.value }))}
-                            placeholder="500"
-                            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-slate-400 mb-2">Unit</label>
-                          <select
-                            value={newRFQ.unit}
-                            onChange={(e) => setNewRFQ(prev => ({ ...prev, unit: e.target.value }))}
-                            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-emerald-500 focus:outline-none"
-                          >
-                            <option value="MT">MT</option>
-                            <option value="KG">KG</option>
-                            <option value="Units">Units</option>
-                            <option value="L">L</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm text-slate-400 mb-2">Target Price (Optional)</label>
-                        <input
-                          type="text"
-                          value={newRFQ.targetPrice}
-                          onChange={(e) => setNewRFQ(prev => ({ ...prev, targetPrice: e.target.value }))}
-                          placeholder="$800/MT"
-                          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-slate-400 mb-2">Deadline</label>
-                        <input
-                          type="date"
-                          value={newRFQ.deadline}
-                          onChange={(e) => setNewRFQ(prev => ({ ...prev, deadline: e.target.value }))}
-                          className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-emerald-500 focus:outline-none"
-                        />
+                      <h3 className="text-lg font-semibold mb-1" style={{ color: theme.foreground }}>{rfq.title}</h3>
+                      <div className="flex flex-wrap items-center gap-4 text-sm" style={{ color: theme.textMuted }}>
+                        <span className="flex items-center gap-1"><Building2 className="w-4 h-4" /> {rfq.buyer}</span>
+                        <span className="flex items-center gap-1"><Package className="w-4 h-4" /> {rfq.quantity}</span>
+                        <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {rfq.deadline}</span>
+                        <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {rfq.responses} responses</span>
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <button
-                        onClick={submitRFQ}
-                        className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-all"
-                      >
-                        Submit RFQ
-                      </button>
-                      <button
-                        onClick={() => setShowRFQForm(false)}
-                        className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium transition-all"
-                      >
-                        Cancel
-                      </button>
+                      <button className="px-4 py-2 rounded-xl text-sm font-medium transition-all" style={{ backgroundColor: `${theme.secondary}10`, color: theme.secondary }}>View Details</button>
+                      <button className="px-4 py-2 rounded-xl text-sm font-medium text-white transition-all" style={{ backgroundColor: theme.primary }}>Submit Quote</button>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* RFQ List */}
-              <div className="grid gap-4">
-                {rfqs.map((rfq, i) => (
-                  <motion.div
-                    key={rfq.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/50 transition-all"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-medium rounded-full">
-                            {rfq.status}
-                          </span>
-                          <span className="text-slate-500 text-sm">{rfq.id}</span>
-                        </div>
-                        <h3 className="text-lg font-semibold text-white mb-1">{rfq.title}</h3>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-                          <span className="flex items-center gap-1">
-                            <Building2 className="w-4 h-4" />
-                            {rfq.buyer}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Package className="w-4 h-4" />
-                            {rfq.quantity}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {rfq.deadline}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Users className="w-4 h-4" />
-                            {rfq.responses} responses
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-medium transition-all">
-                          View Details
-                        </button>
-                        <button className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium transition-all">
-                          Submit Quote
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Cart Summary */}
         {cart.length > 0 && (
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="fixed bottom-24 right-6 bg-slate-900 border border-amber-500/50 rounded-2xl p-4 shadow-2xl shadow-amber-500/10"
-          >
+          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed bottom-24 right-6 rounded-2xl p-4 shadow-xl z-40" style={{ backgroundColor: theme.white, border: `2px solid ${theme.secondary}` }}>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <ShoppingCart className="w-6 h-6 text-amber-400" />
-                <span className="absolute -top-2 -right-2 w-5 h-5 bg-amber-500 text-slate-900 text-xs font-bold rounded-full flex items-center justify-center">
-                  {cart.length}
-                </span>
+                <ShoppingBag className="w-6 h-6" style={{ color: theme.secondary }} />
+                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: theme.secondary }}>{cart.length}</span>
               </div>
               <div>
-                <div className="text-sm text-slate-400">Cart Total</div>
-                <div className="text-lg font-bold text-white">
-                  ${products.filter(p => cart.includes(p.id)).reduce((sum, p) => sum + p.price, 0).toLocaleString()}
-                </div>
+                <div className="text-sm" style={{ color: theme.textMuted }}>Cart Total</div>
+                <div className="text-lg font-bold" style={{ color: theme.foreground }}>${cartTotal.toLocaleString()}</div>
               </div>
-              <button className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl text-sm font-medium transition-all">
-                Checkout
-              </button>
+              <button onClick={() => setShowCheckout(true)} className="px-4 py-2 rounded-xl text-sm font-medium text-white transition-all" style={{ backgroundColor: theme.secondary }}>Checkout</button>
             </div>
           </motion.div>
         )}
+
+        {/* Product Comparison Modal */}
+        <AnimatePresence>{showCompareModal && <ProductComparisonModal products={products.filter(p => comparisonProducts.includes(p.id))} onClose={() => setShowCompareModal(false)} />}</AnimatePresence>
+
+        {/* Checkout Modal */}
+        <AnimatePresence>{showCheckout && <CheckoutModal cart={cart} products={products} step={checkoutStep} setStep={setCheckoutStep} onClose={() => { setShowCheckout(false); setCheckoutStep(1); }} />}</AnimatePresence>
       </div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// PRODUCT COMPARISON MODAL
+// ============================================================================
+
+function ProductComparisonModal({ products, onClose }: { products: Product[]; onClose: () => void }) {
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden" style={{ backgroundColor: theme.white }} onClick={e => e.stopPropagation()}>
+        <div className="p-6 flex items-center justify-between" style={{ borderBottom: `1px solid ${theme.secondary}20` }}>
+          <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: theme.foreground }}><GitCompare className="w-6 h-6" style={{ color: theme.secondary }} /> Product Comparison</h2>
+          <button onClick={onClose} className="p-2 rounded-lg transition-colors" style={{ backgroundColor: `${theme.secondary}10` }}><X className="w-5 h-5" style={{ color: theme.textMuted }} /></button>
+        </div>
+        <div className="overflow-x-auto p-6">
+          <table className="w-full">
+            <thead>
+              <tr style={{ borderBottom: `1px solid ${theme.secondary}20` }}>
+                <th className="text-left py-4 px-4" style={{ color: theme.textMuted }}>Feature</th>
+                {products.map(product => (
+                  <th key={product.id} className="text-center py-4 px-4 min-w-[200px]">
+                    <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-xl mb-3" />
+                    <div className="font-semibold" style={{ color: theme.foreground }}>{product.name}</div>
+                    <div className="text-sm" style={{ color: theme.textMuted }}>{product.supplier}</div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: 'Price', getValue: (p: Product) => `$${p.price}/${p.unit}` },
+                { label: 'MOQ', getValue: (p: Product) => p.moq },
+                { label: 'Origin', getValue: (p: Product) => p.origin },
+                { label: 'Lead Time', getValue: (p: Product) => p.leadTime },
+                { label: 'Rating', getValue: (p: Product) => `${p.rating}/5 (${p.reviews} reviews)` },
+                { label: 'Certifications', getValue: (p: Product) => p.certifications.join(', ') },
+              ].map(row => (
+                <tr key={row.label} style={{ borderBottom: `1px solid ${theme.secondary}10` }}>
+                  <td className="py-4 px-4 font-medium" style={{ color: theme.textMuted }}>{row.label}</td>
+                  {products.map(product => (
+                    <td key={product.id} className="py-4 px-4 text-center" style={{ color: theme.foreground }}>{row.getValue(product)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// CHECKOUT MODAL
+// ============================================================================
+
+function CheckoutModal({ cart, products, step, setStep, onClose }: any) {
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const cartItems = cart.map((c: { id: number; quantity: number }) => ({ ...products.find((p: Product) => p.id === c.id)!, quantity: c.quantity }));
+  const subtotal = cartItems.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+  const shipping = 2500;
+  const total = subtotal + shipping;
+
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden" style={{ backgroundColor: theme.white }} onClick={e => e.stopPropagation()}>
+        {orderPlaced ? (
+          <div className="p-8 text-center">
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: theme.success }}>
+              <Check className="w-10 h-10 text-white" />
+            </motion.div>
+            <h2 className="text-2xl font-bold mb-2" style={{ color: theme.foreground }}>Order Placed Successfully!</h2>
+            <p className="mb-6" style={{ color: theme.textMuted }}>Your order #LEV-{Date.now().toString().slice(-6)} has been placed.</p>
+            <div className="rounded-xl p-4 mb-6 text-left" style={{ backgroundColor: `${theme.secondary}10` }}>
+              <div className="flex justify-between text-sm mb-2"><span style={{ color: theme.textMuted }}>Order Total:</span><span className="font-bold" style={{ color: theme.foreground }}>${total.toLocaleString()}</span></div>
+              <div className="flex justify-between text-sm"><span style={{ color: theme.textMuted }}>Est. Delivery:</span><span style={{ color: theme.success }}>Jul 15-22, 2026</span></div>
+            </div>
+            <button onClick={onClose} className="px-8 py-3 rounded-xl font-medium text-white transition-all" style={{ backgroundColor: theme.primary }}>Continue Shopping</button>
+          </div>
+        ) : (
+          <>
+            <div className="p-6 flex items-center justify-between" style={{ borderBottom: `1px solid ${theme.secondary}20` }}>
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-bold" style={{ color: theme.foreground }}>Checkout</h2>
+                <div className="flex gap-2">
+                  {[1, 2, 3].map(s => (
+                    <button key={s} onClick={() => setStep(s)} className="px-3 py-1 rounded-full text-sm font-medium transition-all" style={{ backgroundColor: step === s ? theme.primary : step > s ? `${theme.primary}20` : `${theme.secondary}10`, color: step === s ? theme.white : step > s ? theme.primary : theme.textMuted }}>
+                      {s === 1 ? 'Shipping' : s === 2 ? 'Payment' : 'Review'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 rounded-lg" style={{ backgroundColor: `${theme.secondary}10` }}><X className="w-5 h-5" style={{ color: theme.textMuted }} /></button>
+            </div>
+            <div className="p-6 max-h-[60vh] overflow-y-auto">
+              {step === 1 && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm mb-2" style={{ color: theme.textMuted }}>Company Name</label>
+                      <input type="text" defaultValue="Your Company LLC" className="w-full px-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-2" style={{ color: theme.textMuted }}>Contact Person</label>
+                      <input type="text" defaultValue="John Smith" className="w-full px-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-2" style={{ color: theme.textMuted }}>Shipping Address</label>
+                    <input type="text" defaultValue="123 Trade Street, Dubai, UAE" className="w-full px-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} />
+                  </div>
+                </motion.div>
+              )}
+              {step === 2 && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="p-4 rounded-xl" style={{ backgroundColor: `${theme.primary}10`, border: `1px solid ${theme.primary}30` }}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <CreditCard className="w-6 h-6" style={{ color: theme.primary }} />
+                    <span className="font-medium" style={{ color: theme.foreground }}>Escrow Protected Payment</span>
+                    <Shield className="w-5 h-5 ml-auto" style={{ color: theme.primary }} />
+                  </div>
+                  <p className="text-sm mb-4" style={{ color: theme.textMuted }}>Your payment is held securely until the shipment is delivered and confirmed.</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 rounded-lg cursor-pointer" style={{ backgroundColor: theme.white, border: `2px solid ${theme.primary}` }}>
+                      <input type="radio" name="payment" defaultChecked className="accent-emerald-600" />
+                      <CreditCard className="w-5 h-5" style={{ color: theme.textMuted }} />
+                      <span style={{ color: theme.foreground }}>Credit Card (Stripe)</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {step === 3 && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+                  <h3 className="font-medium" style={{ color: theme.foreground }}>Order Summary</h3>
+                  <div className="space-y-3">
+                    {cartItems.map((item: any) => (
+                      <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10` }}>
+                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                        <div className="flex-1">
+                          <div className="font-medium" style={{ color: theme.foreground }}>{item.name}</div>
+                          <div className="text-sm" style={{ color: theme.textMuted }}>{item.quantity} × ${item.price}/{item.unit}</div>
+                        </div>
+                        <div className="font-bold" style={{ color: theme.foreground }}>${(item.price * item.quantity).toLocaleString()}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pt-4 space-y-2" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
+                    <div className="flex justify-between"><span style={{ color: theme.textMuted }}>Subtotal</span><span>${subtotal.toLocaleString()}</span></div>
+                    <div className="flex justify-between"><span style={{ color: theme.textMuted }}>Shipping (FOB)</span><span>${shipping.toLocaleString()}</span></div>
+                    <div className="flex justify-between font-bold text-lg pt-2" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
+                      <span style={{ color: theme.foreground }}>Total</span>
+                      <span style={{ color: theme.primary }}>${total.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+            <div className="p-6 flex gap-3" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
+              {step > 1 && <button onClick={() => setStep(step - 1)} className="px-6 py-3 rounded-xl font-medium transition-all" style={{ backgroundColor: `${theme.secondary}10`, color: theme.secondary }}>Back</button>}
+              <button onClick={step === 3 ? () => setOrderPlaced(true) : () => setStep(step + 1)} className="flex-1 px-6 py-3 rounded-xl font-medium text-white transition-all flex items-center justify-center gap-2" style={{ backgroundColor: theme.primary }}>
+                {step === 3 ? <><Lock className="w-4 h-4" /> Place Order (Escrow Protected)</> : <><>Continue <ArrowRight className="w-4 h-4" /></></>}
+              </button>
+            </div>
+          </>
+        )}
+      </motion.div>
     </motion.div>
   );
 }
@@ -758,216 +817,114 @@ function MarketplaceSection() {
 // ============================================================================
 
 function DocumentsSection() {
-  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState('invoice');
   const [generating, setGenerating] = useState(false);
   const [generated, setGenerated] = useState(false);
-  const [orderData, setOrderData] = useState({
-    invoiceNumber: 'INV-2026-001',
-    date: '2026-07-01',
-    sellerName: 'Global Trade Exports Pvt Ltd',
-    sellerAddress: '123 Industrial Area, Mumbai, India',
-    buyerName: 'UAE Trading LLC',
-    buyerAddress: '456 Trade Center, Dubai, UAE',
-    product: 'Premium Basmati Rice 1121',
-    quantity: '50 MT',
-    price: '$42,500',
-    terms: 'FOB Mumbai',
-  });
 
-  const documents = [
-    { id: 'invoice', name: 'Commercial Invoice', icon: FileText, color: 'emerald' },
-    { id: 'packing', name: 'Packing List', icon: Package, color: 'blue' },
-    { id: 'bol', name: 'Bill of Lading', icon: Ship, color: 'amber' },
-    { id: 'coo', name: 'Certificate of Origin', icon: Globe, color: 'purple' },
-    { id: 'lc', name: 'Letter of Credit', icon: CreditCard, color: 'rose' },
-    { id: 'insurance', name: 'Insurance Certificate', icon: Shield, color: 'cyan' },
-    { id: 'export', name: 'Export License', icon: FileCheck, color: 'green' },
-    { id: 'import', name: 'Bill of Entry', icon: Scale, color: 'indigo' },
+  const documentTypes = [
+    { id: 'invoice', name: 'Commercial Invoice', icon: FileText },
+    { id: 'packing', name: 'Packing List', icon: Package },
+    { id: 'bol', name: 'Bill of Lading', icon: Anchor },
+    { id: 'coo', name: 'Certificate of Origin', icon: Globe2 },
+    { id: 'lc', name: 'Letter of Credit', icon: FileBox },
+    { id: 'insurance', name: 'Insurance Certificate', icon: Shield },
+    { id: 'export', name: 'Export License', icon: FileCheck },
+    { id: 'import', name: 'Bill of Entry', icon: Building2 },
   ];
 
-  const handleGenerate = () => {
+  const generatePDF = () => {
     setGenerating(true);
     setTimeout(() => {
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.setTextColor(21, 66, 48);
+      doc.text(documentTypes.find(d => d.id === selectedDoc)?.name.toUpperCase() || 'DOCUMENT', 105, 20, { align: 'center' });
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text('LEVERGE Trade OS', 105, 28, { align: 'center' });
+      doc.line(20, 35, 190, 35);
+      doc.setFontSize(11);
+      doc.setTextColor(0);
+      const details = [['Document Number:', 'INV-2026-001'], ['Date:', '2026-07-01'], ['Seller:', 'Global Trade Exports Pvt Ltd'], ['Buyer:', 'UAE Trading LLC'], ['Product:', 'Premium Basmati Rice 1121'], ['Quantity:', '50 MT'], ['Price:', '$42,500']];
+      let y = 50;
+      details.forEach(([label, value]) => { doc.text(label, 25, y); doc.text(value, 80, y); y += 10; });
+      doc.line(20, y + 5, 190, y + 5);
+      doc.setFontSize(14);
+      doc.setTextColor(21, 66, 48);
+      doc.text('Total: $42,500', 190, y + 20, { align: 'right' });
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text('Generated by LEVERGE Trade OS', 105, 280, { align: 'center' });
+      doc.save(`${selectedDoc.toUpperCase()}-INV-2026-001.pdf`);
       setGenerating(false);
       setGenerated(true);
-    }, 2000);
+    }, 1500);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4"
-          >
-            <FileText className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-400 text-sm font-medium">Trade Documents</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: `${theme.secondary}15` }}>
+            <FileText className="w-4 h-4" style={{ color: theme.secondary }} />
+            <span className="text-sm font-medium" style={{ color: theme.secondary }}>Trade Documents</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Generate Documents in Seconds</h2>
-          <p className="text-slate-400 text-lg">Create compliant trade documents with AI-powered automation</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Generate Documents in Seconds</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Create compliant trade documents with AI-powered automation</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Document Types */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Select Document Type</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Select Document Type</h3>
             <div className="grid grid-cols-2 gap-4">
-              {documents.map((doc, i) => (
-                <motion.button
-                  key={doc.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => { setSelectedDoc(doc.id); setGenerated(false); }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`p-4 rounded-xl border transition-all text-left ${
-                    selectedDoc === doc.id
-                      ? `bg-${doc.color}-500/20 border-${doc.color}-500 bg-${doc.color}-500/10`
-                      : 'bg-slate-900 border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  <doc.icon className={`w-8 h-8 mb-3 text-${doc.color}-400`} />
-                  <div className="font-medium text-white">{doc.name}</div>
+              {documentTypes.map((doc, i) => (
+                <motion.button key={doc.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} onClick={() => { setSelectedDoc(doc.id); setGenerated(false); }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="p-4 rounded-xl border text-left transition-all" style={{ backgroundColor: selectedDoc === doc.id ? `${theme.primary}10` : theme.white, borderColor: selectedDoc === doc.id ? theme.primary : `${theme.secondary}20` }}>
+                  <doc.icon className="w-8 h-8 mb-3" style={{ color: selectedDoc === doc.id ? theme.primary : theme.secondary }} />
+                  <div className="font-medium" style={{ color: theme.foreground }}>{doc.name}</div>
                 </motion.button>
               ))}
             </div>
           </div>
 
-          {/* Document Preview */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Document Preview</h3>
-            <div className="bg-white rounded-2xl p-8 shadow-2xl min-h-[500px] relative overflow-hidden">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Document Preview</h3>
+            <div className="rounded-2xl p-8 shadow-xl min-h-[500px] relative overflow-hidden" style={{ backgroundColor: theme.white }}>
               {generating ? (
-                <div className="absolute inset-0 bg-white flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: theme.white }}>
                   <div className="text-center">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-500 rounded-full mx-auto mb-4"
-                    />
-                    <p className="text-slate-600 font-medium">Generating document...</p>
-                    <p className="text-slate-400 text-sm">Using AI to fill template</p>
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 rounded-full mx-auto mb-4" style={{ borderColor: `${theme.primary}30`, borderTopColor: theme.primary, borderWidth: 4 }} />
+                    <p className="font-medium" style={{ color: theme.foreground }}>Generating {documentTypes.find(d => d.id === selectedDoc)?.name}...</p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6 text-slate-800">
-                  <div className="text-center border-b pb-4">
-                    <div className="text-2xl font-bold text-emerald-600 mb-1">COMMERCIAL INVOICE</div>
-                    <div className="text-slate-500">LEVERGE Trade OS</div>
+                <div className="space-y-6" style={{ color: theme.foreground }}>
+                  <div className="text-center pb-4" style={{ borderBottom: `1px solid ${theme.secondary}20` }}>
+                    <div className="text-2xl font-bold mb-1" style={{ color: theme.primary }}>{documentTypes.find(d => d.id === selectedDoc)?.name?.toUpperCase()}</div>
+                    <div style={{ color: theme.textMuted }}>LEVERGE Trade OS</div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Invoice Number</div>
-                      <div className="font-medium">{orderData.invoiceNumber}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Date</div>
-                      <div className="font-medium">{orderData.date}</div>
-                    </div>
+                    <div><div className="text-xs uppercase mb-1" style={{ color: theme.textMuted }}>Document Number</div><div className="font-medium">INV-2026-001</div></div>
+                    <div><div className="text-xs uppercase mb-1" style={{ color: theme.textMuted }}>Date</div><div className="font-medium">2026-07-01</div></div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Seller</div>
-                      <div className="font-medium">{orderData.sellerName}</div>
-                      <div className="text-sm text-slate-500">{orderData.sellerAddress}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Buyer</div>
-                      <div className="font-medium">{orderData.buyerName}</div>
-                      <div className="text-sm text-slate-500">{orderData.buyerAddress}</div>
-                    </div>
+                    <div><div className="text-xs uppercase mb-1" style={{ color: theme.textMuted }}>Seller</div><div className="font-medium">Global Trade Exports Pvt Ltd</div></div>
+                    <div><div className="text-xs uppercase mb-1" style={{ color: theme.textMuted }}>Buyer</div><div className="font-medium">UAE Trading LLC</div></div>
                   </div>
-
-                  <div className="border-t pt-4">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-2 text-xs text-slate-400">Description</th>
-                          <th className="text-right py-2 text-xs text-slate-400">Qty</th>
-                          <th className="text-right py-2 text-xs text-slate-400">Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b">
-                          <td className="py-2">{orderData.product}</td>
-                          <td className="text-right py-2">{orderData.quantity}</td>
-                          <td className="text-right py-2 font-medium">{orderData.price}</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td colSpan={2} className="text-right py-2 font-medium">Total:</td>
-                          <td className="text-right py-2 font-bold text-emerald-600">{orderData.price}</td>
-                        </tr>
-                      </tfoot>
+                  <div className="pt-4" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
+                    <table className="w-full"><thead><tr style={{ borderBottom: `1px solid ${theme.secondary}20` }}><th className="text-left py-2 text-xs" style={{ color: theme.textMuted }}>Description</th><th className="text-right py-2 text-xs" style={{ color: theme.textMuted }}>Qty</th><th className="text-right py-2 text-xs" style={{ color: theme.textMuted }}>Price</th></tr></thead>
+                    <tbody><tr style={{ borderBottom: `1px solid ${theme.secondary}20` }}><td className="py-2">Premium Basmati Rice 1121</td><td className="text-right py-2">50 MT</td><td className="text-right py-2 font-medium">$42,500</td></tr></tbody>
+                    <tfoot><tr><td colSpan={2} className="text-right py-2 font-medium">Total:</td><td className="text-right py-2 font-bold" style={{ color: theme.primary }}>$42,500</td></tr></tfoot>
                     </table>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Incoterms</div>
-                      <div className="font-medium">{orderData.terms}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-slate-400 uppercase mb-1">Payment Terms</div>
-                      <div className="font-medium">Letter of Credit</div>
-                    </div>
-                  </div>
-
-                  {generated && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
-                    >
-                      <Check className="w-4 h-4" />
-                      Generated
-                    </motion.div>
-                  )}
+                  {generated && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full text-sm" style={{ backgroundColor: `${theme.success}20`, color: theme.success }}><Check className="w-4 h-4" /> PDF Downloaded</motion.div>}
                 </div>
               )}
             </div>
-
-            {/* Actions */}
             <div className="flex gap-3 mt-4">
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="flex-1 flex items-center justify-center gap-2 py-4 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-700 text-white rounded-xl font-medium transition-all"
-              >
-                {generating ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                    />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    Generate with AI
-                  </>
-                )}
+              <button onClick={generatePDF} disabled={generating} className="flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-medium text-white transition-all disabled:opacity-50" style={{ backgroundColor: theme.primary }}>
+                {generating ? <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }} className="w-5 h-5 rounded-full" style={{ borderColor: theme.white, borderTopColor: 'transparent', borderWidth: 2 }} /> Generating...</> : <><Download className="w-5 h-5" /> Generate & Download PDF</>}
               </button>
-              <button className="px-6 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-medium transition-all">
-                Download PDF
-              </button>
-              <button className="px-6 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-medium transition-all">
-                <Share2 className="w-5 h-5" />
-              </button>
+              <button className="px-6 py-4 rounded-xl font-medium transition-all" style={{ backgroundColor: `${theme.secondary}10`, color: theme.secondary }}><Share2 className="w-5 h-5" /></button>
             </div>
           </div>
         </div>
@@ -983,13 +940,7 @@ function DocumentsSection() {
 function ComplianceSection() {
   const [hsCodeSearch, setHsCodeSearch] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('USA');
-  const [dutyResult, setDutyResult] = useState<{
-    hsCode: string;
-    description: string;
-    dutyRate: number;
-    vat: number;
-    totalLandedCost: number;
-  } | null>(null);
+  const [dutyResult, setDutyResult] = useState<any>(null);
   const [calculating, setCalculating] = useState(false);
 
   const hsCodes = [
@@ -1011,185 +962,72 @@ function ComplianceSection() {
         const baseValue = 10000;
         const duty = baseValue * (hs.duty / 100);
         const vat = (baseValue + duty) * (hs.vat / 100);
-        setDutyResult({
-          hsCode: hs.code,
-          description: hs.description,
-          dutyRate: hs.duty,
-          vat: hs.vat,
-          totalLandedCost: baseValue + duty + vat,
-        });
+        setDutyResult({ hsCode: hs.code, dutyRate: hs.duty, vat: hs.vat, totalLandedCost: baseValue + duty + vat });
       }
       setCalculating(false);
     }, 1500);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4"
-          >
-            <Shield className="w-4 h-4 text-purple-400" />
-            <span className="text-purple-400 text-sm font-medium">Trade Compliance</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#7C3AED15' }}>
+            <Shield className="w-4 h-4" style={{ color: '#7C3AED' }} />
+            <span className="text-sm font-medium" style={{ color: '#7C3AED' }}>Trade Compliance</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Stay Compliant, Every Time</h2>
-          <p className="text-slate-400 text-lg">AI-powered HS code suggestions and instant duty calculations</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Stay Compliant, Every Time</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>AI-powered HS code suggestions and instant duty calculations</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* HS Code Search */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">HS Code Search</h3>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>HS Code Search</h3>
+            <div className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white }}>
               <div className="relative mb-6">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  value={hsCodeSearch}
-                  onChange={(e) => setHsCodeSearch(e.target.value)}
-                  placeholder="Search HS code or product name..."
-                  className="w-full pl-12 pr-4 py-4 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
-                />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: theme.textMuted }} />
+                <input type="text" value={hsCodeSearch} onChange={(e) => setHsCodeSearch(e.target.value)} placeholder="Search HS code or product name..." className="w-full pl-12 pr-4 py-4 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} />
               </div>
-
               <div className="space-y-3">
-                {hsCodes
-                  .filter(h => h.code.includes(hsCodeSearch) || h.description.toLowerCase().includes(hsCodeSearch.toLowerCase()))
-                  .map((hs, i) => (
-                    <motion.div
-                      key={hs.code}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      whileHover={{ scale: 1.01 }}
-                      className="p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-purple-500/50 transition-all"
-                      onClick={() => setHsCodeSearch(hs.code)}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-mono text-purple-400 font-medium">{hs.code}</span>
-                        <span className="text-sm text-emerald-400">{hs.duty}% duty</span>
-                      </div>
-                      <div className="text-sm text-slate-400">{hs.description}</div>
-                    </motion.div>
-                  ))}
+                {hsCodes.filter(h => h.code.includes(hsCodeSearch) || h.description.toLowerCase().includes(hsCodeSearch.toLowerCase())).map((hs, i) => (
+                  <motion.div key={hs.code} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.01 }} onClick={() => setHsCodeSearch(hs.code)} className="p-4 rounded-xl cursor-pointer transition-all" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20` }}>
+                    <div className="flex items-center justify-between mb-2"><span className="font-mono font-medium" style={{ color: '#7C3AED' }}>{hs.code}</span><span className="text-sm" style={{ color: theme.success }}>{hs.duty}% duty</span></div>
+                    <div className="text-sm" style={{ color: theme.textMuted }}>{hs.description}</div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Duty Calculator */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Duty Calculator</h3>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Duty Calculator</h3>
+            <div className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white }}>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                  <label className="block text-sm text-slate-400 mb-2">Product Value</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                    <input
-                      type="text"
-                      placeholder="10,000"
-                      className="w-full pl-8 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
-                    />
-                  </div>
+                  <label className="block text-sm mb-2" style={{ color: theme.textMuted }}>Product Value</label>
+                  <div className="relative"><span className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: theme.textMuted }}>$</span><input type="text" placeholder="10,000" className="w-full pl-8 pr-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} /></div>
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-400 mb-2">Destination Country</label>
-                  <select
-                    value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-purple-500 focus:outline-none"
-                  >
-                    {countries.map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
+                  <label className="block text-sm mb-2" style={{ color: theme.textMuted }}>Destination</label>
+                  <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} className="w-full px-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }}>
+                    {countries.map(c => <option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
-
-              <button
-                onClick={calculateDuty}
-                disabled={calculating || !hsCodeSearch}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-purple-500 hover:bg-purple-600 disabled:bg-slate-700 text-white rounded-xl font-medium transition-all"
-              >
-                {calculating ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                    />
-                    Calculating...
-                  </>
-                ) : (
-                  <>
-                    <Calculator className="w-5 h-5" />
-                    Calculate Duty
-                  </>
-                )}
+              <button onClick={calculateDuty} disabled={calculating || !hsCodeSearch} className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-medium text-white transition-all disabled:opacity-50" style={{ backgroundColor: '#7C3AED' }}>
+                {calculating ? <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }} className="w-5 h-5 rounded-full" style={{ borderColor: theme.white, borderTopColor: 'transparent', borderWidth: 2 }} /> Calculating...</> : <><Calculator className="w-5 h-5" /> Calculate Duty</>}
               </button>
-
               {dutyResult && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-6 bg-slate-800/50 border border-emerald-500/30 rounded-xl"
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                    <span className="text-emerald-400 font-medium">Calculation Complete</span>
-                  </div>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-6 rounded-xl" style={{ backgroundColor: `${theme.success}10`, border: `1px solid ${theme.success}30` }}>
+                  <div className="flex items-center gap-2 mb-4"><CheckCircle2 className="w-5 h-5" style={{ color: theme.success }} /><span className="font-medium" style={{ color: theme.success }}>Calculation Complete</span></div>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">HS Code</span>
-                      <span className="text-white font-mono">{dutyResult.hsCode}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Import Duty</span>
-                      <span className="text-amber-400">{dutyResult.dutyRate}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">VAT/GST</span>
-                      <span className="text-blue-400">{dutyResult.vat}%</span>
-                    </div>
-                    <div className="border-t pt-3 flex justify-between">
-                      <span className="text-white font-medium">Total Landed Cost</span>
-                      <span className="text-2xl font-bold text-emerald-400">
-                        ${dutyResult.totalLandedCost.toLocaleString()}
-                      </span>
-                    </div>
+                    <div className="flex justify-between"><span style={{ color: theme.textMuted }}>HS Code</span><span className="font-mono" style={{ color: theme.foreground }}>{dutyResult.hsCode}</span></div>
+                    <div className="flex justify-between"><span style={{ color: theme.textMuted }}>Import Duty</span><span style={{ color: theme.warning }}>{dutyResult.dutyRate}%</span></div>
+                    <div className="flex justify-between"><span style={{ color: theme.textMuted }}>VAT/GST</span><span style={{ color: '#3B82F6' }}>{dutyResult.vat}%</span></div>
+                    <div className="flex justify-between font-bold text-lg pt-3" style={{ borderTop: `1px solid ${theme.success}30` }}><span style={{ color: theme.foreground }}>Total Landed Cost</span><span style={{ color: theme.success }}>${dutyResult.totalLandedCost.toLocaleString()}</span></div>
                   </div>
                 </motion.div>
               )}
-            </div>
-
-            {/* Compliance Checklist */}
-            <div className="mt-6 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-white font-medium mb-4">Pre-Shipment Checklist</h4>
-              <div className="space-y-3">
-                {[
-                  { item: 'Commercial Invoice', done: true },
-                  { item: 'Packing List', done: true },
-                  { item: 'Certificate of Origin', done: true },
-                  { item: 'Bill of Lading', done: false },
-                  { item: 'Insurance Certificate', done: false },
-                ].map((item, i) => (
-                  <div key={item.item} className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${item.done ? 'bg-emerald-500' : 'bg-slate-700'}`}>
-                      {item.done && <Check className="w-3 h-3 text-white" />}
-                    </div>
-                    <span className={item.done ? 'text-slate-300' : 'text-slate-500'}>{item.item}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -1203,234 +1041,94 @@ function ComplianceSection() {
 // ============================================================================
 
 function FreightSection() {
-  const [trackingNumber, setTrackingNumber] = useState('');
-  const [showTracking, setShowTracking] = useState(false);
-  const [shipmentStatus, setShipmentStatus] = useState({
-    current: 2,
-    stages: [
-      { name: 'Order Confirmed', date: 'Jun 25, 2026', completed: true },
-      { name: 'Picked Up', date: 'Jun 26, 2026', completed: true },
-      { name: 'In Transit', date: 'Jun 28, 2026', completed: true, active: true },
-      { name: 'Customs Clearance', date: 'Jul 2, 2026', completed: false },
-      { name: 'Delivered', date: 'Jul 4, 2026', completed: false },
-    ]
-  });
+  const [selectedQuote, setSelectedQuote] = useState<number | null>(null);
+  const [showBooking, setShowBooking] = useState(false);
 
   const quotes = [
     { carrier: 'Maersk', price: 2850, transit: '18 days', type: '20ft Container', recommended: true },
     { carrier: 'MSC', price: 2650, transit: '21 days', type: '20ft Container', recommended: false },
     { carrier: 'CMA CGM', price: 2950, transit: '16 days', type: '20ft Container', recommended: false },
-    { carrier: 'Hapag-Lloyd', price: 2780, transit: '19 days', type: '20ft Container', recommended: false },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-4"
-          >
-            <Truck className="w-4 h-4 text-amber-400" />
-            <span className="text-amber-400 text-sm font-medium">Freight & Logistics</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: `${theme.accent}15` }}>
+            <Truck className="w-4 h-4" style={{ color: theme.accent }} />
+            <span className="text-sm font-medium" style={{ color: theme.accent }}>Freight & Logistics</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Ship Globally, Track Instantly</h2>
-          <p className="text-slate-400 text-lg">Compare carriers, book shipments, and track cargo in real-time</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Ship Globally, Track Instantly</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Compare carriers, book shipments, and track cargo in real-time</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Shipping Routes Map */}
           <div className="lg:col-span-2">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 h-full">
-              <h3 className="text-lg font-semibold text-white mb-4">Global Trade Routes</h3>
-              <div className="relative h-[400px] bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl overflow-hidden">
-                {/* World Map SVG */}
+            <div className="rounded-2xl p-6 shadow-md h-full" style={{ backgroundColor: theme.white }}>
+              <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Global Trade Routes</h3>
+              <div className="relative h-[400px] rounded-xl overflow-hidden" style={{ backgroundColor: theme.backgroundAlt }}>
                 <svg viewBox="0 0 1000 500" className="w-full h-full">
-                  {/* Simplified continents */}
-                  <path d="M150,120 Q200,100 280,130 Q320,150 340,200 Q350,250 320,300 Q280,340 220,350 Q160,340 140,280 Q120,220 150,120" fill="#334155" opacity="0.5"/>
-                  <path d="M450,80 Q520,60 600,90 Q660,120 680,180 Q690,240 660,280 Q620,310 560,320 Q500,330 460,290 Q420,250 440,180 Q450,120 450,80" fill="#334155" opacity="0.5"/>
-                  <path d="M700,150 Q760,130 820,160 Q870,200 860,260 Q840,310 780,320 Q720,320 700,270 Q680,220 700,150" fill="#334155" opacity="0.5"/>
-                  <path d="M200,380 Q260,360 320,380 Q360,400 350,440 Q330,470 270,470 Q210,460 200,420 Q195,400 200,380" fill="#334155" opacity="0.5"/>
-                  <path d="M780,380 Q840,360 900,390 Q940,420 920,460 Q890,490 830,490 Q770,480 760,440 Q755,410 780,380" fill="#334155" opacity="0.5"/>
-
-                  {/* Trade routes */}
-                  {[
-                    { from: [180, 180], to: [620, 200] },
-                    { from: [620, 200], to: [850, 420] },
-                    { from: [280, 420], to: [620, 200] },
-                    { from: [180, 180], to: [850, 420] },
-                  ].map((route, i) => (
-                    <motion.line
-                      key={i}
-                      x1={route.from[0]}
-                      y1={route.from[1]}
-                      x2={route.to[0]}
-                      y2={route.to[1]}
-                      stroke="#10b981"
-                      strokeWidth="2"
-                      strokeDasharray="10 5"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{
-                        pathLength: 1,
-                        opacity: [0.3, 0.8, 0.3],
-                      }}
-                      transition={{
-                        pathLength: { duration: 2, delay: i * 0.3 },
-                        opacity: { duration: 2, repeat: Infinity, delay: i * 0.3 }
-                      }}
-                    />
+                  <path d="M150,120 Q200,100 280,130 Q320,150 340,200 Q350,250 320,300 Q280,340 220,350 Q160,340 140,280 Q120,220 150,120" fill={theme.secondary + '20'} />
+                  <path d="M450,80 Q520,60 600,90 Q660,120 680,180 Q690,240 660,280 Q620,310 560,320 Q500,330 460,290 Q420,250 440,180 Q450,120 450,80" fill={theme.secondary + '20'} />
+                  <path d="M700,150 Q760,130 820,160 Q870,200 860,260 Q840,310 780,320 Q720,320 700,270 Q680,220 700,150" fill={theme.secondary + '20'} />
+                  {[{ from: [180, 180], to: [620, 200] }, { from: [620, 200], to: [850, 420] }].map((route, i) => (
+                    <g key={i}>
+                      <motion.line x1={route.from[0]} y1={route.from[1]} x2={route.to[0]} y2={route.to[1]} stroke={theme.primary} strokeWidth="2" strokeDasharray="10 5" initial={{ pathLength: 0 }} animate={{ pathLength: 1, opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2, repeat: Infinity }} />
+                      <motion.circle r="4" fill={theme.primary} initial={{ cx: route.from[0], cy: route.from[1] }} animate={{ cx: route.to[0], cy: route.to[1] }} transition={{ duration: 4, repeat: Infinity }} />
+                    </g>
                   ))}
-
-                  {/* Port markers */}
-                  {[
-                    { x: 180, y: 180, name: 'Mumbai', pulse: true },
-                    { x: 620, y: 200, name: 'Dubai', pulse: false },
-                    { x: 850, y: 420, name: 'Singapore', pulse: true },
-                    { x: 280, y: 420, name: 'Santos', pulse: false },
-                    { x: 500, y: 100, name: 'Rotterdam', pulse: true },
-                    { x: 200, y: 130, name: 'New York', pulse: false },
-                  ].map((port, i) => (
+                  {[{ x: 180, y: 180, name: 'Mumbai' }, { x: 620, y: 200, name: 'Dubai' }, { x: 850, y: 420, name: 'Singapore' }, { x: 500, y: 100, name: 'Rotterdam' }].map((port, i) => (
                     <g key={port.name}>
-                      {port.pulse && (
-                        <motion.circle
-                          cx={port.x}
-                          cy={port.y}
-                          r="8"
-                          fill="none"
-                          stroke="#10b981"
-                          strokeWidth="2"
-                          animate={{ r: [8, 20], opacity: [0.8, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}
-                        />
-                      )}
-                      <motion.circle
-                        cx={port.x}
-                        cy={port.y}
-                        r="4"
-                        fill="#10b981"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.5 + i * 0.1 }}
-                      />
-                      <text x={port.x} y={port.y + 18} textAnchor="middle" fill="#94a3b8" fontSize="10" className="text-xs">
-                        {port.name}
-                      </text>
+                      <motion.circle cx={port.x} cy={port.y} r="12" fill="none" stroke={theme.primary} strokeWidth="2" animate={{ r: [12, 24], opacity: [0.8, 0] }} transition={{ duration: 2, repeat: Infinity }} />
+                      <motion.circle cx={port.x} cy={port.y} r="4" fill={theme.primary} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} />
+                      <text x={port.x} y={port.y + 18} textAnchor="middle" fontSize="10" fill={theme.textMuted}>{port.name}</text>
                     </g>
                   ))}
                 </svg>
-
-                {/* Live indicator */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 bg-slate-900/80 backdrop-blur-sm rounded-lg">
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                  <span className="text-xs text-slate-300">Live Tracking Active</span>
+                <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.success }} />
+                  <span className="text-xs" style={{ color: theme.textMuted }}>Live Tracking Active</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Panel */}
           <div className="space-y-6">
-            {/* Tracking */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Track Shipment</h3>
-              <div className="relative mb-4">
-                <input
-                  type="text"
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="Enter tracking number..."
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none"
-                />
-                <button
-                  onClick={() => setShowTracking(true)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-amber-500 hover:bg-amber-600 rounded-lg transition-colors"
-                >
-                  <Search className="w-4 h-4 text-white" />
-                </button>
-              </div>
-
-              {showTracking && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-1"
-                >
-                  {shipmentStatus.stages.map((stage, i) => (
-                    <div key={stage.name} className="flex items-center gap-3">
-                      <div className="flex flex-col items-center">
-                        <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                          stage.completed
-                            ? stage.active
-                              ? 'bg-amber-500 animate-pulse'
-                              : 'bg-emerald-500'
-                            : 'bg-slate-700'
-                        }`}>
-                          {stage.completed && <Check className="w-2 h-2 text-white" />}
-                        </div>
-                        {i < shipmentStatus.stages.length - 1 && (
-                          <div className={`w-0.5 h-8 ${stage.completed ? 'bg-emerald-500' : 'bg-slate-700'}`} />
-                        )}
-                      </div>
-                      <div className="flex-1 py-1">
-                        <div className={`text-sm ${stage.completed ? 'text-white' : 'text-slate-500'}`}>
-                          {stage.name}
-                        </div>
-                        {stage.completed && (
-                          <div className="text-xs text-slate-500">{stage.date}</div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-            </div>
-
-            {/* Shipping Quotes */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Shipping Quotes</h3>
+            <div className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white }}>
+              <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Shipping Quotes</h3>
               <div className="space-y-3">
                 {quotes.map((quote, i) => (
-                  <motion.div
-                    key={quote.carrier}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer ${
-                      quote.recommended
-                        ? 'bg-emerald-500/10 border-emerald-500/50'
-                        : 'bg-slate-800 border-slate-700 hover:border-slate-600'
-                    }`}
-                  >
+                  <motion.div key={quote.carrier} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} onClick={() => setSelectedQuote(i)} className="p-4 rounded-xl border cursor-pointer transition-all" style={{ backgroundColor: selectedQuote === i ? `${theme.primary}10` : quote.recommended ? theme.white : theme.white, borderColor: selectedQuote === i ? theme.primary : quote.recommended ? theme.secondary : `${theme.secondary}20` }}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{quote.carrier}</span>
-                        {quote.recommended && (
-                          <span className="px-2 py-0.5 bg-emerald-500 text-white text-xs rounded-full">Best</span>
-                        )}
+                        <span className="font-medium" style={{ color: theme.foreground }}>{quote.carrier}</span>
+                        {quote.recommended && <span className="px-2 py-0.5 rounded-full text-xs text-white" style={{ backgroundColor: theme.success }}>Best</span>}
                       </div>
-                      <span className="text-lg font-bold text-emerald-400">${quote.price}</span>
+                      <span className="text-lg font-bold" style={{ color: theme.primary }}>${quote.price}</span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-slate-400">
-                      <span>{quote.transit}</span>
-                      <span>•</span>
-                      <span>{quote.type}</span>
-                    </div>
+                    <div className="flex items-center gap-4 text-sm" style={{ color: theme.textMuted }}><span>{quote.transit}</span><span>•</span><span>{quote.type}</span></div>
                   </motion.div>
                 ))}
               </div>
-              <button className="w-full mt-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-all">
-                Book This Shipment
-              </button>
+              <button onClick={() => selectedQuote !== null && setShowBooking(true)} disabled={selectedQuote === null} className="w-full mt-4 py-3 rounded-xl font-medium text-white transition-all disabled:opacity-50" style={{ backgroundColor: theme.accent }}>Book This Shipment</button>
             </div>
           </div>
         </div>
+
+        <AnimatePresence>{showBooking && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setShowBooking(false)}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="rounded-2xl p-8 max-w-md w-full text-center" style={{ backgroundColor: theme.white }}>
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: theme.success }}><Check className="w-8 h-8 text-white" /></motion.div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: theme.foreground }}>Shipment Booked!</h3>
+              <p className="mb-4" style={{ color: theme.textMuted }}>Your shipment has been booked with {quotes[selectedQuote!]?.carrier}.</p>
+              <div className="rounded-xl p-4 mb-6 text-left" style={{ backgroundColor: `${theme.secondary}10` }}>
+                <div className="flex justify-between text-sm mb-2"><span style={{ color: theme.textMuted }}>Tracking:</span><span className="font-mono" style={{ color: theme.foreground }}>LEV-{Date.now().toString().slice(-8)}</span></div>
+                <div className="flex justify-between text-sm"><span style={{ color: theme.textMuted }}>Est. Delivery:</span><span style={{ color: theme.success }}>Jul 18-22, 2026</span></div>
+              </div>
+              <button onClick={() => setShowBooking(false)} className="w-full py-3 rounded-xl font-medium text-white" style={{ backgroundColor: theme.primary }}>Done</button>
+            </motion.div>
+          </motion.div>
+        )}</AnimatePresence>
       </div>
     </motion.div>
   );
@@ -1443,6 +1141,11 @@ function FreightSection() {
 function PaymentsSection() {
   const [escrowStep, setEscrowStep] = useState(0);
 
+  useEffect(() => {
+    const timer = setTimeout(() => { if (escrowStep < 4) setEscrowStep(prev => prev + 1); }, 2000);
+    return () => clearTimeout(timer);
+  }, [escrowStep]);
+
   const escrowSteps = [
     { title: 'Buyer Deposits Funds', desc: 'Payment secured in escrow', icon: CreditCard },
     { title: 'Seller Ships Goods', desc: 'Tracking number generated', icon: Truck },
@@ -1450,208 +1153,63 @@ function PaymentsSection() {
     { title: 'Funds Released', desc: 'Payment transferred to seller', icon: CheckCircle2 },
   ];
 
-  useEffect(() => {
-    if (escrowStep < 4) {
-      const timer = setTimeout(() => setEscrowStep(prev => prev + 1), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [escrowStep]);
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full mb-4"
-          >
-            <CreditCard className="w-4 h-4 text-rose-400" />
-            <span className="text-rose-400 text-sm font-medium">Secure Payments</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#DC262615' }}>
+            <CreditCard className="w-4 h-4" style={{ color: '#DC2626' }} />
+            <span className="text-sm font-medium" style={{ color: '#DC2626' }}>Secure Payments</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Protected Transactions</h2>
-          <p className="text-slate-400 text-lg">Escrow payments, multi-currency support, and secure transfers</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Protected Transactions</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Escrow payments, multi-currency support, and secure transfers</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Escrow Visualization */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">How Escrow Works</h3>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-              {/* Visual */}
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>How Escrow Works</h3>
+            <div className="rounded-2xl p-8 shadow-md" style={{ backgroundColor: theme.white }}>
               <div className="relative h-[300px] mb-8">
-                {/* Escrow Vault */}
-                <motion.div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32"
-                  animate={escrowStep >= 1 ? { scale: [1, 1.1, 1] } : {}}
-                  transition={{ duration: 1 }}
-                >
-                  <div className={`w-full h-full rounded-2xl flex items-center justify-center ${
-                    escrowStep >= 1 ? 'bg-emerald-500' : 'bg-slate-800'
-                  }`}>
-                    <Lock className={`w-12 h-12 ${escrowStep >= 1 ? 'text-white' : 'text-slate-600'}`} />
-                  </div>
+                <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32" animate={escrowStep >= 1 ? { scale: [1, 1.1, 1] } : {}} transition={{ duration: 1 }}>
+                  <div className="w-full h-full rounded-2xl flex items-center justify-center" style={{ backgroundColor: escrowStep >= 1 ? theme.success : `${theme.secondary}20` }}><Lock className="w-12 h-12" style={{ color: escrowStep >= 1 ? theme.white : theme.textMuted }} /></div>
                 </motion.div>
-
-                {/* Buyer */}
-                <motion.div
-                  className="absolute left-0 top-1/2 -translate-y-1/2"
-                  animate={escrowStep === 1 ? { x: [0, 20, 0] } : {}}
-                  transition={{ duration: 1 }}
-                >
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                    escrowStep >= 1 ? 'bg-blue-500' : 'bg-slate-800'
-                  }`}>
-                    <Building2 className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="text-center text-xs text-slate-400 mt-1">Buyer</div>
-                </motion.div>
-
-                {/* Seller */}
-                <motion.div
-                  className="absolute right-0 top-1/2 -translate-y-1/2"
-                  animate={escrowStep === 3 ? { x: [0, -20, 0] } : {}}
-                  transition={{ duration: 1 }}
-                >
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                    escrowStep >= 3 ? 'bg-emerald-500' : 'bg-slate-800'
-                  }`}>
-                    <Building className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="text-center text-xs text-slate-400 mt-1">Seller</div>
-                </motion.div>
-
-                {/* Connection lines */}
-                <svg className="absolute inset-0 w-full h-full">
-                  <motion.line
-                    x1="64"
-                    y1="150"
-                    x2="468"
-                    y2="150"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                    strokeDasharray="10 5"
-                    initial={{ pathLength: 0 }}
-                    animate={escrowStep >= 1 ? { pathLength: 1 } : {}}
-                  />
-                  <motion.line
-                    x1="468"
-                    y1="150"
-                    x2="64"
-                    y2="150"
-                    stroke="#10b981"
-                    strokeWidth="3"
-                    strokeDasharray="10 5"
-                    initial={{ pathLength: 0 }}
-                    animate={escrowStep >= 3 ? { pathLength: 1 } : {}}
-                  />
-                </svg>
+                <div className="absolute left-0 top-1/2 -translate-y-1/2"><div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: escrowStep >= 1 ? '#3B82F6' : `${theme.secondary}20` }}><Building2 className="w-8 h-8 text-white" /></div><div className="text-center text-xs mt-1" style={{ color: theme.textMuted }}>Buyer</div></div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2"><div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: escrowStep >= 3 ? theme.success : `${theme.secondary}20` }}><Building className="w-8 h-8 text-white" /></div><div className="text-center text-xs mt-1" style={{ color: theme.textMuted }}>Seller</div></div>
               </div>
-
-              {/* Steps */}
               <div className="space-y-4">
                 {escrowSteps.map((step, i) => (
-                  <motion.div
-                    key={step.title}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.2 }}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
-                      escrowStep > i ? 'bg-emerald-500/10 border border-emerald-500/30' :
-                      escrowStep === i + 1 ? 'bg-amber-500/10 border border-amber-500/30 animate-pulse' :
-                      'bg-slate-800/50 border border-slate-700'
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                      escrowStep > i ? 'bg-emerald-500' :
-                      escrowStep === i + 1 ? 'bg-amber-500' :
-                      'bg-slate-700'
-                    }`}>
-                      {escrowStep > i ? (
-                        <Check className="w-5 h-5 text-white" />
-                      ) : (
-                        <step.icon className="w-5 h-5 text-white" />
-                      )}
-                    </div>
-                    <div>
-                      <div className={`font-medium ${escrowStep > i ? 'text-emerald-400' : 'text-white'}`}>
-                        {step.title}
-                      </div>
-                      <div className="text-sm text-slate-400">{step.desc}</div>
-                    </div>
+                  <motion.div key={step.title} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }} className="flex items-center gap-4 p-4 rounded-xl transition-all" style={{ backgroundColor: escrowStep > i ? `${theme.success}10` : escrowStep === i + 1 ? `${theme.warning}10` : `${theme.secondary}10`, border: `1px solid ${escrowStep > i ? theme.success : escrowStep === i + 1 ? theme.warning : theme.secondary}30` }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: escrowStep > i ? theme.success : escrowStep === i + 1 ? theme.warning : theme.secondary }}>{escrowStep > i ? <Check className="w-5 h-5 text-white" /> : <step.icon className="w-5 h-5 text-white" />}</div>
+                    <div><div className="font-medium" style={{ color: escrowStep > i ? theme.success : theme.foreground }}>{step.title}</div><div className="text-sm" style={{ color: theme.textMuted }}>{step.desc}</div></div>
                   </motion.div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Payment Methods */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Supported Payment Methods</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: theme.foreground }}>Supported Payment Methods</h3>
             <div className="grid grid-cols-2 gap-4 mb-6">
-              {[
-                { name: 'Stripe', desc: 'International', icon: '💳' },
-                { name: 'Razorpay', desc: 'India', icon: '₹' },
-                { name: 'Wire Transfer', desc: 'Bank to Bank', icon: '🏦' },
-                { name: 'Letter of Credit', desc: 'Trade Finance', icon: '📄' },
-              ].map((method, i) => (
-                <motion.div
-                  key={method.name}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="p-4 bg-slate-900 border border-slate-800 rounded-xl"
-                >
-                  <div className="text-2xl mb-2">{method.icon}</div>
-                  <div className="font-medium text-white">{method.name}</div>
-                  <div className="text-sm text-slate-500">{method.desc}</div>
+              {[{ name: 'Stripe', desc: 'International' }, { name: 'Razorpay', desc: 'India' }, { name: 'Wire Transfer', desc: 'Bank to Bank' }, { name: 'Letter of Credit', desc: 'Trade Finance' }].map((method, i) => (
+                <motion.div key={method.name} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-xl" style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}20` }}>
+                  <div className="w-10 h-10 rounded-xl mb-2 flex items-center justify-center text-2xl" style={{ backgroundColor: `${theme.secondary}15` }}>{i === 0 ? '💳' : i === 1 ? '₹' : i === 2 ? '🏦' : '📄'}</div>
+                  <div className="font-medium" style={{ color: theme.foreground }}>{method.name}</div>
+                  <div className="text-sm" style={{ color: theme.textMuted }}>{method.desc}</div>
                 </motion.div>
               ))}
             </div>
-
-            {/* Multi-currency */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h4 className="text-white font-medium mb-4">Multi-Currency Support</h4>
+            <div className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white }}>
+              <h4 className="font-medium mb-4" style={{ color: theme.foreground }}>Multi-Currency Support</h4>
               <div className="flex flex-wrap gap-2">
-                {['USD', 'EUR', 'GBP', 'AED', 'INR', 'CNY', 'SGD', 'JPY', 'AUD'].map((currency, i) => (
-                  <motion.span
-                    key={currency}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-sm"
-                  >
-                    {currency}
-                  </motion.span>
-                ))}
+                {['USD', 'EUR', 'GBP', 'AED', 'INR', 'CNY', 'SGD', 'JPY', 'AUD'].map((currency, i) => (<motion.span key={currency} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} className="px-3 py-1 rounded-lg text-sm" style={{ backgroundColor: `${theme.secondary}10`, color: theme.foreground }}>{currency}</motion.span>))}
               </div>
             </div>
-
-            {/* Transaction Summary */}
-            <div className="mt-6 bg-slate-900 border border-emerald-500/30 rounded-2xl p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                <span className="text-emerald-400 font-medium">Recent Transaction</span>
-              </div>
+            <div className="mt-6 rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white, border: `2px solid ${theme.success}30` }}>
+              <div className="flex items-center gap-2 mb-4"><CheckCircle2 className="w-5 h-5" style={{ color: theme.success }} /><span className="font-medium" style={{ color: theme.success }}>Recent Transaction</span></div>
               <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Order</span>
-                  <span className="text-white">INV-2026-001</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Amount</span>
-                  <span className="text-xl font-bold text-emerald-400">$42,500 USD</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Status</span>
-                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">Escrow Protected</span>
-                </div>
+                <div className="flex justify-between"><span style={{ color: theme.textMuted }}>Order</span><span style={{ color: theme.foreground }}>INV-2026-001</span></div>
+                <div className="flex justify-between"><span className="text-xl font-bold" style={{ color: theme.success }}>$42,500 USD</span></div>
+                <div className="flex justify-between"><span style={{ color: theme.textMuted }}>Status</span><span className="px-2 py-1 rounded-full text-xs" style={{ backgroundColor: `${theme.success}20`, color: theme.success }}>Escrow Protected</span></div>
               </div>
             </div>
           </div>
@@ -1666,195 +1224,81 @@ function PaymentsSection() {
 // ============================================================================
 
 function AISection() {
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: "👋 Hi! I'm your AI trade assistant powered by HOJAI. How can I help you today?" },
-  ]);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: "👋 Hi! I'm your AI trade assistant powered by HOJAI. How can I help you today?\n\n• Creating export documents\n• Calculating import duties\n• Finding suppliers\n• Tracking shipments\n• Trade compliance" }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
 
   const quickActions = [
     { text: 'Create export invoice', icon: FileText },
     { text: 'Calculate import duty', icon: Calculator },
-    { text: 'Find suppliers for cotton', icon: Users },
+    { text: 'Find cotton suppliers', icon: Users },
     { text: 'Track my shipment', icon: Truck },
   ];
 
-  const responses = {
-    'Create export invoice': "I'll help you create an export invoice. Let me prepare the template with your company details and product information...",
-    'Calculate import duty': "For importing to the UAE, I need a few details: Product value, HS code, and country of origin. I've found your HS code is 1006.30 for rice. Estimated duty is 5%.",
-    'Find suppliers for cotton': "I found 47 verified cotton suppliers matching your criteria. Top matches: India (23), Pakistan (15), USA (9). Want me to show their profiles?",
-    'Track my shipment': "Found your shipment! It's currently in Dubai port, cleared customs, and will be delivered by July 4th.",
+  const responses: Record<string, string> = {
+    'Create export invoice': "📄 I'll help you create an export invoice. Based on your orders, I can pre-fill: Seller: Global Trade Exports Pvt Ltd, Product: Premium Basmati Rice 1121, Quantity: 50 MT, Value: $42,500. Shall I generate it?",
+    'Calculate import duty': "🧮 Import duty to UAE:\n• Product: Basmati Rice (HS: 1006.30)\n• Value: $10,000\n• Import Duty: 5%\n• VAT: 5%\n• Total: $11,000",
+    'Find cotton suppliers': "🔍 Found 47 verified cotton suppliers:\n• India: 23 suppliers ⭐\n• Pakistan: 15 suppliers ⭐\n• USA: 9 suppliers\n\nTop rated: Cotton World Ltd (4.7★)",
+    'Track my shipment': "🚢 Found your shipment!\n• Status: In Transit to Dubai\n• Location: Singapore Port\n• ETA: July 4, 2026",
+    'default': "I'm here to help! Try asking about documents, duties, suppliers, or tracking.",
   };
 
   const sendMessage = (text?: string) => {
     const messageText = text || input;
     if (!messageText.trim()) return;
-
     setMessages(prev => [...prev, { role: 'user', content: messageText }]);
     setInput('');
     setTyping(true);
-
     setTimeout(() => {
       setTyping(false);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: responses[messageText as keyof typeof responses] || "I'll help you with that. Let me process your request..."
-      }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: responses[messageText] || responses['default'] }]);
     }, 1500);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full mb-4"
-          >
-            <Bot className="w-4 h-4 text-cyan-400" />
-            <span className="text-cyan-400 text-sm font-medium">Powered by HOJAI AI</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
+            <Bot className="w-4 h-4" style={{ color: '#0891B2' }} />
+            <span className="text-sm font-medium" style={{ color: '#0891B2' }}>Powered by HOJAI AI</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Your AI Trade Partner</h2>
-          <p className="text-slate-400 text-lg">Natural language commands for documents, compliance, and insights</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>Your AI Trade Partner</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Natural language commands for documents, compliance, and insights</p>
         </div>
 
-        {/* Chat Interface */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          {/* Header */}
-          <div className="p-4 border-b border-slate-800 flex items-center gap-3">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                <Bot className="w-6 h-6 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-slate-900" />
-            </div>
-            <div>
-              <div className="font-medium text-white">HOJAI Trade Copilot</div>
-              <div className="text-xs text-emerald-400">Online • Ready to assist</div>
-            </div>
-            <div className="ml-auto flex gap-2">
-              <button className="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors">
-                <Cpu className="w-4 h-4" />
-              </button>
-            </div>
+        <div className="rounded-2xl overflow-hidden shadow-xl" style={{ backgroundColor: theme.white }}>
+          <div className="p-4 flex items-center gap-3" style={{ borderBottom: `1px solid ${theme.secondary}20` }}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: `linear-gradient(135deg, #0891B2, #3B82F6)` }}><Bot className="w-6 h-6 text-white" /></div>
+            <div><div className="font-medium" style={{ color: theme.foreground }}>HOJAI Trade Copilot</div><div className="text-xs" style={{ color: theme.success }}>Online • Ready to assist</div></div>
           </div>
-
-          {/* Messages */}
           <div className="h-[400px] overflow-y-auto p-4 space-y-4">
             {messages.map((msg, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                  msg.role === 'user'
-                    ? 'bg-cyan-500 text-white rounded-br-md'
-                    : 'bg-slate-800 text-slate-100 rounded-bl-md'
-                }`}>
-                  {msg.content}
-                </div>
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className="max-w-[80%] px-4 py-3 rounded-2xl whitespace-pre-line" style={{ backgroundColor: msg.role === 'user' ? theme.primary : `${theme.secondary}10`, color: msg.role === 'user' ? theme.white : theme.foreground, borderBottomLeftRadius: msg.role === 'user' ? '8px' : '0', borderBottomRightRadius: msg.role === 'user' ? '0' : '8px' }}>{msg.content}</div>
               </motion.div>
             ))}
             {typing && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex justify-start"
-              >
-                <div className="bg-slate-800 px-4 py-3 rounded-2xl rounded-bl-md">
-                  <div className="flex gap-1">
-                    <motion.div
-                      animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity }}
-                      className="w-2 h-2 bg-slate-400 rounded-full"
-                    />
-                    <motion.div
-                      animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.1 }}
-                      className="w-2 h-2 bg-slate-400 rounded-full"
-                    />
-                    <motion.div
-                      animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                      className="w-2 h-2 bg-slate-400 rounded-full"
-                    />
-                  </div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                <div className="px-4 py-3 rounded-2xl rounded-bl-md" style={{ backgroundColor: `${theme.secondary}10` }}>
+                  <div className="flex gap-1">{[0, 1, 2].map(i => <motion.div key={i} animate={{ y: [0, -5, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }} className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.textMuted }} />)}</div>
                 </div>
               </motion.div>
             )}
           </div>
-
-          {/* Quick Actions */}
-          <div className="p-4 border-t border-slate-800">
+          <div className="p-4" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
             <div className="flex flex-wrap gap-2 mb-4">
-              {quickActions.map((action, i) => (
-                <motion.button
-                  key={action.text}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => sendMessage(action.text)}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-sm text-slate-300 transition-all"
-                >
-                  <action.icon className="w-4 h-4 text-cyan-400" />
-                  {action.text}
+              {quickActions.map(action => (
+                <motion.button key={action.text} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} onClick={() => sendMessage(action.text)} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all" style={{ backgroundColor: `${theme.secondary}10`, color: theme.secondary }}>
+                  <action.icon className="w-4 h-4" />{action.text}
                 </motion.button>
               ))}
             </div>
-
-            {/* Input */}
             <div className="flex gap-3">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Ask me anything about trade..."
-                className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
-              />
-              <button className="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-slate-400 hover:text-white transition-colors">
-                <Mic className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => sendMessage()}
-                className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl font-medium transition-colors flex items-center gap-2"
-              >
-                <Send className="w-4 h-4" />
-                Send
-              </button>
+              <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && sendMessage()} placeholder="Ask me anything about trade..." className="flex-1 px-4 py-3 rounded-xl" style={{ backgroundColor: `${theme.secondary}10`, border: `1px solid ${theme.secondary}20`, color: theme.foreground }} />
+              <button onClick={() => sendMessage()} className="px-6 py-3 rounded-xl font-medium text-white transition-all" style={{ backgroundColor: '#0891B2' }}><Send className="w-4 h-4" /></button>
             </div>
           </div>
-        </div>
-
-        {/* AI Capabilities */}
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { name: 'Document Gen', desc: 'Create trade docs' },
-            { name: 'Duty Calc', desc: 'Instant calculations' },
-            { name: 'Supplier Match', desc: 'AI recommendations' },
-            { name: 'Risk Analysis', desc: 'Fraud detection' },
-          ].map((cap, i) => (
-            <motion.div
-              key={cap.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl text-center"
-            >
-              <Activity className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-              <div className="font-medium text-white text-sm">{cap.name}</div>
-              <div className="text-xs text-slate-500">{cap.desc}</div>
-            </motion.div>
-          ))}
         </div>
       </div>
     </motion.div>
@@ -1866,7 +1310,7 @@ function AISection() {
 // ============================================================================
 
 function NetworkSection({ animatedRoutes }: { animatedRoutes: number[] }) {
-  const [partners, setPartners] = useState([
+  const [partners] = useState([
     { id: 1, name: 'Global Trade Exports', country: 'India', type: 'Exporter', products: 45, verified: true, tradeVolume: '$2.5M' },
     { id: 2, name: 'UAE Trading LLC', country: 'UAE', type: 'Importer', products: 120, verified: true, tradeVolume: '$5.8M' },
     { id: 3, name: 'Germany Textiles GmbH', country: 'Germany', type: 'Buyer', products: 89, verified: true, tradeVolume: '$3.2M' },
@@ -1876,208 +1320,55 @@ function NetworkSection({ animatedRoutes }: { animatedRoutes: number[] }) {
   ]);
 
   const [activeFilter, setActiveFilter] = useState('all');
-
   const filters = ['all', 'Exporter', 'Importer', 'Buyer', 'Freight'];
-
-  const filteredPartners = activeFilter === 'all'
-    ? partners
-    : partners.filter(p => p.type === activeFilter);
+  const filteredPartners = activeFilter === 'all' ? partners : partners.filter(p => p.type === activeFilter);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-[calc(100vh-5rem)] py-12 px-6"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-full mb-4"
-          >
-            <Network className="w-4 h-4 text-indigo-400" />
-            <span className="text-indigo-400 text-sm font-medium">Global Network</span>
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#6366F115' }}>
+            <Network className="w-4 h-4" style={{ color: '#6366F1' }} />
+            <span className="text-sm font-medium" style={{ color: '#6366F1' }}>Global Network</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">The Trade Network</h2>
-          <p className="text-slate-400 text-lg">Connect with verified businesses worldwide</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 brand-font" style={{ color: theme.foreground }}>The Trade Network</h2>
+          <p className="text-lg" style={{ color: theme.textMuted }}>Connect with verified businesses worldwide</p>
         </div>
 
         {/* World Map */}
-        <div className="relative h-[400px] bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl overflow-hidden mb-8">
-          {/* Animated background */}
-          <div className="absolute inset-0">
-            {[...Array(30)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-indigo-400/50 rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  opacity: [0.2, 0.8, 0.2],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 2 + Math.random() * 3,
-                  repeat: Infinity,
-                  delay: Math.random() * 2,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* SVG World Map */}
-          <svg viewBox="0 0 1000 400" className="w-full h-full relative z-10">
-            {/* Simplified world outline */}
-            <path d="M150,100 Q200,80 280,110 Q320,130 340,180 Q350,230 320,280 Q280,320 220,330 Q160,320 140,260 Q120,200 150,100" fill="#1e293b" />
-            <path d="M450,60 Q520,40 600,70 Q660,100 680,160 Q690,220 660,260 Q620,290 560,300 Q500,310 460,270 Q420,230 440,160 Q450,100 450,60" fill="#1e293b" />
-            <path d="M700,130 Q760,110 820,140 Q870,180 860,240 Q840,290 780,300 Q720,300 700,250 Q680,200 700,130" fill="#1e293b" />
-            <path d="M200,360 Q260,340 320,360 Q360,380 350,420 Q330,450 270,450 Q210,440 200,400 Q195,380 200,360" fill="#1e293b" />
-            <path d="M780,360 Q840,340 900,370 Q940,400 920,440 Q890,470 830,470 Q770,460 760,420 Q755,390 780,360" fill="#1e293b" />
-
-            {/* Animated trade routes */}
-            {animatedRoutes.map((routeIndex, i) => (
-              <motion.g key={i}>
-                <motion.circle
-                  cx={150 + routeIndex * 150}
-                  cy={100 + (routeIndex % 3) * 100}
-                  r="4"
-                  fill="#818cf8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-              </motion.g>
-            ))}
-
-            {/* Connection lines */}
-            {partners.slice(0, 6).map((partner, i) => (
-              <motion.path
-                key={partner.name}
-                d={`M${500},${200} Q${200 + i * 100},${100 + i * 50} ${100 + i * 150},${100 + (i % 3) * 100}`}
-                stroke="#6366f1"
-                strokeWidth="1"
-                fill="none"
-                strokeDasharray="5 5"
-                animate={{
-                  strokeDashoffset: [0, -20],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              />
-            ))}
-
-            {/* Company nodes */}
-            {partners.map((partner, i) => (
-              <motion.g key={partner.name}>
-                <motion.circle
-                  cx={100 + i * 150}
-                  cy={100 + (i % 3) * 100}
-                  r={partner.verified ? 8 : 6}
-                  fill={partner.verified ? '#10b981' : '#6366f1'}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.5 + i * 0.1 }}
-                />
-                {partner.verified && (
-                  <motion.circle
-                    cx={100 + i * 150}
-                    cy={100 + (i % 3) * 100}
-                    r="12"
-                    fill="none"
-                    stroke="#10b981"
-                    strokeWidth="2"
-                    initial={{ scale: 0.5, opacity: 0.8 }}
-                    animate={{ scale: 1.5, opacity: 0 }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                )}
-              </motion.g>
-            ))}
+        <div className="relative h-[400px] rounded-2xl overflow-hidden mb-8" style={{ backgroundColor: theme.backgroundAlt }}>
+          <svg viewBox="0 0 1000 400" className="w-full h-full">
+            <path d="M150,100 Q200,80 280,110 Q320,130 340,180 Q350,230 320,280 Q280,320 220,330 Q160,320 140,260 Q120,200 150,100" fill={theme.secondary + '20'} />
+            <path d="M450,60 Q520,40 600,70 Q660,100 680,160 Q690,220 660,260 Q620,290 560,300 Q500,310 460,270 Q420,230 440,160 Q450,100 450,60" fill={theme.secondary + '20'} />
+            <path d="M700,130 Q760,110 820,140 Q870,180 860,240 Q840,290 780,300 Q720,300 700,250 Q680,200 700,130" fill={theme.secondary + '20'} />
+            {animatedRoutes.map((routeIndex, i) => (<motion.circle key={i} cx={150 + routeIndex * 150} cy={100 + (routeIndex % 3) * 100} r="4" fill="#6366F1" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity }} />))}
+            {partners.map((partner, i) => (<motion.circle key={partner.name} cx={100 + i * 150} cy={100 + (i % 3) * 100} r={partner.verified ? 8 : 6} fill={partner.verified ? theme.success : '#6366F1'} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} />))}
           </svg>
-
-          {/* Stats overlay */}
           <div className="absolute top-4 left-4 flex gap-4">
-            <div className="px-4 py-2 bg-slate-900/80 backdrop-blur-sm rounded-lg">
-              <div className="text-2xl font-bold text-white">50,000+</div>
-              <div className="text-xs text-slate-400">Connected Businesses</div>
-            </div>
-            <div className="px-4 py-2 bg-slate-900/80 backdrop-blur-sm rounded-lg">
-              <div className="text-2xl font-bold text-emerald-400">120+</div>
-              <div className="text-xs text-slate-400">Countries</div>
-            </div>
+            <div className="px-4 py-2 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}><div className="text-2xl font-bold" style={{ color: theme.foreground }}>50,000+</div><div className="text-xs" style={{ color: theme.textMuted }}>Connected Businesses</div></div>
+            <div className="px-4 py-2 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}><div className="text-2xl font-bold" style={{ color: theme.success }}>120+</div><div className="text-xs" style={{ color: theme.textMuted }}>Countries</div></div>
           </div>
-
-          <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2 bg-slate-900/80 backdrop-blur-sm rounded-lg">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-sm text-slate-300">Network Active</span>
-          </div>
+          <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-2 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}><div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.success }} /><span className="text-sm" style={{ color: theme.textMuted }}>Network Active</span></div>
         </div>
 
-        {/* Partner Directory */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-white">Verified Partners</h3>
-            <div className="flex gap-2">
-              {filters.map(filter => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeFilter === filter
-                      ? 'bg-indigo-500 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                </button>
-              ))}
-            </div>
+            <h3 className="text-xl font-semibold" style={{ color: theme.foreground }}>Verified Partners</h3>
+            <div className="flex gap-2">{filters.map(filter => (<button key={filter} onClick={() => setActiveFilter(filter)} className="px-4 py-2 rounded-lg text-sm font-medium transition-all" style={{ backgroundColor: activeFilter === filter ? '#6366F1' : `${theme.secondary}10`, color: activeFilter === filter ? theme.white : theme.textMuted }}>{filter.charAt(0).toUpperCase() + filter.slice(1)}</button>))}</div>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredPartners.map((partner, i) => (
-              <motion.div
-                key={partner.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/50 transition-all"
-              >
+              <motion.div key={partner.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="rounded-2xl p-6 shadow-md" style={{ backgroundColor: theme.white, border: `1px solid ${theme.secondary}20` }}>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold">
-                      {partner.name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{partner.name}</span>
-                        {partner.verified && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        )}
-                      </div>
-                      <div className="text-sm text-slate-500">{partner.country} • {partner.type}</div>
-                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold" style={{ background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})` }}>{partner.name.charAt(0)}</div>
+                    <div><div className="flex items-center gap-2"><span className="font-medium" style={{ color: theme.foreground }}>{partner.name}</span>{partner.verified && <CheckCircle2 className="w-4 h-4" style={{ color: theme.success }} />}</div><div className="text-sm" style={{ color: theme.textMuted }}>{partner.country} • {partner.type}</div></div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                  <div>
-                    <div className="text-sm text-slate-500">Products</div>
-                    <div className="font-medium text-white">{partner.products}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-slate-500">Trade Volume</div>
-                    <div className="font-medium text-emerald-400">{partner.tradeVolume}</div>
-                  </div>
-                  <button className="px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 rounded-lg text-sm font-medium transition-colors">
-                    Connect
-                  </button>
+                <div className="flex items-center justify-between pt-4" style={{ borderTop: `1px solid ${theme.secondary}20` }}>
+                  <div><div className="text-sm" style={{ color: theme.textMuted }}>Products</div><div className="font-medium" style={{ color: theme.foreground }}>{partner.products}</div></div>
+                  <div><div className="text-sm" style={{ color: theme.textMuted }}>Trade Volume</div><div className="font-medium" style={{ color: theme.success }}>{partner.tradeVolume}</div></div>
+                  <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all" style={{ backgroundColor: '#6366F120', color: '#6366F1' }}>Connect</button>
                 </div>
               </motion.div>
             ))}

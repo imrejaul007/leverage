@@ -4,163 +4,51 @@ import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Package, Grid3X3, List, SlidersHorizontal } from 'lucide-react';
+import { Package, Grid3X3, List, Filter, ChevronDown, ChevronUp, X, MapPin } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/layout/Hero';
-import { ProductCard, Product } from '@/components/shared/ProductCard';
-import { CategoryFilter, Category } from '@/components/shared/CategoryFilter';
-import { FilterDropdown } from '@/components/shared/FilterDropdown';
+import { ProductCard } from '@/components/shared/ProductCard';
 import { Pagination } from '@/components/shared/Pagination';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
+import { MobileFilterSheet, type FilterOption } from '@/components/shared/MobileFilterSheet';
 import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/useToast';
+import { products, Product } from '@/data/products';
 
-// Product data
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Basmati Rice 1121',
-    description: 'Extra long grain aromatic basmati rice for export. Perfect for international trade.',
-    price: 850,
-    originalPrice: 950,
-    currency: 'MT',
-    moq: '50 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Global Trade Exports',
-    supplierId: 'sup-001',
-    rating: 4.8,
-    reviews: 128,
-    salesCount: 1248,
-    featured: true,
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800',
-  },
-  {
-    id: '2',
-    name: 'Organic Cotton Yarn 40s',
-    description: 'Premium organic cotton yarn for textiles. Sustainable and certified.',
-    price: 4.20,
-    currency: 'KG',
-    moq: '1000 KG',
-    category: 'Textiles',
-    supplier: 'Cotton World Ltd',
-    supplierId: 'sup-002',
-    rating: 4.7,
-    reviews: 96,
-    salesCount: 890,
-    image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800',
-  },
-  {
-    id: '3',
-    name: 'Copper Cathode 99.99%',
-    description: 'Industrial grade copper cathode for manufacturing.',
-    price: 7250,
-    currency: 'MT',
-    moq: '25 MT',
-    category: 'Metals & Minerals',
-    supplier: 'MetalLink Global',
-    supplierId: 'sup-003',
-    rating: 4.9,
-    reviews: 78,
-    salesCount: 560,
-    image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=800',
-  },
-  {
-    id: '4',
-    name: 'Solar Panels 550W',
-    description: 'Tier 1 solar panels with high efficiency rating.',
-    price: 165,
-    currency: 'unit',
-    moq: '100 units',
-    category: 'Energy',
-    supplier: 'Shanghai Import Co.',
-    supplierId: 'sup-004',
-    rating: 4.6,
-    reviews: 89,
-    salesCount: 2100,
-    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800',
-  },
-  {
-    id: '5',
-    name: 'Extra Virgin Olive Oil',
-    description: 'Cold pressed, first harvest olive oil. Premium quality.',
-    price: 4.50,
-    currency: 'L',
-    moq: '5 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Turkey Merchants',
-    supplierId: 'sup-005',
-    rating: 4.9,
-    reviews: 156,
-    salesCount: 3450,
-    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800',
-  },
-  {
-    id: '6',
-    name: 'Steel Billets Grade A',
-    description: 'IS 2062 certified steel billets for construction.',
-    price: 620,
-    currency: 'MT',
-    moq: '100 MT',
-    category: 'Metals & Minerals',
-    supplier: 'Turkey Merchants',
-    supplierId: 'sup-005',
-    rating: 4.9,
-    reviews: 32,
-    salesCount: 890,
-    image: 'https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=800',
-  },
-  {
-    id: '7',
-    name: 'Fresh Green Coffee Beans',
-    description: 'Arabica coffee beans, washed process.',
-    price: 3200,
-    currency: 'MT',
-    moq: '10 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Ethiopia Direct',
-    supplierId: 'sup-006',
-    rating: 4.8,
-    reviews: 64,
-    salesCount: 420,
-    image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800',
-  },
-  {
-    id: '8',
-    name: 'Wheat Grain Grade 1',
-    description: 'High quality wheat for milling and export.',
-    price: 280,
-    currency: 'MT',
-    moq: '100 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Ukraine Grain Co.',
-    supplierId: 'sup-007',
-    rating: 4.5,
-    reviews: 45,
-    salesCount: 2100,
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800',
-  },
+// Categories with counts
+const categories: FilterOption[] = [
+  { value: 'all', label: 'All Products', count: products.length },
+  { value: 'Food & Agriculture', label: 'Food & Agriculture', emoji: '🌾', count: products.filter(p => p.category === 'Food & Agriculture').length },
+  { value: 'Textiles', label: 'Textiles', emoji: '🧵', count: products.filter(p => p.category === 'Textiles').length },
+  { value: 'Metals & Minerals', label: 'Metals & Minerals', emoji: '⚙️', count: products.filter(p => p.category === 'Metals & Minerals').length },
+  { value: 'Energy', label: 'Energy', emoji: '⚡', count: products.filter(p => p.category === 'Energy').length },
 ];
 
-const categories: Category[] = [
-  { name: 'All', slug: 'all' },
-  { name: 'Food & Agriculture', slug: 'Food & Agriculture', emoji: '🌾' },
-  { name: 'Textiles', slug: 'Textiles', emoji: '🧵' },
-  { name: 'Electronics', slug: 'Electronics', emoji: '💻' },
-  { name: 'Metals & Minerals', slug: 'Metals & Minerals', emoji: '⚙️' },
-  { name: 'Energy', slug: 'Energy', emoji: '⚡' },
-  { name: 'Chemicals', slug: 'Chemicals', emoji: '🧪' },
-  { name: 'Machinery', slug: 'Machinery', emoji: '🔧' },
+const priceRanges: FilterOption[] = [
+  { value: '', label: 'All Prices' },
+  { value: '0-100', label: 'Under $100' },
+  { value: '100-500', label: '$100 - $500' },
+  { value: '500-1000', label: '$500 - $1,000' },
+  { value: '1000+', label: '$1,000+' },
 ];
 
-const sortOptions = [
+const sortOptions: FilterOption[] = [
   { value: 'featured', label: 'Featured' },
   { value: 'price-low', label: 'Price: Low to High' },
   { value: 'price-high', label: 'Price: High to Low' },
   { value: 'rating', label: 'Highest Rated' },
-  { value: 'sales', label: 'Best Sales' },
+  { value: 'sales', label: 'Most Selling' },
+];
+
+const countries: FilterOption[] = [
+  { value: 'all', label: 'All India' },
+  { value: 'India', label: 'India' },
+  { value: 'UAE', label: 'UAE' },
+  { value: 'China', label: 'China' },
+  { value: 'Turkey', label: 'Turkey' },
+  { value: 'Ethiopia', label: 'Ethiopia' },
 ];
 
 const ITEMS_PER_PAGE = 12;
@@ -172,9 +60,16 @@ export default function ProductsPage() {
   const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'indiamart'>('indiamart');
   const [currentPage, setCurrentPage] = useState(1);
-  const [priceRange, setPriceRange] = useState<string>('');
+  const [priceRange, setPriceRange] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('all');
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({
+    category: true,
+    price: true,
+    country: false,
+  });
 
   const { cartItems, addToCart, isInCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -200,6 +95,20 @@ export default function ProductsPage() {
       result = result.filter((p) => p.category === selectedCategory);
     }
 
+    // Filter by country
+    if (selectedCountry !== 'all') {
+      result = result.filter((p) => p.country === selectedCountry);
+    }
+
+    // Filter by price range
+    if (priceRange) {
+      const [min, max] = priceRange.split('-').map(Number);
+      result = result.filter((p) => {
+        if (priceRange === '1000+') return p.price >= 1000;
+        return p.price >= min && p.price <= max;
+      });
+    }
+
     // Sort
     switch (sortBy) {
       case 'price-low':
@@ -219,7 +128,7 @@ export default function ProductsPage() {
     }
 
     return result;
-  }, [search, selectedCategory, sortBy]);
+  }, [search, selectedCategory, sortBy, priceRange, selectedCountry]);
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -227,6 +136,10 @@ export default function ProductsPage() {
   }, [filteredProducts, currentPage]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
 
   const handleAddToCart = (product: Product) => {
     if (isInCart(product.id)) {
@@ -252,131 +165,345 @@ export default function ProductsPage() {
     );
   };
 
+  const handleMobileFilterApply = () => {
+    setMobileFiltersOpen(false);
+    setCurrentPage(1);
+  };
+
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
+    <div className="min-h-screen bg-gray-50">
       <Header cartCount={cartCount} notificationCount={3} activeRoute="/products" />
 
-      {/* Hero */}
-      <HeroSection
-        title="Browse Products"
-        subtitle="Discover verified products from trusted suppliers worldwide"
-        icon={<Package className="w-10 h-10" />}
-        searchPlaceholder="Search products..."
-        stats={[
-          { label: 'Products', value: products.length.toString() },
-          { label: 'Categories', value: categories.length - 1 + '' },
-          { label: 'Suppliers', value: '523' },
-          { label: 'Countries', value: '45' },
-        ]}
-      />
-
-      {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-12 pb-16">
-        <div className="container mx-auto max-w-7xl">
-          {/* Categories */}
-          <CategoryFilter
-            categories={categories}
-            selected={selectedCategory}
-            onSelect={(cat) => {
-              setSelectedCategory(cat);
-              setCurrentPage(1);
-            }}
-            variant="pill"
-          />
-
-          {/* Filters Bar */}
-          <div className="bg-white rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <FilterDropdown
-                label="Sort By"
-                options={sortOptions}
-                value={sortBy}
-                onChange={(v) => setSortBy(v as string)}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#4A4A4A]">
-                {filteredProducts.length} products
-              </span>
-              <div className="flex items-center gap-1 border-l border-black/10 pl-3">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'grid'
-                      ? 'bg-[#154230] text-white'
-                      : 'hover:bg-black/5'
-                  }`}
-                >
-                  <Grid3X3 className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-[#154230] text-white'
-                      : 'hover:bg-black/5'
-                  }`}
-                >
-                  <List className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
+      <main className="container mx-auto px-4 py-6">
+        {/* Page Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">All Products</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {filteredProducts.length} products from verified suppliers
+            </p>
           </div>
+        </div>
+
+        {/* Mobile: Filter chips & sort */}
+        <div className="lg:hidden mb-4">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <button
+              onClick={() => setMobileFiltersOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium whitespace-nowrap"
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+            </button>
+            <button
+              onClick={() => setSortBy('featured')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                sortBy === 'featured' ? 'bg-[#154230] text-white' : 'bg-white border border-gray-200'
+              }`}
+            >
+              Featured
+            </button>
+            <button
+              onClick={() => setSortBy('price-low')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                sortBy === 'price-low' ? 'bg-[#154230] text-white' : 'bg-white border border-gray-200'
+              }`}
+            >
+              Low Price
+            </button>
+            <button
+              onClick={() => setSortBy('rating')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                sortBy === 'rating' ? 'bg-[#154230] text-white' : 'bg-white border border-gray-200'
+              }`}
+            >
+              Top Rated
+            </button>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex gap-6">
+          {/* Left Sidebar - Desktop Filters */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sticky top-24">
+              <h2 className="font-bold text-lg mb-4">Filters</h2>
+
+              {/* Categories */}
+              <div className="mb-6">
+                <button
+                  onClick={() => toggleSection('category')}
+                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
+                >
+                  Category
+                  {expandedSections.category ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+                {expandedSections.category && (
+                  <div className="space-y-1">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.value}
+                        onClick={() => { setSelectedCategory(cat.value); setCurrentPage(1); }}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                          selectedCategory === cat.value
+                            ? 'bg-[#154230]/10 text-[#154230] font-medium'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {cat.emoji && <span>{cat.emoji}</span>}
+                          {cat.label}
+                        </span>
+                        {cat.count !== undefined && (
+                          <span className="text-xs text-gray-400">({cat.count})</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Price Range */}
+              <div className="mb-6">
+                <button
+                  onClick={() => toggleSection('price')}
+                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
+                >
+                  Price
+                  {expandedSections.price ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+                {expandedSections.price && (
+                  <div className="space-y-1">
+                    {priceRanges.map((range) => (
+                      <button
+                        key={range.value}
+                        onClick={() => { setPriceRange(range.value); setCurrentPage(1); }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                          priceRange === range.value
+                            ? 'bg-[#154230]/10 text-[#154230] font-medium'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        {range.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Location */}
+              <div className="mb-6">
+                <button
+                  onClick={() => toggleSection('country')}
+                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
+                >
+                  Location
+                  {expandedSections.country ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+                {expandedSections.country && (
+                  <div className="space-y-1">
+                    {countries.map((country) => (
+                      <button
+                        key={country.value}
+                        onClick={() => { setSelectedCountry(country.value); setCurrentPage(1); }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                          selectedCountry === country.value
+                            ? 'bg-[#154230]/10 text-[#154230] font-medium'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        {country.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Clear Filters */}
+              {(selectedCategory !== 'all' || priceRange || selectedCountry !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setPriceRange('');
+                    setSelectedCountry('all');
+                    setCurrentPage(1);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Clear All Filters
+                </button>
+              )}
+            </div>
+          </aside>
 
           {/* Products Grid/List */}
-          {paginatedProducts.length > 0 ? (
-            <>
-              <div
-                className={
-                  viewMode === 'grid'
-                    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6'
-                    : 'flex flex-col gap-4'
-                }
-              >
-                {paginatedProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    variant={viewMode === 'list' ? 'list' : 'default'}
-                    onAddToCart={handleAddToCart}
-                    onToggleFavorite={handleToggleFavorite}
-                    isFavorite={isFavorite(product.id)}
-                    isInCart={isInCart(product.id)}
-                  />
-                ))}
+          <div className="flex-1 min-w-0">
+            {/* Desktop: Sort & View controls */}
+            <div className="hidden lg:flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">
+                  {filteredProducts.length} products
+                </span>
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-8">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                  />
+              <div className="flex items-center gap-3">
+                {/* Sort Dropdown */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#154230]/20"
+                >
+                  {sortOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+
+                {/* View Mode Toggle */}
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setViewMode('indiamart')}
+                    className={`p-2 transition-colors ${
+                      viewMode === 'indiamart' ? 'bg-[#154230] text-white' : 'bg-white hover:bg-gray-50'
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 transition-colors ${
+                      viewMode === 'grid' ? 'bg-[#154230] text-white' : 'bg-white hover:bg-gray-50'
+                    }`}
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
                 </div>
-              )}
-            </>
-          ) : (
-            <EmptyState
-              icon={<Package className="w-16 h-16" />}
-              title="No products found"
-              description="Try adjusting your search or filters to find what you're looking for."
-              action={
-                <div className="flex gap-3">
-                  <Button onClick={() => { setSelectedCategory('all'); setSearch(''); }}>
-                    Clear Filters
-                  </Button>
-                  <Link href="/rfqs/new">
-                    <Button variant="outline">Post an RFQ</Button>
-                  </Link>
+              </div>
+            </div>
+
+            {/* Active Filters */}
+            {(selectedCategory !== 'all' || priceRange || selectedCountry !== 'all') && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {selectedCategory !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#154230]/10 text-[#154230] rounded-full text-sm">
+                    {categories.find(c => c.value === selectedCategory)?.emoji} {selectedCategory}
+                    <button onClick={() => setSelectedCategory('all')} className="hover:text-red-600">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                {priceRange && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#154230]/10 text-[#154230] rounded-full text-sm">
+                    {priceRanges.find(r => r.value === priceRange)?.label}
+                    <button onClick={() => setPriceRange('')} className="hover:text-red-600">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedCountry !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#154230]/10 text-[#154230] rounded-full text-sm">
+                    <MapPin className="w-3 h-3" /> {selectedCountry}
+                    <button onClick={() => setSelectedCountry('all')} className="hover:text-red-600">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Products */}
+            {paginatedProducts.length > 0 ? (
+              <>
+                <div
+                  className={
+                    viewMode === 'grid'
+                      ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
+                      : 'flex flex-col gap-3'
+                  }
+                >
+                  {paginatedProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      variant={viewMode === 'grid' ? 'default' : 'indiamart'}
+                      onAddToCart={handleAddToCart}
+                      onToggleFavorite={handleToggleFavorite}
+                      isFavorite={isFavorite(product.id)}
+                      isInCart={isInCart(product.id)}
+                    />
+                  ))}
                 </div>
-              }
-            />
-          )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="mt-8">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={setCurrentPage}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <EmptyState
+                icon={<Package className="w-16 h-16" />}
+                title="No products found"
+                description="Try adjusting your search or filters to find what you're looking for."
+                action={
+                  <div className="flex gap-3">
+                    <Button onClick={() => {
+                      setSelectedCategory('all');
+                      setPriceRange('');
+                      setSelectedCountry('all');
+                      setSearch('');
+                    }}>
+                      Clear Filters
+                    </Button>
+                    <Link href="/rfqs/new">
+                      <Button variant="outline">Post an RFQ</Button>
+                    </Link>
+                  </div>
+                }
+              />
+            )}
+          </div>
         </div>
       </main>
+
+      {/* Mobile Filter Sheet */}
+      <MobileFilterSheet
+        isOpen={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        filters={{
+          categories,
+          selectedCategory,
+          onCategoryChange: setSelectedCategory,
+          priceRanges,
+          selectedPriceRange: priceRange,
+          onPriceRangeChange: setPriceRange,
+          sortOptions,
+          selectedSort: sortBy,
+          onSortChange: setSortBy,
+          countries,
+          selectedCountry,
+          onCountryChange: setSelectedCountry,
+        }}
+        resultsCount={filteredProducts.length}
+        onApply={handleMobileFilterApply}
+      />
 
       <Footer />
     </div>
