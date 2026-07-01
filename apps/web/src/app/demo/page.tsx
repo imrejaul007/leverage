@@ -223,10 +223,157 @@ function AnimatedCounter({ end, duration = 2000, suffix = '', prefix = '' }: { e
   return <span>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
 
+// ============================================================================
+// 3D BUILDING BLOCK COMPONENT
+// ============================================================================
+function Block3D({ delay, color, x, y, isActive }: { delay: number; color: string; x: number; y: number; isActive: boolean }) {
+  return (
+    <motion.div
+      className="absolute w-16 h-16 rounded-xl flex items-center justify-center cursor-pointer"
+      style={{
+        backgroundColor: color,
+        left: `${x}%`,
+        top: `${y}%`,
+        transform: 'translate(-50%, -50%)',
+      }}
+      initial={{ scale: 0, rotateX: 90, rotateY: 90, opacity: 0 }}
+      animate={isActive ? {
+        scale: 1,
+        rotateX: 0,
+        rotateY: 0,
+        opacity: 1,
+        y: [0, -10, 0],
+      } : { scale: 0, opacity: 0 }}
+      transition={{
+        delay,
+        duration: 0.5,
+        type: 'spring',
+        y: { duration: 2, repeat: Infinity, delay: delay + 0.5 }
+      }}
+      whileHover={{ scale: 1.1, z: 20 }}
+    >
+      <div className="absolute inset-0 border-2 border-white/20 rounded-xl" />
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// FLYING PRODUCT COMPONENT
+// ============================================================================
+function FlyingProduct({ delay, image, x, y }: { delay: number; image: string; x: number; y: number }) {
+  return (
+    <motion.div
+      className="absolute w-16 h-16 rounded-xl overflow-hidden shadow-xl"
+      style={{ left: `${x}%`, top: `${y}%` }}
+      initial={{ x: -200, y: -200, rotate: -180, scale: 0, opacity: 0 }}
+      animate={{ x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 }}
+      transition={{ delay, duration: 0.8, type: 'spring' }}
+      whileHover={{ scale: 1.1 }}
+    >
+      <img src={image} alt="" className="w-full h-full object-cover" />
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// CARGO SHIP COMPONENT
+// ============================================================================
+function CargoShip({ fromX, fromY, toX, toY, delay, color }: { fromX: number; fromY: number; toX: number; toY: number; delay: number; color: string }) {
+  return (
+    <motion.div
+      className="absolute"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay }}
+    >
+      <motion.div
+        className="w-8 h-8 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: color }}
+        animate={{
+          x: [fromX, toX],
+          y: [fromY, toY],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      >
+        <Ship className="w-5 h-5 text-white" />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// AI TASK COMPLETION COMPONENT
+// ============================================================================
+function TaskComplete({ show, text }: { show: boolean; text: string }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ scale: 0, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0, opacity: 0, y: -20 }}
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+        >
+          <div
+            className="px-8 py-6 rounded-2xl shadow-2xl flex items-center gap-4"
+            style={{ backgroundColor: 'white', border: '2px solid #16A34A' }}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring' }}
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: '#16A34A' }}
+            >
+              <Check className="w-10 h-10 text-white" />
+            </motion.div>
+            <div>
+              <div className="text-2xl font-bold" style={{ color: '#101111' }}>Task Complete!</div>
+              <div className="text-lg" style={{ color: '#4A4A4A' }}>{text}</div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ============================================================================
+// SUPPLIER RESPONSE POP COMPONENT
+// ============================================================================
+function SupplierResponsePop({ show, supplier, index }: { show: boolean; supplier: string; index: number }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -100, opacity: 0 }}
+          className="absolute top-0 right-0"
+          style={{ zIndex: 10 }}
+        >
+          <div
+            className="px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
+            style={{ backgroundColor: '#A6824A' }}
+          >
+            <Rocket className="w-4 h-4 text-white" />
+            <span className="text-sm font-medium text-white">New response from {supplier}</span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function HeroSection() {
+  const [buildingComplete, setBuildingComplete] = useState(false);
   const stats = [
     { value: 50000, suffix: '+', label: 'Active Traders', icon: Users },
-    { value: 2.5, suffix: 'B+', prefix: '$', label: 'Trade Volume', icon: TrendingUp },
+    { value: 2.5, suffix: 'B+', prefix: '$', label: 'Trade Volume', icon: TrendingUpIcon },
     { value: 120, suffix: '+', label: 'Countries', icon: Globe },
     { value: 1, suffix: 'M+', label: 'Documents', icon: FileCheck },
   ];
@@ -239,6 +386,22 @@ function HeroSection() {
     { name: 'Payments', icon: CreditCard, bgColor: '#DC2626' },
     { name: 'AI Copilot', icon: Bot, bgColor: '#0891B2' },
   ];
+
+  // 3D Building blocks configuration
+  const buildingBlocks = [
+    { color: '#154230', x: 50, y: 30, delay: 0 },
+    { color: '#A6824A', x: 42, y: 40, delay: 0.2 },
+    { color: '#5D1E21', x: 58, y: 40, delay: 0.4 },
+    { color: '#7C3AED', x: 50, y: 50, delay: 0.6 },
+    { color: '#DC2626', x: 38, y: 50, delay: 0.8 },
+    { color: '#0891B2', x: 62, y: 50, delay: 1.0 },
+  ];
+
+  useEffect(() => {
+    // Start building animation after 1 second
+    const timer = setTimeout(() => setBuildingComplete(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <motion.div
@@ -253,13 +416,32 @@ function HeroSection() {
         style={{ backgroundImage: `radial-gradient(#154230 1px, transparent 1px)`, backgroundSize: '60px 60px' }}
       />
 
+      {/* 3D Building Animation */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {buildingBlocks.map((block, i) => (
+          <Block3D
+            key={i}
+            {...block}
+            isActive={buildingComplete}
+          />
+        ))}
+      </div>
+
+      {/* Central Glow */}
+      <motion.div
+        className="absolute w-64 h-64 rounded-full"
+        style={{ backgroundColor: '#154230', opacity: 0.1, left: '50%', top: '35%', transform: 'translate(-50%, -50%)' }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      />
+
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto px-6">
         {/* Logo */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, type: 'spring' }}
+          animate={{ scale: buildingComplete ? 1 : 0, opacity: buildingComplete ? 1 : 0 }}
+          transition={{ duration: 0.8, type: 'spring', delay: 1.2 }}
           className="mb-8"
         >
           <div className="inline-flex items-center gap-3 mb-6">
@@ -281,8 +463,8 @@ function HeroSection() {
 
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+            transition={{ delay: 1.4 }}
             className="text-6xl md:text-8xl font-bold mb-4 tracking-tight brand-font"
             style={{ color: '#101111' }}
           >
@@ -290,8 +472,8 @@ function HeroSection() {
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+            transition={{ delay: 1.5 }}
             className="text-xl md:text-2xl mb-2"
             style={{ color: '#4A4A4A' }}
           >
@@ -299,8 +481,8 @@ function HeroSection() {
           </motion.p>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+            transition={{ delay: 1.6 }}
             className="text-lg"
             style={{ color: '#A6824A' }}
           >
@@ -311,16 +493,16 @@ function HeroSection() {
         {/* Stats */}
         <motion.div
           initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
+          animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+          transition={{ delay: 1.7 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
         >
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.8 + i * 0.1 }}
+              animate={{ scale: 1, opacity: buildingComplete ? 1 : 0 }}
+              transition={{ delay: 1.8 + i * 0.1 }}
               className="rounded-2xl p-4"
               style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
             >
@@ -337,16 +519,16 @@ function HeroSection() {
         {/* Module Grid */}
         <motion.div
           initial={{ y: 60, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1 }}
+          animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+          transition={{ delay: 2 }}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
         >
           {modules.map((module, i) => (
             <motion.div
               key={module.name}
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 1.2 + i * 0.1 }}
+              animate={{ scale: 1, opacity: buildingComplete ? 1 : 0 }}
+              transition={{ delay: 2.1 + i * 0.1 }}
               whileHover={{ scale: 1.05, y: -5 }}
               className="relative rounded-2xl p-6 cursor-pointer"
               style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
@@ -404,6 +586,33 @@ function MarketplaceSection({
     { id: 5, name: 'Extra Virgin Olive Oil', price: 4.50, unit: 'L', moq: '5000 L', supplier: 'Turkey Merchants', rating: 4.9, reviews: 156, image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400', category: 'Food & Agriculture', origin: 'Turkey', leadTime: '10-14 days', certifications: ['EU Organic', 'IFS'] },
     { id: 6, name: 'Steel Billets Grade A', price: 520, unit: 'MT', moq: '100 MT', supplier: 'India Steel Corp', rating: 4.5, reviews: 64, image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=400', category: 'Metals', origin: 'India', leadTime: '14-21 days', certifications: ['BIS', 'ISO 9001'] },
   ]);
+
+  // Flying products animation state
+  const [flyingProducts, setFlyingProducts] = useState<Array<{ id: number; image: string; delay: number }>>([]);
+
+  // Supplier response pop animation state
+  const [supplierResponses, setSupplierResponses] = useState<Array<{ id: string; supplier: string }>>([]);
+
+  useEffect(() => {
+    // Auto fly products into view when section loads
+    const flyingItems = products.slice(0, 3).map((p, i) => ({
+      id: p.id,
+      image: p.image,
+      delay: i * 0.3,
+    }));
+    setFlyingProducts(flyingItems);
+    // Clear after animation
+    setTimeout(() => setFlyingProducts([]), 3000);
+
+    // Auto show supplier responses
+    const timer = setInterval(() => {
+      const randomRfq = rfqs[Math.floor(Math.random() * rfqs.length)];
+      const suppliers = ['ABC Corp', 'XYZ Ltd', 'Global Trade', 'Prime Exports', 'Swift Logistics'];
+      const randomSupplier = suppliers[Math.floor(Math.random() * suppliers.length)];
+      setSupplierResponses(prev => [...prev.slice(-2), { id: randomRfq.id, supplier: randomSupplier }]);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [rfqs] = useState([
     { id: 'RFQ-001', title: 'Basmati Rice 1121 Premium', buyer: 'UAE Trading LLC', quantity: '500 MT', deadline: 'Jul 15, 2026', responses: 5, status: 'OPEN' },
@@ -495,6 +704,19 @@ function MarketplaceSection({
             </button>
           ))}
         </div>
+
+        {/* Flying Products Animation */}
+        <AnimatePresence>
+          {flyingProducts.map((item, i) => (
+            <FlyingProduct
+              key={item.id}
+              delay={item.delay}
+              image={item.image}
+              x={10 + i * 30}
+              y={50}
+            />
+          ))}
+        </AnimatePresence>
 
         {/* Category Filter */}
         <div className="flex justify-center gap-2 mb-8 flex-wrap">
@@ -598,7 +820,18 @@ function MarketplaceSection({
                         <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {rfq.responses} responses</span>
                       </div>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 relative">
+                      {/* Supplier Response Pop */}
+                      <AnimatePresence>
+                        {supplierResponses.filter(r => r.id === rfq.id).map((response, i) => (
+                          <SupplierResponsePop
+                            key={response.id + i}
+                            show={true}
+                            supplier={response.supplier}
+                            index={i}
+                          />
+                        ))}
+                      </AnimatePresence>
                       <button className="px-4 py-2 rounded-xl text-sm font-medium transition-all" style={{ backgroundColor: '#A6824A10', color: '#A6824A' }}>View Details</button>
                       <button className="px-4 py-2 rounded-xl text-sm font-medium text-white transition-all" style={{ backgroundColor: '#154230' }}>Submit Quote</button>
                     </div>
@@ -994,6 +1227,13 @@ function FreightSection() {
     { carrier: 'CMA CGM', price: 2950, transit: '16 days', type: '20ft Container', recommended: false },
   ];
 
+  // Cargo ships configuration
+  const cargoShips = [
+    { id: 1, fromX: 0, fromY: 0, toX: 400, toY: 50, delay: 0, color: '#154230' },
+    { id: 2, fromX: 800, fromY: 0, toX: 400, toY: 200, delay: 2, color: '#5D1E21' },
+    { id: 3, fromX: 400, fromY: 0, toX: 800, toY: 400, delay: 4, color: '#A6824A' },
+  ];
+
   return (
     <div className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -1027,6 +1267,19 @@ function FreightSection() {
                       <motion.circle cx={port.x} cy={port.y} r="4" fill="#154230" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} />
                       <text x={port.x} y={port.y + 18} textAnchor="middle" fontSize="10" fill="#4A4A4A">{port.name}</text>
                     </g>
+                  ))}
+
+                  {/* Animated Cargo Ships */}
+                  {cargoShips.map((ship) => (
+                    <CargoShip
+                      key={ship.id}
+                      fromX={ship.fromX}
+                      fromY={ship.fromY}
+                      toX={ship.toX}
+                      toY={ship.toY}
+                      delay={ship.delay}
+                      color={ship.color}
+                    />
                   ))}
                 </svg>
                 <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}>
@@ -1153,6 +1406,8 @@ function AISection() {
   const [messages, setMessages] = useState([{ role: 'assistant', content: "👋 Hi! I'm your AI trade assistant powered by HOJAI. How can I help you today?" }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const [showTaskComplete, setShowTaskComplete] = useState(false);
+  const [taskCompleteText, setTaskCompleteText] = useState('');
 
   const quickActions = [
     { text: 'Create export invoice', icon: FileText },
@@ -1169,6 +1424,13 @@ function AISection() {
     'default': "I'm here to help! Try asking about documents, duties, suppliers, or tracking.",
   };
 
+  const taskTexts: Record<string, string> = {
+    'Create export invoice': 'Commercial Invoice Generated',
+    'Calculate import duty': 'Duty Calculated',
+    'Find cotton suppliers': '47 Suppliers Found',
+    'Track my shipment': 'Shipment Tracked',
+  };
+
   const sendMessage = (text?: string) => {
     const messageText = text || input;
     if (!messageText.trim()) return;
@@ -1177,12 +1439,21 @@ function AISection() {
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      setMessages(prev => [...prev, { role: 'assistant', content: responses[messageText] || responses['default'] }]);
+      const response = responses[messageText] || responses['default'];
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      // Show task completion animation
+      const taskText = taskTexts[messageText] || 'Task Completed';
+      setTaskCompleteText(taskText);
+      setShowTaskComplete(true);
+      setTimeout(() => setShowTaskComplete(false), 2500);
     }, 1500);
   };
 
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 relative">
+      {/* AI Task Completion Animation */}
+      <TaskComplete show={showTaskComplete} text={taskCompleteText} />
+
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
