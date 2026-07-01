@@ -41,8 +41,126 @@ import {
   Timer,
   Anchor,
   Move,
+  Sparkles,
 } from 'lucide-react';
 import { freightApi, FreightQuote, Carrier } from '@/lib/api';
+
+// Demo data - shows sample quotes when page loads
+const DEMO_QUOTES: FreightQuote[] = [
+  {
+    quoteId: 'QT-AIR-001',
+    carrierId: 'MAERSK',
+    carrierCode: 'MA',
+    carrierName: 'Maersk Air',
+    carrierLogo: '',
+    serviceType: 'Express Air',
+    originPort: 'PVG',
+    destinationPort: 'LAX',
+    transitDays: 5,
+    baseRate: 2800,
+    fuelSurcharge: 420,
+    originCharges: 180,
+    destCharges: 150,
+    totalRate: 3550,
+    currency: 'USD',
+    estimatedDeparture: new Date(Date.now() + 86400000 * 2).toISOString(),
+    estimatedArrival: new Date(Date.now() + 86400000 * 7).toISOString(),
+    inclusions: ['Real-time Tracking', 'Customs Clearance', 'Insurance up to $10K'],
+    validUntil: new Date(Date.now() + 86400000 * 7).toISOString(),
+  },
+  {
+    quoteId: 'QT-AIR-002',
+    carrierId: 'HAPAG',
+    carrierCode: 'HPL',
+    carrierName: 'Hapag-Lloyd Air',
+    carrierLogo: '',
+    serviceType: 'Standard Air',
+    originPort: 'PVG',
+    destinationPort: 'LAX',
+    transitDays: 7,
+    baseRate: 2400,
+    fuelSurcharge: 380,
+    originCharges: 120,
+    destCharges: 100,
+    totalRate: 3000,
+    currency: 'USD',
+    estimatedDeparture: new Date(Date.now() + 86400000 * 3).toISOString(),
+    estimatedArrival: new Date(Date.now() + 86400000 * 10).toISOString(),
+    inclusions: ['Real-time Tracking', 'Basic Insurance'],
+    validUntil: new Date(Date.now() + 86400000 * 14).toISOString(),
+  },
+  {
+    quoteId: 'QT-AIR-003',
+    carrierId: 'EMIRATES',
+    carrierCode: 'EK',
+    carrierName: 'Emirates SkyCargo',
+    carrierLogo: '',
+    serviceType: 'Priority Air',
+    originPort: 'PVG',
+    destinationPort: 'JFK',
+    transitDays: 4,
+    baseRate: 3200,
+    fuelSurcharge: 550,
+    originCharges: 200,
+    destCharges: 175,
+    totalRate: 4125,
+    currency: 'USD',
+    estimatedDeparture: new Date(Date.now() + 86400000 * 1).toISOString(),
+    estimatedArrival: new Date(Date.now() + 86400000 * 5).toISOString(),
+    inclusions: ['Real-time Tracking', 'Customs Clearance', 'Insurance up to $25K', 'Priority Handling'],
+    validUntil: new Date(Date.now() + 86400000 * 3).toISOString(),
+  },
+  {
+    quoteId: 'QT-AIR-004',
+    carrierId: 'SINOTRANS',
+    carrierCode: 'ST',
+    carrierName: 'SinoTrans Air',
+    carrierLogo: '',
+    serviceType: 'Economy Air',
+    originPort: 'CAN',
+    destinationPort: 'LAX',
+    transitDays: 10,
+    baseRate: 1800,
+    fuelSurcharge: 280,
+    originCharges: 80,
+    destCharges: 70,
+    totalRate: 2230,
+    currency: 'USD',
+    estimatedDeparture: new Date(Date.now() + 86400000 * 5).toISOString(),
+    estimatedArrival: new Date(Date.now() + 86400000 * 15).toISOString(),
+    inclusions: ['Basic Tracking'],
+    validUntil: new Date(Date.now() + 86400000 * 21).toISOString(),
+  },
+  {
+    quoteId: 'QT-AIR-005',
+    carrierId: 'CHINAAIR',
+    carrierCode: 'CA',
+    carrierName: 'Air China Cargo',
+    carrierLogo: '',
+    serviceType: 'Standard Air',
+    originPort: 'PEK',
+    destinationPort: 'ORD',
+    transitDays: 8,
+    baseRate: 2100,
+    fuelSurcharge: 340,
+    originCharges: 100,
+    destCharges: 90,
+    totalRate: 2630,
+    currency: 'USD',
+    estimatedDeparture: new Date(Date.now() + 86400000 * 4).toISOString(),
+    estimatedArrival: new Date(Date.now() + 86400000 * 12).toISOString(),
+    inclusions: ['Real-time Tracking', 'Customs Clearance'],
+    validUntil: new Date(Date.now() + 86400000 * 10).toISOString(),
+  },
+];
+
+const DEMO_CARRIERS: Carrier[] = [
+  { id: 'MAERSK', name: 'Maersk Air', rating: 4.8,总部: 'Denmark', established: 1904, description: 'Leading global container logistics company', services: ['Ocean', 'Air', 'Land'], certifications: ['ISO 9001', 'AEO'] },
+  { id: 'HAPAG', name: 'Hapag-Lloyd Air', rating: 4.6,总部: 'Germany', established: 1847, description: 'German global transport company', services: ['Ocean', 'Air'], certifications: ['ISO 9001'] },
+  { id: 'EMIRATES', name: 'Emirates SkyCargo', rating: 4.9,总部: 'UAE', established: 1985, description: 'Premium air cargo services', services: ['Air', 'Express'], certifications: ['IATA', 'TAPA-A'] },
+  { id: 'SINOTRANS', name: 'SinoTrans', rating: 4.3,总部: 'China', established: 1985, description: 'China\'s leading logistics provider', services: ['Ocean', 'Air', 'Land', 'Warehouse'], certifications: ['ISO 9001', 'C-TPAT'] },
+  { id: 'CHINAAIR', name: 'Air China Cargo', rating: 4.5,总部: 'China', established: 1988, description: 'National airline cargo division', services: ['Air', 'Express'], certifications: ['IATA', 'ISO 9001'] },
+];
 
 type TransportMode = 'AIR' | 'OCEAN' | 'LAND' | 'MULTIMODAL';
 type SortOption = 'price' | 'transit' | 'rating' | 'recommended';
@@ -114,22 +232,23 @@ export default function FeaturesPage() {
   const [selectedMode, setSelectedMode] = useState<TransportMode>('AIR');
   const [selectedQuote, setSelectedQuote] = useState<FreightQuote | null>(null);
   const [expandedQuote, setExpandedQuote] = useState<string | null>(null);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(new Set(['QT-AIR-001', 'QT-AIR-003']));
   const [compareList, setCompareList] = useState<FreightQuote[]>([]);
   const [showCompare, setShowCompare] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('recommended');
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [quotes, setQuotes] = useState<FreightQuote[]>([]);
-  const [carriers, setCarriers] = useState<Carrier[]>([]);
+  const [hasSearched, setHasSearched] = useState(true); // Start with demo data visible
+  const [isDemoMode, setIsDemoMode] = useState(true);
+  const [quotes, setQuotes] = useState<FreightQuote[]>(DEMO_QUOTES);
+  const [carriers, setCarriers] = useState<Carrier[]>(DEMO_CARRIERS);
 
   // Search form state
-  const [originCountry, setOriginCountry] = useState('');
-  const [originCity, setOriginCity] = useState('');
-  const [destCountry, setDestCountry] = useState('');
-  const [destCity, setDestCity] = useState('');
-  const [weight, setWeight] = useState('100');
+  const [originCountry, setOriginCountry] = useState('CN');
+  const [originCity, setOriginCity] = useState('Shanghai');
+  const [destCountry, setDestCountry] = useState('US');
+  const [destCity, setDestCity] = useState('Los Angeles');
+  const [weight, setWeight] = useState('500');
 
   // Filter state
   const [maxPrice, setMaxPrice] = useState(10000);
@@ -141,10 +260,6 @@ export default function FeaturesPage() {
   const selectedOrigin = countries.find(c => c.code === originCountry);
   const selectedDest = countries.find(c => c.code === destCountry);
 
-  useEffect(() => {
-    loadCarriers();
-  }, []);
-
   const loadCarriers = async () => {
     try {
       const data = await freightApi.getCarriers();
@@ -155,9 +270,8 @@ export default function FeaturesPage() {
   };
 
   const handleSearch = async () => {
-    if (!originCountry || !destCountry) return;
-
     setLoading(true);
+    setIsDemoMode(false);
     setHasSearched(true);
 
     try {
@@ -180,6 +294,18 @@ export default function FeaturesPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadDemoData = () => {
+    setQuotes(DEMO_QUOTES);
+    setCarriers(DEMO_CARRIERS);
+    setIsDemoMode(true);
+    setHasSearched(true);
+    setOriginCountry('CN');
+    setOriginCity('Shanghai');
+    setDestCountry('US');
+    setDestCity('Los Angeles');
+    setWeight('500');
   };
 
   const getCarrierInfo = (carrierId: string) => {
@@ -244,6 +370,25 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#f7f5f1] pb-24">
       <PageHeader title="Freight Explorer" subtitle="Compare all shipping options" backHref="/freight" />
+
+      {/* Demo Banner */}
+      {isDemoMode && (
+        <div className="bg-gradient-to-r from-[#A6824A] to-[#c9a066] px-4 py-2">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2 text-white text-sm">
+              <Sparkles className="w-4 h-4" />
+              <span className="font-medium">Demo Mode:</span>
+              <span>Showing sample data from Shanghai → Los Angeles (500kg Air Freight)</span>
+            </div>
+            <button
+              onClick={handleSearch}
+              className="px-3 py-1 bg-white text-[#A6824A] text-xs font-semibold rounded-lg hover:bg-white/90 transition-colors"
+            >
+              Search Real Routes →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Mode Selector - Full Width Tabs */}
       <div className="sticky top-16 z-40 bg-white border-b border-black/5 px-4">
@@ -404,7 +549,14 @@ export default function FeaturesPage() {
         {hasSearched && filteredQuotes.length > 0 && (
           <div className="bg-white rounded-2xl p-4 shadow-sm mb-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-[#101111]">{filteredQuotes.length} quotes found</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-[#101111]">{filteredQuotes.length} quotes found</h3>
+                {isDemoMode && (
+                  <span className="px-2 py-0.5 bg-[#A6824A]/10 text-[#A6824A] text-xs font-medium rounded-full">
+                    Demo
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
@@ -799,9 +951,16 @@ export default function FeaturesPage() {
           <div className="text-center py-16">
             <Globe className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-[#101111] mb-2">Freight Explorer</h3>
-            <p className="text-[#4A4A4A] max-w-xs mx-auto">
+            <p className="text-[#4A4A4A] max-w-xs mx-auto mb-4">
               Enter your route and weight above to compare freight rates from all carriers.
             </p>
+            <button
+              onClick={loadDemoData}
+              className="px-6 py-3 bg-[#154230] text-white font-semibold rounded-xl hover:bg-[#1d5240] transition-colors"
+            >
+              <Sparkles className="w-4 h-4 inline mr-2" />
+              View Demo
+            </button>
           </div>
         )}
       </div>
