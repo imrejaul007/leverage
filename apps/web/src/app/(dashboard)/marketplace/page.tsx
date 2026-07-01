@@ -373,7 +373,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
         {/* Image + Content Row */}
         <div className="flex">
           {/* Image - clickable */}
-          <Link href={`/products/${product.id}`} className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
+          <Link href={`/marketplace/products/${product.id}`} className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
@@ -387,7 +387,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
           <div className="flex-1 p-2 pr-3 min-w-0">
             {/* Title + TrustSEAL badge - clickable */}
             <div className="flex items-start justify-between gap-1 mb-1">
-              <Link href={`/products/${product.id}`} className="text-blue-700 font-bold text-sm leading-tight flex-1 hover:text-blue-800">
+              <Link href={`/marketplace/products/${product.id}`} className="text-blue-700 font-bold text-sm leading-tight flex-1 hover:text-blue-800">
                 {product.name}
               </Link>
               {product.trustseal && (
@@ -398,7 +398,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
             </div>
 
             {/* Price - Bold */}
-            <Link href={`/products/${product.id}`} className="block mb-2">
+            <Link href={`/marketplace/products/${product.id}`} className="block mb-2">
               <span className="text-base font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
               <span className="text-xs text-gray-500">/{product.currency}</span>
             </Link>
@@ -454,7 +454,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
       <div className="hidden md:block p-4">
         <div className="flex gap-4">
           {/* Image - clickable */}
-          <Link href={`/products/${product.id}`} className="relative w-36 h-36 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+          <Link href={`/marketplace/products/${product.id}`} className="relative w-36 h-36 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
@@ -473,7 +473,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <Link href={`/products/${product.id}`} className="text-blue-600 hover:text-blue-700 font-medium text-lg leading-tight mb-1 block">
+            <Link href={`/marketplace/products/${product.id}`} className="text-blue-600 hover:text-blue-700 font-medium text-lg leading-tight mb-1 block">
               {product.name}
             </Link>
 
@@ -512,7 +512,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
 
           {/* Price & CTA */}
           <div className="flex flex-col items-end justify-between w-36">
-            <Link href={`/products/${product.id}`} className="text-right block">
+            <Link href={`/marketplace/products/${product.id}`} className="text-right block">
               <div className="text-xl font-bold text-gray-900">₹{product.price.toLocaleString()}</div>
               <div className="text-xs text-gray-500">/{product.currency}</div>
               <div className="text-xs text-gray-400 mt-1">MOQ: {product.moq}</div>
