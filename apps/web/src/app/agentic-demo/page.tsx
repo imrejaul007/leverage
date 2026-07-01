@@ -4,110 +4,104 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import {
-  Brain, MemoryStick, Users, Bot, Zap, Globe, ShoppingCart, FileText, Truck, Shield,
-  CheckCircle2, Clock, Database, Building, Package, DollarSign, Lock, ArrowRight,
-  Check, Sparkles, Layers, Target, TrendingUp, Activity, MessageCircle, Mail,
-  Phone, Settings, ChevronRight, BarChart3, Navigation, CreditCard, Briefcase,
-  Network, Package as PackageIcon, Building2, Play, Pause, FileCheck
+  Brain, Database, Zap, Bot, Globe, Target, CheckCircle2, Clock, Package, DollarSign, Shield,
+  Truck, FileText, MessageCircle, Phone, Mail, Users, Building2, ChevronRight, ArrowRight,
+  Check, Sparkles, Layers, Play, Pause, Star, Send, Phone as PhoneIcon
 } from 'lucide-react';
 
 // ============================================================================
-// AGENTIC COMMERCE DEMO - LEVERAGE × HOJAI × GLOBAL NEXHA
+// AUTONOMOUS IMPORT ASSISTANT DEMO
 // ============================================================================
 
 export default function AgenticDemoPage() {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [isRunning, setIsRunning] = useState(false);
-  const [activeAgent, setActiveAgent] = useState<string | null>(null);
+  const [phase, setPhase] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [userInput, setUserInput] = useState('');
 
-  const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'twin', label: 'Merchant Twin', icon: Brain },
-    { id: 'memory', label: 'MemoryOS', icon: Database },
-    { id: 'skills', label: 'SkillOS', icon: Zap },
-    { id: 'sutars', label: 'SUTAR Workforce', icon: Bot },
-    { id: 'nexha', label: 'Global Nexha', icon: Globe },
-    { id: 'scenario', label: 'Import Scenario', icon: Target },
+  const phases = [
+    { id: 'input', name: 'User Input', icon: Target },
+    { id: 'twin', name: 'TwinOS', icon: Brain },
+    { id: 'memory', name: 'MemoryOS', icon: Database },
+    { id: 'skills', name: 'SkillOS', icon: Zap },
+    { id: 'workforce', name: 'SUTAR', icon: Bot },
+    { id: 'nexha', name: 'Global Nexha', icon: Globe },
+    { id: 'complete', name: 'Complete', icon: CheckCircle2 },
   ];
 
+  // Auto-play through phases
   useEffect(() => {
-    if (isRunning) {
-      const agentTimer = setInterval(() => {
-        setActiveAgent(prev => {
-          const agents = ['ceo', 'import', 'negotiation', 'finance', 'logistics', 'documentation'];
-          const current = agents.indexOf(prev || 'ceo');
-          return agents[(current + 1) % agents.length];
-        });
-      }, 2000);
-      return () => clearInterval(agentTimer);
+    if (isPlaying && phase < phases.length) {
+      const timer = setTimeout(() => {
+        setPhase(p => p + 1);
+      }, 4000);
+      return () => clearTimeout(timer);
     }
-  }, [isRunning]);
+  }, [isPlaying, phase]);
+
+  const handleStart = () => {
+    setPhase(1);
+    setIsPlaying(true);
+  };
+
+  const handleReset = () => {
+    setPhase(0);
+    setIsPlaying(false);
+  };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#E6E2DA' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#0A0A0A' }}>
       {/* Header */}
-      <header
-        className="sticky top-0 z-50 backdrop-blur-md border-b"
-        style={{ backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'rgba(0,0,0,0.08)' }}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
-                <Layers className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <span className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
-                <div className="text-xs" style={{ color: '#4A4A4A' }}>Agentic Commerce</div>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: '#0891B215' }}>
-                <Brain className="w-4 h-4" style={{ color: '#0891B2' }} />
-                <span className="text-sm font-medium" style={{ color: '#0891B2' }}>AI Agentic Engine Active</span>
-              </div>
-              <button
-                onClick={() => setIsRunning(!isRunning)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white"
-                style={{ backgroundColor: isRunning ? '#DC2626' : '#154230' }}
-              >
-                {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                {isRunning ? 'Stop Demo' : 'Auto Demo'}
-              </button>
+      <header className="border-b" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
+              <Layers className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
+              <div className="text-xs" style={{ color: '#666' }}>Autonomous Import Assistant</div>
             </div>
           </div>
-
-          {/* Tab Navigation */}
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all"
-                style={{
-                  backgroundColor: activeTab === tab.id ? '#154230' : 'transparent',
-                  color: activeTab === tab.id ? 'white' : '#4A4A4A',
-                }}
-              >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <span className="text-sm px-3 py-1 rounded-full" style={{ backgroundColor: '#0891B215', color: '#0891B2' }}>
+              Powered by HOJAI AI
+            </span>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      {/* Main */}
+      <main className="max-w-6xl mx-auto px-6 py-8">
+        {/* Phase Progress */}
+        <div className="flex items-center justify-center gap-2 mb-12">
+          {phases.map((p, i) => (
+            <div key={p.id} className="flex items-center">
+              <div
+                className="flex items-center gap-2 px-3 py-2 rounded-full transition-all"
+                style={{
+                  backgroundColor: i <= phase ? '#154230' : 'transparent',
+                  border: i <= phase ? 'none' : '1px solid rgba(255,255,255,0.2)',
+                }}
+              >
+                <p.icon className="w-4 h-4" style={{ color: i <= phase ? 'white' : '#666' }} />
+                <span className="text-sm font-medium hidden sm:inline" style={{ color: i <= phase ? 'white' : '#666' }}>
+                  {p.name}
+                </span>
+              </div>
+              {i < phases.length - 1 && <ArrowRight className="w-4 h-4 mx-1" style={{ color: '#333' }} />}
+            </div>
+          ))}
+        </div>
+
+        {/* Content */}
         <AnimatePresence mode="wait">
-          {activeTab === 'dashboard' && <Dashboard key="dashboard" isRunning={isRunning} setActiveTab={setActiveTab} />}
-          {activeTab === 'twin' && <MerchantTwin key="twin" isRunning={isRunning} />}
-          {activeTab === 'memory' && <MemoryOS key="memory" isRunning={isRunning} />}
-          {activeTab === 'skills' && <SkillOS key="skills" isRunning={isRunning} />}
-          {activeTab === 'sutars' && <SUTARWorkforce key="sutars" isRunning={isRunning} activeAgent={activeAgent} />}
-          {activeTab === 'nexha' && <GlobalNexha key="nexha" isRunning={isRunning} />}
-          {activeTab === 'scenario' && <ImportScenario key="scenario" isRunning={isRunning} setActiveTab={setActiveTab} />}
+          {phase === 0 && <InputPhase key="input" onStart={handleStart} userInput={userInput} setUserInput={setUserInput} />}
+          {phase === 1 && <TwinOSPhase key="twin" />}
+          {phase === 2 && <MemoryOSPhase key="memory" />}
+          {phase === 3 && <SkillOSPhase key="skills" />}
+          {phase === 4 && <WorkforcePhase key="workforce" isPlaying={isPlaying} />}
+          {phase === 5 && <NexhaPhase key="nexha" isPlaying={isPlaying} />}
+          {phase === 6 && <CompletePhase key="complete" onReset={handleReset} />}
         </AnimatePresence>
       </main>
     </div>
@@ -115,610 +109,493 @@ export default function AgenticDemoPage() {
 }
 
 // ============================================================================
-// DASHBOARD
+// PHASE 1: USER INPUT
 // ============================================================================
 
-function Dashboard({ isRunning, setActiveTab }: { isRunning: boolean; setActiveTab: (tab: string) => void }) {
-  const stats = [
-    { label: 'Active Agents', value: 12, icon: Bot, color: '#0891B2', tab: 'sutars' },
-    { label: 'Pending Approvals', value: 3, icon: Clock, color: '#CA8A04', tab: 'scenario' },
-    { label: 'Global Nexha Activity', value: 47, icon: Globe, color: '#7C3AED', tab: 'nexha' },
-    { label: 'Trade Volume', value: '$2.4M', icon: TrendingUp, color: '#16A34A', tab: 'twin' },
-  ];
-
+function InputPhase({ onStart, userInput, setUserInput }: { onStart: () => void; userInput: string; setUserInput: (v: string) => void }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2" style={{ color: '#101111' }}>Agentic Trade Dashboard</h1>
-        <p style={{ color: '#4A4A4A' }}>Monitor your AI workforce and trade operations</p>
-      </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="max-w-2xl mx-auto text-center"
+    >
+      <motion.div
+        animate={{ scale: [1, 1.02, 1] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="mb-12"
+      >
+        <h1 className="text-5xl font-bold mb-4" style={{ color: 'white' }}>
+          Autonomous Import Assistant
+        </h1>
+        <p className="text-xl mb-8" style={{ color: '#888' }}>
+          Powered by HOJAI AI × Global Nexha
+        </p>
+      </motion.div>
 
-      <div className="grid md:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat) => (
-          <motion.div
-            key={stat.label}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => setActiveTab(stat.tab)}
-            className="p-6 rounded-2xl cursor-pointer"
-            style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <stat.icon className="w-8 h-8" style={{ color: stat.color }} />
-              <ChevronRight className="w-5 h-5" style={{ color: '#4A4A4A' }} />
-            </div>
-            <div className="text-3xl font-bold" style={{ color: stat.color }}>{stat.value}</div>
-            <div className="text-sm" style={{ color: '#4A4A4A' }}>{stat.label}</div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Agent Activity */}
-        <div className="p-6 rounded-2xl" style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
-          <div className="flex items-center gap-3 mb-6">
-            <Bot className="w-6 h-6" style={{ color: '#0891B2' }} />
-            <h2 className="text-xl font-bold" style={{ color: '#101111' }}>Active Agents</h2>
+      {/* Merchant Card */}
+      <div className="p-8 rounded-2xl mb-8" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold" style={{ backgroundColor: '#154230', color: 'white' }}>
+            ABC
           </div>
-          <div className="space-y-3">
-            {[
-              { name: 'CEO Agent', status: 'Analyzing trade opportunities', progress: 78 },
-              { name: 'Import Agent', status: 'Processing 12 shipments', progress: 92 },
-              { name: 'Negotiation Agent', status: 'Chatting with 5 suppliers', progress: 65 },
-              { name: 'Finance Agent', status: 'Managing 8 escrows', progress: 85 },
-            ].map((agent) => (
-              <div key={agent.name} className="p-4 rounded-xl" style={{ backgroundColor: '#F7F6F2' }}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium" style={{ color: '#101111' }}>{agent.name}</span>
-                  <span className="text-sm" style={{ color: '#4A4A4A' }}>{agent.progress}%</span>
-                </div>
-                <div className="h-2 rounded-full" style={{ backgroundColor: '#E5E5E5' }}>
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: '#0891B2' }}
-                    initial={{ width: '0%' }}
-                    animate={{ width: `${agent.progress}%` }}
-                  />
-                </div>
-                <div className="text-sm mt-2" style={{ color: '#4A4A4A' }}>{agent.status}</div>
-              </div>
-            ))}
+          <div className="text-left">
+            <div className="font-bold" style={{ color: 'white' }}>ABC Fashion Germany</div>
+            <div className="text-sm" style={{ color: '#666' }}>Merchant Dashboard</div>
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="p-6 rounded-2xl" style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
-          <div className="flex items-center gap-3 mb-6">
-            <Activity className="w-6 h-6" style={{ color: '#16A34A' }} />
-            <h2 className="text-xl font-bold" style={{ color: '#101111' }}>Recent Activity</h2>
-          </div>
-          <div className="space-y-4">
-            {[
-              { icon: '📄', text: 'Invoice INV-2024-001 generated', time: '2 min ago' },
-              { icon: '🚢', text: 'Shipment MSC123 tracked to Hamburg', time: '5 min ago' },
-              { icon: '💰', text: 'Escrow $45,000 secured', time: '8 min ago' },
-              { icon: '📞', text: 'Call with Vietnam Textiles completed', time: '12 min ago' },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="flex items-center gap-4 p-4 rounded-xl"
-                style={{ backgroundColor: '#F7F6F2' }}
-              >
-                <span className="text-2xl">{item.icon}</span>
-                <div className="flex-1">
-                  <div style={{ color: '#101111' }}>{item.text}</div>
-                  <div className="text-sm" style={{ color: '#4A4A4A' }}>{item.time}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        <textarea
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Describe what you need..."
+          className="w-full p-4 rounded-xl text-lg resize-none"
+          style={{ backgroundColor: '#0A0A0A', border: '1px solid rgba(255,255,255,0.2)', color: 'white', minHeight: '120px' }}
+        />
       </div>
+
+      <motion.button
+        onClick={onStart}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="px-8 py-4 rounded-xl font-bold text-lg"
+        style={{ backgroundColor: '#154230', color: 'white' }}
+      >
+        <Sparkles className="w-5 h-5 inline mr-2" />
+        Start Autonomous Trade
+      </motion.button>
     </motion.div>
   );
 }
 
 // ============================================================================
-// MERCHANT TWIN
+// PHASE 2: TWINOS
 // ============================================================================
 
-function MerchantTwin({ isRunning }: { isRunning: boolean }) {
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Brain className="w-8 h-8" style={{ color: '#0891B2' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>Merchant Twin</h1>
-        </div>
-        <p style={{ color: '#4A4A4A' }}>Digital representation of your company - Source of truth for AI agents</p>
-      </div>
+function TwinOSPhase() {
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="p-6 rounded-2xl" style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#101111' }}>Company Profile</h2>
-
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold" style={{ backgroundColor: '#154230' }}>
-              ABC
-            </div>
-            <div>
-              <div className="text-xl font-bold" style={{ color: '#101111' }}>ABC Global Textiles Ltd</div>
-              <div style={{ color: '#4A4A4A' }}>Textiles & Apparel</div>
-              <div className="flex items-center gap-2 mt-1">
-                <CheckCircle2 className="w-4 h-4" style={{ color: '#16A34A' }} />
-                <span className="text-sm" style={{ color: '#16A34A' }}>Verified Merchant</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="p-4 rounded-xl" style={{ backgroundColor: '#F7F6F2' }}>
-              <div className="text-2xl font-bold" style={{ color: '#0891B2' }}>98%</div>
-              <div className="text-sm" style={{ color: '#4A4A4A' }}>Trust Score</div>
-            </div>
-            <div className="p-4 rounded-xl" style={{ backgroundColor: '#F7F6F2' }}>
-              <div className="text-2xl font-bold" style={{ color: '#0891B2' }}>47</div>
-              <div className="text-sm" style={{ color: '#4A4A4A' }}>Network Members</div>
-            </div>
-          </div>
-
-          <h3 className="font-bold mb-3" style={{ color: '#101111' }}>Operating Countries</h3>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {['India', 'Vietnam', 'Germany', 'UAE'].map(country => (
-              <span key={country} className="px-3 py-1 rounded-full text-sm" style={{ backgroundColor: '#15423015', color: '#154230' }}>
-                {country}
-              </span>
-            ))}
-          </div>
-
-          <h3 className="font-bold mb-3" style={{ color: '#101111' }}>Trade Goals</h3>
-          <div className="space-y-2">
-            {['Expand EU exports', 'Reduce freight cost by 10%', 'New supplier relationships'].map(goal => (
-              <div key={goal} className="flex items-center gap-2">
-                <Target className="w-4 h-4" style={{ color: '#0891B2' }} />
-                <span style={{ color: '#101111' }}>{goal}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="p-6 rounded-2xl" style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#101111' }}>Trade Preferences</h2>
-          <p className="text-sm mb-6" style={{ color: '#4A4A4A' }}>Agents use these for autonomous decisions</p>
-
-          <div className="space-y-4">
-            {[
-              { label: 'Incoterm', value: 'FOB' },
-              { label: 'Shipping', value: 'Ocean Freight' },
-              { label: 'Payment', value: 'Letter of Credit' },
-              { label: 'Currency', value: 'USD' },
-            ].map((pref) => (
-              <div key={pref.label} className="flex items-center justify-between p-4 rounded-xl" style={{ backgroundColor: '#F7F6F2' }}>
-                <span className="text-sm" style={{ color: '#4A4A4A' }}>{pref.label}</span>
-                <span className="font-medium" style={{ color: '#101111' }}>{pref.value}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 p-4 rounded-xl" style={{ backgroundColor: '#0891B215', border: '1px solid rgba(8,145,178,0.2)' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <Brain className="w-5 h-5" style={{ color: '#0891B2' }} />
-              <span className="font-medium" style={{ color: '#0891B2' }}>Agent Access</span>
-            </div>
-            <p className="text-sm" style={{ color: '#4A4A4A' }}>
-              All SUTAR agents work against this Twin. No UI state access.
-            </p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-// ============================================================================
-// MEMORY OS
-// ============================================================================
-
-function MemoryOS({ isRunning }: { isRunning: boolean }) {
-  const [activeMemory, setActiveMemory] = useState('trade');
-
-  const memories = {
-    trade: [
-      { title: 'Order #ORD-001', preview: '50 MT Basmati Rice - $42,500 - Shipped' },
-      { title: 'RFQ #RFQ-2024-089', preview: 'Cotton Yarn 10,000 KG - Pending quotes' },
-      { title: 'Contract #CT-2024-045', preview: 'Steel Billets - $125,000 - Active' },
-    ],
-    relationships: [
-      { title: 'Vietnam Textiles Ltd', preview: 'Last order: 3 weeks ago - Trust: 95%', location: 'Vietnam' },
-      { title: 'Germany Trading GmbH', preview: 'Last order: 1 week ago - Trust: 98%', location: 'Germany' },
-      { title: 'UAE Merchants LLC', preview: 'Last order: 2 days ago - Trust: 92%', location: 'UAE' },
-    ],
-  };
-
-  const currentMemories = activeMemory === 'trade' ? memories.trade : memories.relationships;
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <MemoryStick className="w-8 h-8" style={{ color: '#7C3AED' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>MemoryOS</h1>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto"
+    >
+      <motion.div
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        className="text-center mb-8"
+      >
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
+          <Brain className="w-5 h-5" style={{ color: '#0891B2' }} />
+          <span className="text-sm font-medium" style={{ color: '#0891B2' }}>TwinOS</span>
         </div>
-        <p style={{ color: '#4A4A4A' }}>Persistent memory for trade intelligence</p>
-      </div>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>Merchant Twin Loaded</h2>
+        <p style={{ color: '#888' }}>Your digital profile for autonomous decisions</p>
+      </motion.div>
 
-      <div className="flex gap-2 mb-6">
-        {['trade', 'relationships'].map(type => (
-          <button
-            key={type}
-            onClick={() => setActiveMemory(type)}
-            className="px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all"
-            style={{
-              backgroundColor: activeMemory === type ? '#7C3AED' : '#F7F6F2',
-              color: activeMemory === type ? 'white' : '#4A4A4A',
-            }}
-          >
-            {type === 'trade' ? 'Trade Memory' : 'Relationships'}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        {currentMemories.map((item: any, i: number) => (
+      <div className="grid md:grid-cols-2 gap-4">
+        {[
+          { label: 'Company', value: 'ABC Fashion GmbH' },
+          { label: 'Countries', value: 'Germany, Vietnam, India' },
+          { label: 'Preferred Incoterm', value: 'FOB' },
+          { label: 'Preferred Payment', value: 'Letter of Credit' },
+          { label: 'Trade Volume', value: '$2.4M annually' },
+          { label: 'Trust Score', value: '98%' },
+        ].map((item, i) => (
           <motion.div
-            key={item.title}
+            key={item.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            whileHover={{ scale: 1.02 }}
-            className="p-6 rounded-2xl cursor-pointer"
-            style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
+            className="p-6 rounded-xl"
+            style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <div className="text-sm mb-1" style={{ color: '#666' }}>{item.label}</div>
+            <div className="text-xl font-bold" style={{ color: 'white' }}>{item.value}</div>
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+        className="mt-8 p-6 rounded-xl text-center"
+        style={{ backgroundColor: '#15423020', border: '1px solid #154230' }}
+      >
+        <Check className="w-8 h-8 mx-auto mb-2" style={{ color: '#16A34A' }} />
+        <div style={{ color: 'white' }}>TwinOS ready. AI knows who you are.</div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// PHASE 3: MEMORYOS
+// ============================================================================
+
+function MemoryOSPhase() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto"
+    >
+      <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#7C3AED15' }}>
+          <Database className="w-5 h-5" style={{ color: '#7C3AED' }} />
+          <span className="text-sm font-medium" style={{ color: '#7C3AED' }}>MemoryOS</span>
+        </div>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>Past Trade History</h2>
+        <p style={{ color: '#888' }}>AI remembers everything about your business</p>
+      </motion.div>
+
+      {/* Memory Cards */}
+      <div className="space-y-4 mb-8">
+        {[
+          { year: '2025', product: 'Cotton Shirts', supplier: 'Vietnam Textiles Ltd', amount: '$285,000', success: '95%' },
+          { year: '2024', product: 'Polyester Fabric', supplier: 'Saigon Textiles', amount: '$142,000', success: '92%' },
+          { year: '2024', product: 'Cotton Yarn', supplier: 'Vietnam Fabric Co', amount: '$98,000', success: '97%' },
+        ].map((memory, i) => (
+          <motion.div
+            key={memory.year}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.2 }}
+            className="p-6 rounded-xl"
+            style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="font-medium" style={{ color: '#101111' }}>{item.title}</span>
-              <ChevronRight className="w-5 h-5" style={{ color: '#4A4A4A' }} />
-            </div>
-            <p className="text-sm mb-2" style={{ color: '#4A4A4A' }}>{item.preview}</p>
-            {item.location && (
-              <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#7C3AED15', color: '#7C3AED' }}>
-                {item.location}
+              <span className="text-sm px-2 py-1 rounded" style={{ backgroundColor: '#7C3AED20', color: '#7C3AED' }}>{memory.year}</span>
+              <span className="flex items-center gap-1 text-sm" style={{ color: '#16A34A' }}>
+                <Star className="w-4 h-4 fill-current" /> {memory.success} success
               </span>
-            )}
+            </div>
+            <div className="font-bold mb-1" style={{ color: 'white' }}>{memory.product}</div>
+            <div className="text-sm" style={{ color: '#666' }}>{memory.supplier} • {memory.amount}</div>
           </motion.div>
         ))}
       </div>
 
-      <div className="mt-8 p-6 rounded-2xl" style={{ backgroundColor: '#7C3AED15', border: '2px solid rgba(124,58,237,0.3)' }}>
-        <h3 className="font-bold mb-4" style={{ color: '#101111' }}>Example Query</h3>
-        <div className="p-4 rounded-xl mb-4" style={{ backgroundColor: 'white' }}>
-          <div className="text-sm" style={{ color: '#4A4A4A' }}>"Use the same logistics provider we used last year for Germany shipments"</div>
+      {/* AI Recommendation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="p-6 rounded-xl text-center"
+        style={{ backgroundColor: '#16A34A15', border: '2px solid #16A34A' }}
+      >
+        <Sparkles className="w-8 h-8 mx-auto mb-3" style={{ color: '#16A34A' }} />
+        <div className="font-bold text-lg mb-2" style={{ color: '#16A34A' }}>AI Recommendation</div>
+        <div style={{ color: 'white' }}>
+          Use <strong>Vietnam Textiles Ltd</strong> again
         </div>
-        <div className="flex items-center gap-2">
-          <Brain className="w-5 h-5" style={{ color: '#7C3AED' }} />
-          <div className="flex-1 p-4 rounded-xl" style={{ backgroundColor: 'rgba(22,163,74,0.1)', border: '1px solid rgba(22,163,74,0.3)' }}>
-            <div className="font-medium" style={{ color: '#16A34A' }}>Memory Retrieved:</div>
-            <div style={{ color: '#101111' }}>Provider: <strong>MSC Logistics</strong></div>
-            <div style={{ color: '#4A4A4A' }}>Success Rate: <strong>97%</strong> • Average Cost: <strong>$4,200</strong></div>
-          </div>
-        </div>
-      </div>
+        <div className="text-sm mt-1" style={{ color: '#888' }}>Previous success rate: 95%</div>
+      </motion.div>
     </motion.div>
   );
 }
 
 // ============================================================================
-// SKILL OS
+// PHASE 4: SKILLOS
 // ============================================================================
 
-function SkillOS({ isRunning }: { isRunning: boolean }) {
+function SkillOSPhase() {
   const skills = [
-    { name: 'Email Assistant', enabled: true, icon: Mail },
-    { name: 'WhatsApp Integration', enabled: true, icon: MessageCircle },
-    { name: 'Voice Calls', enabled: true, icon: Phone },
-    { name: 'RFQ Management', enabled: true, icon: FileText },
-    { name: 'Freight Booking', enabled: true, icon: Truck },
-    { name: 'Escrow Management', enabled: true, icon: Lock },
-    { name: 'Document Generation', enabled: true, icon: FileCheck },
-    { name: 'Translation', enabled: true, icon: Globe },
+    { name: 'Negotiation Skill', desc: 'Auto-negotiate best prices' },
+    { name: 'Compliance Skill', desc: 'EU textile regulations' },
+    { name: 'Freight Skill', desc: 'Container booking' },
+    { name: 'Documentation Skill', desc: 'Invoice, BL, COO generation' },
+    { name: 'Translation Skill', desc: 'Vietnamese ↔ German' },
+    { name: 'WhatsApp Skill', desc: 'Supplier communication' },
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Zap className="w-8 h-8" style={{ color: '#A6824A' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>SkillOS</h1>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto"
+    >
+      <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#A6824A15' }}>
+          <Zap className="w-5 h-5" style={{ color: '#A6824A' }} />
+          <span className="text-sm font-medium" style={{ color: '#A6824A' }}>SkillOS</span>
         </div>
-        <p style={{ color: '#4A4A4A' }}>App Store for AI workers - Enable skills your agents can use</p>
-      </div>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>Skills Activated</h2>
+        <p style={{ color: '#888' }}>Capabilities installed into your AI workforce</p>
+      </motion.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {skills.map((skill) => (
+      <div className="grid md:grid-cols-2 gap-4">
+        {skills.map((skill, i) => (
           <motion.div
             key={skill.name}
-            whileHover={{ scale: 1.02 }}
-            className="p-4 rounded-xl"
-            style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.15 }}
+            className="p-6 rounded-xl flex items-center gap-4"
+            style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}
           >
-            <div className="flex items-center gap-3 mb-3">
-              <skill.icon className="w-5 h-5" style={{ color: '#A6824A' }} />
-              <span style={{ color: '#101111' }}>{skill.name}</span>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#A6824A20' }}>
+              <Zap className="w-6 h-6" style={{ color: '#A6824A' }} />
             </div>
-            <span className="px-3 py-1 rounded-full text-xs" style={{ backgroundColor: '#16A34A20', color: '#16A34A' }}>
-              Enabled
-            </span>
+            <div>
+              <div className="font-bold" style={{ color: 'white' }}>{skill.name}</div>
+              <div className="text-sm" style={{ color: '#666' }}>{skill.desc}</div>
+            </div>
+            <Check className="w-6 h-6 ml-auto" style={{ color: '#16A34A' }} />
           </motion.div>
         ))}
-      </div>
-
-      <div className="mt-8 p-6 rounded-2xl text-center" style={{ backgroundColor: '#A6824A15', border: '2px solid rgba(166,130,74,0.3)' }}>
-        <Sparkles className="w-8 h-8 mx-auto mb-3" style={{ color: '#A6824A' }} />
-        <h3 className="text-lg font-bold mb-2" style={{ color: '#101111' }}>Skills power your SUTAR Workforce</h3>
-        <p style={{ color: '#4A4A4A' }}>Enable skills to give your AI agents new capabilities</p>
       </div>
     </motion.div>
   );
 }
 
 // ============================================================================
-// SUTAR WORKFORCE
+// PHASE 5: SUTAR WORKFORCE
 // ============================================================================
 
-function SUTARWorkforce({ isRunning, activeAgent }: { isRunning: boolean; activeAgent: string | null }) {
+function WorkforcePhase({ isPlaying }: { isPlaying: boolean }) {
+  const [activeAgent, setActiveAgent] = useState(0);
+
+  useEffect(() => {
+    if (isPlaying) {
+      const timer = setInterval(() => {
+        setActiveAgent(prev => (prev + 1) % 6);
+      }, 600);
+      return () => clearInterval(timer);
+    }
+  }, [isPlaying]);
+
   const agents = [
-    { id: 'ceo', name: 'CEO Agent', desc: 'Strategic decisions', color: '#7C3AED' },
-    { id: 'import', name: 'Import Agent', desc: 'Sourcing & procurement', color: '#0891B2' },
-    { id: 'export', name: 'Export Agent', desc: 'Market expansion', color: '#154230' },
-    { id: 'negotiation', name: 'Negotiation Agent', desc: 'Deals & contracts', color: '#A6824A' },
-    { id: 'finance', name: 'Finance Agent', desc: 'Payments & escrow', color: '#CA8A04' },
-    { id: 'compliance', name: 'Compliance Agent', desc: 'Regulations & duties', color: '#DC2626' },
-    { id: 'documentation', name: 'Documentation Agent', desc: 'Invoices & BL & COO', color: '#6366F1' },
-    { id: 'logistics', name: 'Logistics Agent', desc: 'Shipping & tracking', color: '#8B5CF6' },
+    { name: 'Import Agent', status: 'Searching suppliers...', color: '#0891B2' },
+    { name: 'Negotiation Agent', status: 'Negotiating price...', color: '#A6824A' },
+    { name: 'Compliance Agent', status: 'Checking EU regulations...', color: '#DC2626' },
+    { name: 'Finance Agent', status: 'Setting up escrow...', color: '#CA8A04' },
+    { name: 'Logistics Agent', status: 'Booking freight...', color: '#7C3AED' },
+    { name: 'Documentation Agent', status: 'Generating docs...', color: '#6366F1' },
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Bot className="w-8 h-8" style={{ color: '#0891B2' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>SUTAR Workforce</h1>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto"
+    >
+      <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
+          <Bot className="w-5 h-5" style={{ color: '#0891B2' }} />
+          <span className="text-sm font-medium" style={{ color: '#0891B2' }}>SUTAR Workforce</span>
         </div>
-        <p style={{ color: '#4A4A4A' }}>Your autonomous AI workforce - Not a chatbot, an AI company</p>
-      </div>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>AI Team at Work</h2>
+        <p style={{ color: '#888' }}>Your autonomous workforce executes the trade</p>
+      </motion.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {agents.map((agent) => (
+      <div className="space-y-3">
+        {agents.map((agent, i) => (
           <motion.div
-            key={agent.id}
-            whileHover={{ scale: 1.02 }}
-            className="p-6 rounded-2xl cursor-pointer relative overflow-hidden"
+            key={agent.name}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              scale: activeAgent === i ? 1.02 : 1,
+            }}
+            transition={{ delay: i * 0.1 }}
+            className="p-4 rounded-xl flex items-center gap-4"
             style={{
-              backgroundColor: 'white',
-              border: activeAgent === agent.id ? `2px solid ${agent.color}` : '1px solid rgba(0,0,0,0.08)',
+              backgroundColor: activeAgent === i ? `${agent.color}20` : '#111',
+              border: activeAgent === i ? `2px solid ${agent.color}` : '1px solid rgba(255,255,255,0.1)',
             }}
           >
-            {activeAgent === agent.id && (
-              <motion.div
-                className="absolute top-2 right-2 w-3 h-3 rounded-full"
-                style={{ backgroundColor: agent.color }}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              />
-            )}
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: `${agent.color}20` }}>
-              <Bot className="w-6 h-6" style={{ color: agent.color }} />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: agent.color }}>
+              <Bot className="w-5 h-5 text-white" />
             </div>
-            <div className="font-bold mb-1" style={{ color: '#101111' }}>{agent.name}</div>
-            <div className="text-sm" style={{ color: '#4A4A4A' }}>{agent.desc}</div>
-            {isRunning && activeAgent === agent.id && (
-              <div className="mt-3 flex items-center gap-2">
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}>
-                  <Sparkles className="w-4 h-4" style={{ color: agent.color }} />
-                </motion.div>
-                <span className="text-xs" style={{ color: agent.color }}>Active</span>
-              </div>
+            <div className="flex-1">
+              <div className="font-medium" style={{ color: 'white' }}>{agent.name}</div>
+              <div className="text-sm" style={{ color: '#888' }}>{agent.status}</div>
+            </div>
+            {activeAgent === i ? (
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
+                <Sparkles className="w-5 h-5" style={{ color: agent.color }} />
+              </motion.div>
+            ) : i < activeAgent ? (
+              <Check className="w-5 h-5" style={{ color: '#16A34A' }} />
+            ) : (
+              <Clock className="w-5 h-5" style={{ color: '#666' }} />
             )}
           </motion.div>
         ))}
       </div>
+    </motion.div>
+  );
+}
 
-      <div className="mt-8 p-6 rounded-2xl" style={{ backgroundColor: '#0891B215', border: '2px solid rgba(8,145,178,0.3)' }}>
-        <h3 className="font-bold mb-4" style={{ color: '#101111' }}>Agent Architecture</h3>
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          {['Merchant', 'SUTAR', 'Skills', 'Global Nexha'].map((item, i) => (
-            <div key={item} className="flex items-center">
-              <div className="px-4 py-2 rounded-xl" style={{ backgroundColor: 'white' }}>
-                {item}
+// ============================================================================
+// PHASE 6: GLOBAL NEXHA
+// ============================================================================
+
+function NexhaPhase({ isPlaying }: { isPlaying: boolean }) {
+  const [suppliers, setSuppliers] = useState<{ name: string; score: number; price: string }[]>([]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      setTimeout(() => setSuppliers([
+        { name: 'Vietnam Textiles Ltd', score: 96, price: '$3.15' },
+        { name: 'Saigon Apparel Co', score: 93, price: '$3.22' },
+        { name: 'Asia Garments Ltd', score: 91, price: '$3.28' },
+      ]), 1000);
+    }
+  }, [isPlaying]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto"
+    >
+      <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#6366F115' }}>
+          <Globe className="w-5 h-5" style={{ color: '#6366F1' }} />
+          <span className="text-sm font-medium" style={{ color: '#6366F1' }}>Global Nexha</span>
+        </div>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>Supplier Discovery</h2>
+        <p style={{ color: '#888' }}>Connected to global trade network</p>
+      </motion.div>
+
+      {suppliers.length === 0 ? (
+        <div className="text-center py-16">
+          <Globe className="w-16 h-16 mx-auto mb-4" style={{ color: '#6366F1' }} />
+          <div className="animate-pulse" style={{ color: '#888' }}>Searching global network...</div>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {suppliers.map((supplier, i) => (
+            <motion.div
+              key={supplier.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2 }}
+              className="p-6 rounded-xl flex items-center gap-4"
+              style={{ backgroundColor: i === 0 ? '#16A34A15' : '#111', border: i === 0 ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold" style={{ backgroundColor: '#154230' }}>
+                {supplier.name.charAt(0)}
               </div>
-              {i < 3 && <ArrowRight className="w-5 h-5 mx-2" style={{ color: '#0891B2' }} />}
+              <div className="flex-1">
+                <div className="font-bold" style={{ color: 'white' }}>{supplier.name}</div>
+                <div className="flex items-center gap-4 text-sm" style={{ color: '#888' }}>
+                  <span className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-current" style={{ color: '#CA8A04' }} />
+                    {supplier.score}%
+                  </span>
+                  <span>{supplier.price}/unit</span>
+                </div>
+              </div>
+              {i === 0 && <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#16A34A', color: 'white' }}>Best Match</span>}
+              {i === 0 && <CheckCircle2 className="w-6 h-6" style={{ color: '#16A34A' }} />}
+            </motion.div>
+          ))}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-6 p-4 rounded-xl text-center"
+            style={{ backgroundColor: '#16A34A15', border: '1px solid #16A34A' }}
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <DollarSign className="w-5 h-5" style={{ color: '#16A34A' }} />
+              <span className="font-bold" style={{ color: '#16A34A' }}>Savings: $25,000</span>
+            </div>
+            <div className="text-sm" style={{ color: '#888' }}>vs market rate negotiation</div>
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// PHASE 7: COMPLETE
+// ============================================================================
+
+function CompletePhase({ onReset }: { onReset: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-3xl mx-auto text-center"
+    >
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: 'spring' }}
+        className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
+        style={{ backgroundColor: '#16A34A' }}
+      >
+        <Check className="w-10 h-10 text-white" />
+      </motion.div>
+
+      <h2 className="text-3xl font-bold mb-2" style={{ color: 'white' }}>Autonomous Trade Complete</h2>
+      <p className="mb-8" style={{ color: '#888' }}>AI handled everything. Just review and approve.</p>
+
+      {/* Summary */}
+      <div className="text-left p-6 rounded-xl mb-8" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="grid md:grid-cols-2 gap-4">
+          {[
+            { label: 'Supplier', value: 'Vietnam Textiles Ltd', icon: Users },
+            { label: 'Product', value: '10,000 Cotton Shirts', icon: Package },
+            { label: 'Unit Price', value: '$3.15 (Saved $0.25/unit)', icon: DollarSign },
+            { label: 'Total', value: '$31,500', icon: Building2 },
+            { label: 'Duty', value: '12% (EU textile', icon: Shield },
+            { label: 'ETA', value: '18 days via MSC', icon: Truck },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-3">
+              <item.icon className="w-5 h-5" style={{ color: '#A6824A' }} />
+              <div>
+                <div className="text-sm" style={{ color: '#666' }}>{item.label}</div>
+                <div className="font-medium" style={{ color: 'white' }}>{item.value}</div>
+              </div>
             </div>
           ))}
         </div>
       </div>
-    </motion.div>
-  );
-}
 
-// ============================================================================
-// GLOBAL NEXHA
-// ============================================================================
-
-function GlobalNexha({ isRunning }: { isRunning: boolean }) {
-  const networks = [
-    { name: 'Supplier Network', count: 50000, icon: Users },
-    { name: 'Logistics Partners', count: 1200, icon: Truck },
-    { name: 'Insurance Providers', count: 45, icon: Shield },
-    { name: 'Banks & Finance', count: 200, icon: Building2 },
-    { name: 'Customs Brokers', count: 500, icon: FileCheck },
-    { name: 'Warehouses', count: 800, icon: Package },
-  ];
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      {/* Documents */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Network className="w-8 h-8" style={{ color: '#7C3AED' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>Global Nexha</h1>
-        </div>
-        <p style={{ color: '#4A4A4A' }}>Your gateway to the global agent network</p>
-      </div>
-
-      <div className="grid md:grid-cols-6 gap-4 mb-8">
-        {networks.map((network) => (
-          <motion.div
-            key={network.name}
-            whileHover={{ scale: 1.05 }}
-            className="p-4 rounded-xl text-center"
-            style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}
-          >
-            <network.icon className="w-8 h-8 mx-auto mb-2" style={{ color: '#7C3AED' }} />
-            <div className="text-2xl font-bold" style={{ color: '#7C3AED' }}>{network.count.toLocaleString()}+</div>
-            <div className="text-xs" style={{ color: '#4A4A4A' }}>{network.name}</div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        {[
-          { name: 'Supplier Agent Network', desc: 'Auto-negotiate, auto-match' },
-          { name: 'Freight Agent Network', desc: 'Compare & book carriers' },
-          { name: 'Insurance Agent Network', desc: 'Instant quotes & claims' },
-        ].map((agent) => (
-          <div key={agent.name} className="p-4 rounded-xl flex items-center gap-4" style={{ backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)' }}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#7C3AED15' }}>
-              <Globe className="w-6 h-6" style={{ color: '#7C3AED' }} />
+        <div className="text-sm mb-3" style={{ color: '#888' }}>Documents Generated</div>
+        <div className="flex justify-center gap-4">
+          {['Invoice', 'Packing List', 'BL', 'COO'].map((doc) => (
+            <div key={doc} className="px-4 py-2 rounded-lg" style={{ backgroundColor: '#16A34A15', color: '#16A34A' }}>
+              <Check className="w-4 h-4 inline mr-1" /> {doc}
             </div>
-            <div>
-              <div className="font-medium" style={{ color: '#101111' }}>{agent.name}</div>
-              <div className="text-sm" style={{ color: '#4A4A4A' }}>{agent.desc}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
-// ============================================================================
-// IMPORT SCENARIO
-// ============================================================================
-
-function ImportScenario({ isRunning, setActiveTab }: { isRunning: boolean; setActiveTab: (tab: string) => void }) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isSimulating, setIsSimulating] = useState(false);
-
-  const steps = [
-    { agent: 'AI Copilot', action: 'Intent Detection', desc: 'Import order detected' },
-    { agent: 'Import Agent', action: 'Sourcing', desc: 'Finding suppliers...' },
-    { agent: 'Negotiation Agent', action: 'Supplier Discovery', desc: '12 suppliers found' },
-    { agent: 'Negotiation Agent', action: 'Price Negotiation', desc: 'Best price: $3.10/kg' },
-    { agent: 'Compliance Agent', action: 'HS Code Check', desc: '620520 - Duty: 12%' },
-    { agent: 'Finance Agent', action: 'Escrow Created', desc: '$31,000 secured' },
-    { agent: 'Logistics Agent', action: 'Freight Booking', desc: 'MSC - 18 days' },
-    { agent: 'Documentation Agent', action: 'Docs Generated', desc: 'Invoice, BL, COO ready' },
-    { agent: 'Merchant', action: 'Approval Required', desc: 'Review & confirm' },
-  ];
-
-  useEffect(() => {
-    if (isSimulating && currentStep < steps.length) {
-      const timer = setTimeout(() => {
-        setCurrentStep(prev => prev + 1);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [currentStep, isSimulating]);
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Target className="w-8 h-8" style={{ color: '#DC2626' }} />
-          <h1 className="text-4xl font-bold" style={{ color: '#101111' }}>Import Scenario</h1>
-        </div>
-        <p style={{ color: '#4A4A4A' }}>Watch autonomous execution from goal to completion</p>
-      </div>
-
-      <div className="p-6 rounded-2xl mb-6" style={{ backgroundColor: '#154230', color: 'white' }}>
-        <div className="text-sm mb-2 opacity-70">User Input</div>
-        <div className="text-lg font-medium">
-          "Import 10,000 cotton shirts from Vietnam to Germany. Budget: $300,000. Delivery: 30 days."
+          ))}
         </div>
       </div>
 
-      {!isSimulating && currentStep === 0 && (
-        <button
-          onClick={() => { setCurrentStep(1); setIsSimulating(true); }}
-          className="w-full py-4 rounded-xl font-bold text-white mb-6"
-          style={{ backgroundColor: '#DC2626' }}
-        >
-          ▶️ Start Autonomous Execution
-        </button>
-      )}
-
-      <div className="space-y-3 mb-8">
-        {steps.map((step, i) => (
-          <motion.div
-            key={step.agent + i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{
-              opacity: i < currentStep ? 1 : i === currentStep ? 1 : 0.3,
-              x: 0,
-              scale: i === currentStep ? 1.02 : 1,
-            }}
-            className="p-4 rounded-xl flex items-center gap-4"
-            style={{
-              backgroundColor: i < currentStep ? 'rgba(22,163,74,0.1)' : i === currentStep ? 'rgba(220,38,38,0.1)' : '#F7F6F2',
-              border: i === currentStep ? '2px solid #DC2626' : '1px solid transparent',
-            }}
-          >
-            <div className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{
-                backgroundColor: i < currentStep ? '#16A34A' : i === currentStep ? '#DC2626' : '#4A4A4A',
-              }}>
-              {i < currentStep ? (
-                <Check className="w-5 h-5 text-white" />
-              ) : i === currentStep ? (
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}>
-                  <Sparkles className="w-5 h-5 text-white" />
-                </motion.div>
-              ) : (
-                <span className="text-white text-sm">{i + 1}</span>
-              )}
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="font-medium" style={{ color: i < currentStep ? '#16A34A' : '#101111' }}>{step.agent}</span>
-                <ArrowRight className="w-4 h-4" style={{ color: '#4A4A4A' }} />
-                <span style={{ color: '#101111' }}>{step.action}</span>
-              </div>
-              <div className="text-sm" style={{ color: '#4A4A4A' }}>{step.desc}</div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {currentStep >= steps.length && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="p-6 rounded-2xl text-center"
-          style={{ backgroundColor: 'rgba(22,163,74,0.1)', border: '2px solid #16A34A' }}
-        >
-          <CheckCircle2 className="w-12 h-12 mx-auto mb-4" style={{ color: '#16A34A' }} />
-          <h3 className="text-xl font-bold mb-2" style={{ color: '#101111' }}>Ready for Approval</h3>
-          <p className="mb-4" style={{ color: '#4A4A4A' }}>All agents have completed their tasks autonomously</p>
-          <div className="flex justify-center gap-4">
-            <button className="px-6 py-3 rounded-xl font-medium text-white" style={{ backgroundColor: '#DC2626' }}>
-              Approve & Execute
-            </button>
-            <button className="px-6 py-3 rounded-xl font-medium" style={{ backgroundColor: '#F7F6F2', color: '#101111' }}>
-              Modify Request
-            </button>
-          </div>
-        </motion.div>
-      )}
+      <motion.button
+        onClick={onReset}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="px-8 py-4 rounded-xl font-bold text-lg"
+        style={{ backgroundColor: '#154230', color: 'white' }}
+      >
+        <CheckCircle2 className="w-5 h-5 inline mr-2" />
+        Approve & Execute Trade
+      </motion.button>
     </motion.div>
   );
 }
