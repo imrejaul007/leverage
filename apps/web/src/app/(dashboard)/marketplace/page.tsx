@@ -19,7 +19,13 @@ import {
   SlidersHorizontal,
   X,
   List,
+  Shield,
+  Truck,
+  Globe,
+  Users,
+  Plus,
 } from 'lucide-react';
+import { products } from '@/data/products';
 
 // WhatsApp Icon Component
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -29,20 +35,17 @@ function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
     </svg>
   );
 }
-import { products } from '@/data/products';
 
 const categories = [
-  'Food & Agriculture',
-  'Textiles',
-  'Metals & Minerals',
-  'Energy',
-  'Chemicals',
-  'Machinery',
+  { name: 'Food & Agriculture', emoji: '🌾', count: products.filter(p => p.category === 'Food & Agriculture').length },
+  { name: 'Textiles', emoji: '🧵', count: products.filter(p => p.category === 'Textiles').length },
+  { name: 'Metals & Minerals', emoji: '⚙️', count: products.filter(p => p.category === 'Metals & Minerals').length },
+  { name: 'Energy', emoji: '⚡', count: products.filter(p => p.category === 'Energy').length },
+  { name: 'Chemicals', emoji: '🧪', count: 156 },
+  { name: 'Machinery', emoji: '🔧', count: 234 },
 ];
 
-const nearbyCities = ['Delhi', 'Mumbai', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore'];
-
-const priceFilters = ['Under ₹100', '₹100 - ₹500', '₹500 - ₹1K', '₹1K - ₹5K', 'Above ₹5K'];
+const priceFilters = ['Under ₹500', '₹500 - ₹1K', '₹1K - ₹5K', 'Above ₹5K'];
 
 export default function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -61,7 +64,6 @@ export default function MarketplacePage() {
     return result;
   }, [selectedCategory]);
 
-  // Auto-scroll images in product cards
   useEffect(() => {
     const interval = setInterval(() => {
       filteredProducts.forEach(p => {
@@ -79,152 +81,145 @@ export default function MarketplacePage() {
   const scroll = (productId: string, direction: 'left' | 'right') => {
     const el = scrollRefs.current[productId];
     if (!el) return;
-    const scrollAmount = 200;
-    el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    el.scrollBy({ left: direction === 'left' ? -200 : 200, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Toaster position="top-right" />
 
-      {/* Desktop Header */}
-      <header className="hidden md:block sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
+      {/* ==================== HOMEPAGE HEADER (From Screenshot) ==================== */}
+      <header className="bg-gradient-to-br from-[#154230] via-[#1a5a3a] to-[#0d3d28]">
+        {/* Top Bar */}
+        <div className="bg-[#0d2e20]">
+          <div className="max-w-7xl mx-auto px-4 py-2">
+            <div className="flex items-center justify-between text-sm text-white/80">
+              <div className="flex items-center gap-4">
+                <span>Welcome to LEVERAGE Marketplace</span>
+              </div>
+              <div className="hidden md:flex items-center gap-4">
+                <span>24x7 Support</span>
+                <Link href="/contact" className="flex items-center gap-1 hover:text-white">
+                  <Phone className="w-4 h-4" />
+                  +1-xxx-xxx-xxxx
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Header with Logo & Search */}
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-6">
             <Link href="/" className="flex-shrink-0">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={120} height={40} className="object-contain" />
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={47} className="object-contain" />
             </Link>
 
-            <div className="flex-1 flex gap-2">
-              <div className="relative flex-1 max-w-2xl">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Enter product / service name or keyword"
-                  className="w-full h-11 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#154230] focus:ring-1 focus:ring-[#154230]/20"
-                />
+            {/* Search Bar */}
+            <div className="flex-1 max-w-3xl">
+              <div className="relative flex">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products, suppliers..."
+                    className="w-full h-12 pl-12 pr-4 bg-white rounded-l-xl text-gray-900 placeholder-gray-400 focus:outline-none"
+                  />
+                </div>
+                <button className="px-8 h-12 bg-[#A6824A] hover:bg-[#8a6a3a] text-white font-semibold rounded-r-xl transition-colors">
+                  Search
+                </button>
               </div>
-              <button className="px-6 h-11 bg-[#154230] hover:bg-[#1a5a3a] text-white font-medium rounded-lg transition-colors">
-                Search
-              </button>
             </div>
 
-            <div className="flex items-center gap-3">
-              <Link href="/login" className="px-4 py-2 text-sm font-medium text-[#154230] hover:bg-[#154230]/5 rounded-lg transition-colors">
+            {/* Actions */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link href="/login" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors">
                 Sign In
               </Link>
-              <Link href="/cart" className="relative p-2 hover:bg-gray-100 rounded-lg">
-                <ShoppingCart className="w-5 h-5 text-gray-600" />
+              <Link href="/rfqs/new" className="px-5 py-2.5 bg-[#A6824A] hover:bg-[#8a6a3a] text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Post RFQ
+              </Link>
+              <Link href="/cart" className="relative p-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+                <ShoppingCart className="w-5 h-5 text-white" />
               </Link>
             </div>
           </div>
         </div>
-      </header>
 
-      {/* Mobile Header */}
-      <header className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-3 mb-3">
-            <Link href="/">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
-            </Link>
-            <Link href="/login" className="ml-auto text-sm font-medium text-[#154230]">
-              Sign In
-            </Link>
+        {/* Hero Section */}
+        <div className="max-w-7xl mx-auto px-4 pb-8">
+          <div className="text-center text-white mb-8">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
+              Global B2B Marketplace
+            </h1>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Connect with verified suppliers and buyers from 150+ countries
+            </p>
           </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full h-10 pl-9 pr-4 bg-gray-50 border border-gray-200 rounded-lg text-sm"
-            />
-          </div>
-        </div>
 
-        {/* Mobile City Pills */}
-        <div className="px-4 py-2 flex gap-2 overflow-x-auto scrollbar-hide border-t border-gray-100">
-          <button className="flex items-center gap-1 px-3 py-1.5 bg-[#154230] text-white text-xs font-medium rounded-full whitespace-nowrap">
-            All India
-          </button>
-          {nearbyCities.map(city => (
-            <button
-              key={city}
-              onClick={() => setSelectedCity(selectedCity === city ? null : city)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
-                selectedCity === city ? 'bg-[#154230] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {city}
-            </button>
-          ))}
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {[
+              { label: 'Products', value: '2,847' },
+              { label: 'Suppliers', value: '523' },
+              { label: 'Countries', value: '150+' },
+              { label: 'Verified', value: '98%' },
+            ].map(stat => (
+              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                <p className="text-2xl md:text-3xl font-bold">{stat.value}</p>
+                <p className="text-sm text-white/70">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </header>
 
-      {/* Mobile: Category + Price Chips */}
-      <div className="md:hidden px-4 py-3 space-y-3 bg-white border-b border-gray-200">
-        {/* Category Chips */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-              !selectedCategory ? 'bg-[#154230] text-white' : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            All
-          </button>
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-                selectedCategory === cat ? 'bg-[#154230] text-white' : 'bg-gray-100 text-gray-600'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Price Chips */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {priceFilters.map(price => (
-            <button
-              key={price}
-              onClick={() => setSelectedPrice(selectedPrice === price ? null : price)}
-              className={`px-3 py-1.5 text-xs font-medium rounded border whitespace-nowrap ${
-                selectedPrice === price
-                  ? 'border-[#154230] bg-[#154230]/10 text-[#154230]'
-                  : 'border-gray-200 text-gray-600 hover:border-gray-300'
-              }`}
-            >
-              {price}
-            </button>
-          ))}
-        </div>
-
-        {/* Filter + Sort */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600">
-            Sort: Relevance
-            <ChevronDown className="w-4 h-4" />
-          </button>
+      {/* ==================== POST RFQ BANNER ==================== */}
+      <div className="bg-gradient-to-r from-[#A6824A] to-[#8a6a3a] py-4">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <div className="text-white">
+            <h3 className="font-bold text-lg">Can't find what you need?</h3>
+            <p className="text-white/80 text-sm">Post a Request for Quote and let suppliers come to you</p>
+          </div>
+          <Link href="/rfqs/new" className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#A6824A] font-semibold rounded-lg hover:bg-white/90 transition-colors">
+            <Plus className="w-5 h-5" />
+            Post RFQ
+          </Link>
         </div>
       </div>
 
-      {/* Desktop Content */}
-      <div className="hidden md:block max-w-7xl mx-auto px-4 py-6">
+      {/* ==================== CATEGORIES SECTION ==================== */}
+      <section className="bg-white py-8 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Browse Categories</h2>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+            {categories.map(cat => (
+              <button
+                key={cat.name}
+                onClick={() => setSelectedCategory(selectedCategory === cat.name ? null : cat.name)}
+                className={`p-4 rounded-xl border-2 transition-all text-center ${
+                  selectedCategory === cat.name
+                    ? 'border-[#154230] bg-[#154230]/5'
+                    : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
+                }`}
+              >
+                <span className="text-3xl mb-2 block">{cat.emoji}</span>
+                <span className="text-sm font-medium text-gray-700">{cat.name}</span>
+                <span className="text-xs text-gray-400 block mt-1">{cat.count}+</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== PRODUCT LISTING (IndiaMART Style) ==================== */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex gap-6">
-          {/* Left Sidebar */}
-          <aside className="w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+          {/* Left Sidebar - Desktop */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4 sticky top-4">
               {/* Price Filter */}
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3">Price</h3>
@@ -282,7 +277,7 @@ export default function MarketplacePage() {
               </div>
             </div>
 
-            {/* Products Grid - IndiaMART Style */}
+            {/* Products - IndiaMART Style */}
             <div className="space-y-4">
               {filteredProducts.map(product => (
                 <div key={product.id} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
@@ -294,7 +289,7 @@ export default function MarketplacePage() {
                       onMouseLeave={() => setHoveredProduct(null)}
                     >
                       <Image
-                        src={product.images?.[currentImageIndex[product.id] || 0] ? product.images![currentImageIndex[product.id] || 0] : product.image}
+                        src={product.images?.[currentImageIndex[product.id] || 0] || product.image}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -305,12 +300,7 @@ export default function MarketplacePage() {
                       {product.images && product.images.length > 1 && (
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                           {product.images.map((_, i) => (
-                            <span
-                              key={i}
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                (currentImageIndex[product.id] || 0) === i ? 'bg-white' : 'bg-white/50'
-                              }`}
-                            />
+                            <span key={i} className={`w-1.5 h-1.5 rounded-full ${(currentImageIndex[product.id] || 0) === i ? 'bg-white' : 'bg-white/50'}`} />
                           ))}
                         </div>
                       )}
@@ -318,18 +308,8 @@ export default function MarketplacePage() {
                       {/* Scroll buttons */}
                       {product.images && product.images.length > 1 && hoveredProduct === product.id && (
                         <>
-                          <button
-                            onClick={() => scroll(product.id, 'left')}
-                            className="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow"
-                          >
-                            ‹
-                          </button>
-                          <button
-                            onClick={() => scroll(product.id, 'right')}
-                            className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow"
-                          >
-                            ›
-                          </button>
+                          <button onClick={() => scroll(product.id, 'left')} className="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow">‹</button>
+                          <button onClick={() => scroll(product.id, 'right')} className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow">›</button>
                         </>
                       )}
                     </div>
@@ -343,36 +323,24 @@ export default function MarketplacePage() {
                       <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
                         <MapPin className="w-3 h-3" />
                         <span>{product.location}</span>
-                        {product.yearsInBusiness && (
-                          <span className="ml-2">| {product.yearsInBusiness}+ yrs</span>
-                        )}
+                        {product.yearsInBusiness && <span className="ml-2">| {product.yearsInBusiness}+ yrs</span>}
                       </div>
 
                       {/* Trust Badges */}
                       <div className="flex items-center gap-3 mb-3">
                         {product.gstVerified && (
-                          <span className="flex items-center gap-1 text-xs text-green-600">
-                            <CheckCircle className="w-3 h-3" />
-                            GST Verified
-                          </span>
+                          <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle className="w-3 h-3" /> GST Verified</span>
                         )}
                         {product.trustseal && (
-                          <span className="flex items-center gap-1 text-xs text-[#154230]">
-                            <CheckCircle className="w-3 h-3" />
-                            TrustSEAL
-                          </span>
+                          <span className="flex items-center gap-1 text-xs text-[#154230]"><CheckCircle className="w-3 h-3" /> TrustSEAL</span>
                         )}
-                        <span className="text-xs text-gray-400">
-                          <Star className="w-3 h-3 inline text-amber-400" /> {product.rating} ({product.reviews})
-                        </span>
+                        <span className="text-xs text-gray-400"><Star className="w-3 h-3 inline text-amber-400" /> {product.rating} ({product.reviews})</span>
                       </div>
 
                       {/* Specs Pills */}
-                      <div className="flex flex-wrap gap-2 mb-3">
+                      <div className="flex flex-wrap gap-2">
                         {product.specifications && Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
-                          <span key={key} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                            {value}
-                          </span>
+                          <span key={key} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">{value}</span>
                         ))}
                       </div>
                     </div>
@@ -380,21 +348,14 @@ export default function MarketplacePage() {
                     {/* Price & CTA */}
                     <div className="flex flex-col items-end justify-between w-40">
                       <div>
-                        <div className="text-xl font-bold text-gray-900">
-                          ₹{product.price.toLocaleString()}
-                        </div>
+                        <div className="text-xl font-bold text-gray-900">₹{product.price.toLocaleString()}</div>
                         <div className="text-xs text-gray-500">per {product.currency}</div>
                         <div className="text-xs text-gray-400 mt-1">MOQ: {product.moq}</div>
                       </div>
 
-                      <div className="w-full space-y-2">
-                        <button
-                          onClick={() => toast.success('Enquiry sent!')}
-                          className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors"
-                        >
-                          Contact Supplier
-                        </button>
-                      </div>
+                      <button onClick={() => toast.success('Enquiry sent!')} className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors">
+                        Contact Supplier
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -404,114 +365,47 @@ export default function MarketplacePage() {
         </div>
       </div>
 
-      {/* Mobile: Product List - IndiaMART Style */}
-      <div className="md:hidden px-4 py-4 space-y-3">
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-          <span>{filteredProducts.length} results</span>
-        </div>
-
-        {filteredProducts.map(product => (
-          <div key={product.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div className="flex">
-              {/* Product Image */}
-              <div className="relative w-28 h-28 flex-shrink-0 bg-gray-100">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-                {/* Dots */}
-                {product.images && product.images.length > 1 && (
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
-                    {product.images.map((_, i) => (
-                      <span key={i} className={`w-1 h-1 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}`} />
-                    ))}
-                  </div>
-                )}
+      {/* ==================== FEATURES SECTION ==================== */}
+      <section className="bg-white py-12 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Why Choose LEVERAGE?</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { icon: Shield, title: 'Verified Suppliers', desc: 'All suppliers vetted' },
+              { icon: Globe, title: '150+ Countries', desc: 'Global reach' },
+              { icon: Truck, title: 'Logistics', desc: 'Integrated shipping' },
+              { icon: Users, title: '20K+ Buyers', desc: 'Growing community' },
+            ].map((f, i) => (
+              <div key={i} className="text-center p-6 bg-gray-50 rounded-xl">
+                <f.icon className="w-10 h-10 text-[#154230] mx-auto mb-3" />
+                <h3 className="font-semibold text-gray-900 mb-1">{f.title}</h3>
+                <p className="text-sm text-gray-500">{f.desc}</p>
               </div>
-
-              {/* Content */}
-              <div className="flex-1 p-2 min-w-0">
-                <h3 className="text-blue-600 text-sm font-medium line-clamp-2 leading-tight">
-                  {product.name}
-                </h3>
-
-                <div className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
-                  <MapPin className="w-2.5 h-2.5" />
-                  <span className="truncate">{product.location}</span>
-                </div>
-
-                {/* Trust badges */}
-                <div className="flex gap-2 mt-1">
-                  {product.gstVerified && (
-                    <span className="text-[9px] text-green-600 font-medium">GST</span>
-                  )}
-                  {product.trustseal && (
-                    <span className="text-[9px] text-[#154230] font-medium">TrustSEAL</span>
-                  )}
-                </div>
-
-                {/* Price */}
-                <div className="mt-1">
-                  <span className="text-sm font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
-                  <span className="text-[10px] text-gray-500">/{product.currency}</span>
-                </div>
-
-                {/* Mobile CTAs - IndiaMART Style */}
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => toast.success('Opening WhatsApp...')}
-                    className="flex-1 flex items-center justify-center gap-1 py-1.5 border border-green-500 text-green-600 text-xs font-medium rounded"
-                  >
-                    <WhatsAppIcon className="w-3.5 h-3.5" />
-                    WhatsApp
-                  </button>
-                  <button
-                    onClick={() => toast.success('Calling...')}
-                    className="flex-1 flex items-center justify-center gap-1 py-1.5 bg-green-600 text-white text-xs font-medium rounded"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    Call Now
-                  </button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
 
-      {/* Desktop CTA Section */}
-      <section className="hidden md:block bg-gradient-to-r from-[#154230] to-[#1a5a3a] py-12 mt-8">
-        <div className="max-w-7xl mx-auto px-4 text-center text-white">
+      {/* ==================== CTA SECTION ==================== */}
+      <section className="bg-gradient-to-r from-[#154230] to-[#1a5a3a] py-12">
+        <div className="max-w-4xl mx-auto px-4 text-center text-white">
           <h2 className="text-2xl font-bold mb-2">Ready to start trading?</h2>
           <p className="text-white/80 mb-6">Join thousands of businesses already trading globally</p>
           <div className="flex justify-center gap-4">
             <Link href="/signup" className="px-6 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
               Create Free Account
             </Link>
-            <Link href="/contact" className="px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
+            <Link href="/contact" className="px-6 py-3 border-2 border-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
               Contact Sales
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Mobile CTA - Sticky Bottom */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex gap-2">
-        <button className="flex-1 py-3 border border-[#154230] text-[#154230] font-semibold rounded-lg">
-          WhatsApp
-        </button>
-        <button className="flex-1 py-3 bg-[#154230] text-white font-semibold rounded-lg">
-          Call Now
-        </button>
-      </div>
-
-      {/* Footer */}
-      <footer className="hidden md:block bg-gray-900 text-white py-8 mt-8">
+      {/* ==================== FOOTER ==================== */}
+      <footer className="bg-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8">
             <div>
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain brightness-0 invert mb-4" />
               <p className="text-gray-400 text-sm">The Global Trade Operating System</p>
@@ -535,7 +429,7 @@ export default function MarketplacePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} LEVERAGE. All rights reserved.
+            © {new Date().getFullYear()} LEVERAGE Marketplace. All rights reserved.
           </div>
         </div>
       </footer>
