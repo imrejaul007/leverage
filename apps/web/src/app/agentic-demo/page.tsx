@@ -5,17 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import {
   Brain, Database, Zap, Bot, Globe, Target, CheckCircle2, Clock, Package, DollarSign,
-  Shield, Truck, FileText, Users, Building2, ArrowRight, Check, Sparkles,
-  Layers, Star, MessageCircle, Phone, Mail, Lock, Search, FileCheck,
-  MessageSquare, PhoneCall, ChevronRight, Volume2
+  Shield, Truck, FileText, Users, ArrowRight, Check, Sparkles, Layers, Star, MessageCircle,
+  Phone, Lock, Search, FileCheck, Play, ChevronRight, X
 } from 'lucide-react';
 
 // ============================================================================
-// INTERACTIVE AUTONOMOUS IMPORT DEMO - FULLY WORKING
+// FULLY FUNCTIONAL AGENTIC DEMO
 // ============================================================================
 
 export default function AgenticDemoPage() {
-  const [activePhase, setActivePhase] = useState<string>('start');
+  const [activePhase, setActivePhase] = useState('start');
+  const [autoProgress, setAutoProgress] = useState(false);
 
   const phases = [
     { id: 'start', name: 'Start', icon: Target },
@@ -30,53 +30,89 @@ export default function AgenticDemoPage() {
     { id: 'complete', name: 'Complete', icon: CheckCircle2 },
   ];
 
+  // Auto progress
+  useEffect(() => {
+    if (!autoProgress) return;
+
+    const currentIndex = phases.findIndex(p => p.id === activePhase);
+    if (currentIndex < phases.length - 1) {
+      const timer = setTimeout(() => {
+        setActivePhase(phases[currentIndex + 1].id);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setAutoProgress(false);
+    }
+  }, [autoProgress, activePhase]);
+
+  const startAutoPlay = () => {
+    setAutoProgress(true);
+    setActivePhase('start');
+  };
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0A0A0A', color: 'white' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#050510' }}>
+      {/* Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px',
+        }} />
+        <motion.div animate={{ x: ['-100%', '100%'] }} transition={{ duration: 20, repeat: Infinity }}
+          className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.15) 0%, transparent 70%)' }} />
+        <motion.div animate={{ x: ['100%', '-100%'] }} transition={{ duration: 25, repeat: Infinity }}
+          className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(255,0,255,0.1) 0%, transparent 70%)' }} />
+      </div>
+
       {/* Header */}
-      <header className="border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/demo" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
-                <Layers className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <span className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
-                <div className="text-xs" style={{ color: '#666' }}>Agentic Demo</div>
-              </div>
-            </Link>
-            <Link href="/demo" className="px-4 py-2 rounded-xl text-sm" style={{ backgroundColor: '#222', color: '#888' }}>
-              ← Back to Demo Home
-            </Link>
+      <header className="relative z-10 border-b" style={{ borderColor: 'rgba(0,212,255,0.2)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/demo" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#154230' }}>
+              <Layers className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="text-xl font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</span>
+              <div className="text-xs" style={{ color: '#666' }}>Agentic Demo</div>
+            </div>
+          </Link>
+          <div className="flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={startAutoPlay}
+              className="px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+              style={{ backgroundColor: '#154230', color: 'white' }}>
+              {autoProgress ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}><Sparkles className="w-4 h-4" /></motion.div> : <Play className="w-4 h-4" />}
+              {autoProgress ? 'Playing...' : 'Auto Play'}
+            </motion.button>
           </div>
         </div>
       </header>
 
       {/* Phase Navigation */}
-      <div className="border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {phases.map((phase) => (
-              <button
-                key={phase.id}
-                onClick={() => setActivePhase(phase.id)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all"
-                style={{
-                  backgroundColor: activePhase === phase.id ? '#154230' : 'transparent',
-                  color: activePhase === phase.id ? 'white' : '#666',
-                  border: activePhase === phase.id ? 'none' : '1px solid rgba(255,255,255,0.2)',
-                }}
-              >
-                <phase.icon className="w-4 h-4" />
-                {phase.name}
-              </button>
-            ))}
-          </div>
+      <div className="relative z-10 border-b overflow-x-auto" style={{ borderColor: 'rgba(0,212,255,0.1)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex gap-2">
+          {phases.map((phase) => (
+            <motion.button
+              key={phase.id}
+              whileHover={{ scale: 1.05 }}
+              onClick={() => { setActivePhase(phase.id); setAutoProgress(false); }}
+              className="px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all"
+              style={{
+                backgroundColor: activePhase === phase.id ? '#154230' : 'transparent',
+                color: activePhase === phase.id ? 'white' : '#666',
+                border: activePhase === phase.id ? 'none' : '1px solid rgba(255,255,255,0.1)',
+              }}>
+              <phase.icon className="w-4 h-4" />
+              {phase.name}
+            </motion.button>
+          ))}
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="relative z-10 max-w-4xl mx-auto px-6 py-8">
         <AnimatePresence mode="wait">
           {activePhase === 'start' && <StartPhase key="start" onNext={() => setActivePhase('twin')} />}
           {activePhase === 'twin' && <TwinOSPhase key="twin" onNext={() => setActivePhase('memory')} />}
@@ -95,18 +131,18 @@ export default function AgenticDemoPage() {
 }
 
 // ============================================================================
-// PHASE 1: START
+// PHASES
 // ============================================================================
 
 function StartPhase({ onNext }: { onNext: () => void }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-center">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center">
       <motion.div animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 2, repeat: Infinity }}>
         <h1 className="text-5xl font-bold mb-4">Autonomous Import Demo</h1>
         <p className="text-xl mb-8" style={{ color: '#888' }}>Powered by HOJAI AI × Global Nexha</p>
       </motion.div>
 
-      <div className="p-8 rounded-2xl mb-8 text-left max-w-2xl mx-auto" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="p-8 rounded-2xl mb-8 text-left max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold" style={{ backgroundColor: '#154230' }}>ABC</div>
           <div>
@@ -114,36 +150,28 @@ function StartPhase({ onNext }: { onNext: () => void }) {
             <div className="text-sm" style={{ color: '#666' }}>Merchant</div>
           </div>
         </div>
-        <div className="p-6 rounded-xl" style={{ backgroundColor: '#0A0A0A' }}>
+        <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
           <div className="text-sm mb-2" style={{ color: '#666' }}>What do you need?</div>
-          <div className="text-lg font-medium mb-4">
-            "Import 10,000 cotton shirts from Vietnam. Budget: $300,000. Delivery: 30 days."
-          </div>
+          <div className="text-lg font-medium mb-4">"Import 10,000 cotton shirts from Vietnam. Budget: $300,000. Delivery: 30 days."</div>
         </div>
       </div>
 
       <motion.button onClick={onNext} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         className="px-8 py-4 rounded-xl font-bold text-lg" style={{ backgroundColor: '#154230', color: 'white' }}>
-        <Sparkles className="w-5 h-5 inline mr-2" />
-        Start Autonomous Trade
+        <Sparkles className="w-5 h-5 inline mr-2" /> Start Autonomous Trade
       </motion.button>
     </motion.div>
   );
 }
 
-// ============================================================================
-// PHASE 2: TWINOS
-// ============================================================================
-
 function TwinOSPhase({ onNext }: { onNext: () => void }) {
   const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => { setLoaded(true); }, []);
+  useEffect(() => { setTimeout(() => setLoaded(true), 500); }, []);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(8,145,178,0.1)' }}>
           <Brain className="w-5 h-5" style={{ color: '#0891B2' }} />
           <span style={{ color: '#0891B2' }}>TwinOS</span>
         </div>
@@ -159,7 +187,7 @@ function TwinOSPhase({ onNext }: { onNext: () => void }) {
           { label: 'Payment', value: 'Letter of Credit' },
         ].map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-            className="p-6 rounded-xl" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+            className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="text-sm mb-1" style={{ color: '#666' }}>{item.label}</div>
             <div className="text-xl font-bold">{item.value}</div>
           </motion.div>
@@ -176,17 +204,13 @@ function TwinOSPhase({ onNext }: { onNext: () => void }) {
   );
 }
 
-// ============================================================================
-// PHASE 3: MEMORYOS
-// ============================================================================
-
 function MemoryOSPhase({ onNext }: { onNext: () => void }) {
   const [showRecommendation, setShowRecommendation] = useState(false);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#7C3AED15' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(124,58,237,0.1)' }}>
           <Database className="w-5 h-5" style={{ color: '#7C3AED' }} />
           <span style={{ color: '#7C3AED' }}>MemoryOS</span>
         </div>
@@ -198,7 +222,7 @@ function MemoryOSPhase({ onNext }: { onNext: () => void }) {
         {[
           { product: 'Cotton Shirts 8,000 units', supplier: 'Vietnam Textiles Ltd', success: '95%' },
           { product: 'Polyester Fabric', supplier: 'Saigon Textiles', success: '92%' },
-        ].map((memory, i) => (
+        ].map((memory) => (
           <motion.button key={memory.supplier} onClick={() => setShowRecommendation(true)} whileHover={{ scale: 1.01 }}
             className="w-full p-6 rounded-xl text-left" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="flex items-center justify-between mb-2">
@@ -215,7 +239,7 @@ function MemoryOSPhase({ onNext }: { onNext: () => void }) {
       <AnimatePresence>
         {showRecommendation && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="p-6 rounded-xl text-center mb-8" style={{ backgroundColor: '#16A34A15', border: '2px solid #16A34A' }}>
+            className="p-6 rounded-xl text-center mb-8" style={{ backgroundColor: 'rgba(22,163,74,0.1)', border: '2px solid #16A34A' }}>
             <Sparkles className="w-8 h-8 mx-auto mb-2" style={{ color: '#16A34A' }} />
             <div className="font-bold mb-1" style={{ color: '#16A34A' }}>AI Recommendation</div>
             <div>Use <strong>Vietnam Textiles Ltd</strong> again</div>
@@ -232,10 +256,6 @@ function MemoryOSPhase({ onNext }: { onNext: () => void }) {
     </motion.div>
   );
 }
-
-// ============================================================================
-// PHASE 4: SKILLOS
-// ============================================================================
 
 function SkillOSPhase({ onNext }: { onNext: () => void }) {
   const [enabledSkills, setEnabledSkills] = useState<string[]>([]);
@@ -254,7 +274,7 @@ function SkillOSPhase({ onNext }: { onNext: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#A6824A15' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(166,130,74,0.1)' }}>
           <Zap className="w-5 h-5" style={{ color: '#A6824A' }} />
           <span style={{ color: '#A6824A' }}>SkillOS</span>
         </div>
@@ -266,9 +286,12 @@ function SkillOSPhase({ onNext }: { onNext: () => void }) {
         {skills.map((skill) => (
           <motion.button key={skill.name} onClick={() => toggleSkill(skill.name)} whileHover={{ scale: 1.02 }}
             className="p-6 rounded-xl text-left flex items-center gap-4"
-            style={{ backgroundColor: enabledSkills.includes(skill.name) ? '#16A34A15' : '#111', border: enabledSkills.includes(skill.name) ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
+            style={{
+              backgroundColor: enabledSkills.includes(skill.name) ? 'rgba(22,163,74,0.1)' : 'rgba(255,255,255,0.05)',
+              border: enabledSkills.includes(skill.name) ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)',
+            }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: enabledSkills.includes(skill.name) ? '#16A34A' : '#222' }}>
+              style={{ backgroundColor: enabledSkills.includes(skill.name) ? '#16A34A' : '#333' }}>
               {enabledSkills.includes(skill.name) ? <Check className="w-6 h-6" style={{ color: 'white' }} /> : <skill.icon className="w-6 h-6" style={{ color: '#666' }} />}
             </div>
             <div className="font-bold" style={{ color: enabledSkills.includes(skill.name) ? '#16A34A' : 'white' }}>{skill.name}</div>
@@ -285,10 +308,6 @@ function SkillOSPhase({ onNext }: { onNext: () => void }) {
     </motion.div>
   );
 }
-
-// ============================================================================
-// PHASE 5: SUTAR WORKFORCE
-// ============================================================================
 
 function WorkforcePhase({ onNext }: { onNext: () => void }) {
   const [activeAgent, setActiveAgent] = useState<number | null>(null);
@@ -315,7 +334,7 @@ function WorkforcePhase({ onNext }: { onNext: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#0891B215' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(8,145,178,0.1)' }}>
           <Bot className="w-5 h-5" style={{ color: '#0891B2' }} />
           <span style={{ color: '#0891B2' }}>SUTAR Workforce</span>
         </div>
@@ -330,14 +349,23 @@ function WorkforcePhase({ onNext }: { onNext: () => void }) {
           return (
             <motion.button key={agent.name} onClick={() => clickAgent(i)} whileHover={{ scale: 1.01 }}
               className="w-full p-4 rounded-xl flex items-center gap-4"
-              style={{ backgroundColor: isCompleted ? '#16A34A15' : isActive ? `${agent.color}20` : '#111', border: isCompleted ? '2px solid #16A34A' : isActive ? `2px solid ${agent.color}` : '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: isCompleted ? '#16A34A' : agent.color }}>
-                {isCompleted ? <Check className="w-6 h-6" style={{ color: 'white' }} /> : isActive ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
-                  <agent.icon className="w-6 h-6" style={{ color: 'white' }} /></motion.div> : <agent.icon className="w-6 h-6" style={{ color: 'white' }} />}
+              style={{
+                backgroundColor: isCompleted ? 'rgba(22,163,74,0.1)' : isActive ? `${agent.color}20` : 'rgba(255,255,255,0.05)',
+                border: isCompleted ? '2px solid #16A34A' : isActive ? `2px solid ${agent.color}` : '1px solid rgba(255,255,255,0.1)',
+              }}>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: isCompleted ? '#16A34A' : agent.color }}>
+                {isCompleted ? <Check className="w-6 h-6" style={{ color: 'white' }} /> : isActive ? (
+                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
+                    <agent.icon className="w-6 h-6" style={{ color: 'white' }} />
+                  </motion.div>
+                ) : <agent.icon className="w-6 h-6" style={{ color: 'white' }} />}
               </div>
               <div className="flex-1 text-left">
                 <div className="font-bold">{agent.name}</div>
-                <div className="text-sm" style={{ color: '#888' }}>{isCompleted ? 'Task completed' : isActive ? 'Working...' : 'Waiting'}</div>
+                <div className="text-sm" style={{ color: '#888' }}>
+                  {isCompleted ? 'Task completed' : isActive ? 'Working...' : 'Waiting'}
+                </div>
               </div>
               {isActive && <Sparkles className="w-5 h-5" style={{ color: agent.color }} />}
             </motion.button>
@@ -354,10 +382,6 @@ function WorkforcePhase({ onNext }: { onNext: () => void }) {
     </motion.div>
   );
 }
-
-// ============================================================================
-// PHASE 6: GLOBAL NEXHA
-// ============================================================================
 
 function NexhaPhase({ onNext }: { onNext: () => void }) {
   const [searching, setSearching] = useState(false);
@@ -378,7 +402,7 @@ function NexhaPhase({ onNext }: { onNext: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#6366F115' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(99,102,241,0.1)' }}>
           <Globe className="w-5 h-5" style={{ color: '#6366F1' }} />
           <span style={{ color: '#6366F1' }}>Global Nexha</span>
         </div>
@@ -407,7 +431,7 @@ function NexhaPhase({ onNext }: { onNext: () => void }) {
           {results.map((supplier, i) => (
             <motion.button key={supplier.name} onClick={() => setSelectedSupplier(supplier.name)} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}
               whileHover={{ scale: 1.01 }} className="w-full p-6 rounded-xl text-left flex items-center gap-4"
-              style={{ backgroundColor: i === 0 ? '#16A34A15' : '#111', border: i === 0 ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
+              style={{ backgroundColor: i === 0 ? 'rgba(22,163,74,0.1)' : 'rgba(255,255,255,0.05)', border: i === 0 ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold" style={{ backgroundColor: '#154230' }}>{supplier.name.charAt(0)}</div>
               <div className="flex-1">
                 <div className="font-bold">{supplier.name}</div>
@@ -424,11 +448,11 @@ function NexhaPhase({ onNext }: { onNext: () => void }) {
 
       {selectedSupplier && (
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-          className="p-6 rounded-xl text-center mb-8" style={{ backgroundColor: '#16A34A15', border: '2px solid #16A34A' }}>
-          <CheckCircle2 className="w-12 h-12 mx-auto mb-4" style={{ color: '#16A34A' }} />
-          <div className="font-bold text-lg mb-2">Supplier Selected</div>
-          <div className="text-2xl font-bold mb-4">{selectedSupplier}</div>
-        </motion.div>
+          className="p-6 rounded-xl text-center mb-8" style={{ backgroundColor: 'rgba(22,163,74,0.1)', border: '2px solid #16A34A' }}>
+            <CheckCircle2 className="w-12 h-12 mx-auto mb-4" style={{ color: '#16A34A' }} />
+            <div className="font-bold text-lg mb-2">Supplier Selected</div>
+            <div className="text-2xl font-bold mb-4">{selectedSupplier}</div>
+          </motion.div>
       )}
 
       <div className="flex justify-center">
@@ -440,10 +464,6 @@ function NexhaPhase({ onNext }: { onNext: () => void }) {
     </motion.div>
   );
 }
-
-// ============================================================================
-// PHASE 7: NEGOTIATION
-// ============================================================================
 
 function NegotiationPhase({ onNext }: { onNext: () => void }) {
   const [stage, setStage] = useState(0);
@@ -462,18 +482,15 @@ function NegotiationPhase({ onNext }: { onNext: () => void }) {
     let i = 0;
     const interval = setInterval(() => {
       i++;
-      if (i >= stages.length) {
-        clearInterval(interval);
-      } else {
-        setStage(i);
-      }
+      setStage(i);
+      if (i >= stages.length - 1) clearInterval(interval);
     }, 1500);
   };
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#A6824A15' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(166,130,74,0.1)' }}>
           <DollarSign className="w-5 h-5" style={{ color: '#A6824A' }} />
           <span style={{ color: '#A6824A' }}>Negotiation Agent</span>
         </div>
@@ -495,27 +512,20 @@ function NegotiationPhase({ onNext }: { onNext: () => void }) {
           {stages.slice(0, stage + 1).map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
               className="p-6 rounded-xl flex items-center justify-between"
-              style={{ backgroundColor: i === stages.length - 1 ? '#16A34A15' : '#111', border: i === stages.length - 1 ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="font-bold" style={{ color: s.color }}>{s.label}</div>
-              <div className="text-3xl font-bold" style={{ color: s.color }}>{s.value}</div>
-            </motion.div>
-          ))}
-          {stage < stages.length - 1 && (
-            <div className="flex justify-center">
-              <motion.div animate={{ opacity: [0.5, 1] }} transition={{ duration: 0.5, repeat: Infinity }}>
-                <span className="text-sm" style={{ color: '#888' }}>Negotiating...</span>
+              style={{ backgroundColor: i === stages.length - 1 ? 'rgba(22,163,74,0.1)' : 'rgba(255,255,255,0.05)', border: i === stages.length - 1 ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
+                <div className="font-bold" style={{ color: s.color }}>{s.label}</div>
+                <div className="text-3xl font-bold" style={{ color: s.color }}>{s.value}</div>
               </motion.div>
-            </div>
-          )}
+          ))}
         </div>
       )}
 
       {stage >= stages.length - 1 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center p-6 rounded-xl mb-8"
-          style={{ backgroundColor: '#16A34A15', border: '2px solid #16A34A' }}>
-          <div className="font-bold text-lg mb-2" style={{ color: '#16A34A' }}>Savings: $25,000</div>
-          <div className="text-sm" style={{ color: '#888' }}>vs market rate</div>
-        </motion.div>
+          style={{ backgroundColor: 'rgba(22,163,74,0.1)', border: '2px solid #16A34A' }}>
+            <div className="font-bold text-lg mb-2" style={{ color: '#16A34A' }}>Savings: $25,000</div>
+            <div className="text-sm" style={{ color: '#888' }}>vs market rate</div>
+          </motion.div>
       )}
 
       <div className="flex justify-center">
@@ -528,10 +538,6 @@ function NegotiationPhase({ onNext }: { onNext: () => void }) {
   );
 }
 
-// ============================================================================
-// PHASE 8: COMMUNICATIONS
-// ============================================================================
-
 function CommsPhase({ onNext }: { onNext: () => void }) {
   const [showWhatsApp, setShowWhatsApp] = useState(false);
   const [showCall, setShowCall] = useState(false);
@@ -539,7 +545,7 @@ function CommsPhase({ onNext }: { onNext: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#25D36615' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(37,211,102,0.1)' }}>
           <MessageCircle className="w-5 h-5" style={{ color: '#25D366' }} />
           <span style={{ color: '#25D366' }}>Communication Assistant</span>
         </div>
@@ -548,8 +554,7 @@ function CommsPhase({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        {/* WhatsApp Demo */}
-        <div className="p-6 rounded-xl" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#25D366' }}>
               <MessageCircle className="w-5 h-5" style={{ color: 'white' }} />
@@ -563,19 +568,16 @@ function CommsPhase({ onNext }: { onNext: () => void }) {
             </motion.button>
           ) : (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl" style={{ backgroundColor: '#DCF8C6', color: '#000' }}>
-                Can we deliver in 25 days?
-              </div>
+              <div className="p-3 rounded-xl" style={{ backgroundColor: '#DCF8C6', color: '#000' }}>Can we deliver in 25 days?</div>
               <div className="p-3 rounded-xl ml-auto" style={{ backgroundColor: '#25D366', color: 'white', maxWidth: '80%' }}>
                 Based on your preferences, 25 days is acceptable. Please proceed.
               </div>
-              <div className="text-xs" style={{ color: '#888' }}>SUTAR responded automatically using MemoryOS preferences</div>
+              <div className="text-xs" style={{ color: '#888' }}>SUTAR responded automatically</div>
             </div>
           )}
         </div>
 
-        {/* Call Demo */}
-        <div className="p-6 rounded-xl" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#16A34A' }}>
               <Phone className="w-5 h-5" style={{ color: 'white' }} />
@@ -589,11 +591,12 @@ function CommsPhase({ onNext }: { onNext: () => void }) {
             </motion.button>
           ) : (
             <div className="text-center">
-              <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1, repeat: Infinity }} className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#16A34A' }}>
-                <PhoneCall className="w-10 h-10" style={{ color: 'white' }} />
+              <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1, repeat: Infinity }}
+                className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#16A34A' }}>
+                <Phone className="w-10 h-10" style={{ color: 'white' }} />
               </motion.div>
               <div className="font-bold mb-2">Voice Agent Answered</div>
-              <div className="p-3 rounded-xl text-left text-sm" style={{ backgroundColor: '#0A0A0A' }}>
+              <div className="p-3 rounded-xl text-sm" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
                 "Hello, this is ABC Fashion's AI Assistant. How may I help you?"
               </div>
               <div className="text-xs mt-2" style={{ color: '#888' }}>Call summary saved to MemoryOS</div>
@@ -612,10 +615,6 @@ function CommsPhase({ onNext }: { onNext: () => void }) {
   );
 }
 
-// ============================================================================
-// PHASE 9: DOCUMENTS
-// ============================================================================
-
 function DocumentsPhase({ onNext }: { onNext: () => void }) {
   const [generatedDocs, setGeneratedDocs] = useState<string[]>([]);
 
@@ -629,7 +628,7 @@ function DocumentsPhase({ onNext }: { onNext: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: '#6366F115' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: 'rgba(99,102,241,0.1)' }}>
           <FileText className="w-5 h-5" style={{ color: '#6366F1' }} />
           <span style={{ color: '#6366F1' }}>Documentation Agent</span>
         </div>
@@ -650,8 +649,12 @@ function DocumentsPhase({ onNext }: { onNext: () => void }) {
         {['Commercial Invoice', 'Packing List', 'Bill of Lading', 'Certificate of Origin'].map((doc) => (
           <motion.div key={doc} animate={generatedDocs.includes(doc) ? { scale: [0.9, 1.05, 1] } : {}}
             className="p-6 rounded-xl flex items-center gap-4"
-            style={{ backgroundColor: generatedDocs.includes(doc) ? '#16A34A15' : '#111', border: generatedDocs.includes(doc) ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)' }}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: generatedDocs.includes(doc) ? '#16A34A' : '#333' }}>
+            style={{
+              backgroundColor: generatedDocs.includes(doc) ? 'rgba(22,163,74,0.1)' : 'rgba(255,255,255,0.05)',
+              border: generatedDocs.includes(doc) ? '2px solid #16A34A' : '1px solid rgba(255,255,255,0.1)',
+            }}>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: generatedDocs.includes(doc) ? '#16A34A' : '#333' }}>
               {generatedDocs.includes(doc) ? <Check className="w-6 h-6" style={{ color: 'white' }} /> : <FileText className="w-6 h-6" style={{ color: '#666' }} />}
             </div>
             <div>
@@ -674,10 +677,6 @@ function DocumentsPhase({ onNext }: { onNext: () => void }) {
   );
 }
 
-// ============================================================================
-// PHASE 10: COMPLETE
-// ============================================================================
-
 function CompletePhase({ onReset }: { onReset: () => void }) {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="text-center">
@@ -689,7 +688,7 @@ function CompletePhase({ onReset }: { onReset: () => void }) {
       <h2 className="text-3xl font-bold mb-2">Autonomous Import Complete</h2>
       <p className="mb-8" style={{ color: '#888' }}>AI handled everything. Just review and approve.</p>
 
-      <div className="text-left p-6 rounded-2xl mb-8" style={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="text-left p-6 rounded-2xl mb-8" style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className="grid md:grid-cols-2 gap-4">
           {[
             { label: 'Supplier', value: 'Vietnam Textiles Ltd' },
@@ -711,7 +710,7 @@ function CompletePhase({ onReset }: { onReset: () => void }) {
 
       <div className="flex justify-center gap-4 mb-8">
         {['Invoice', 'Packing List', 'BL', 'COO'].map(doc => (
-          <span key={doc} className="px-4 py-2 rounded-lg text-sm" style={{ backgroundColor: '#16A34A15', color: '#16A34A' }}>
+          <span key={doc} className="px-4 py-2 rounded-lg text-sm" style={{ backgroundColor: 'rgba(22,163,74,0.1)', color: '#16A34A' }}>
             <Check className="w-4 h-4 inline mr-1" /> {doc}
           </span>
         ))}
@@ -719,8 +718,7 @@ function CompletePhase({ onReset }: { onReset: () => void }) {
 
       <motion.button onClick={onReset} whileHover={{ scale: 1.02 }}
         className="px-8 py-4 rounded-xl font-bold text-lg" style={{ backgroundColor: '#16A34A', color: 'white' }}>
-        <CheckCircle2 className="w-5 h-5 inline mr-2" />
-        Approve & Execute
+        <CheckCircle2 className="w-5 h-5 inline mr-2" /> Approve & Execute
       </motion.button>
     </motion.div>
   );
