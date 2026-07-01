@@ -370,9 +370,10 @@ function ProductCard({ product }: { product: typeof products[0] }) {
     <div className="bg-white border border-gray-200 overflow-hidden">
       {/* Mobile Layout - IndiaMART Style */}
       <div className="md:hidden">
+        {/* Image + Content Row */}
         <div className="flex">
-          {/* Image - square */}
-          <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
+          {/* Image - clickable */}
+          <Link href={`/products/${product.id}`} className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
@@ -380,15 +381,15 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               className="object-cover"
               unoptimized
             />
-          </div>
+          </Link>
 
           {/* Content */}
           <div className="flex-1 p-2 pr-3 min-w-0">
-            {/* Title + TrustSEAL badge */}
+            {/* Title + TrustSEAL badge - clickable */}
             <div className="flex items-start justify-between gap-1 mb-1">
-              <h3 className="text-blue-700 font-bold text-sm leading-tight flex-1">
+              <Link href={`/products/${product.id}`} className="text-blue-700 font-bold text-sm leading-tight flex-1 hover:text-blue-800">
                 {product.name}
-              </h3>
+              </Link>
               {product.trustseal && (
                 <span className="flex-shrink-0 px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[8px] font-bold rounded-full flex items-center gap-0.5">
                   <CheckCircle className="w-2 h-2" /> TrustSEAL
@@ -397,10 +398,10 @@ function ProductCard({ product }: { product: typeof products[0] }) {
             </div>
 
             {/* Price - Bold */}
-            <div className="mb-2">
+            <Link href={`/products/${product.id}`} className="block mb-2">
               <span className="text-base font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
               <span className="text-xs text-gray-500">/{product.currency}</span>
-            </div>
+            </Link>
 
             {/* Specs - key: bold value format */}
             <div className="space-y-0.5 mb-2 text-[11px]">
@@ -433,14 +434,14 @@ function ProductCard({ product }: { product: typeof products[0] }) {
         {/* CTAs - WhatsApp + Call Now */}
         <div className="grid grid-cols-2 gap-0 border-t border-gray-100">
           <button
-            onClick={() => toast.success('Opening WhatsApp...')}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.success('Opening WhatsApp...'); }}
             className="flex items-center justify-center gap-2 py-3 border-r border-gray-100 bg-white text-green-700 font-semibold text-sm"
           >
             <WhatsAppIcon className="w-4 h-4" />
             WhatsApp
           </button>
           <button
-            onClick={() => toast('Calling supplier...')}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast('Calling supplier...'); }}
             className="flex items-center justify-center gap-2 py-3 bg-green-600 text-white font-semibold text-sm"
           >
             <Phone className="w-4 h-4" />
@@ -452,8 +453,8 @@ function ProductCard({ product }: { product: typeof products[0] }) {
       {/* Desktop Layout - IndiaMART Style */}
       <div className="hidden md:block p-4">
         <div className="flex gap-4">
-          {/* Image */}
-          <div className="relative w-36 h-36 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+          {/* Image - clickable */}
+          <Link href={`/products/${product.id}`} className="relative w-36 h-36 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
@@ -468,13 +469,13 @@ function ProductCard({ product }: { product: typeof products[0] }) {
                 ))}
               </div>
             )}
-          </div>
+          </Link>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-blue-600 hover:text-blue-700 font-medium text-lg leading-tight cursor-pointer mb-1">
+            <Link href={`/products/${product.id}`} className="text-blue-600 hover:text-blue-700 font-medium text-lg leading-tight mb-1 block">
               {product.name}
-            </h3>
+            </Link>
 
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
               <MapPin className="w-3 h-3" />
@@ -511,13 +512,13 @@ function ProductCard({ product }: { product: typeof products[0] }) {
 
           {/* Price & CTA */}
           <div className="flex flex-col items-end justify-between w-36">
-            <div className="text-right">
+            <Link href={`/products/${product.id}`} className="text-right block">
               <div className="text-xl font-bold text-gray-900">₹{product.price.toLocaleString()}</div>
               <div className="text-xs text-gray-500">/{product.currency}</div>
               <div className="text-xs text-gray-400 mt-1">MOQ: {product.moq}</div>
-            </div>
+            </Link>
             <button
-              onClick={() => toast.success('Enquiry sent!')}
+              onClick={(e) => { e.preventDefault(); toast.success('Enquiry sent!'); }}
               className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors"
             >
               Contact Supplier
