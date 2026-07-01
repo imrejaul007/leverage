@@ -90,6 +90,9 @@ export default function HomePage() {
             </nav>
 
             <div className="flex items-center gap-4">
+              <Link href="/demo" className="px-5 py-2.5 bg-[#A6824A] hover:bg-[#b8925a] text-white font-semibold rounded-lg transition-all text-sm">
+                Try Demo
+              </Link>
               <Link href="/login" className="px-5 py-2.5 bg-[#154230] hover:bg-[#1d5240] text-white font-semibold rounded-lg transition-all text-sm">
                 Sign In
               </Link>
@@ -111,6 +114,7 @@ export default function HomePage() {
           transition={{ duration: 0.3 }}
         >
           <div className="p-4 flex flex-col gap-2">
+            <Link href="/demo" className="p-3 hover:bg-black/5 rounded-lg font-medium text-[#A6824A]">Try Demo</Link>
             <Link href="/marketplace" className="p-3 hover:bg-black/5 rounded-lg">Marketplace</Link>
             <Link href="/documents" className="p-3 hover:bg-black/5 rounded-lg">Documents</Link>
             <Link href="/freight" className="p-3 hover:bg-black/5 rounded-lg">Freight</Link>

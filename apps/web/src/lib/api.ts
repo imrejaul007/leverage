@@ -110,6 +110,9 @@ export interface FreightQuote {
   carrierId: string;
   carrierCode: string;
   carrierName: string;
+  carrierLogo?: string;
+  originPort: string;
+  destinationPort: string;
   serviceType: string;
   baseRate: number;
   fuelSurcharge: number;
@@ -121,7 +124,8 @@ export interface FreightQuote {
   estimatedDeparture: string;
   estimatedArrival: string;
   validUntil: string;
-  surcharges: { name: string; amount: number }[];
+  surcharges?: { name: string; amount: number }[];
+  inclusions?: string[];
 }
 
 export interface FreightQuoteRequest {
@@ -155,6 +159,11 @@ export interface Carrier {
   types: string[];
   rating: number;
   isActive: boolean;
+  headquarters?: string;
+  established?: number;
+  description?: string;
+  services?: string[];
+  certifications?: string[];
 }
 
 export interface FreightBooking {
