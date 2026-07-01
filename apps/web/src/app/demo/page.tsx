@@ -53,6 +53,10 @@ import {
   Bell,
   Workflow,
   TrendingUp as TrendingUpIcon,
+  Brain,
+  Orbit,
+  Target,
+  Crosshair,
 } from 'lucide-react';
 
 // ============================================================================
@@ -488,6 +492,26 @@ function HeroSection() {
           >
             One platform. Every trade function.
           </motion.p>
+
+          {/* Autonomous AI Agent Badge */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: buildingComplete ? 1 : 0 }}
+            transition={{ delay: 1.7 }}
+            className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-full"
+            style={{ backgroundColor: '#0891B215', border: '2px solid #0891B2' }}
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+            >
+              <Brain className="w-6 h-6" style={{ color: '#0891B2' }} />
+            </motion.div>
+            <div className="text-left">
+              <div className="font-bold" style={{ color: '#0891B2' }}>AI Agent Works Autonomously</div>
+              <div className="text-sm" style={{ color: '#4A4A4A' }}>Set it once, it does everything for you</div>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Stats */}
@@ -1403,50 +1427,104 @@ function PaymentsSection() {
 }
 
 function AISection() {
-  const [messages, setMessages] = useState([{ role: 'assistant', content: "👋 Hi! I'm your AI trade assistant powered by HOJAI. How can I help you today?" }]);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: "👋 Hi! I'm your AI Agent. I work autonomously for you - just tell me what you need and I'll handle everything." }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [showTaskComplete, setShowTaskComplete] = useState(false);
   const [taskCompleteText, setTaskCompleteText] = useState('');
+  const [agentThinking, setAgentThinking] = useState(false);
+  const [agentActions, setAgentActions] = useState<Array<{ icon: string; text: string; done: boolean }>>([]);
 
-  const quickActions = [
-    { text: 'Create export invoice', icon: FileText },
-    { text: 'Calculate import duty', icon: Calculator },
-    { text: 'Find cotton suppliers', icon: Users },
-    { text: 'Track my shipment', icon: Truck },
+  // Autonomous agent capabilities
+  const agentCapabilities = [
+    { icon: FileText, text: 'Generate Documents', subtext: 'Invoice, BL, COO, LC' },
+    { icon: Calculator, text: 'Calculate Duties', subtext: 'HS codes & taxes' },
+    { icon: Search, text: 'Find Suppliers', subtext: 'AI matching' },
+    { icon: Truck, text: 'Book Shipments', subtext: 'Auto booking' },
+    { icon: CreditCard, text: 'Process Payments', subtext: 'Escrow secured' },
+    { icon: Shield, text: 'Check Compliance', subtext: 'Risk analysis' },
   ];
 
-  const responses: Record<string, string> = {
-    'Create export invoice': "📄 I'll help you create an export invoice. Based on your orders, I can pre-fill: Seller: Global Trade Exports Pvt Ltd, Product: Premium Basmati Rice 1121, Quantity: 50 MT, Value: $42,500.",
-    'Calculate import duty': "🧮 Import duty to UAE:\n• Product: Basmati Rice (HS: 1006.30)\n• Value: $10,000\n• Import Duty: 5%\n• Total: $11,000",
-    'Find cotton suppliers': "🔍 Found 47 verified cotton suppliers:\n• India: 23 suppliers ⭐\n• Pakistan: 15 suppliers\n• USA: 9 suppliers",
-    'Track my shipment': "🚢 Found your shipment!\n• Status: In Transit to Dubai\n• ETA: July 4, 2026",
-    'default': "I'm here to help! Try asking about documents, duties, suppliers, or tracking.",
-  };
+  // Autonomous agent task log
+  const agentLog = [
+    { step: 1, icon: '📋', text: 'Analyzing your request...', status: 'done' },
+    { step: 2, icon: '🔍', text: 'Finding best suppliers...', status: 'done' },
+    { step: 3, icon: '📄', text: 'Generating invoice...', status: 'running' },
+    { step: 4, icon: '📦', text: 'Booking shipment...', status: 'pending' },
+    { step: 5, icon: '💰', text: 'Processing payment...', status: 'pending' },
+  ];
 
-  const taskTexts: Record<string, string> = {
-    'Create export invoice': 'Commercial Invoice Generated',
-    'Calculate import duty': 'Duty Calculated',
-    'Find cotton suppliers': '47 Suppliers Found',
-    'Track my shipment': 'Shipment Tracked',
+  const quickActions = [
+    { text: 'Find suppliers for cotton', icon: Users },
+    { text: 'Generate export invoice', icon: FileText },
+    { text: 'Calculate duties for UAE', icon: Calculator },
+    { text: 'Book shipment to Dubai', icon: Truck },
+  ];
+
+  const responses: Record<string, { response: string; actions: string[] }> = {
+    'Find suppliers for cotton': {
+      response: "🤖 Agent searching 500+ suppliers autonomously...\n\n✅ Found 47 verified cotton suppliers:\n• India: 23 suppliers ⭐\n• Pakistan: 15 suppliers\n• USA: 9 suppliers\n\n💾 Auto-saving to your dashboard...",
+      actions: ['Searching database', 'Verifying suppliers', 'Ranking by rating', 'Saving results']
+    },
+    'Generate export invoice': {
+      response: "📄 Agent generating invoice autonomously...\n\n✅ Invoice INV-2026-001 Created\n• Seller: Global Trade Exports\n• Product: 50 MT Basmati Rice\n• Value: $42,500\n\n📧 Auto-sending to buyer...",
+      actions: ['Filling template', 'Adding HS codes', 'Calculating totals', 'Exporting PDF', 'Emailing buyer']
+    },
+    'Calculate duties for UAE': {
+      response: "🧮 Agent calculating import duties...\n\n✅ Duties calculated:\n• HS Code: 1006.30\n• Import Duty: 5%\n• VAT: 5%\n• Total: $11,000\n\n💾 Saving to compliance records...",
+      actions: ['Fetching HS database', 'Applying rates', 'Generating report']
+    },
+    'Book shipment to Dubai': {
+      response: "🚢 Agent comparing 12 carriers...\n\n✅ Best rate found:\n• Maersk: $2,850\n• Transit: 18 days\n\n📦 Booking container...",
+      actions: ['Comparing carriers', 'Checking schedules', 'Booking container', 'Confirming booking']
+    },
+    'default': {
+      response: "🤖 Agent ready. I'll handle it autonomously - just tell me what you need.",
+      actions: []
+    },
   };
 
   const sendMessage = (text?: string) => {
     const messageText = text || input;
     if (!messageText.trim()) return;
-    setMessages(prev => [...prev, { role: 'user', content: messageText }]);
+
+    // User message
+    setMessages(prev => [...prev, { role: 'user', content: "You: " + messageText }]);
     setInput('');
     setTyping(true);
+    setAgentThinking(true);
+
+    // Show agent thinking
     setTimeout(() => {
       setTyping(false);
-      const response = responses[messageText] || responses['default'];
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-      // Show task completion animation
-      const taskText = taskTexts[messageText] || 'Task Completed';
-      setTaskCompleteText(taskText);
-      setShowTaskComplete(true);
-      setTimeout(() => setShowTaskComplete(false), 2500);
-    }, 1500);
+      const { response, actions } = responses[messageText] || responses['default'];
+
+      // Show agent actions
+      if (actions.length > 0) {
+        setAgentActions(actions.map((a, i) => ({ icon: '⚙️', text: a, done: false })));
+
+        // Animate each action completing
+        actions.forEach((action, i) => {
+          setTimeout(() => {
+            setAgentActions(prev => prev.map((a, idx) =>
+              idx === i ? { ...a, done: true } : a
+            ));
+          }, i * 600);
+        });
+      }
+
+      // Show response
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+        setAgentThinking(false);
+        setAgentActions([]);
+
+        // Show task complete
+        setTaskCompleteText('Agent Completed Task!');
+        setShowTaskComplete(true);
+        setTimeout(() => setShowTaskComplete(false), 2500);
+      }, actions.length * 600 + 500);
+    }, 2000);
   };
 
   return (
