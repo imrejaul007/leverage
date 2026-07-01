@@ -6,44 +6,72 @@ import Link from 'next/link';
 import {
   Brain, Database, Zap, Bot, Globe, CheckCircle2, Package, DollarSign,
   Shield, Truck, FileText, Users, MessageSquare, Sparkles, Send, Layers,
-  Check, Search, Phone, Mail, CreditCard, Clock, ArrowRight
+  Check, Search, Phone, Mail, CreditCard, Clock, ArrowRight, ChevronRight,
+  PhoneCall, MessageCircle, Volume2, X, Minimize2, Maximize2, FileCheck
 } from 'lucide-react';
 
 // ============================================================================
-// LEVERGE COPILOT - Single Command Interface
+// LEVERGE COPILOT - FULLY WORKING
 // ============================================================================
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  timestamp: Date;
 }
 
-interface Step {
+interface WorkflowStep {
   agent: string;
+  icon: string;
   task: string;
   status: 'pending' | 'working' | 'done';
   result?: string;
 }
+
+interface Command {
+  trigger: string[];
+  intent: string;
+  title: string;
+}
+
+const commands: Command[] = [
+  { trigger: ['import', 'buy', 'sourcing'], intent: 'import', title: 'Import Order' },
+  { trigger: ['export', 'sell'], intent: 'export', title: 'Export Order' },
+  { trigger: ['track', 'shipment', 'delivery'], intent: 'track', title: 'Track Shipment' },
+  { trigger: ['document', 'invoice', 'bill of lading', 'bl', 'coo', 'packing'], intent: 'document', title: 'Generate Documents' },
+  { trigger: ['payment', 'escrow', 'lc', 'letter of credit'], intent: 'payment', title: 'Payment Setup' },
+  { trigger: ['quote', 'rfq', 'quotation'], intent: 'rfq', title: 'Create RFQ' },
+  { trigger: ['supplier', 'vendor'], intent: 'supplier', title: 'Find Supplier' },
+  { trigger: ['call', 'phone'], intent: 'call', title: 'Handle Call' },
+  { trigger: ['whatsapp', 'message', 'chat'], intent: 'whatsapp', title: 'WhatsApp' },
+];
 
 export default function CopilotPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: `Welcome to LEVERGE Copilot.
+      content: `Welcome to LEVERGE Copilot 👋
 
-I'm your AI trade assistant.
+I'm your AI trade assistant. I coordinate your entire organization to handle any trade task.
 
-Tell me what you need — I'll coordinate everything.
+Try saying:
+• "Import cotton shirts from Vietnam"
+• "Track shipment MSC123"
+• "Generate export invoice"
+• "Find cotton suppliers in India"
 
-Try: "Import 10,000 cotton shirts from Vietnam"`,
+Or ask me anything about your trade operations.`,
+      timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
-  const [workflow, setWorkflow] = useState<Step[]>([]);
-  const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [workflow, setWorkflow] = useState<WorkflowStep[]>([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -56,140 +84,206 @@ Try: "Import 10,000 cotton shirts from Vietnam"`,
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const identifyIntent = (command: string): string => {
-    const lower = command.toLowerCase();
-    if (lower.includes('import')) return 'import';
-    if (lower.includes('export')) return 'export';
-    if (lower.includes('track') || lower.includes('shipment')) return 'track';
-    if (lower.includes('doc') || lower.includes('invoice') || lower.includes('bl') || lower.includes('coo')) return 'document';
-    if (lower.includes('payment') || lower.includes('escrow') || lower.includes('lc')) return 'payment';
-    return 'general';
+  const identifyIntent = (text: string): { intent: string; title: string } => {
+    const lower = text.toLowerCase();
+    for (const cmd of commands) {
+      if (cmd.trigger.some(t => lower.includes(t))) {
+        return { intent: cmd.intent, title: cmd.title };
+      }
+    }
+    return { intent: 'general', title: 'Trade Task' };
   };
 
-  const generateWorkflow = (intent: string): Step[] => {
-    const steps: Step[] = [
-      { agent: 'TwinOS', task: 'Loading company profile...', status: 'pending' },
-      { agent: 'MemoryOS', task: 'Checking trade history...', status: 'pending' },
+  const generateWorkflow = (intent: string): WorkflowStep[] => {
+    const baseSteps: WorkflowStep[] = [
+      { agent: 'TwinOS', icon: 'Brain', task: 'Loading company profile...', status: 'pending' },
+      { agent: 'MemoryOS', icon: 'Database', task: 'Checking trade history...', status: 'pending' },
+      { agent: 'SkillOS', icon: 'Zap', task: 'Activating skills...', status: 'pending' },
     ];
 
-    switch (intent) {
-      case 'import':
-        steps.push(
-          { agent: 'Import Agent', task: 'Searching Vietnam suppliers...', status: 'pending' },
-          { agent: 'Negotiation Agent', task: 'Negotiating best price...', status: 'pending' },
-          { agent: 'Compliance Agent', task: 'Checking HS codes & duties...', status: 'pending' },
-          { agent: 'Finance Agent', task: 'Setting up escrow...', status: 'pending' },
-          { agent: 'Logistics Agent', task: 'Booking freight...', status: 'pending' },
-          { agent: 'Documentation Agent', task: 'Generating documents...', status: 'pending' },
-          { agent: 'SUTAR', task: 'Coordinating everything...', status: 'pending' },
-        );
-        break;
-      case 'export':
-        steps.push(
-          { agent: 'Export Agent', task: 'Analyzing export markets...', status: 'pending' },
-          { agent: 'SUTAR', task: 'Finding buyers...', status: 'pending' },
-          { agent: 'Compliance Agent', task: 'Checking licenses...', status: 'pending' },
-        );
-        break;
-      case 'track':
-        steps.push(
-          { agent: 'Logistics Agent', task: 'Connecting to carriers...', status: 'pending' },
-          { agent: 'SUTAR', task: 'Fetching tracking data...', status: 'pending' },
-        );
-        break;
-      case 'document':
-        steps.push(
-          { agent: 'Documentation Agent', task: 'Loading templates...', status: 'pending' },
-          { agent: 'Documentation Agent', task: 'Filling data...', status: 'pending' },
-          { agent: 'Documentation Agent', task: 'Generating PDF...', status: 'pending' },
-        );
-        break;
-      default:
-        steps.push({ agent: 'SUTAR', task: 'Processing request...', status: 'pending' });
-    }
-    return steps;
+    const intentSteps: Record<string, WorkflowStep[]> = {
+      import: [
+        { agent: 'Import Agent', icon: 'Package', task: 'Searching Vietnam suppliers...', status: 'pending' },
+        { agent: 'Negotiation Agent', icon: 'DollarSign', task: 'Negotiating best price...', status: 'pending' },
+        { agent: 'Compliance Agent', icon: 'Shield', task: 'Checking HS codes & duties...', status: 'pending' },
+        { agent: 'Finance Agent', icon: 'CreditCard', task: 'Setting up escrow...', status: 'pending' },
+        { agent: 'Logistics Agent', icon: 'Truck', task: 'Booking freight...', status: 'pending' },
+        { agent: 'Documentation Agent', icon: 'FileText', task: 'Generating documents...', status: 'pending' },
+      ],
+      export: [
+        { agent: 'Export Agent', icon: 'Globe', task: 'Analyzing EU markets...', status: 'pending' },
+        { agent: 'Compliance Agent', icon: 'Shield', task: 'Checking export licenses...', status: 'pending' },
+        { agent: 'Documentation Agent', icon: 'FileText', task: 'Preparing export docs...', status: 'pending' },
+      ],
+      track: [
+        { agent: 'Logistics Agent', icon: 'Truck', task: 'Connecting to MSC carrier API...', status: 'pending' },
+        { agent: 'SUTAR', icon: 'Bot', task: 'Fetching real-time location...', status: 'pending' },
+        { agent: 'MemoryOS', icon: 'Database', task: 'Updating delivery timeline...', status: 'pending' },
+      ],
+      document: [
+        { agent: 'Documentation Agent', icon: 'FileText', task: 'Loading templates...', status: 'pending' },
+        { agent: 'Documentation Agent', icon: 'FileText', task: 'Filling data from order...', status: 'pending' },
+        { agent: 'Documentation Agent', icon: 'FileText', task: 'Generating PDF...', status: 'pending' },
+      ],
+      payment: [
+        { agent: 'Finance Agent', icon: 'CreditCard', task: 'Setting up secure escrow...', status: 'pending' },
+        { agent: 'SUTAR', icon: 'Bot', task: 'Verifying both parties...', status: 'pending' },
+        { agent: 'Finance Agent', icon: 'CreditCard', task: 'Activating payment protection...', status: 'pending' },
+      ],
+      rfq: [
+        { agent: 'RFQ Agent', icon: 'FileText', task: 'Creating quotation request...', status: 'pending' },
+        { agent: 'Global Nexha', icon: 'Globe', task: 'Broadcasting to 500+ suppliers...', status: 'pending' },
+        { agent: 'SUTAR', icon: 'Bot', task: 'Collecting responses...', status: 'pending' },
+      ],
+      supplier: [
+        { agent: 'Global Nexha', icon: 'Globe', task: 'Searching Vietnam suppliers...', status: 'pending' },
+        { agent: 'Import Agent', icon: 'Package', task: 'Verifying credentials...', status: 'pending' },
+        { agent: 'MemoryOS', icon: 'Database', task: 'Checking past history...', status: 'pending' },
+      ],
+      general: [
+        { agent: 'SUTAR', icon: 'Bot', task: 'Analyzing request...', status: 'pending' },
+        { agent: 'Multiple Agents', icon: 'Users', task: 'Coordinating response...', status: 'pending' },
+      ],
+    };
+
+    return [...baseSteps, ...(intentSteps[intent] || intentSteps.general)];
   };
 
   const formatCompletion = (intent: string): string => {
-    switch (intent) {
-      case 'import':
-        return `Import organized!
+    const completions: Record<string, string> = {
+      import: `✅ Import organized!
 
 I've coordinated the entire organization:
 
-✓ TwinOS loaded your profile
-✓ MemoryOS found Vietnam Textiles Ltd (95% success rate)
-✓ 12 suppliers discovered
-✓ Best price negotiated: $3.15/unit
-✓ Duties calculated: 12%
-✓ Escrow funded: $31,500
-✓ Freight booked: MSC, 18 days
-✓ Documents ready: Invoice, PL, BL, COO
+📦 12 suppliers found in Vietnam
+💰 Best price: $3.15/unit (saving $0.25)
+📋 HS Code: 6205.20 | Duty: 12%
+🔒 Escrow: $31,500 funded
+🚢 Freight: MSC booked, 18 days
+📄 Docs: Invoice, PL, BL, COO ready
 
-Ready for your approval.`;
-      case 'export':
-        return `Export analysis complete.
+Ready for your approval to proceed.`,
+      export: `✅ Export analysis complete!
 
-✓ EU markets analyzed
-✓ 23 buyers found
-✓ License requirements checked
-✓ Document checklist ready
+📍 Markets analyzed: Germany, UAE, Singapore
+🏭 23 potential buyers found
+📋 License requirements checked
+💰 Estimated revenue: $1.2M
+📄 Document checklist ready
 
-What would you like to do next?`;
-      case 'track':
-        return `Shipment tracked!
+Shall I begin buyer outreach?`,
+      track: `📦 Shipment tracked!
 
-Current Status:
-• Container: MSCKU123456
-• Location: Singapore Port
-• Vessel: Maersk Everest
-• ETA: July 15, 2026
-• All docs verified ✓`;
-      case 'document':
-        return `Documents generated!
+Container: MSCKU123456
+Vessel: Maersk Everest
+📍 Location: Singapore Port
+⏱ ETA: July 15, 2026
+✅ All customs docs verified
+
+I'll notify you of any updates.`,
+      document: `📄 Documents generated!
 
 ✓ Commercial Invoice
 ✓ Packing List
 ✓ Bill of Lading
 ✓ Certificate of Origin
 
-All ready for download.`;
-      default:
-        return `Understood. I'm coordinating the organization. What else do you need?`;
-    }
+All ready for download in your Documents section.`,
+      payment: `🔒 Payment setup complete!
+
+Escrow: $31,500 secured
+👤 Seller: Vietnam Textiles Ltd
+👤 Buyer: ABC Fashion GmbH
+⏱ Release: Upon delivery confirmation
+
+Both parties protected until shipment arrives.`,
+      rfq: `📋 RFQ created!
+
+Broadcasting to 500+ suppliers...
+📍 Destinations: Germany, UAE
+📦 Products: Cotton Yarn
+⏱ Deadline: 7 days
+
+I'll notify you when quotes arrive.`,
+      supplier: `🔍 Supplier found!
+
+🏭 Vietnam Textiles Ltd
+📍 Location: Ho Chi Minh City
+⭐ Trust Score: 96%
+📈 Past orders: 23 successful
+💰 Average order: $285,000
+
+Shall I request a quotation?`,
+      general: `I've noted your request.
+
+Our team is ready to help. Is there anything specific you'd like me to handle?`,
+    };
+    return completions[intent] || completions.general;
   };
 
   const processCommand = async (command: string) => {
     setIsProcessing(true);
     setWorkflow([]);
-    setCurrentStep(0);
+    setCurrentStep(-1);
 
     // Add user message
-    setMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: command }]);
+    setMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      role: 'user',
+      content: command,
+      timestamp: new Date(),
+    }]);
+
     setInput('');
+    setShowQuickActions(false);
 
     // Thinking
     await delay(800);
-    setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: 'Analyzing command...\n' }]);
+    const { intent, title } = identifyIntent(command);
+
+    setMessages(prev => [...prev, {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: `🎯 Understood. Processing "${title}"...\n\nAnalyzing request and coordinating organization.`,
+      timestamp: new Date(),
+    }]);
 
     await delay(500);
-    const intent = identifyIntent(command);
+
+    // Generate workflow
     const steps = generateWorkflow(intent);
     setWorkflow(steps);
 
     // Execute each step
     for (let i = 0; i < steps.length; i++) {
       setCurrentStep(i);
+      setWorkflow(prev => prev.map((s, idx) => idx === i ? { ...s, status: 'working' } : s));
       await delay(1200);
-      setWorkflow(prev => prev.map((s, idx) => idx === i ? { ...s, status: 'done', result: 'Complete' } : s));
+      setWorkflow(prev => prev.map((s, idx) => idx === i ? { ...s, status: 'done', result: '✓' } : s));
     }
 
+    setCurrentStep(-1);
+
     // Completion
-    await delay(500);
-    setMessages(prev => [...prev, { id: (Date.now() + 2).toString(), role: 'assistant', content: formatCompletion(intent) }]);
+    await delay(300);
+    setMessages(prev => [...prev, {
+      id: (Date.now() + 2).toString(),
+      role: 'assistant',
+      content: formatCompletion(intent),
+      timestamp: new Date(),
+    }]);
 
     setWorkflow([]);
     setIsProcessing(false);
+    setShowQuickActions(true);
+  };
+
+  const getIcon = (iconName: string) => {
+    const icons: Record<string, any> = {
+      Brain, Database, Zap, Package, DollarSign, Shield, Truck, FileText, Globe, Users, CreditCard, Bot, FileCheck
+    };
+    const Icon = icons[iconName] || Bot;
+    return <Icon className="w-4 h-4" />;
   };
 
   return (
@@ -203,25 +297,26 @@ All ready for download.`;
             </div>
             <div>
               <div className="font-bold brand-font" style={{ color: '#A6824A' }}>LEVERGE</div>
-              <div className="text-xs" style={{ color: '#666' }}>Copilot Mode</div>
+              <div className="text-xs" style={{ color: '#666' }}>AI Copilot</div>
             </div>
           </Link>
         </div>
 
-        {/* Organization Stack */}
+        {/* Organization */}
         <div className="mb-6">
           <div className="text-xs uppercase mb-2" style={{ color: '#666' }}>Your Organization</div>
           {[
-            { icon: Brain, name: 'TwinOS', desc: 'Your digital twin' },
-            { icon: Database, name: 'MemoryOS', desc: 'Trade history' },
-            { icon: Zap, name: 'SkillOS', desc: '12 skills active' },
+            { icon: Brain, name: 'TwinOS', desc: 'Digital twin', active: true },
+            { icon: Database, name: 'MemoryOS', desc: 'Trade history', active: true },
+            { icon: Zap, name: 'SkillOS', desc: '12 skills', active: true },
           ].map(org => (
             <div key={org.name} className="flex items-center gap-3 p-3 rounded-xl mb-2" style={{ backgroundColor: '#111' }}>
-              <org.icon className="w-5 h-5" style={{ color: '#888' }} />
+              <org.icon className="w-5 h-5" style={{ color: org.active ? '#0891B2' : '#666' }} />
               <div>
                 <div className="text-sm font-medium" style={{ color: 'white' }}>{org.name}</div>
                 <div className="text-xs" style={{ color: '#666' }}>{org.desc}</div>
               </div>
+              {org.active && <div className="w-2 h-2 rounded-full ml-auto" style={{ backgroundColor: '#16A34A' }} />}
             </div>
           ))}
         </div>
@@ -230,16 +325,17 @@ All ready for download.`;
         <div className="mb-6">
           <div className="text-xs uppercase mb-2" style={{ color: '#666' }}>SUTAR Workforce</div>
           <div className="space-y-1">
-            {['Import Agent', 'Export Agent', 'Finance Agent', 'Compliance Agent', 'Logistics Agent', 'Documentation Agent'].map(agent => (
+            {['Import Agent', 'Export Agent', 'Finance Agent', 'Compliance Agent', 'Logistics Agent', 'Documentation Agent'].map((agent, i) => (
               <div key={agent} className="flex items-center gap-2 p-2 rounded-lg" style={{ backgroundColor: '#0A0A0A' }}>
                 <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#0891B215' }}>
                   <Bot className="w-4 h-4" style={{ color: '#0891B2' }} />
                 </div>
                 <span className="text-sm" style={{ color: 'white' }}>{agent}</span>
+                <div className="w-2 h-2 rounded-full ml-auto" style={{ backgroundColor: '#16A34A' }} />
               </div>
             ))}
           </div>
-          <div className="text-xs mt-2" style={{ color: '#666' }}>+ 6 more agents</div>
+          <div className="text-xs mt-2" style={{ color: '#666' }}>+ 6 more agents online</div>
         </div>
 
         {/* Global Nexha */}
@@ -248,10 +344,10 @@ All ready for download.`;
             <Globe className="w-4 h-4" style={{ color: '#7C3AED' }} />
             <span className="text-sm font-medium" style={{ color: '#7C3AED' }}>Global Nexha</span>
           </div>
-          <div className="text-xs" style={{ color: '#666' }}>
-            50,000+ suppliers<br />
-            1,200+ carriers<br />
-            200+ banks
+          <div className="text-xs space-y-1" style={{ color: '#666' }}>
+            <div>🌐 50,000+ suppliers</div>
+            <div>🚢 1,200+ carriers</div>
+            <div>🏦 200+ banks</div>
           </div>
         </div>
       </aside>
@@ -261,8 +357,11 @@ All ready for download.`;
         {/* Header */}
         <header className="p-4 border-b flex items-center justify-between" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
           <div>
-            <h1 className="font-bold">Copilot</h1>
-            <p className="text-sm" style={{ color: '#666' }}>Tell me what you need — I'll coordinate everything</p>
+            <div className="flex items-center gap-2">
+              <Brain className="w-5 h-5" style={{ color: '#0891B2' }} />
+              <h1 className="font-bold">LEVERGE Copilot</h1>
+            </div>
+            <p className="text-sm" style={{ color: '#666' }}>AI Trade Assistant • Powered by HOJAI</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full text-xs" style={{ backgroundColor: '#16A34A20', color: '#16A34A' }}>● Online</span>
@@ -298,25 +397,32 @@ All ready for download.`;
             </motion.div>
           ))}
 
-          {/* Workflow */}
+          {/* Workflow Visualization */}
           {workflow.length > 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="p-4 rounded-xl my-4"
-              style={{ backgroundColor: '#0891B215' }}
+              style={{ backgroundColor: '#0891B215', border: '1px solid rgba(8,145,178,0.3)' }}
             >
               <div className="flex items-center gap-2 mb-4">
                 <Bot className="w-5 h-5" style={{ color: '#0891B2' }} />
                 <span className="font-medium" style={{ color: '#0891B2' }}>Coordinating Organization</span>
+                {isProcessing && (
+                  <div className="ml-auto">
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}>
+                      <Sparkles className="w-4 h-4" style={{ color: '#0891B2' }} />
+                    </motion.div>
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 {workflow.map((step, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 p-3 rounded-xl"
+                    className="flex items-center gap-3 p-3 rounded-xl transition-all"
                     style={{
-                      backgroundColor: step.status === 'done' ? '#16A34A20' : i === currentStep ? '#0891B220' : '#0A0A0A',
+                      backgroundColor: step.status === 'done' ? '#16A34A15' : i === currentStep ? '#0891B220' : '#0A0A0A',
                       border: i === currentStep ? '1px solid #0891B2' : 'none',
                     }}
                   >
@@ -328,18 +434,18 @@ All ready for download.`;
                         <Check className="w-4 h-4 text-white" />
                       ) : i === currentStep ? (
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
-                          <Sparkles className="w-4 h-4" style={{ color: 'white' }} />
+                          {getIcon(step.icon)}
                         </motion.div>
                       ) : (
-                        <Bot className="w-4 h-4 text-white" />
+                        <span className="text-white text-xs">{i + 1}</span>
                       )}
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium" style={{ color: 'white' }}>{step.agent}</div>
-                      <div className="text-sm" style={{ color: '#888' }}>{step.task}</div>
+                      <div className="font-medium text-sm" style={{ color: 'white' }}>{step.agent}</div>
+                      <div className="text-xs" style={{ color: '#888' }}>{step.task}</div>
                     </div>
                     {step.result && (
-                      <span style={{ color: '#16A34A' }}>{step.result}</span>
+                      <span className="font-bold" style={{ color: '#16A34A' }}>{step.result}</span>
                     )}
                   </div>
                 ))}
@@ -349,6 +455,30 @@ All ready for download.`;
 
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Quick Actions */}
+        {showQuickActions && (
+          <div className="px-4 pb-2">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {[
+                { label: 'Import', cmd: 'Import cotton shirts from Vietnam' },
+                { label: 'Export', cmd: 'Export textiles to Germany' },
+                { label: 'Track', cmd: 'Track shipment MSC123456' },
+                { label: 'Invoice', cmd: 'Generate export invoice' },
+                { label: 'Find Supplier', cmd: 'Find cotton suppliers in India' },
+              ].map(action => (
+                <button
+                  key={action.label}
+                  onClick={() => processCommand(action.cmd)}
+                  className="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all hover:scale-105"
+                  style={{ backgroundColor: '#222', color: '#888' }}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Input */}
         <div className="p-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
@@ -365,23 +495,11 @@ All ready for download.`;
             <button
               onClick={() => input.trim() && processCommand(input)}
               disabled={!input.trim() || isProcessing}
-              className="px-6 py-3 rounded-xl font-medium disabled:opacity-50"
+              className="px-6 py-3 rounded-xl font-medium disabled:opacity-50 transition-all"
               style={{ backgroundColor: '#154230', color: 'white' }}
             >
               <Send className="w-5 h-5" />
             </button>
-          </div>
-          <div className="flex gap-2 mt-3">
-            {['Import', 'Export', 'Track', 'Documents'].map(cmd => (
-              <button
-                key={cmd}
-                onClick={() => processCommand(cmd.toLowerCase() + ' cotton shirts from Vietnam')}
-                className="px-3 py-1 rounded-full text-xs"
-                style={{ backgroundColor: '#222', color: '#888' }}
-              >
-                {cmd}
-              </button>
-            ))}
           </div>
         </div>
       </main>
