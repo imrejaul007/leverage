@@ -24,6 +24,10 @@ const quickActions = [
   { label: '📦 Sell', command: 'I want to sell tea to UAE', color: '#FF00FF' },
   { label: '🚢 Track', command: 'Track shipment MSCKU123456', color: '#FF6B00' },
   { label: '📄 Invoice', command: 'Generate invoice for order #5432', color: '#A6824A' },
+  { label: '🔍 Supplier', command: 'Which supplier generated the most revenue?', color: '#00D4FF' },
+  { label: '📈 Compare', command: 'Compare this year vs last year', color: '#FF00FF' },
+  { label: '🔄 Repeat', command: 'Repeat my last Germany shipment', color: '#00FF88' },
+  { label: '📞 Call', command: 'Answer my supplier calls', color: '#FF6B00' },
 ];
 
 const responses: Record<string, { steps: string[]; response: string }> = {
@@ -100,6 +104,161 @@ Total: $31,500
 
 Shall I proceed with order?`
   },
+  sell: {
+    steps: ['Export Agent analyzing...', 'Global Nexha finding buyers...', 'Pricing Agent calculating...'],
+    response: `📦 EXPORT OPPORTUNITY
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Market: UAE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Top Buyers Found:
+1. Dubai Food Trading LLC ⭐
+2. Abu Dhabi Organic Market
+3. Sharjah Retail Group
+
+Estimated Demand: 50,000 units/month
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create export offers?`
+  },
+  track: {
+    steps: ['Logistics Agent connecting...', 'Global Nexha fetching location...', 'MemoryOS updating...'],
+    response: `🚢 SHIPMENT STATUS
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Container: MSCKU123456
+Vessel: Maersk Everest
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 Location: Singapore Port
+⏱ ETA: July 18, 2026
+
+MILESTONES:
+✅ Order confirmed
+✅ Payment received
+✅ Loaded vessel
+🔄 In transit
+⏳ Customs pending
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All documents verified ✓`
+  },
+  invoice: {
+    steps: ['Documentation Agent loading...', 'MemoryOS fetching data...', 'Generating PDF...'],
+    response: `📄 DOCUMENTS GENERATED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Order #5432
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Commercial Invoice
+   #INV-2026-5432
+
+✅ Packing List
+   10,000 units
+
+✅ Bill of Lading
+   MSC Container
+
+✅ Certificate of Origin
+   Vietnam
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Download ready in Documents section.`
+  },
+  supplier: {
+    steps: ['MemoryOS analyzing...', 'Analytics calculating...'],
+    response: `🏭 TOP SUPPLIER ANALYSIS
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Vietnam Textiles Ltd
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Revenue: $2.4M (12 months)
+Orders: 23 successful
+Success Rate: 95% ⭐
+Avg Delivery: 17 days
+
+Last Order: March 2026
+Product: Cotton Shirts 8,000
+Price: $26,400
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Would you like supplier details?`
+  },
+  compare: {
+    steps: ['Analytics engine comparing...', 'MemoryOS fetching data...'],
+    response: `📈 YEAR-OVER-YEAR COMPARISON
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2025 Full Year: $8.2M
+2026 YTD: $10.7M
+
+GROWTH: +30% ↑↑
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BREAKDOWN:
+• Exports: +42%
+• Domestic: +15%
+
+TOP GROWTH MARKETS:
+• Germany: +38%
+• UAE: +45%
+• France: +28%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Higher value products: +25%
+Bulk orders: +18%`
+  },
+  repeat: {
+    steps: ['MemoryOS searching...', 'Order #2341 found...', 'Duplicating details...'],
+    response: `🔄 LAST ORDER FOUND
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Order #2341 (March 2026)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Supplier: Vietnam Textiles Ltd
+Product: Cotton Shirts 8,000 units
+Price: $26,400
+Delivery: 17 days
+Status: Completed ✓
+Satisfaction: 95%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create new order with these details?`
+  },
+  call: {
+    steps: ['Voice Agent activating...', 'Answering call...', 'Transcribing...'],
+    response: `📞 VOICE AGENT ACTIVE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Incoming Call: Vietnam Textiles Ltd
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Agent answered:
+"Hello, this is ABC Fashion's
+AI Trade Assistant. How may I help?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CALL SUMMARY:
+• Caller: Nguyen Van Minh
+• Request: Delivery confirmation
+• Response: July 18 confirmed
+• Action: Email sent to buyer
+
+Task created for your review ✓`
+  },
 };
 
 export default function CopilotPage() {
@@ -130,10 +289,16 @@ How can I help?` },
 
   const identifyCommand = (text: string): string => {
     const lower = text.toLowerCase();
-    if (lower.includes('outstanding') || lower.includes('invoice due') || lower.includes('overdue')) return 'outstanding';
-    if (lower.includes('sales') || lower.includes('revenue')) return 'sales';
+    if (lower.includes('outstanding') || lower.includes('invoice due') || lower.includes('overdue') || lower.includes('show') && lower.includes('invoice')) return 'outstanding';
+    if (lower.includes('sales') || lower.includes('revenue') || lower.includes('my sales')) return 'sales';
     if (lower.includes('buy') || lower.includes('purchase') || lower.includes('import')) return 'buy';
+    if (lower.includes('sell') || lower.includes('export') || lower.includes('uae')) return 'sell';
     if (lower.includes('track') || lower.includes('shipment')) return 'track';
+    if (lower.includes('invoice') || lower.includes('document') || lower.includes('generate')) return 'invoice';
+    if (lower.includes('supplier') || lower.includes('vendor')) return 'supplier';
+    if (lower.includes('compare') || lower.includes('growth') || lower.includes('year')) return 'compare';
+    if (lower.includes('repeat') || lower.includes('duplicate') || lower.includes('last')) return 'repeat';
+    if (lower.includes('call') || lower.includes('phone') || lower.includes('voice')) return 'call';
     return 'sales';
   };
 

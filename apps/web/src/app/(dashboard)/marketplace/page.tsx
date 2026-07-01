@@ -36,30 +36,165 @@ const categories = [
   { name: 'Energy', emoji: '⚡' },
 ];
 
-const nearbyCities = [
-  'All India',
-  // India
-  'Mumbai', 'Delhi', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Jaipur', 'Lucknow', 'Chandigarh',
-  // Middle East
-  'Dubai', 'Abu Dhabi', 'Sharjah', 'Riyadh', 'Jeddah', 'Doha', 'Muscat', 'Kuwait City', 'Manama', 'Beirut',
-  // Southeast Asia
-  'Singapore', 'Kuala Lumpur', 'Bangkok', 'Jakarta', 'Manila', 'Ho Chi Minh City', 'Hanoi',
-  // East Asia
-  'Shanghai', 'Beijing', 'Hong Kong', 'Tokyo', 'Seoul',
-  // Europe
-  'London', 'Amsterdam', 'Hamburg', 'Milan', 'Paris', 'Frankfurt',
-  // USA
-  'New York', 'Los Angeles', 'Houston', 'Chicago',
-  // Africa
-  'Cairo', 'Lagos', 'Nairobi', 'Johannesburg'
+// Country and City data - hierarchical
+const locationData = [
+  {
+    country: 'All Countries',
+    cities: ['All Cities']
+  },
+  {
+    country: 'India',
+    cities: ['All India', 'Mumbai', 'Delhi NCR', 'Ahmedabad', 'Surat', 'Pune', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Jaipur', 'Lucknow', 'Chandigarh', 'Kochi', 'Indore', 'Nagpur', 'Vadodara', 'Bhopal']
+  },
+  {
+    country: 'UAE',
+    cities: ['All UAE', 'Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah']
+  },
+  {
+    country: 'Saudi Arabia',
+    cities: ['All Saudi', 'Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam']
+  },
+  {
+    country: 'Qatar',
+    cities: ['All Qatar', 'Doha', 'Al Rayyan', 'Al Wakrah']
+  },
+  {
+    country: 'Oman',
+    cities: ['All Oman', 'Muscat', 'Salalah', 'Sohar']
+  },
+  {
+    country: 'Kuwait',
+    cities: ['All Kuwait', 'Kuwait City', 'Al Ahmadi', 'Hawalli']
+  },
+  {
+    country: 'Bahrain',
+    cities: ['All Bahrain', 'Manama', 'Muharraq', 'Riffa']
+  },
+  {
+    country: 'Lebanon',
+    cities: ['All Lebanon', 'Beirut', 'Tripoli', 'Sidon']
+  },
+  {
+    country: 'Singapore',
+    cities: ['Singapore']
+  },
+  {
+    country: 'Malaysia',
+    cities: ['All Malaysia', 'Kuala Lumpur', 'Penang', 'Johor Bahru']
+  },
+  {
+    country: 'Thailand',
+    cities: ['All Thailand', 'Bangkok', 'Phuket', 'Chiang Mai']
+  },
+  {
+    country: 'Indonesia',
+    cities: ['All Indonesia', 'Jakarta', 'Surabaya', 'Bandung']
+  },
+  {
+    country: 'Philippines',
+    cities: ['All Philippines', 'Manila', 'Cebu', 'Davao']
+  },
+  {
+    country: 'Vietnam',
+    cities: ['All Vietnam', 'Ho Chi Minh City', 'Hanoi', 'Da Nang']
+  },
+  {
+    country: 'China',
+    cities: ['All China', 'Shanghai', 'Beijing', 'Shenzhen', 'Guangzhou', 'Hong Kong']
+  },
+  {
+    country: 'Japan',
+    cities: ['All Japan', 'Tokyo', 'Osaka', 'Yokohama', 'Nagoya']
+  },
+  {
+    country: 'South Korea',
+    cities: ['All Korea', 'Seoul', 'Busan', 'Incheon']
+  },
+  {
+    country: 'UK',
+    cities: ['All UK', 'London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds']
+  },
+  {
+    country: 'Germany',
+    cities: ['All Germany', 'Hamburg', 'Berlin', 'Frankfurt', 'Munich', 'Dusseldorf']
+  },
+  {
+    country: 'Netherlands',
+    cities: ['All Netherlands', 'Amsterdam', 'Rotterdam', 'The Hague']
+  },
+  {
+    country: 'France',
+    cities: ['All France', 'Paris', 'Lyon', 'Marseille']
+  },
+  {
+    country: 'Italy',
+    cities: ['All Italy', 'Milan', 'Rome', 'Naples', 'Turin']
+  },
+  {
+    country: 'Spain',
+    cities: ['All Spain', 'Madrid', 'Barcelona', 'Valencia', 'Seville']
+  },
+  {
+    country: 'USA',
+    cities: ['All USA', 'New York', 'Los Angeles', 'Houston', 'Chicago', 'Miami', 'San Francisco', 'Seattle', 'Dallas']
+  },
+  {
+    country: 'Canada',
+    cities: ['All Canada', 'Toronto', 'Vancouver', 'Montreal', 'Calgary']
+  },
+  {
+    country: 'Mexico',
+    cities: ['All Mexico', 'Mexico City', 'Guadalajara', 'Monterrey']
+  },
+  {
+    country: 'Brazil',
+    cities: ['All Brazil', 'Sao Paulo', 'Rio de Janeiro', 'Brasilia']
+  },
+  {
+    country: 'Egypt',
+    cities: ['All Egypt', 'Cairo', 'Alexandria', 'Giza']
+  },
+  {
+    country: 'Nigeria',
+    cities: ['All Nigeria', 'Lagos', 'Abuja', 'Kano']
+  },
+  {
+    country: 'Kenya',
+    cities: ['All Kenya', 'Nairobi', 'Mombasa', 'Kisumu']
+  },
+  {
+    country: 'South Africa',
+    cities: ['All SA', 'Johannesburg', 'Cape Town', 'Durban']
+  },
+  {
+    country: 'Ethiopia',
+    cities: ['All Ethiopia', 'Addis Claude', 'Dire Dawa', 'Harar']
+  },
+  {
+    country: 'Turkey',
+    cities: ['All Turkey', 'Istanbul', 'Ankara', 'Izmir', 'Antalya']
+  },
 ];
 
-const priceFilters = ['All Prices', 'Under 500', '500-1K', '1K-5K', 'Above 5K'];
+const priceFilters = ['All Prices', 'Under ₹500', '₹500-₹1K', '₹1K-₹5K', 'Above ₹5K'];
 
 export default function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [selectedCity, setSelectedCity] = useState<string>('All India');
+  const [selectedCountry, setSelectedCountry] = useState<string>('All Countries');
+  const [selectedCity, setSelectedCity] = useState<string>('All Cities');
   const [selectedPrice, setSelectedPrice] = useState<string>('All Prices');
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  // Get cities for selected country
+  const currentCountryData = locationData.find(l => l.country === selectedCountry);
+  const cities = currentCountryData?.cities || [];
+
+  // Reset city when country changes
+  const handleCountryChange = (country: string) => {
+    setSelectedCountry(country);
+    const countryData = locationData.find(l => l.country === country);
+    setSelectedCity(countryData?.cities[0] || 'All Cities');
+  };
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -75,51 +210,39 @@ export default function MarketplacePage() {
 
       {/* ==================== MOBILE HEADER ==================== */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200">
-        {/* Top strip - green like IndiaMART */}
-        <div className="bg-[#154230] px-4 py-2">
-          <div className="flex items-center justify-between">
-            <span className="text-white text-xs font-medium">LEVERAGE</span>
-            <div className="flex items-center gap-3">
-              <Link href="/cart" className="text-white relative">
-                <ShoppingCart className="w-4 h-4" />
-              </Link>
-              <Link href="/login" className="text-white text-xs font-medium">Sign In</Link>
-            </div>
+        <div className="bg-[#154230] px-4 py-2 flex justify-between items-center">
+          <span className="text-white text-xs font-medium">LEVERAGE</span>
+          <div className="flex items-center gap-3">
+            <Link href="/marketplace/cart" className="text-white"><ShoppingCart className="w-4 h-4" /></Link>
+            <Link href="/marketplace/login" className="text-white text-xs font-medium">Sign In</Link>
           </div>
         </div>
-
-        {/* Logo + Search - like IndiaMART */}
         <div className="px-4 py-2">
           <div className="flex items-center gap-3">
-            <Link href="/">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={90} height={30} className="object-contain" />
-            </Link>
+            <Link href="/"><Image src="/leverage-logo.png" alt="LEVERAGE" width={90} height={30} className="object-contain" /></Link>
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search products, suppliers..."
-                className="w-full h-9 pl-10 pr-4 bg-gray-100 rounded-lg text-sm"
-              />
+              <input type="text" placeholder="Search products..." className="w-full h-9 pl-10 pr-4 bg-gray-100 rounded-lg text-sm" />
             </div>
           </div>
         </div>
-
-        {/* City Pills - like IndiaMART */}
-        <div className="px-4 py-2 border-t border-gray-100 flex gap-2 overflow-x-auto scrollbar-hide">
-          {nearbyCities.map(city => (
-            <button
-              key={city}
-              onClick={() => setSelectedCity(city)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap flex-shrink-0 ${
-                selectedCity === city
-                  ? 'bg-[#154230] text-white'
-                  : 'bg-gray-100 text-gray-600'
-              }`}
-            >
-              {city}
-            </button>
-          ))}
+        <div className="px-4 py-2 border-t border-gray-100">
+          {/* Country Pills */}
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+            {['All', 'India', 'UAE', 'USA', 'UK', 'China'].map(c => (
+              <button
+                key={c}
+                onClick={() => handleCountryChange(c === 'All' ? 'All Countries' : c)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap flex-shrink-0 ${
+                  (c === 'All' ? selectedCountry === 'All Countries' : selectedCountry === c)
+                    ? 'bg-[#154230] text-white'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -137,11 +260,67 @@ export default function MarketplacePage() {
             </div>
           </div>
         </div>
+
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-6">
-            <Link href="/">
+            <Link href="/" className="flex-shrink-0">
               <Image src="/leverage-logo.png" alt="LEVERAGE" width={140} height={47} className="object-contain" />
             </Link>
+
+            {/* Location Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLocationDropdown(!showLocationDropdown)}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                <MapPin className="w-4 h-4 text-white" />
+                <span className="text-sm font-medium text-white">{selectedCountry === 'All Countries' ? 'All Countries' : `${selectedCity}, ${selectedCountry}`}</span>
+                <ChevronDown className={`w-4 h-4 text-white/70 transition-transform ${showLocationDropdown ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown */}
+              {showLocationDropdown && (
+                <div className="absolute top-full mt-2 left-0 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 max-h-96 overflow-hidden flex">
+                  {/* Countries */}
+                  <div className="w-1/3 border-r border-gray-100 overflow-y-auto">
+                    {locationData.map(loc => (
+                      <button
+                        key={loc.country}
+                        onClick={() => handleCountryChange(loc.country)}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                          selectedCountry === loc.country
+                            ? 'bg-[#154230]/10 text-[#154230] font-medium'
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {loc.country}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Cities */}
+                  <div className="w-2/3 overflow-y-auto max-h-96">
+                    {cities.map(city => (
+                      <button
+                        key={city}
+                        onClick={() => {
+                          setSelectedCity(city);
+                          setShowLocationDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                          selectedCity === city
+                            ? 'bg-[#154230]/10 text-[#154230] font-medium'
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {city}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Search Bar */}
             <div className="flex-1 max-w-3xl">
               <div className="relative flex">
                 <div className="relative flex-1">
@@ -152,25 +331,27 @@ export default function MarketplacePage() {
                     className="w-full h-12 pl-12 pr-4 bg-white rounded-l-xl text-gray-900 placeholder-gray-400 focus:outline-none"
                   />
                 </div>
-                <button className="px-8 h-12 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-semibold rounded-r-xl">
+                <button className="px-8 h-12 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-semibold rounded-r-xl transition-colors">
                   Search
                 </button>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <Link href="/login" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg">
+
+            <div className="hidden md:flex items-center gap-4">
+              <Link href="/login" className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors">
                 Sign In
               </Link>
-              <Link href="/rfqs/new" className="px-5 py-2.5 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-medium rounded-lg flex items-center gap-2">
+              <Link href="/rfqs/new" className="px-5 py-2.5 bg-[#5D1E21] hover:bg-[#7a2629] text-white font-medium rounded-lg transition-colors flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Post RFQ
               </Link>
-              <Link href="/cart" className="relative p-2.5 bg-white/10 rounded-lg">
+              <Link href="/cart" className="relative p-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
                 <ShoppingCart className="w-5 h-5 text-white" />
               </Link>
             </div>
           </div>
         </div>
+
         {/* Hero */}
         <div className="max-w-7xl mx-auto px-4 pb-8 text-center text-white">
           <h1 className="text-3xl lg:text-5xl font-bold mb-3">Global B2B Marketplace</h1>
@@ -193,7 +374,7 @@ export default function MarketplacePage() {
             <h3 className="font-bold">Can't find what you need?</h3>
             <p className="text-white/80 text-sm">Post an RFQ and let suppliers come to you</p>
           </div>
-          <Link href="/rfqs/new" className="flex items-center gap-2 px-4 py-2 bg-white text-[#5D1E21] font-semibold rounded-lg">
+          <Link href="/rfqs/new" className="flex items-center gap-2 px-4 py-2 bg-white text-[#5D1E21] font-semibold rounded-lg hover:bg-white/90 transition-colors">
             <Plus className="w-4 h-4" />
             Post RFQ
           </Link>
@@ -216,22 +397,6 @@ export default function MarketplacePage() {
               >
                 <span>{cat.emoji}</span>
                 <span>{cat.name}</span>
-              </button>
-            ))}
-          </div>
-          {/* Price Filters - Desktop */}
-          <div className="hidden md:flex gap-2 mt-4">
-            {priceFilters.map(price => (
-              <button
-                key={price}
-                onClick={() => setSelectedPrice(price)}
-                className={`px-4 py-2 rounded-lg border text-sm ${
-                  selectedPrice === price
-                    ? 'border-[#154230] bg-[#154230]/10 text-[#154230]'
-                    : 'border-gray-200 text-gray-600'
-                }`}
-              >
-                {price}
               </button>
             ))}
           </div>
@@ -277,16 +442,29 @@ export default function MarketplacePage() {
           {/* Products */}
           <main className="flex-1">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500">{filteredProducts.length} results</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Sort:</span>
-                <select className="text-sm font-medium text-[#154230] bg-transparent border-0">
-                  <option>Relevance</option>
-                </select>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-500">{filteredProducts.length} results</span>
+                <div className="hidden md:flex gap-2">
+                  {priceFilters.map(price => (
+                    <button
+                      key={price}
+                      onClick={() => setSelectedPrice(price)}
+                      className={`px-3 py-1.5 rounded-lg border text-sm ${
+                        selectedPrice === price
+                          ? 'border-[#154230] bg-[#154230]/10 text-[#154230]'
+                          : 'border-gray-200 text-gray-600'
+                      }`}
+                    >
+                      {price}
+                    </button>
+                  ))}
+                </div>
               </div>
+              <select className="text-sm font-medium text-[#154230] bg-transparent border-0">
+                <option>Relevance</option>
+              </select>
             </div>
 
-            {/* Product Cards */}
             <div className="space-y-3">
               {filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
@@ -296,7 +474,7 @@ export default function MarketplacePage() {
         </div>
       </div>
 
-      {/* ==================== MOBILE STICKY BOTTOM BAR ==================== */}
+      {/* Mobile Sticky Bottom Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex gap-2 z-40">
         <button className="flex-1 flex items-center justify-center gap-2 py-3 border-2 border-[#5D1E21] text-[#5D1E21] font-semibold rounded-lg">
           <WhatsAppIcon />
@@ -308,7 +486,7 @@ export default function MarketplacePage() {
         </button>
       </div>
 
-      {/* ==================== FEATURES ==================== */}
+      {/* Features */}
       <section className="hidden md:block bg-white py-12 border-t">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Why Choose LEVERAGE?</h2>
@@ -329,23 +507,19 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* ==================== CTA ==================== */}
+      {/* CTA */}
       <section className="hidden md:block bg-gradient-to-r from-[#154230] to-[#1a5a3a] py-12">
         <div className="max-w-4xl mx-auto px-4 text-center text-white">
           <h2 className="text-2xl font-bold mb-2">Ready to start trading?</h2>
           <p className="text-white/80 mb-6">Join thousands of businesses globally</p>
           <div className="flex justify-center gap-4">
-            <Link href="/signup" className="px-6 py-3 bg-white text-[#154230] font-semibold rounded-lg">
-              Create Free Account
-            </Link>
-            <Link href="/contact" className="px-6 py-3 border-2 border-white font-semibold rounded-lg">
-              Contact Sales
-            </Link>
+            <Link href="/signup" className="px-6 py-3 bg-white text-[#154230] font-semibold rounded-lg">Create Free Account</Link>
+            <Link href="/contact" className="px-6 py-3 border-2 border-white font-semibold rounded-lg">Contact Sales</Link>
           </div>
         </div>
       </section>
 
-      {/* ==================== FOOTER ==================== */}
+      {/* Footer */}
       <footer className="hidden md:block bg-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between">
@@ -357,23 +531,14 @@ export default function MarketplacePage() {
               <div>
                 <h4 className="font-semibold mb-2">Platform</h4>
                 <ul className="space-y-1 text-gray-400">
-                  <li><Link href="/products">Products</Link></li>
-                  <li><Link href="/suppliers">Suppliers</Link></li>
-                  <li><Link href="/rfqs">RFQs</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Company</h4>
-                <ul className="space-y-1 text-gray-400">
-                  <li><Link href="/about">About</Link></li>
-                  <li><Link href="/contact">Contact</Link></li>
+                  <li><Link href="/marketplace">Products</Link></li>
+                  <li><Link href="/marketplace/suppliers">Suppliers</Link></li>
+                  <li><Link href="/marketplace/rfqs">RFQs</Link></li>
                 </ul>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} LEVERAGE. All rights reserved.
-          </div>
+          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">© {new Date().getFullYear()} LEVERAGE. All rights reserved.</div>
         </div>
       </footer>
     </div>
@@ -384,24 +549,13 @@ export default function MarketplacePage() {
 function ProductCard({ product }: { product: typeof products[0] }) {
   return (
     <div className="bg-white border border-gray-200 overflow-hidden">
-      {/* Mobile Layout - IndiaMART Style */}
+      {/* Mobile Layout */}
       <div className="md:hidden">
-        {/* Image + Content Row */}
         <div className="flex">
-          {/* Image - clickable */}
-          <Link href={`/marketplace/products/${product.id}`} className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              unoptimized
-            />
+          <Link href={`/marketplace/products/${product.id}`} className="relative w-24 h-24 m-2 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+            <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
           </Link>
-
-          {/* Content */}
           <div className="flex-1 p-2 pr-3 min-w-0">
-            {/* Title + TrustSEAL badge - clickable */}
             <div className="flex items-start justify-between gap-1 mb-1">
               <Link href={`/marketplace/products/${product.id}`} className="text-blue-700 font-bold text-sm leading-tight flex-1 hover:text-blue-800">
                 {product.name}
@@ -412,14 +566,10 @@ function ProductCard({ product }: { product: typeof products[0] }) {
                 </span>
               )}
             </div>
-
-            {/* Price - Bold */}
             <Link href={`/marketplace/products/${product.id}`} className="block mb-2">
               <span className="text-base font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
               <span className="text-xs text-gray-500">/{product.currency}</span>
             </Link>
-
-            {/* Specs - key: bold value format */}
             <div className="space-y-0.5 mb-2 text-[11px]">
               {product.specifications && Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
                 <div key={key} className="flex">
@@ -430,8 +580,6 @@ function ProductCard({ product }: { product: typeof products[0] }) {
             </div>
           </div>
         </div>
-
-        {/* Supplier row */}
         <div className="border-t border-gray-100 px-3 py-2 flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-gray-900">{product.supplier}</p>
@@ -446,38 +594,21 @@ function ProductCard({ product }: { product: typeof products[0] }) {
             <p className="text-[10px] text-gray-500">📞 87% Response Rate</p>
           </div>
         </div>
-
-        {/* CTAs - WhatsApp + Call Now */}
-        <div className="grid grid-cols-2 gap-0 border-t border-gray-100">
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.success('Opening WhatsApp...'); }}
-            className="flex items-center justify-center gap-2 py-3 border-r border-gray-100 bg-white text-green-700 font-semibold text-sm"
-          >
-            <WhatsAppIcon className="w-4 h-4" />
-            WhatsApp
+        <div className="grid grid-cols-2 border-t border-gray-100">
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.success('Opening WhatsApp...'); }} className="flex items-center justify-center gap-1 py-3 border-r border-gray-100 bg-white text-green-700 font-semibold text-sm">
+            <WhatsAppIcon className="w-4 h-4" />WhatsApp
           </button>
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast('Calling supplier...'); }}
-            className="flex items-center justify-center gap-2 py-3 bg-green-600 text-white font-semibold text-sm"
-          >
-            <Phone className="w-4 h-4" />
-            Call Now
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast('Calling supplier...'); }} className="flex items-center justify-center gap-1 py-3 bg-green-600 text-white font-semibold text-sm">
+            <Phone className="w-4 h-4" />Call Now
           </button>
         </div>
       </div>
 
-      {/* Desktop Layout - IndiaMART Style */}
+      {/* Desktop Layout */}
       <div className="hidden md:block p-4">
         <div className="flex gap-4">
-          {/* Image - clickable */}
           <Link href={`/marketplace/products/${product.id}`} className="relative w-36 h-36 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              unoptimized
-            />
+            <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
             {product.images && product.images.length > 1 && (
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                 {product.images.map((_, i) => (
@@ -486,57 +617,37 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               </div>
             )}
           </Link>
-
-          {/* Content */}
           <div className="flex-1 min-w-0">
             <Link href={`/marketplace/products/${product.id}`} className="text-blue-600 hover:text-blue-700 font-medium text-lg leading-tight mb-1 block">
               {product.name}
             </Link>
-
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
               <MapPin className="w-3 h-3" />
               <span>{product.location}</span>
-              {product.yearsInBusiness && (
-                <span className="ml-2 text-gray-400">| {product.yearsInBusiness}+ yrs</span>
-              )}
+              {product.yearsInBusiness && <span className="ml-2 text-gray-400">| {product.yearsInBusiness}+ yrs</span>}
             </div>
-
             <div className="flex items-center gap-3 mb-2">
               {product.gstVerified && (
-                <span className="flex items-center gap-1 text-xs text-green-600">
-                  <CheckCircle className="w-3 h-3" /> GST Verified
-                </span>
+                <span className="flex items-center gap-1 text-xs text-green-600"><CheckCircle className="w-3 h-3" /> GST Verified</span>
               )}
               {product.trustseal && (
-                <span className="flex items-center gap-1 text-xs text-[#154230]">
-                  <CheckCircle className="w-3 h-3" /> TrustSEAL
-                </span>
+                <span className="flex items-center gap-1 text-xs text-[#154230]"><CheckCircle className="w-3 h-3" /> TrustSEAL</span>
               )}
-              <span className="text-xs text-gray-400">
-                <Star className="w-3 h-3 inline text-amber-400" /> {product.rating} ({product.reviews})
-              </span>
+              <span className="text-xs text-gray-400"><Star className="w-3 h-3 inline text-amber-400" /> {product.rating} ({product.reviews})</span>
             </div>
-
             <div className="flex flex-wrap gap-1.5">
               {product.specifications && Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
-                <span key={key} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                  {value}
-                </span>
+                <span key={key} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">{value}</span>
               ))}
             </div>
           </div>
-
-          {/* Price & CTA */}
           <div className="flex flex-col items-end justify-between w-36">
             <Link href={`/marketplace/products/${product.id}`} className="text-right block">
               <div className="text-xl font-bold text-gray-900">₹{product.price.toLocaleString()}</div>
               <div className="text-xs text-gray-500">/{product.currency}</div>
               <div className="text-xs text-gray-400 mt-1">MOQ: {product.moq}</div>
             </Link>
-            <button
-              onClick={(e) => { e.preventDefault(); toast.success('Enquiry sent!'); }}
-              className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors"
-            >
+            <button onClick={(e) => { e.preventDefault(); toast.success('Enquiry sent!'); }} className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors">
               Contact Supplier
             </button>
           </div>
