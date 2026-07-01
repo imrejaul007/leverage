@@ -8,7 +8,7 @@ import {
   CheckCircle2, Clock, Database, Building, Package, DollarSign, Lock, ArrowRight,
   Check, Sparkles, Layers, Target, TrendingUp, Activity, MessageCircle, Mail,
   Phone, Settings, ChevronRight, BarChart3, Navigation, CreditCard, Briefcase,
-  Network, Package as PackageIcon, Building2, Play, Pause
+  Network, Package as PackageIcon, Building2, Play, Pause, FileCheck
 } from 'lucide-react';
 
 // ============================================================================
