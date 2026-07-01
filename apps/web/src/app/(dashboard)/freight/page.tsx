@@ -290,13 +290,44 @@ export default function FreightLandingPage() {
               )}
 
               {activeTab === 'quote' && (
-                <div className="text-center py-12">
-                  <DollarSign className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-[#101111] mb-2">Get a Freight Quote</h3>
-                  <p className="text-[#4A4A4A] mb-4">Compare rates from top carriers worldwide.</p>
-                  <Link href="/freight/shipments" className="inline-block px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
-                    Request Quote
-                  </Link>
+                <div className="py-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold text-[#101111] mb-2">Compare Freight Rates</h3>
+                    <p className="text-[#4A4A4A]">Search all carriers and transport modes in one place</p>
+                  </div>
+
+                  {/* Quick Transport Mode Selection */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    {[
+                      { mode: 'AIR', icon: Plane, label: 'Air Freight', color: '#154230' },
+                      { mode: 'OCEAN', icon: Ship, label: 'Ocean', color: '#A6824A' },
+                      { mode: 'LAND', icon: Truck, label: 'Land', color: '#5D1E21' },
+                      { mode: 'MULTIMODAL', icon: Globe, label: 'Multimodal', color: '#6366f1' },
+                    ].map(({ mode, icon: Icon, label, color }) => (
+                      <Link
+                        key={mode}
+                        href={`/freight/features?mode=${mode}`}
+                        className="p-4 bg-[#f7f5f1] rounded-xl hover:bg-[#E6E2DA] transition-colors text-center group"
+                      >
+                        <div
+                          className="w-12 h-12 rounded-xl mx-auto mb-2 flex items-center justify-center"
+                          style={{ backgroundColor: color + '15' }}
+                        >
+                          <Icon className="w-6 h-6" style={{ color }} />
+                        </div>
+                        <p className="font-semibold text-sm text-[#101111] group-hover:text-[#154230]">{label}</p>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* CTA */}
+                  <div className="text-center">
+                    <Link href="/freight/features" className="inline-flex items-center gap-2 px-6 py-3 bg-[#154230] text-white font-semibold rounded-lg hover:bg-[#1d5240] transition-colors">
+                      <BarChart3 className="w-5 h-5" />
+                      Open Freight Explorer
+                    </Link>
+                    <p className="text-xs text-[#4A4A4A] mt-2">Compare all carriers, all modes, side-by-side</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -315,8 +346,8 @@ export default function FreightLandingPage() {
             <Link href="/signup" className="px-8 py-3 bg-white text-[#154230] font-semibold rounded-lg hover:bg-white/90 transition-colors">
               Get Started
             </Link>
-            <Link href="/freight/shipments" className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2">
-              View Shipments <ArrowRight className="w-4 h-4" />
+            <Link href="/freight/features" className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2">
+              Compare Rates <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

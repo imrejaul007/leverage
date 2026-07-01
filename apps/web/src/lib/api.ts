@@ -103,3 +103,97 @@ export interface SignupData {
   lastName: string;
   role?: string;
 }
+
+// Freight API
+export interface FreightQuote {
+  quoteId: string;
+  carrierId: string;
+  carrierCode: string;
+  carrierName: string;
+  serviceType: string;
+  baseRate: number;
+  fuelSurcharge: number;
+  originCharges: number;
+  destCharges: number;
+  totalRate: number;
+  currency: string;
+  transitDays: number;
+  estimatedDeparture: string;
+  estimatedArrival: string;
+  validUntil: string;
+  surcharges: { name: string; amount: number }[];
+}
+
+export interface FreightQuoteRequest {
+  origin: {
+    country: string;
+    city: string;
+    postalCode?: string;
+    address?: string;
+  };
+  destination: {
+    country: string;
+    city: string;
+    postalCode?: string;
+    address?: string;
+  };
+  cargoDetails: {
+    weight: number;
+    dimensions?: { length: number; width: number; height: number };
+    description?: string;
+    quantity?: number;
+    packageType?: 'parcel' | 'pallet' | 'container';
+  };
+  transportMode: 'AIR' | 'OCEAN' | 'LAND' | 'MULTIMODAL';
+  incoterms?: 'EXW' | 'FOB' | 'CIF' | 'DDP' | 'DAP';
+}
+
+export interface Carrier {
+  id: string;
+  name: string;
+  code: string;
+  types: string[];
+  rating: number;
+  isActive: boolean;
+}
+
+export interface FreightBooking {
+  bookingId: string;
+  bookingReference: string;
+  status: string;
+  estimatedPickup: string;
+  estimatedDelivery: string;
+  message: string;
+  shipmentId: string;
+  shipmentNumber: string;
+}
+
+export interface FreightRate {
+  rates: FreightQuote[];
+  transportMode: string;
+  currency: string;
+  totalQuotes: number;
+  filtered: boolean;
+}
+
+export const freightApi = {
+  // Get freight quotes
+  getQuotes: (request: FreightQuoteRequest) =>
+    api.post<FreightRate>('/api/v1/freight/quotes', request),
+
+  // Get single quote by ID
+  getQuote: (quoteId: string) =>
+    api.get<FreightQuote>(`/api/v1/freight/quotes/${quoteId}`),
+
+  // Book a quote
+  bookQuote: (quoteId: string) =>
+    api.post<FreightBooking>(`/api/v1/freight/quotes/${quoteId}/book`),
+
+  // Get all carriers
+  getCarriers: () =>
+    api.get<Carrier[]>('/api/v1/freight/carriers'),
+
+  // Get carrier by ID
+  getCarrier: (carrierId: string) =>
+    api.get<Carrier>(`/api/v1/freight/carriers/${carrierId}`),
+};
