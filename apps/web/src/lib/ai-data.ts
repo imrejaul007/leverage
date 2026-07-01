@@ -623,7 +623,7 @@ export const FREIGHT_ROUTES = [
   { origin: 'Tokyo', originCountry: 'JP', dest: 'New York', destCountry: 'US', mode: 'air', transitDays: 7, ratePerCBM: 900, ratePerKg: 5.5 },
   { origin: 'Frankfurt', originCountry: 'DE', dest: 'Chicago', destCountry: 'US', mode: 'air', transitDays: 4, ratePerCBM: 750, ratePerKg: 4.0 },
   { origin: 'London', originCountry: 'GB', dest: 'Dubai', destCountry: 'AE', mode: 'air', transitDays: 3, ratePerCBM: 600, ratePerKg: 3.5 },
-  { origin: 'Dubai', originCountry: 'AE', dest: 'Shanghai', originCountry: 'CN', mode: 'air', transitDays: 4, ratePerCBM: 700, ratePerKg: 4.0 },
+  { origin: 'Dubai', originCountry: 'AE', dest: 'Shanghai', destCountry: 'CN', mode: 'air', transitDays: 4, ratePerCBM: 700, ratePerKg: 4.0 },
   { origin: 'Los Angeles', originCountry: 'US', dest: 'Mexico City', destCountry: 'MX', mode: 'truck', transitDays: 3, ratePerCBM: 120, ratePerKg: 0.8 },
   { origin: 'Chicago', originCountry: 'US', dest: 'Toronto', destCountry: 'CA', mode: 'truck', transitDays: 2, ratePerCBM: 100, ratePerKg: 0.6 },
   { origin: 'Rotterdam', originCountry: 'NL', dest: 'Warsaw', destCountry: 'PL', mode: 'truck', transitDays: 2, ratePerCBM: 90, ratePerKg: 0.55 },
