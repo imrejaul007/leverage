@@ -44,6 +44,15 @@ import {
   MinusCircle,
   ShoppingBag,
   Globe2,
+  Zap,
+  Rocket,
+  Ship,
+  Cog,
+  RefreshCw,
+  Settings,
+  Bell,
+  Workflow,
+  TrendingUp as TrendingUpIcon,
 } from 'lucide-react';
 
 // ============================================================================

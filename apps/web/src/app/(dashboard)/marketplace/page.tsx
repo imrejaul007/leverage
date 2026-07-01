@@ -59,41 +59,43 @@ export default function MarketplacePage() {
 
       {/* ==================== MOBILE HEADER ==================== */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200">
-        {/* Top strip */}
+        {/* Top strip - green like IndiaMART */}
         <div className="bg-[#154230] px-4 py-2">
           <div className="flex items-center justify-between">
-            <span className="text-white text-xs">Welcome to LEVERAGE</span>
-            <Link href="/login" className="text-white text-xs font-medium">Sign In</Link>
+            <span className="text-white text-xs font-medium">LEVERAGE</span>
+            <div className="flex items-center gap-3">
+              <Link href="/cart" className="text-white relative">
+                <ShoppingCart className="w-4 h-4" />
+              </Link>
+              <Link href="/login" className="text-white text-xs font-medium">Sign In</Link>
+            </div>
           </div>
         </div>
 
-        {/* Logo + Search */}
-        <div className="px-4 py-3">
+        {/* Logo + Search - like IndiaMART */}
+        <div className="px-4 py-2">
           <div className="flex items-center gap-3">
             <Link href="/">
-              <Image src="/leverage-logo.png" alt="LEVERAGE" width={100} height={33} className="object-contain" />
+              <Image src="/leverage-logo.png" alt="LEVERAGE" width={90} height={30} className="object-contain" />
             </Link>
-            <Link href="/cart" className="ml-auto relative p-2">
-              <ShoppingCart className="w-5 h-5 text-gray-600" />
-            </Link>
-          </div>
-          <div className="relative mt-3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full h-10 pl-10 pr-4 bg-gray-100 rounded-lg text-sm"
-            />
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products, suppliers..."
+                className="w-full h-9 pl-10 pr-4 bg-gray-100 rounded-lg text-sm"
+              />
+            </div>
           </div>
         </div>
 
-        {/* City Pills */}
+        {/* City Pills - like IndiaMART */}
         <div className="px-4 py-2 border-t border-gray-100 flex gap-2 overflow-x-auto scrollbar-hide">
           {nearbyCities.map(city => (
             <button
               key={city}
               onClick={() => setSelectedCity(city)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap flex-shrink-0 ${
                 selectedCity === city
                   ? 'bg-[#154230] text-white'
                   : 'bg-gray-100 text-gray-600'
@@ -365,12 +367,12 @@ export default function MarketplacePage() {
 // ==================== PRODUCT CARD COMPONENT ====================
 function ProductCard({ product }: { product: typeof products[0] }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-      {/* Mobile Layout */}
+    <div className="bg-white border border-gray-200 overflow-hidden">
+      {/* Mobile Layout - IndiaMART Style */}
       <div className="md:hidden">
         <div className="flex">
-          {/* Image */}
-          <div className="relative w-28 h-28 flex-shrink-0 bg-gray-100">
+          {/* Image - square */}
+          <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 m-2 rounded overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
@@ -381,49 +383,69 @@ function ProductCard({ product }: { product: typeof products[0] }) {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-2 min-w-0">
-            <h3 className="text-blue-600 text-sm font-medium line-clamp-2 leading-tight">
-              {product.name}
-            </h3>
-            <div className="flex items-center gap-1 text-[10px] text-gray-500 mt-0.5">
-              <MapPin className="w-2.5 h-2.5" />
-              <span className="truncate">{product.location}</span>
-            </div>
-
-            {/* Trust badges */}
-            <div className="flex gap-2 mt-1">
-              {product.gstVerified && (
-                <span className="text-[9px] text-green-600 font-medium">GST ✓</span>
-              )}
+          <div className="flex-1 p-2 pr-3 min-w-0">
+            {/* Title + TrustSEAL badge */}
+            <div className="flex items-start justify-between gap-1 mb-1">
+              <h3 className="text-blue-700 font-bold text-sm leading-tight flex-1">
+                {product.name}
+              </h3>
               {product.trustseal && (
-                <span className="text-[9px] text-[#154230] font-medium">TrustSEAL</span>
+                <span className="flex-shrink-0 px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[8px] font-bold rounded-full flex items-center gap-0.5">
+                  <CheckCircle className="w-2 h-2" /> TrustSEAL
+                </span>
               )}
             </div>
 
-            {/* Price */}
-            <div className="mt-1">
-              <span className="text-sm font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
-              <span className="text-[10px] text-gray-500">/{product.currency}</span>
+            {/* Price - Bold */}
+            <div className="mb-2">
+              <span className="text-base font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
+              <span className="text-xs text-gray-500">/{product.currency}</span>
             </div>
 
-            {/* Mobile CTAs - IndiaMART Style */}
-            <div className="flex gap-1.5 mt-2">
-              <button
-                onClick={() => toast.success('Opening WhatsApp...')}
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 border border-green-600 text-green-600 text-[10px] font-medium rounded"
-              >
-                <WhatsAppIcon />
-                WhatsApp
-              </button>
-              <button
-                onClick={() => toast('Calling supplier...')}
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 bg-green-600 text-white text-[10px] font-medium rounded"
-              >
-                <Phone className="w-3 h-3" />
-                Call
-              </button>
+            {/* Specs - key: bold value format */}
+            <div className="space-y-0.5 mb-2 text-[11px]">
+              {product.specifications && Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
+                <div key={key} className="flex">
+                  <span className="text-gray-600">{key}:</span>
+                  <span className="font-semibold text-gray-900 ml-1">{value}</span>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+
+        {/* Supplier row */}
+        <div className="border-t border-gray-100 px-3 py-2 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-gray-900">{product.supplier}</p>
+            <p className="text-[10px] text-gray-500">{product.country}{product.yearsInBusiness && ` · ${product.yearsInBusiness} yrs`}</p>
+          </div>
+          <div className="text-right">
+            <div className="flex items-center gap-1">
+              <span className="text-amber-400 text-xs">★★★★★</span>
+              <span className="text-xs font-semibold text-gray-900">{product.rating}</span>
+              <span className="text-[10px] text-gray-500">({product.reviews})</span>
+            </div>
+            <p className="text-[10px] text-gray-500">📞 87% Response Rate</p>
+          </div>
+        </div>
+
+        {/* CTAs - WhatsApp + Call Now */}
+        <div className="grid grid-cols-2 gap-0 border-t border-gray-100">
+          <button
+            onClick={() => toast.success('Opening WhatsApp...')}
+            className="flex items-center justify-center gap-2 py-3 border-r border-gray-100 bg-white text-green-700 font-semibold text-sm"
+          >
+            <WhatsAppIcon className="w-4 h-4" />
+            WhatsApp
+          </button>
+          <button
+            onClick={() => toast('Calling supplier...')}
+            className="flex items-center justify-center gap-2 py-3 bg-green-600 text-white font-semibold text-sm"
+          >
+            <Phone className="w-4 h-4" />
+            Call Now
+          </button>
         </div>
       </div>
 
@@ -439,7 +461,6 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               className="object-cover"
               unoptimized
             />
-            {/* Image dots */}
             {product.images && product.images.length > 1 && (
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                 {product.images.map((_, i) => (
@@ -463,7 +484,6 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               )}
             </div>
 
-            {/* Trust Badges */}
             <div className="flex items-center gap-3 mb-2">
               {product.gstVerified && (
                 <span className="flex items-center gap-1 text-xs text-green-600">
@@ -480,7 +500,6 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               </span>
             </div>
 
-            {/* Specs */}
             <div className="flex flex-wrap gap-1.5">
               {product.specifications && Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
                 <span key={key} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
@@ -497,7 +516,6 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               <div className="text-xs text-gray-500">/{product.currency}</div>
               <div className="text-xs text-gray-400 mt-1">MOQ: {product.moq}</div>
             </div>
-
             <button
               onClick={() => toast.success('Enquiry sent!')}
               className="w-full py-2 bg-[#154230] hover:bg-[#1a5a3a] text-white text-sm font-medium rounded-lg transition-colors"
