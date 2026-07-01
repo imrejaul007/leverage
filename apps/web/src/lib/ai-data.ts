@@ -1448,7 +1448,7 @@ export const INDIA_SEZ = [
   { name: 'Cyberabad SEZ', location: 'Hyderabad', type: 'IT/ITES', units: '300+', famousFor: 'IT Services, Pharma' },
   { name: 'Bangalore Electronics City', location: 'Bangalore', type: 'Electronics', units: '200+', famousFor: 'IT Hardware, Semiconductors' },
   { name: 'KIADB - Electronic City Phase 2', location: 'Bangalore', type: 'Electronics', units: '100+', famousFor: 'Electronics Manufacturing' },
-  { name: 'Shedas 'SEZ - Electronics', location: 'Noida', type: 'Electronics', units: '80+', famousFor: 'Mobile Manufacturing, Electronics' },
+  { name: "Shedas 'SEZ - Electronics", location: 'Noida', type: 'Electronics', units: '80+', famousFor: 'Mobile Manufacturing, Electronics' },
 ];
 
 export const INDIA_GST_RATES = [

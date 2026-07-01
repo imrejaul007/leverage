@@ -85,7 +85,7 @@ export default function DemoPage() {
           '🔔 New message from Cotton World Ltd',
           '⚡ Price alert: Steel prices +2.5%',
         ];
-        setNotifications(prev => [messages[Math.floor(Math.random() * messages.length), ...prev.slice(0, 4)]);
+        setNotifications(prev => [messages[Math.floor(Math.random() * messages.length)], ...prev.slice(0, 4)]);
       }, 5000);
 
       // Update task progress
