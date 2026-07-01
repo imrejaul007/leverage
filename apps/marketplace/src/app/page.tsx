@@ -3,155 +3,28 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Plus, ArrowRight, Shield, Globe, Truck, Users } from 'lucide-react';
+import { Plus, ArrowRight, Shield, Globe, Truck, Users, MapPin, Star, TrendingUp } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/layout/Hero';
 import { ProductCard, Product } from '@/components/shared/ProductCard';
-import { CategoryFilter, Category } from '@/components/shared/CategoryFilter';
-import { Pagination } from '@/components/shared/Pagination';
-import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/useToast';
-import { Package } from 'lucide-react';
+import { products } from '@/data/products';
 
-// Product data
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Basmati Rice 1121',
-    description: 'Extra long grain aromatic basmati rice for export. Perfect for international trade.',
-    price: 850,
-    originalPrice: 950,
-    currency: 'MT',
-    moq: '50 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Global Trade Exports',
-    supplierId: 'sup-001',
-    rating: 4.8,
-    reviews: 128,
-    salesCount: 1248,
-    featured: true,
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800',
-  },
-  {
-    id: '2',
-    name: 'Organic Cotton Yarn 40s',
-    description: 'Premium organic cotton yarn for textiles. Sustainable and certified.',
-    price: 4.20,
-    currency: 'KG',
-    moq: '1000 KG',
-    category: 'Textiles',
-    supplier: 'Cotton World Ltd',
-    supplierId: 'sup-002',
-    rating: 4.7,
-    reviews: 96,
-    salesCount: 890,
-    image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800',
-  },
-  {
-    id: '3',
-    name: 'Copper Cathode 99.99%',
-    description: 'Industrial grade copper cathode for manufacturing.',
-    price: 7250,
-    currency: 'MT',
-    moq: '25 MT',
-    category: 'Metals & Minerals',
-    supplier: 'MetalLink Global',
-    supplierId: 'sup-003',
-    rating: 4.9,
-    reviews: 78,
-    salesCount: 560,
-    image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=800',
-  },
-  {
-    id: '4',
-    name: 'Solar Panels 550W',
-    description: 'Tier 1 solar panels with high efficiency rating.',
-    price: 165,
-    currency: 'unit',
-    moq: '100 units',
-    category: 'Energy',
-    supplier: 'Shanghai Import Co.',
-    supplierId: 'sup-004',
-    rating: 4.6,
-    reviews: 89,
-    salesCount: 2100,
-    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800',
-  },
-  {
-    id: '5',
-    name: 'Extra Virgin Olive Oil',
-    description: 'Cold pressed, first harvest olive oil. Premium quality.',
-    price: 4.50,
-    currency: 'L',
-    moq: '5 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Turkey Merchants',
-    supplierId: 'sup-005',
-    rating: 4.9,
-    reviews: 156,
-    salesCount: 3450,
-    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800',
-  },
-  {
-    id: '6',
-    name: 'Steel Billets Grade A',
-    description: 'IS 2062 certified steel billets for construction.',
-    price: 620,
-    currency: 'MT',
-    moq: '100 MT',
-    category: 'Metals & Minerals',
-    supplier: 'Turkey Merchants',
-    supplierId: 'sup-005',
-    rating: 4.9,
-    reviews: 32,
-    salesCount: 890,
-    image: 'https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=800',
-  },
-  {
-    id: '7',
-    name: 'Fresh Green Coffee Beans',
-    description: 'Arabica coffee beans, washed process.',
-    price: 3200,
-    currency: 'MT',
-    moq: '10 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Ethiopia Direct',
-    supplierId: 'sup-006',
-    rating: 4.8,
-    reviews: 64,
-    salesCount: 420,
-    image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800',
-  },
-  {
-    id: '8',
-    name: 'Wheat Grain Grade 1',
-    description: 'High quality wheat for milling and export.',
-    price: 280,
-    currency: 'MT',
-    moq: '100 MT',
-    category: 'Food & Agriculture',
-    supplier: 'Ukraine Grain Co.',
-    supplierId: 'sup-007',
-    rating: 4.5,
-    reviews: 45,
-    salesCount: 2100,
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800',
-  },
+// Popular categories (IndiaMART-style)
+const popularCategories = [
+  { name: 'Food & Agriculture', slug: 'Food & Agriculture', emoji: '🌾', count: products.filter(p => p.category === 'Food & Agriculture').length },
+  { name: 'Textiles', slug: 'Textiles', emoji: '🧵', count: products.filter(p => p.category === 'Textiles').length },
+  { name: 'Metals & Minerals', slug: 'Metals & Minerals', emoji: '⚙️', count: products.filter(p => p.category === 'Metals & Minerals').length },
+  { name: 'Energy', slug: 'Energy', emoji: '⚡', count: products.filter(p => p.category === 'Energy').length },
 ];
 
-const categories: Category[] = [
-  { name: 'All', slug: 'all', emoji: '🛒' },
-  { name: 'Food & Agriculture', slug: 'Food & Agriculture', emoji: '🌾' },
-  { name: 'Textiles', slug: 'Textiles', emoji: '🧵' },
-  { name: 'Electronics', slug: 'Electronics', emoji: '💻' },
-  { name: 'Metals & Minerals', slug: 'Metals & Minerals', emoji: '⚙️' },
-  { name: 'Energy', slug: 'Energy', emoji: '⚡' },
-  { name: 'Chemicals', slug: 'Chemicals', emoji: '🧪' },
-  { name: 'Machinery', slug: 'Machinery', emoji: '🔧' },
+// Quick access cities
+const popularLocations = [
+  'Mumbai', 'Delhi', 'Ahmedabad', 'Dubai', 'Shanghai', 'Istanbul', 'Addis Claude'
 ];
 
 const features = [
@@ -164,9 +37,7 @@ const features = [
 const ITEMS_PER_PAGE = 8;
 
 export default function MarketplacePage() {
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const { cartItems, addToCart, isInCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -174,23 +45,14 @@ export default function MarketplacePage() {
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const featuredProducts = useMemo(() => {
+    return products.filter(p => p.featured || p.rating >= 4.8).slice(0, 4);
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      const matchesSearch = search === '' ||
-        product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.supplier.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [search, selectedCategory]);
-
-  const paginatedProducts = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, end);
-  }, [filteredProducts, currentPage]);
-
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    if (!selectedCategory) return featuredProducts;
+    return products.filter(p => p.category === selectedCategory).slice(0, 8);
+  }, [selectedCategory, featuredProducts]);
 
   const handleAddToCart = (product: Product) => {
     if (isInCart(product.id)) {
@@ -210,46 +72,68 @@ export default function MarketplacePage() {
 
   const handleToggleFavorite = (product: Product) => {
     toggleFavorite(product.id);
-    if (isFavorite(product.id)) {
-      showToast(`Removed from favorites`, 'info');
-    } else {
-      showToast(`${product.name} added to favorites`, 'success');
-    }
+    showToast(
+      isFavorite(product.id) ? 'Removed from favorites' : 'Added to favorites',
+      'success'
+    );
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
+    <div className="min-h-screen bg-gray-50">
       <Header cartCount={cartCount} notificationCount={3} activeRoute="/" />
 
-      {/* Hero Section */}
-      <HeroSection
-        title="Global B2B Marketplace"
-        subtitle="Connect with verified suppliers and buyers from 150+ countries"
-        icon={<Globe className="w-10 h-10" />}
-        searchPlaceholder="Search products, suppliers, categories..."
-        stats={[
-          { label: 'Products', value: '2,847' },
-          { label: 'Suppliers', value: '523' },
-          { label: 'Countries', value: '150+' },
-          { label: 'Verified', value: '98%' },
-        ]}
-        primaryCTA={{ label: 'Post RFQ', href: '/rfqs/new' }}
-      />
+      {/* Hero Section - IndiaMART Style */}
+      <section className="bg-gradient-to-br from-[#154230] via-[#1a5a3a] to-[#0d3d28] px-4 sm:px-8 py-10">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center text-white mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
+              Global B2B Marketplace
+            </h1>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Connect with verified suppliers and buyers from 150+ countries
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <form action="/products" method="GET" className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl p-2 shadow-xl flex flex-col sm:flex-row gap-2">
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search products, suppliers, categories..."
+                  className="w-full h-14 px-4 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#154230]/20"
+                />
+              </div>
+              <button
+                type="submit"
+                className="h-14 px-8 bg-[#5D1E21] hover:bg-[#7a2629] rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            {[
+              { label: 'Products', value: '2,847' },
+              { label: 'Suppliers', value: '523' },
+              { label: 'Countries', value: '150+' },
+              { label: 'Verified', value: '98%' },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                <p className="text-2xl sm:text-3xl font-bold">{stat.value}</p>
+                <p className="text-sm text-white/70">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Main Content */}
-      <main className="px-4 sm:px-8 -mt-20 pb-16">
+      <main className="px-4 sm:px-8 -mt-6 pb-16">
         <div className="container mx-auto max-w-7xl">
-          {/* Categories */}
-          <CategoryFilter
-            categories={categories}
-            selected={selectedCategory}
-            onSelect={(cat) => {
-              setSelectedCategory(cat);
-              setCurrentPage(1);
-            }}
-            variant="pill"
-          />
-
           {/* Post RFQ Banner */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -257,68 +141,95 @@ export default function MarketplacePage() {
             className="bg-gradient-to-r from-[#A6824A] to-[#8a6a3a] rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4"
           >
             <div className="text-white text-center sm:text-left">
-              <h3 className="text-xl font-bold mb-1">Can&apos;t find what you need?</h3>
+              <h3 className="text-xl font-bold mb-1">Can't find what you need?</h3>
               <p className="text-white/80">Post a Request for Quote and let suppliers come to you</p>
             </div>
             <Link href="/rfqs/new">
-              <Button variant="secondary" size="lg" rightIcon={<Plus className="w-5 h-5" />}>
+              <Button variant="secondary" size="lg" rightIcon={<Plus className="w-5 h-5" />} className="bg-white text-[#A6824A] hover:bg-white/90">
                 Post RFQ
               </Button>
             </Link>
           </motion.div>
 
-          {/* Products Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-[#101111]">
-                {selectedCategory === 'all' ? 'Featured Products' : selectedCategory}
-              </h2>
-              <p className="text-sm text-[#4A4A4A]">{filteredProducts.length} products found</p>
+          {/* Popular Categories */}
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Browse Categories</h2>
             </div>
-            <Link href="/products" className="text-[#154230] font-medium hover:underline flex items-center gap-1">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {popularCategories.map((cat, i) => (
+                <Link key={cat.slug} href={`/products?category=${encodeURIComponent(cat.slug)}`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md hover:border-[#154230]/30 transition-all cursor-pointer"
+                  >
+                    <span className="text-3xl mb-2 block">{cat.emoji}</span>
+                    <h3 className="font-semibold text-gray-900 text-sm">{cat.name}</h3>
+                    <p className="text-xs text-gray-500 mt-1">{cat.count}+ products</p>
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+          </section>
 
-          {/* Products Grid */}
-          {paginatedProducts.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                {paginatedProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onToggleFavorite={handleToggleFavorite}
-                    isFavorite={isFavorite(product.id)}
-                    isInCart={isInCart(product.id)}
-                  />
-                ))}
+          {/* Top Products */}
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {selectedCategory || 'Featured Products'}
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {filteredProducts.length} products from verified suppliers
+                </p>
               </div>
+              <div className="flex items-center gap-2">
+                <Link href="/products" className="text-[#154230] font-medium hover:underline flex items-center gap-1 text-sm">
+                  View All <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-8">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <EmptyState
-              icon={<Package className="w-16 h-16" />}
-              title="No products found"
-              description="Try adjusting your search or category filter to find what you're looking for."
-              action={
-                <Button onClick={() => { setSelectedCategory('all'); setSearch(''); }}>
-                  Clear Filters
-                </Button>
-              }
-            />
-          )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onToggleFavorite={handleToggleFavorite}
+                  isFavorite={isFavorite(product.id)}
+                  isInCart={isInCart(product.id)}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Trending Products Row - IndiaMART Style */}
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-[#A6824A]" />
+                <h2 className="text-xl font-bold text-gray-900">Trending This Week</h2>
+              </div>
+              <Link href="/products?sort=sales" className="text-[#154230] font-medium hover:underline flex items-center gap-1 text-sm">
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {products.sort((a, b) => b.salesCount - a.salesCount).slice(0, 4).map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  variant="indiamart"
+                  onAddToCart={handleAddToCart}
+                  isInCart={isInCart(product.id)}
+                />
+              ))}
+            </div>
+          </section>
         </div>
       </main>
 
@@ -326,10 +237,10 @@ export default function MarketplacePage() {
       <section className="py-16 px-4 sm:px-8 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
               Why Choose LEVERAGE Marketplace?
             </h2>
-            <p className="text-[#4A4A4A] max-w-2xl mx-auto">
+            <p className="text-gray-500 max-w-2xl mx-auto">
               The trusted platform for global B2B trade
             </p>
           </div>
@@ -344,13 +255,13 @@ export default function MarketplacePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="text-center p-6 bg-[#f7f5f1] rounded-2xl hover:shadow-lg transition-shadow"
+                  className="text-center p-6 bg-gray-50 rounded-2xl hover:shadow-lg transition-shadow"
                 >
                   <div className="w-14 h-14 bg-[#154230] rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="font-semibold text-[#101111] mb-2">{feature.title}</h3>
-                  <p className="text-sm text-[#4A4A4A]">{feature.description}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-gray-500">{feature.description}</p>
                 </motion.div>
               );
             })}
@@ -359,22 +270,22 @@ export default function MarketplacePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-[#E6E2DA]">
+      <section className="py-16 px-4 sm:px-8 bg-gradient-to-r from-[#154230] to-[#1a5a3a]">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#101111] mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             Ready to start trading?
           </h2>
-          <p className="text-[#4A4A4A] mb-8 max-w-xl mx-auto">
+          <p className="text-white/80 mb-8 max-w-xl mx-auto">
             Join thousands of businesses already trading globally on LEVERAGE Marketplace
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup">
-              <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
+              <Button size="lg" rightIcon={<ArrowRight className="w-5 h-5" />} className="bg-white text-[#154230] hover:bg-white/90">
                 Create Free Account
               </Button>
             </Link>
             <Link href="/contact">
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
                 Contact Sales
               </Button>
             </Link>

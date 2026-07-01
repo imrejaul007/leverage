@@ -379,7 +379,7 @@ const generateAIResponse = (query: string): string => {
   }
 
   // Default response with suggestions
-  return `Thank you for your question about global trade!\n\n**I can help with:**\n\n📦 **HS Codes**: "What HS code for laptops?"\n💰 **Duties**: "Import duties to Germany?"\n📄 **Documents**: "What documents for exporting?"\n💳 **Payments**: "Letter of Credit vs T/T?"\n🚢 **Shipping**: "Freight from Shanghai to LA?"\n📋 **Incoterms**: "Explain FOB vs CIF?"\n✅ **Compliance**: "CE marking requirements?"\n🏭 **Products**: "Cotton fabric classification?"\n\n**Data Available:**\n- 200+ HS codes across electronics, textiles, machinery, chemicals\n- 50+ countries with duty rates\n- 100+ ports and airports\n- All Incoterms 2020 explained\n- 10+ trade agreements\n\nWhat would you like to know?`;
+  return `I can help with:\n\n📦 HS codes & classification\n💰 Import duties & tariffs\n📄 Trade documents\n💳 Payment methods\n🚢 Shipping & freight\n📋 Incoterms\n\nAsk me anything about global trade!`;
 };
 
 const quickPrompts: QuickPrompt[] = [
@@ -396,28 +396,15 @@ export default function AIPage() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `👋 **Welcome to the LEVERAGE AI Trade Assistant!**
+      content: `👋 **LEVERAGE AI Trade Assistant**
 
-I have access to **1,000+ data entries** to help with your global trade needs:
+I'm here to help with HS codes, duties, shipping, documents & more.
 
-📦 **200+ HS Codes** - Electronics, textiles, machinery, chemicals, food
-🌍 **50+ Countries** - Duty rates, ports, restrictions, VAT
-🚢 **35+ Freight Routes** - Rates, transit times, mode comparisons
-📄 **25+ Documents** - Requirements, timing, key fields
-💳 **9+ Payment Methods** - L/C, T/T, D/P, Open Account
-📋 **Incoterms 2020** - All 11 terms explained
-🏭 **12 Container Types** - Specs, capacity, best uses
-✈️ **20 Airports** - Cargo volumes, major hubs
-
-**Try asking:**
+Try asking:
 • "HS code for laptop"
-• "Import duties to Germany?"
+• "Import duties to Germany"
 • "Freight from Shanghai to LA"
-• "FOB vs CIF vs DDP"
-• "Letter of credit process"
-• "What documents for exports?"
-
-What would you like to know?`,
+• "FOB vs CIF vs DDP"`,
       timestamp: new Date(),
     },
   ]);
