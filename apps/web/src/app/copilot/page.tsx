@@ -52,6 +52,7 @@ How can I help today?`,
   const [isProcessing, setIsProcessing] = useState(false);
   const [workflowSteps, setWorkflowSteps] = useState<{ agent: string; task: string; status: string }[]>([]);
   const [currentStep, setCurrentStep] = useState(-1);
+  const [pendingAction, setPendingAction] = useState<{ intent: string; entities: Record<string, string> } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -177,6 +178,11 @@ How can I help today?`,
     // EXPAND / STRATEGY
     if (lower.match(/expand.*market|enter.*country|new.*market|go.*uae|go.*germany/i)) {
       return { intent: 'expand_market', category: 'Strategy', entities: extractEntities(text) };
+    }
+
+    // Confirmation intents
+    if (lower.match(/^yes$|^yeah$|^yep$|^confirm$|^proceed$|^go ahead$|^do it$|^approve$|^execute$|^start$/)) {
+      return { intent: 'confirm_task', category: 'Confirmation', entities: {} };
     }
 
     // Default
