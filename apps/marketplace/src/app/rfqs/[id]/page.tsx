@@ -14,33 +14,17 @@ import {
   CheckCircle,
   MessageSquare,
   Send,
+  Star,
 } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { Input, Textarea } from '@/components/ui/Input';
 import { useToast } from '@/hooks/useToast';
+import { getRFQ } from '@/data/rfqs';
 
-const rfqData = {
-  id: 'RFQ-2024-001',
-  title: 'Premium Basmati Rice 1121',
-  description: 'Looking for 500 MT of premium basmati rice for our distribution network in the Middle East. We require extra long grain rice with aromatic properties, suitable for retail and food service channels. Quality certifications and lab reports are required.',
-  buyer: 'Global Imports LLC',
-  buyerId: 'buyer-001',
-  product: 'Basmati Rice',
-  quantity: '500',
-  unit: 'MT',
-  targetPrice: '$800',
-  currency: 'USD',
-  deliveryCountry: 'UAE',
-  deadline: 'Jun 25, 2026',
-  status: 'OPEN' as const,
-  responseCount: 5,
-  createdAt: '2026-06-10',
-};
-
-const quotes = [
+// Sample quotes data
+const sampleQuotes = [
   {
     id: 1,
     supplier: 'Global Trade Exports',
@@ -49,6 +33,7 @@ const quotes = [
     validity: 'Jul 1, 2026',
     message: 'We can supply premium 1121 Basmati rice at competitive rates with full documentation.',
     rating: 4.8,
+    verified: true,
   },
   {
     id: 2,
@@ -58,6 +43,7 @@ const quotes = [
     validity: 'Jun 30, 2026',
     message: 'Factory-direct pricing with door-to-door logistics included.',
     rating: 4.6,
+    verified: true,
   },
   {
     id: 3,
@@ -67,11 +53,28 @@ const quotes = [
     validity: 'Jul 5, 2026',
     message: 'Best quality available. Sample available on request.',
     rating: 4.9,
+    verified: false,
   },
 ];
 
+const statusColors: Record<string, string> = {
+  OPEN: 'bg-emerald-100 text-emerald-700',
+  IN_REVIEW: 'bg-amber-100 text-amber-700',
+  CLOSED: 'bg-gray-100 text-gray-600',
+  AWARDED: 'bg-blue-100 text-blue-700',
+};
+
+const statusLabels: Record<string, string> = {
+  OPEN: 'Open',
+  IN_REVIEW: 'In Review',
+  CLOSED: 'Closed',
+  AWARDED: 'Awarded',
+};
+
 export default function RFQDetailPage() {
   const params = useParams();
+  const rfqId = params.id as string;
+  const rfq = getRFQ(rfqId);
   const { showToast } = useToast();
   const [quoteMessage, setQuoteMessage] = useState('');
   const [quotePrice, setQuotePrice] = useState('');
@@ -86,60 +89,98 @@ export default function RFQDetailPage() {
     setQuotePrice('');
   };
 
+  if (!rfq) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">RFQ Not Found</h1>
+          <p className="text-gray-500 mb-8">The RFQ you're looking for doesn't exist.</p>
+          <Link href="/rfqs">
+            <Button>Browse RFQs</Button>
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const isExpired = new Date(rfq.deadline) < new Date();
+
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
+    <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="container mx-auto px-4 sm:px-8 py-8">
+      <main className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6">
-          <Link href="/" className="text-[#4A4A4A] hover:text-[#154230]">Home</Link>
-          <span className="text-[#4A4A4A]">/</span>
-          <Link href="/rfqs" className="text-[#4A4A4A] hover:text-[#154230]">RFQs</Link>
-          <span className="text-[#4A4A4A]">/</span>
-          <span className="text-[#101111]">{rfqData.id}</span>
+        <nav className="flex items-center gap-2 text-sm mb-6 text-gray-500">
+          <Link href="/" className="hover:text-[#154230]">Home</Link>
+          <span>/</span>
+          <Link href="/rfqs" className="hover:text-[#154230]">RFQs</Link>
+          <span>/</span>
+          <span className="text-gray-900">{rfq.id}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-8 space-y-6">
             {/* RFQ Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-6"
+              className="bg-white rounded-xl border border-gray-200 p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <Badge variant="success" className="mb-2">Open</Badge>
-                  <h1 className="text-2xl font-bold text-[#101111]">{rfqData.title}</h1>
-                  <p className="text-sm text-[#4A4A4A]">RFQ ID: {rfqData.id}</p>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${statusColors[rfq.status]}`}>
+                    {statusLabels[rfq.status]}
+                  </span>
+                  <h1 className="text-2xl font-bold text-gray-900 mt-2">{rfq.title}</h1>
+                  <p className="text-sm text-gray-500">RFQ ID: {rfq.id}</p>
                 </div>
+                {isExpired && (
+                  <Badge variant="error">Expired</Badge>
+                )}
               </div>
 
-              <p className="text-[#4A4A4A] mb-6">{rfqData.description}</p>
+              <p className="text-gray-600 mb-6">{rfq.description}</p>
 
+              {/* Key Details Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="bg-[#f7f5f1] rounded-xl p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <Package className="w-5 h-5 text-[#154230] mb-2" />
-                  <p className="text-xs text-[#4A4A4A]">Quantity</p>
-                  <p className="font-bold">{rfqData.quantity} {rfqData.unit}</p>
+                  <p className="text-xs text-gray-500">Quantity</p>
+                  <p className="font-bold text-gray-900">{rfq.quantity} {rfq.unit}</p>
                 </div>
-                <div className="bg-[#f7f5f1] rounded-xl p-4">
-                  <span className="text-sm text-[#4A4A4A]">Target Price</span>
-                  <p className="font-bold">{rfqData.targetPrice}</p>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <span className="text-sm text-gray-500">Target Price</span>
+                  <p className="font-bold text-gray-900">{rfq.targetPrice || 'Negotiable'}</p>
                 </div>
-                <div className="bg-[#f7f5f1] rounded-xl p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <MapPin className="w-5 h-5 text-[#154230] mb-2" />
-                  <p className="text-xs text-[#4A4A4A]">Delivery</p>
-                  <p className="font-bold">{rfqData.deliveryCountry}</p>
+                  <p className="text-xs text-gray-500">Delivery</p>
+                  <p className="font-bold text-gray-900">{rfq.deliveryCountry}</p>
                 </div>
-                <div className="bg-[#f7f5f1] rounded-xl p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <Calendar className="w-5 h-5 text-[#154230] mb-2" />
-                  <p className="text-xs text-[#4A4A4A]">Deadline</p>
-                  <p className="font-bold">{rfqData.deadline}</p>
+                  <p className="text-xs text-gray-500">Deadline</p>
+                  <p className={`font-bold ${isExpired ? 'text-red-500' : 'text-gray-900'}`}>{rfq.deadline}</p>
                 </div>
               </div>
+
+              {/* Additional Details */}
+              {rfq.specifications && rfq.specifications.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <h3 className="font-medium text-gray-900 mb-3">Specifications</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {rfq.specifications.map((spec, i) => (
+                      <span key={i} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {/* Quotes */}
@@ -147,38 +188,59 @@ export default function RFQDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl p-6"
+              className="bg-white rounded-xl border border-gray-200 p-6"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-[#101111]">
+                <h2 className="text-xl font-bold text-gray-900">
                   Supplier Quotes
                 </h2>
-                <Badge variant="accent">{rfqData.responseCount} quotes</Badge>
+                <Badge variant="accent">{rfq.responseCount} quotes</Badge>
               </div>
 
               <div className="space-y-4">
-                {quotes.map((quote) => (
+                {sampleQuotes.map((quote) => (
                   <div
                     key={quote.id}
-                    className="border border-black/5 rounded-xl p-4 hover:border-[#154230]/30 transition-colors"
+                    className="border border-gray-200 rounded-xl p-4 hover:border-[#154230]/30 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-[#101111]">{quote.supplier}</h3>
-                        <p className="text-sm text-[#4A4A4A]">Rating: {quote.rating}/5</p>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center text-white font-bold">
+                          {quote.supplier.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-gray-900">{quote.supplier}</h3>
+                            {quote.verified && (
+                              <CheckCircle className="w-4 h-4 text-[#154230]" />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                            <span>{quote.rating}/5</span>
+                          </div>
+                        </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-[#154230]">${quote.price}</p>
-                        <p className="text-sm text-[#4A4A4A]">/{quote.unit}</p>
+                        <p className="text-2xl font-bold text-gray-900">${quote.price}</p>
+                        <p className="text-sm text-gray-500">/{quote.unit}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-[#4A4A4A] mb-4">{quote.message}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-[#4A4A4A]">Valid until: {quote.validity}</span>
-                      <Button size="sm" variant="ghost">
-                        <MessageSquare className="w-4 h-4 mr-1" />
-                        Contact
-                      </Button>
+                    <p className="text-sm text-gray-600 mb-4">{quote.message}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        Valid until: {quote.validity}
+                      </span>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="ghost">
+                          <MessageSquare className="w-4 h-4 mr-1" />
+                          Contact
+                        </Button>
+                        <Button size="sm" variant="outline">
+                          View Profile
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -187,32 +249,37 @@ export default function RFQDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="lg:col-span-4 space-y-6">
             {/* Submit Quote */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl p-6 sticky top-24"
+              className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24"
             >
-              <h2 className="text-xl font-bold text-[#101111] mb-4">Submit Your Quote</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Submit Your Quote</h2>
 
               <div className="space-y-4">
-                <Input
-                  label="Your Price"
-                  type="number"
-                  placeholder="e.g., 850"
-                  value={quotePrice}
-                  onChange={(e) => setQuotePrice(e.target.value)}
-                  hint="Price per unit (USD)"
-                />
-                <Textarea
-                  label="Message (optional)"
-                  placeholder="Describe your offering..."
-                  rows={3}
-                  value={quoteMessage}
-                  onChange={(e) => setQuoteMessage(e.target.value)}
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Your Price (USD)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g., 850"
+                    value={quotePrice}
+                    onChange={(e) => setQuotePrice(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#154230]/20 focus:border-[#154230]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message (optional)</label>
+                  <textarea
+                    placeholder="Describe your offering..."
+                    rows={3}
+                    value={quoteMessage}
+                    onChange={(e) => setQuoteMessage(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#154230]/20 focus:border-[#154230] resize-none"
+                  />
+                </div>
                 <Button className="w-full" onClick={handleSubmitQuote} leftIcon={<Send className="w-4 h-4" />}>
                   Submit Quote
                 </Button>
@@ -220,17 +287,23 @@ export default function RFQDetailPage() {
             </motion.div>
 
             {/* Buyer Info */}
-            <div className="bg-white rounded-2xl p-6">
-              <h3 className="font-semibold text-[#101111] mb-4">Buyer Information</h3>
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="font-semibold text-gray-900 mb-4">Buyer Information</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#154230] rounded-full flex items-center justify-center text-white font-bold">
-                    G
+                    {rfq.buyer.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-medium">{rfqData.buyer}</p>
-                    <p className="text-sm text-[#4A4A4A]">Verified Buyer</p>
+                    <p className="font-medium text-gray-900">{rfq.buyer}</p>
+                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3 text-[#154230]" />
+                      Verified Buyer
+                    </p>
                   </div>
+                </div>
+                <div className="pt-3 border-t border-gray-100">
+                  <p className="text-xs text-gray-500">Posted on {rfq.createdAt}</p>
                 </div>
               </div>
             </div>

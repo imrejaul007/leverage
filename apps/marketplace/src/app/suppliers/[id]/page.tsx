@@ -13,76 +13,39 @@ import {
   Globe,
   Calendar,
   Package,
+  Phone,
+  Award,
   ExternalLink,
+  ArrowRight,
 } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { ProductCard, Product } from '@/components/shared/ProductCard';
+import { ProductCard } from '@/components/shared/ProductCard';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-
-const suppliers: Record<string, {
-  id: string;
-  name: string;
-  logo: string;
-  description: string;
-  location: string;
-  verified: boolean;
-  rating: number;
-  reviews: number;
-  productCount: number;
-  responseTime: string;
-  categories: string[];
-  established: string;
-  website?: string;
-  productList: Product[];
-}> = {
-  'sup-001': {
-    id: 'sup-001',
-    name: 'Global Trade Exports',
-    logo: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200',
-    description: 'Leading exporter of premium agricultural products including rice, spices, and pulses from India. With over 15 years of experience in international trade, we have established ourselves as a reliable partner for businesses worldwide. Our products are sourced directly from certified farms and processed under strict quality control measures.',
-    location: 'Mumbai, India',
-    verified: true,
-    rating: 4.8,
-    reviews: 128,
-    productCount: 245,
-    responseTime: '< 2 hours',
-    categories: ['Food & Agriculture', 'Spices'],
-    established: '2009',
-    website: 'https://globaltradeexports.com',
-    productList: [
-      {
-        id: '1',
-        name: 'Premium Basmati Rice 1121',
-        description: 'Extra long grain aromatic basmati rice.',
-        price: 850,
-        currency: 'MT',
-        moq: '50 MT',
-        category: 'Food & Agriculture',
-        supplier: 'Global Trade Exports',
-        supplierId: 'sup-001',
-        rating: 4.8,
-        reviews: 128,
-        salesCount: 1248,
-        image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800',
-      },
-    ],
-  },
-};
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/useToast';
+import { getSupplier, suppliers } from '@/data/suppliers';
+import { products } from '@/data/products';
 
 export default function SupplierProfilePage() {
   const params = useParams();
   const supplierId = params.id as string;
-  const supplier = suppliers[supplierId];
+  const supplier = getSupplier(supplierId);
+  const { cartItems, addToCart, isInCart } = useCart();
+  const { showToast } = useToast();
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Get products from this supplier
+  const supplierProducts = products.filter(p => p.supplierId === supplierId);
 
   if (!supplier) {
     return (
-      <div className="min-h-screen bg-[#f7f5f1]">
-        <Header />
+      <div className="min-h-screen bg-gray-50">
+        <Header cartCount={cartCount} />
         <main className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-bold text-[#101111] mb-4">Supplier Not Found</h1>
-          <p className="text-[#4A4A4A] mb-8">The supplier you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Supplier Not Found</h1>
+          <p className="text-gray-500 mb-8">The supplier you're looking for doesn't exist.</p>
           <Link href="/suppliers">
             <Button>Browse Suppliers</Button>
           </Link>
@@ -93,115 +56,230 @@ export default function SupplierProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <Header cartCount={cartCount} notificationCount={3} />
 
-      <main className="container mx-auto px-4 sm:px-8 py-8">
+      <main className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6">
-          <Link href="/" className="text-[#4A4A4A] hover:text-[#154230]">Home</Link>
-          <span className="text-[#4A4A4A]">/</span>
-          <Link href="/suppliers" className="text-[#4A4A4A] hover:text-[#154230]">Suppliers</Link>
-          <span className="text-[#4A4A4A]">/</span>
-          <span className="text-[#101111]">{supplier.name}</span>
+        <nav className="flex items-center gap-2 text-sm mb-6 text-gray-500">
+          <Link href="/" className="hover:text-[#154230]">Home</Link>
+          <span>/</span>
+          <Link href="/suppliers" className="hover:text-[#154230]">Suppliers</Link>
+          <span>/</span>
+          <span className="text-gray-900">{supplier.name}</span>
         </nav>
 
-        {/* Profile Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-6 mb-8"
-        >
-          <div className="flex flex-col md:flex-row items-start gap-6">
-            <div className="relative w-24 h-24 bg-[#f7f5f1] rounded-xl overflow-hidden flex-shrink-0">
+        {/* Supplier Header */}
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+          {/* Cover Image */}
+          <div className="relative h-32 sm:h-48 bg-gradient-to-r from-[#154230] to-[#1a5a3a]">
+            {supplier.coverImage && (
               <Image
-                src={supplier.logo}
-                alt={supplier.name}
+                src={supplier.coverImage}
+                alt=""
                 fill
-                className="object-cover"
+                className="object-cover opacity-50"
                 unoptimized
               />
-            </div>
+            )}
+          </div>
 
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-[#101111]">{supplier.name}</h1>
-                {supplier.verified && (
-                  <Badge variant="emerald">
-                    <CheckCircle className="w-3 h-3 mr-1" />
-                    Verified
-                  </Badge>
+          {/* Profile Info */}
+          <div className="px-6 pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12">
+              {/* Logo */}
+              <div className="relative w-24 h-24 bg-white rounded-xl border-4 border-white shadow-lg overflow-hidden flex-shrink-0">
+                {supplier.logo ? (
+                  <Image
+                    src={supplier.logo}
+                    alt={supplier.name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[#154230] font-bold text-3xl bg-gradient-to-br from-[#154230] to-[#1a5a3a] text-white">
+                    {supplier.name.charAt(0)}
+                  </div>
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-[#4A4A4A] mb-4">
-                <span className="flex items-center gap-1">
+              {/* Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-2xl font-bold text-gray-900">{supplier.name}</h1>
+                  {supplier.verified && (
+                    <Badge variant="success" className="gap-1">
+                      <CheckCircle className="w-3 h-3" /> Verified
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 text-gray-500">
                   <MapPin className="w-4 h-4" />
-                  {supplier.location}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-[#A6824A] text-[#A6824A]" />
-                  {supplier.rating} ({supplier.reviews} reviews)
-                </span>
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  Est. {supplier.established}
-                </span>
+                  <span>{supplier.location}</span>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-4">
-                {supplier.categories.map((cat) => (
-                  <Badge key={cat} variant="default">{cat}</Badge>
-                ))}
+              {/* Actions */}
+              <div className="flex gap-2">
+                <Button variant="outline" leftIcon={<MessageSquare className="w-4 h-4" />}>
+                  Send Inquiry
+                </Button>
+                <Button leftIcon={<Phone className="w-4 h-4" />}>
+                  View Phone
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left: About & Products */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* About */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">About {supplier.name}</h2>
+              <p className="text-gray-600 mb-6">{supplier.description}</p>
+
+              {/* Business Info */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {supplier.businessType && (
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Business Type</p>
+                    <p className="font-medium text-sm">{supplier.businessType}</p>
+                  </div>
+                )}
+                {supplier.established && (
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Established</p>
+                    <p className="font-medium text-sm">{supplier.established}</p>
+                  </div>
+                )}
+                {supplier.annualRevenue && (
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Annual Revenue</p>
+                    <p className="font-medium text-sm">{supplier.annualRevenue}</p>
+                  </div>
+                )}
+                {supplier.exportPercentage && (
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500">Export</p>
+                    <p className="font-medium text-sm">{supplier.exportPercentage}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Products */}
+            {supplierProducts.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-gray-900">Products ({supplierProducts.length})</h2>
+                  <Link href={`/products?supplier=${supplierId}`} className="text-[#154230] font-medium hover:underline flex items-center gap-1 text-sm">
+                    View All <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {supplierProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onAddToCart={() => {
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                          currency: product.currency,
+                          moq: product.moq,
+                        });
+                        showToast(`${product.name} added to cart`, 'success');
+                      }}
+                      isInCart={isInCart(product.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right: Sidebar */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Stats Card */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
+              <h3 className="font-bold text-gray-900 mb-4">Supplier Stats</h3>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <span className="font-bold text-gray-900">{supplier.rating}</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{supplier.reviews} reviews</p>
+                </div>
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <p className="font-bold text-gray-900 mb-1">{supplier.products}</p>
+                  <p className="text-xs text-gray-500">Products</p>
+                </div>
               </div>
 
-              <p className="text-[#4A4A4A]">{supplier.description}</p>
-            </div>
+              {/* Trust Badges */}
+              <div className="space-y-2 mb-6">
+                {supplier.gstVerified && (
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>GST Verified</span>
+                  </div>
+                )}
+                {supplier.trustseal && (
+                  <div className="flex items-center gap-2 text-sm text-[#154230]">
+                    <Award className="w-4 h-4" />
+                    <span>TrustSEAL Verified</span>
+                  </div>
+                )}
+                {supplier.yearsInBusiness && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>{supplier.yearsInBusiness}+ Years in Business</span>
+                  </div>
+                )}
+                {supplier.responseTime && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Response: {supplier.responseTime}</span>
+                  </div>
+                )}
+              </div>
 
-            <div className="flex flex-col gap-3 w-full md:w-auto">
-              <Link href="/inbox">
-                <Button className="w-full" leftIcon={<MessageSquare className="w-4 h-4" />}>
-                  Contact Supplier
+              {/* Categories */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Categories</h4>
+                <div className="flex flex-wrap gap-2">
+                  {supplier.categories.map((cat) => (
+                    <Badge key={cat} variant="default" size="sm">{cat}</Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact */}
+              <div className="space-y-2">
+                {supplier.phone && (
+                  <Button variant="outline" className="w-full" leftIcon={<Phone className="w-4 h-4" />}>
+                    {supplier.phone}
+                  </Button>
+                )}
+                {supplier.whatsapp && (
+                  <Button variant="accent" className="w-full">
+                    WhatsApp
+                  </Button>
+                )}
+                <Button variant="ghost" className="w-full text-[#5D1E21]" leftIcon={<MessageSquare className="w-4 h-4" />}>
+                  Send Inquiry
                 </Button>
-              </Link>
-              {supplier.website && (
-                <Button variant="outline" className="w-full" leftIcon={<Globe className="w-4 h-4" />}>
-                  Visit Website
-                </Button>
-              )}
+              </div>
             </div>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-black/5">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[#154230]">{supplier.productCount}</p>
-              <p className="text-sm text-[#4A4A4A]">Products</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[#154230]">{supplier.responseTime}</p>
-              <p className="text-sm text-[#4A4A4A]">Response Time</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[#154230]">{supplier.rating}</p>
-              <p className="text-sm text-[#4A4A4A]">Rating</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Products */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-[#101111]">Products</h2>
-            <span className="text-sm text-[#4A4A4A]">{supplier.productList.length} products</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {supplier.productList.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </section>
+        </div>
       </main>
 
       <Footer />

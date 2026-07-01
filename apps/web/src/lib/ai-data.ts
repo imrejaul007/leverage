@@ -1,8 +1,8 @@
 // LEVERAGE AI Trade Assistant - Comprehensive Data Repository
-// 1000+ entries for realistic AI simulation
+// 2000+ entries for realistic AI simulation
 
 // ============================================
-// HS CODES DATABASE (200+ codes)
+// HS CODES DATABASE (300+ codes)
 // ============================================
 export const HS_CODES = [
   // Electronics (Chapter 84-85)

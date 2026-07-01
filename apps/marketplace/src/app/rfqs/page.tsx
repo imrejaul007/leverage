@@ -2,102 +2,21 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { FileText, Plus } from 'lucide-react';
+import { FileText, Plus, Filter, X } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/layout/Hero';
-import { RFQCard, RFQ } from '@/components/shared/RFQCard';
-import { FilterDropdown } from '@/components/shared/FilterDropdown';
+import { RFQCard } from '@/components/shared/RFQCard';
 import { Pagination } from '@/components/shared/Pagination';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
-
-const rfqs: RFQ[] = [
-  {
-    id: 'RFQ-2024-001',
-    title: 'Premium Basmati Rice 1121',
-    description: 'Looking for 500 MT of premium basmati rice for our distribution network in the Middle East.',
-    buyer: 'Global Imports LLC',
-    buyerId: 'buyer-001',
-    product: 'Basmati Rice',
-    quantity: '500',
-    unit: 'MT',
-    targetPrice: '$800',
-    currency: 'USD',
-    deliveryCountry: 'UAE',
-    deadline: 'Jun 25, 2026',
-    status: 'OPEN',
-    responseCount: 5,
-    createdAt: '2026-06-10',
-  },
-  {
-    id: 'RFQ-2024-002',
-    title: 'Organic Cotton Yarn 40s',
-    description: 'Need 10,000 KG of organic cotton yarn for our textile manufacturing facility.',
-    buyer: 'EuroTrade Partners',
-    buyerId: 'buyer-002',
-    product: 'Cotton Yarn',
-    quantity: '10,000',
-    unit: 'KG',
-    deliveryCountry: 'Germany',
-    deadline: 'Jun 28, 2026',
-    status: 'IN_REVIEW',
-    responseCount: 3,
-    createdAt: '2026-06-08',
-  },
-  {
-    id: 'RFQ-2024-003',
-    title: 'Electronic Components Set',
-    description: 'Seeking various electronic components for our manufacturing needs.',
-    buyer: 'Asia Pacific Trading',
-    buyerId: 'buyer-003',
-    product: 'Electronic Components',
-    quantity: '5,000',
-    unit: 'units',
-    deliveryCountry: 'Singapore',
-    deadline: 'Jul 1, 2026',
-    status: 'OPEN',
-    responseCount: 8,
-    createdAt: '2026-06-05',
-  },
-  {
-    id: 'RFQ-2024-004',
-    title: 'Steel Billets Grade A',
-    description: 'IS 2062 certified steel billets required for construction project.',
-    buyer: 'Middle East Builders',
-    buyerId: 'buyer-004',
-    product: 'Steel Billets',
-    quantity: '1,000',
-    unit: 'MT',
-    deliveryCountry: 'Saudi Arabia',
-    deadline: 'Jul 5, 2026',
-    status: 'OPEN',
-    responseCount: 2,
-    createdAt: '2026-06-01',
-  },
-  {
-    id: 'RFQ-2024-005',
-    title: 'Solar Panel Modules',
-    description: 'Tier 1 solar panels for our renewable energy project.',
-    buyer: 'Green Energy Solutions',
-    buyerId: 'buyer-005',
-    product: 'Solar Panels',
-    quantity: '10,000',
-    unit: 'units',
-    deliveryCountry: 'Spain',
-    deadline: 'Jul 10, 2026',
-    status: 'OPEN',
-    responseCount: 4,
-    createdAt: '2026-05-28',
-  },
-];
+import { rfqs, RFQStatus } from '@/data/rfqs';
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
-  { value: 'OPEN', label: 'Open' },
-  { value: 'IN_REVIEW', label: 'In Review' },
-  { value: 'CLOSED', label: 'Closed' },
-  { value: 'AWARDED', label: 'Awarded' },
+  { value: 'OPEN', label: 'Open', count: rfqs.filter(r => r.status === 'OPEN').length },
+  { value: 'IN_REVIEW', label: 'In Review', count: rfqs.filter(r => r.status === 'IN_REVIEW').length },
+  { value: 'CLOSED', label: 'Closed', count: rfqs.filter(r => r.status === 'CLOSED').length },
+  { value: 'AWARDED', label: 'Awarded', count: rfqs.filter(r => r.status === 'AWARDED').length },
 ];
 
 const ITEMS_PER_PAGE = 10;
@@ -105,6 +24,7 @@ const ITEMS_PER_PAGE = 10;
 export default function RFQsPage() {
   const [status, setStatus] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'indiamart'>('indiamart');
 
   const filteredRFQs = useMemo(() => {
     if (status === 'all') return rfqs;
@@ -119,91 +39,95 @@ export default function RFQsPage() {
   const totalPages = Math.ceil(filteredRFQs.length / ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-[#f7f5f1]">
+    <div className="min-h-screen bg-gray-50">
       <Header activeRoute="/rfqs" />
 
-      <HeroSection
-        title="Request for Quotes"
-        subtitle="Submit quotes on RFQs from verified buyers worldwide. Win more business with competitive offers."
-        icon={<FileText className="w-10 h-10" />}
-        searchPlaceholder="Search RFQs..."
-        stats={[
-          { label: 'Active RFQs', value: rfqs.filter(r => r.status === 'OPEN').length.toString() },
-          { label: 'Total Value', value: '$45M' },
-          { label: 'Quote Win Rate', value: '89%' },
-          { label: 'Avg Response', value: '24h' },
-        ]}
-        primaryCTA={{ label: 'Post RFQ', href: '/rfqs/new' }}
-        secondaryCTA={{ label: 'Browse RFQs', href: '/rfqs' }}
-      />
-
-      <main className="px-4 sm:px-8 -mt-12 pb-16">
-        <div className="container mx-auto max-w-7xl">
-          {/* Filters */}
-          <div className="bg-white rounded-2xl p-4 mb-6 flex items-center justify-between gap-4">
-            <FilterDropdown
-              label="Status"
-              options={statusOptions}
-              value={status}
-              onChange={(v) => {
-                setStatus(v as string);
-                setCurrentPage(1);
-              }}
-            />
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-[#4A4A4A]">
-                {filteredRFQs.length} RFQs
-              </span>
-              <Link href="/rfqs/new">
-                <Button size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                  Post RFQ
-                </Button>
-              </Link>
-            </div>
+      <main className="container mx-auto px-4 py-6">
+        {/* Page Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Request for Quotes</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {filteredRFQs.length} RFQs from verified buyers
+            </p>
           </div>
-
-          {/* RFQ List */}
-          {paginatedRFQs.length > 0 ? (
-            <>
-              <div className="space-y-4">
-                {paginatedRFQs.map((rfq) => (
-                  <RFQCard
-                    key={rfq.id}
-                    rfq={rfq}
-                    variant="list"
-                    onQuote={() => {
-                      window.location.href = `/rfqs/${rfq.id}`;
-                    }}
-                  />
-                ))}
-              </div>
-
-              {totalPages > 1 && (
-                <div className="mt-8">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <EmptyState
-              icon={<FileText className="w-16 h-16" />}
-              title="No RFQs found"
-              description="There are no RFQs matching your filters."
-              action={
-                <div className="flex gap-3">
-                  <Button onClick={() => setStatus('all')}>Clear Filters</Button>
-                  <Link href="/rfqs/new">
-                    <Button variant="outline">Post an RFQ</Button>
-                  </Link>
-                </div>
-              }
-            />
-          )}
+          <Link href="/rfqs/new">
+            <Button size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+              Post RFQ
+            </Button>
+          </Link>
         </div>
+
+        {/* Filters */}
+        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-gray-500">Status:</span>
+            {statusOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => { setStatus(opt.value); setCurrentPage(1); }}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  status === opt.value
+                    ? 'bg-[#154230] text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {opt.label}
+                {opt.count !== undefined && (
+                  <span className="ml-1 text-xs opacity-70">({opt.count})</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* RFQ List */}
+        {paginatedRFQs.length > 0 ? (
+          <>
+            <div
+              className={
+                viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 gap-4'
+                  : 'flex flex-col gap-3'
+              }
+            >
+              {paginatedRFQs.map((rfq) => (
+                <RFQCard
+                  key={rfq.id}
+                  rfq={rfq}
+                  variant={viewMode === 'grid' ? 'default' : 'indiamart'}
+                  onQuote={() => {
+                    window.location.href = `/rfqs/${rfq.id}`;
+                  }}
+                />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <EmptyState
+            icon={<FileText className="w-16 h-16" />}
+            title="No RFQs found"
+            description="There are no RFQs matching your filters."
+            action={
+              <div className="flex gap-3">
+                <Button onClick={() => setStatus('all')}>Clear Filters</Button>
+                <Link href="/rfqs/new">
+                  <Button variant="outline">Post an RFQ</Button>
+                </Link>
+              </div>
+            }
+          />
+        )}
       </main>
 
       <Footer />
